@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "~/styles/globals.css";
 
 import { headers } from "next/headers";
+import { AxiomWebVitals } from "next-axiom";
 
 import { TRPCReactProvider } from "./providers";
 
@@ -31,6 +32,7 @@ export const metadata: Metadata = {
 export default function Layout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <AxiomWebVitals />
       <body className={["font-sans", fontSans.variable].join(" ")}>
         <TRPCReactProvider headers={headers()}>
           {props.children}

@@ -1,5 +1,8 @@
 // Importing env files here to validate on build
 import "@skylar/auth/env.mjs";
+
+import { withLoggerForNextConfig } from "@skylar/logger";
+
 import "./src/env.mjs";
 
 /** @type {import("next").NextConfig} */
@@ -12,4 +15,4 @@ const config = {
   typescript: { ignoreBuildErrors: true },
 };
 
-export default config;
+export default withLoggerForNextConfig(config);
