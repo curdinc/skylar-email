@@ -3,6 +3,7 @@ import "@skylar/auth/env.mjs";
 
 import { withLoggerForNextConfig } from "@skylar/logger";
 
+import "@skylar/logger/withLoggerForNextConfig.mjs";
 import "./src/env.mjs";
 
 /** @type {import("next").NextConfig} */

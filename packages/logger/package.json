@@ -32,8 +32,8 @@
   },
   "eslintConfig": {
     "extends": [
-      "@acme/eslint-config/base"
+      "@skylar/eslint-config/base"
     ]
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@skylar/prettier-config"
 }
