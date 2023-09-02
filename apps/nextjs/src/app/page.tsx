@@ -1,11 +1,4 @@
-import { Suspense } from "react";
-
 import { AuthShowcase } from "./_components/auth-showcase";
-import {
-  CreatePostForm,
-  PostCardSkeleton,
-  PostList,
-} from "./_components/posts";
 
 export const runtime = "edge";
 
@@ -17,21 +10,6 @@ export default function HomePage() {
           Create <span className="text-pink-400">T3</span> Turbo
         </h1>
         <AuthShowcase />
-
-        <CreatePostForm />
-        <div className="h-[40vh] w-full max-w-2xl overflow-y-scroll">
-          <Suspense
-            fallback={
-              <div className="flex w-full flex-col gap-4">
-                <PostCardSkeleton />
-                <PostCardSkeleton />
-                <PostCardSkeleton />
-              </div>
-            }
-          >
-            <PostList />
-          </Suspense>
-        </div>
       </div>
     </main>
   );
