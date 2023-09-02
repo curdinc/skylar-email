@@ -1,4 +1,4 @@
-import { auth } from "@acme/auth";
+import { auth } from "@skylar/auth";
 
 import { SignIn, SignOut } from "~/components/auth";
 

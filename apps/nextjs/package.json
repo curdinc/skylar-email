@@ -1,5 +1,5 @@
 {
-  "name": "@acme/nextjs",
+  "name": "@skylar/nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,9 +13,9 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@acme/api": "^0.1.0",
-    "@acme/auth": "^0.1.0",
-    "@acme/db": "^0.1.0",
+    "@skylar/api": "^0.1.0",
+    "@skylar/auth": "^0.1.0",
+    "@skylar/db": "^0.1.0",
     "@t3-oss/env-nextjs": "^0.6.1",
     "@tanstack/react-query": "^4.33.0",
     "@tanstack/react-query-devtools": "^4.33.0",
@@ -31,10 +31,10 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@acme/eslint-config": "^0.2.0",
-    "@acme/prettier-config": "^0.1.0",
-    "@acme/tailwind-config": "^0.1.0",
-    "@acme/tsconfig": "^0.1.0",
+    "@skylar/eslint-config": "^0.2.0",
+    "@skylar/prettier-config": "^0.1.0",
+    "@skylar/tailwind-config": "^0.1.0",
+    "@skylar/tsconfig": "^0.1.0",
     "@types/node": "^18.17.13",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
@@ -47,10 +47,10 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@acme/eslint-config/base",
-      "@acme/eslint-config/nextjs",
-      "@acme/eslint-config/react"
+      "@skylar/eslint-config/base",
+      "@skylar/eslint-config/nextjs",
+      "@skylar/eslint-config/react"
     ]
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@skylar/prettier-config"
 }

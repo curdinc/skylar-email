@@ -1,5 +1,5 @@
 {
-  "name": "@acme/tailwind-config",
+  "name": "@skylar/tailwind-config",
   "version": "0.1.0",
   "private": true,
   "main": "index.ts",
@@ -20,9 +20,9 @@
     "tailwindcss": "3.3.2"
   },
   "devDependencies": {
-    "@acme/eslint-config": "^0.2.0",
-    "@acme/prettier-config": "^0.1.0",
-    "@acme/tsconfig": "^0.1.0",
+    "@skylar/eslint-config": "^0.2.0",
+    "@skylar/prettier-config": "^0.1.0",
+    "@skylar/tsconfig": "^0.1.0",
     "eslint": "^8.48.0",
     "prettier": "^3.0.3",
     "typescript": "^5.2.2"
@@ -30,8 +30,8 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@acme/eslint-config/base"
+      "@skylar/eslint-config/base"
     ]
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@skylar/prettier-config"
 }
