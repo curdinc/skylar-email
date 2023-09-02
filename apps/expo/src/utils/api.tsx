@@ -1,8 +1,8 @@
+import React from "react";
+import Constants from "expo-constants";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
-import Constants from "expo-constants";
-import React from "react";
 import superjson from "superjson";
 
 import type { AppRouter } from "@skylar/api";

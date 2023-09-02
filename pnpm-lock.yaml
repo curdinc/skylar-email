@@ -238,11 +238,11 @@ importers:
         specifier: ^0.1.0
         version: link:../schema
       '@trpc/client':
-        specifier: ^10.38.0
-        version: 10.38.0(@trpc/server@10.38.0)
+        specifier: ^10.38.1
+        version: 10.38.1(@trpc/server@10.38.1)
       '@trpc/server':
-        specifier: ^10.38.0
-        version: 10.38.0
+        specifier: ^10.38.1
+        version: 10.38.1
       superjson:
         specifier: 1.13.1
         version: 1.13.1
@@ -3670,14 +3670,6 @@ packages:
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
     dev: false
 
-  /@trpc/client@10.38.0(@trpc/server@10.38.0):
-    resolution: {integrity: sha512-+uFQeyzVBoWDYt0Oyj+hLUJeBJjMyj/yxfm9s23EU+Y50YZVRSnB9dmAfI6jAAcehJubNLu2NH+jyEJrOen+aA==}
-    peerDependencies:
-      '@trpc/server': 10.38.0
-    dependencies:
-      '@trpc/server': 10.38.0
-    dev: false
-
   /@trpc/client@10.38.1(@trpc/server@10.38.1):
     resolution: {integrity: sha512-kY7ZV7Eco5SeFIGJX6OBg7AAKkiMt5+1N+GC7N1lTZszrw95ZiNgtkZ5TI6+Un4O+RqrOcqqast6MeExCoyZhQ==}
     peerDependencies:
@@ -3721,10 +3713,6 @@ packages:
       '@trpc/server': 10.38.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /@trpc/server@10.38.0:
-    resolution: {integrity: sha512-uMjWTMhqOPVmdiqPFOYwsdQ6Vzy8FtRcgM+ld3OrHsD88NiwZ1BWNIC6KwffjgrgLG/uKBFzNNKntLryv0NamQ==}
     dev: false
 
   /@trpc/server@10.38.1:
