@@ -19,8 +19,8 @@
     "typecheck": "turbo typecheck"
   },
   "dependencies": {
-    "@skylar/prettier-config": "^0.1.0",
     "@manypkg/cli": "^0.21.0",
+    "@skylar/prettier-config": "^0.1.0",
     "@turbo/gen": "^1.10.13",
     "prettier": "^3.0.3",
     "turbo": "^1.10.13",

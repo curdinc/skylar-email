@@ -8,11 +8,11 @@
  */
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { ZodError } from "zod";
 
 import type { Session } from "@skylar/auth";
 import { auth } from "@skylar/auth";
 import { db } from "@skylar/db";
+import { formatValidatorError } from "@skylar/schema";
 
 /**
  * 1. CONTEXT
@@ -75,8 +75,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
       ...shape,
       data: {
         ...shape.data,
-        zodError:
-          error.cause instanceof ZodError ? error.cause.flatten() : null,
+        parserError: formatValidatorError(error.cause),
       },
     };
   },
