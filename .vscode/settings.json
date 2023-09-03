@@ -18,5 +18,5 @@
   "[handlebars]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["valibot"]
+  "cSpell.words": ["Hono", "SUPABASE", "valibot"]
 }

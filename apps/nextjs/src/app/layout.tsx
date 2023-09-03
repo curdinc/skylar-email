@@ -6,6 +6,8 @@ import "~/styles/globals.css";
 import { headers } from "next/headers";
 import { AxiomWebVitals } from "next-axiom";
 
+import { AuthProvider } from "@skylar/auth";
+
 import { TRPCReactProvider } from "./providers";
 
 const fontSans = Inter({
@@ -14,10 +16,10 @@ const fontSans = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Create T3 Turbo",
+  title: "Skylar",
   description: "Simple monorepo with shared backend for web & mobile apps",
   openGraph: {
-    title: "Create T3 Turbo",
+    title: "Skylar",
     description: "Simple monorepo with shared backend for web & mobile apps",
     url: "https://create-t3-turbo.vercel.app",
     siteName: "Create T3 Turbo",
@@ -29,14 +31,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Layout(props: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <AxiomWebVitals />
       <body className={["font-sans", fontSans.variable].join(" ")}>
-        <TRPCReactProvider headers={headers()}>
-          {props.children}
-        </TRPCReactProvider>
+        <AuthProvider>
+          <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
+        </AuthProvider>
       </body>
     </html>
   );

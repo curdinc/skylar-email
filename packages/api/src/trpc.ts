@@ -10,7 +10,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 import type { Session } from "@skylar/auth";
-import { auth } from "@skylar/auth";
+import { getSession } from "@skylar/auth";
 import { db } from "@skylar/db";
 import { formatValidatorError } from "@skylar/schema";
 
@@ -24,7 +24,7 @@ import { formatValidatorError } from "@skylar/schema";
  *
  */
 interface CreateContextOptions {
-  session: Session | null;
+  session?: Session;
 }
 
 /**
@@ -50,9 +50,10 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  */
 export const createTRPCContext = async (opts: {
   req?: Request;
-  auth?: Session;
+  JWT_VERIFICATION_KEY?: string;
 }) => {
-  const session = opts.auth ?? (await auth());
+  const authHeader = opts.req?.headers.get("Authorization") ?? undefined;
+  const session = await getSession(authHeader, opts.JWT_VERIFICATION_KEY);
   const source = opts.req?.headers.get("x-trpc-source") ?? "unknown";
 
   console.log(">>> tRPC Request from", source, "by", session?.user);
