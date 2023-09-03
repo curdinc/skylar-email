@@ -9,8 +9,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
-import type { Session } from "@skylar/auth";
-import { auth } from "@skylar/auth";
 import { db } from "@skylar/db";
 import { formatValidatorError } from "@skylar/schema";
 
@@ -24,7 +22,7 @@ import { formatValidatorError } from "@skylar/schema";
  *
  */
 interface CreateContextOptions {
-  session: Session | null;
+  session: null;
 }
 
 /**
@@ -48,17 +46,9 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * process every request that goes through your tRPC endpoint
  * @link https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: {
-  req?: Request;
-  auth?: Session;
-}) => {
-  const session = opts.auth ?? (await auth());
-  const source = opts.req?.headers.get("x-trpc-source") ?? "unknown";
-
-  console.log(">>> tRPC Request from", source, "by", session?.user);
-
+export const createTRPCContext = () => {
   return createInnerTRPCContext({
-    session,
+    session: null,
   });
 };
 
