@@ -34,9 +34,6 @@ importers:
       '@skylar/api':
         specifier: ^0.1.0
         version: link:../../packages/api
-      '@skylar/auth':
-        specifier: ^0.1.0
-        version: link:../../packages/auth
       hono:
         specifier: ^3.5.6
         version: 3.5.6
@@ -335,6 +332,9 @@ importers:
 
   packages/api:
     dependencies:
+      '@skylar/auth':
+        specifier: ^0.1.0
+        version: link:../auth
       '@skylar/db':
         specifier: ^0.1.0
         version: link:../db
