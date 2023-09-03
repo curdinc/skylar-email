@@ -5,26 +5,26 @@ import type { User } from "../types/user";
 
 export async function getSession(
   authHeader?: string,
-  JWT_VERIFICATION_KEY?: string,
+  JWT_SECRET?: string,
 ): Promise<Session | undefined> {
-  const user = await getUser(authHeader, JWT_VERIFICATION_KEY);
+  const user = await getUser(authHeader, JWT_SECRET);
   return { user };
 }
 
 async function getUser(
   authHeader?: string,
-  JWT_VERIFICATION_KEY?: string,
+  JWT_SECRET?: string,
 ): Promise<User | undefined> {
   const sessionToken = authHeader?.split(" ")[1];
 
   if (sessionToken) {
-    if (!JWT_VERIFICATION_KEY) {
-      console.error("JWT_VERIFICATION_KEY is not set");
+    if (!JWT_SECRET) {
+      console.error("JWT_SECRET is not set");
       return;
     }
 
     try {
-      const authorized = await jwt.verify(sessionToken, JWT_VERIFICATION_KEY, {
+      const authorized = await jwt.verify(sessionToken, JWT_SECRET, {
         algorithm: "HS256",
       });
       if (!authorized) {
