@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@skylar/auth": "^0.1.0",
     "@skylar/db": "^0.1.0",
     "@skylar/schema": "^0.1.0",
     "@trpc/client": "^10.38.1",

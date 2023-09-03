@@ -1,13 +1,10 @@
 "use client";
 
-import { useLogger } from "@skylar/logger";
+import { api } from "~/lib/utils/api";
 
 export const runtime = "edge";
 
 export default function HomePage() {
-  const logger = useLogger();
-  logger.debug("Hello from the home page!");
-  logger.info("test");
 
   return (
     <main className="flex h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
