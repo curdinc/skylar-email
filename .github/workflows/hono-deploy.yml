@@ -36,7 +36,7 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           workingDirectory: .
-          command: deploy ./app/backend/src/index.ts
+          command: deploy ./apps/backend/src/index.ts
           secrets: |
             APP_URL
         env:
