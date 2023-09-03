@@ -14,8 +14,7 @@ export const env = createEnv({
    * built with invalid env vars.
    */
   server: {
-    DATABASE_URL: z.string().url(),
-    SUPABASE_JWT_SECRET: z.string(),
+
   },
   /**
    * Specify your client-side environment variables schema here.
@@ -31,8 +30,7 @@ export const env = createEnv({
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
     VERCEL_URL: process.env.VERCEL_URL,
     PORT: process.env.PORT,
-    DATABASE_URL: process.env.DATABASE_URL,
-    SUPABASE_JWT_SECRET: process.env.SUPABASE_JWT_SECRET,
+
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation:

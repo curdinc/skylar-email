@@ -50,10 +50,10 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  */
 export const createTRPCContext = async (opts: {
   req?: Request;
-  JWT_VERIFICATION_KEY?: string;
+  JWT_SECRET?: string;
 }) => {
   const authHeader = opts.req?.headers.get("Authorization") ?? undefined;
-  const session = await getSession(authHeader, opts.JWT_VERIFICATION_KEY);
+  const session = await getSession(authHeader, opts.JWT_SECRET);
   const source = opts.req?.headers.get("x-trpc-source") ?? "unknown";
 
   console.log(">>> tRPC Request from", source, "by", session?.user);
