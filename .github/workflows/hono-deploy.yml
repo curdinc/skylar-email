@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - "apps/backend"
-      - "packages/api"
+      - "packages/*"
 
 jobs:
   deploy:
@@ -28,42 +28,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Set-up pnpm
-        uses: pnpm/action-setup@v2.2.4
-        with:
-          run_install: false
-
-      - name: Expose pnpm config(s) through "$GITHUB_OUTPUT"
-        id: pnpm-config
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      - name: Cache rotation keys
-        id: cache-rotation
-        shell: bash
-        run: |
-          echo "YEAR_MONTH=$(/bin/date -u "+%Y%m")" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-config.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-cache-${{ steps.cache-rotation.outputs.YEAR_MONTH }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-cache-${{ steps.cache-rotation.outputs.YEAR_MONTH }}-
-
-      # Prevent store to grow over time (not needed with yarn)
-      # Note: not perfect as it prune too much in monorepos so the idea
-      #       is to use cache-rotation as above. In the future this might work better.
-      #- name: Prune pnpm store
-      #  shell: bash
-      #  run: pnpm prune store
-
-      - name: Install dependencies
-        shell: bash
-        working-directory: ./
-        run: pnpm install --frozen-lockfile --prefer-offline
+      - name: 📥 Install Dependencies
+        uses: ./.github/actions/pnpm-install
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3.1.0
