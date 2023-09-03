@@ -34,7 +34,7 @@ const handler = async (req: NextRequest) => {
     createContext: () =>
       createTRPCContext({
         req,
-        JWT_VERIFICATION_KEY: env.SUPABASE_JWT_SECRET,
+        JWT_SECRET: env.SUPABASE_JWT_SECRET,
       }),
     onError({ error, path }) {
       console.error(`>>> tRPC Error on '${path}'`, error);

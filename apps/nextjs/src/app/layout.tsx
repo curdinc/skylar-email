@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 
 import "~/styles/globals.css";
 
@@ -14,6 +14,10 @@ import { TRPCReactProvider } from "./providers";
 const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+const fontHeading = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-heading",
 });
 
 export const metadata = {
@@ -66,8 +70,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <head />
       <body
         className={cn(
-          "bg-background min-h-screen font-sans antialiased",
+          "bg-background min-h-screen scroll-smooth font-sans antialiased",
           fontSans.variable,
+          fontHeading.variable,
         )}
       >
         <AxiomWebVitals />
