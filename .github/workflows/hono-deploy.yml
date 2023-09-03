@@ -61,10 +61,9 @@ jobs:
       #  run: pnpm prune store
 
       - name: Install dependencies
-        run: pnpm install
-
-      - name: Build backend
-        run: pnpm run build --filter backend
+        shell: bash
+        working-directory: ./
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3.1.0
