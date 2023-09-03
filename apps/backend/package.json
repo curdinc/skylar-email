@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "cross-env wrangler dev src/index.ts",
+    "build": "cross-env wrangler deploy src/index.ts --dry-run --outdir dist",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
