@@ -1,0 +1,8 @@
+node_modules
+dist
+.wrangler
+.dev.vars
+wrangler.toml
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

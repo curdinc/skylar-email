@@ -1,33 +1,29 @@
 {
-  "name": "@skylar/api",
-  "version": "0.1.0",
+  "name": "@skylar/backend",
   "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
-  "license": "MIT",
+  "version": "0.1.0",
   "scripts": {
+    "dev": "cross-env wrangler dev src/index.ts",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@skylar/db": "^0.1.0",
-    "@skylar/schema": "^0.1.0",
-    "@trpc/client": "^10.38.1",
-    "@trpc/server": "^10.38.1",
-    "superjson": "1.13.1"
+    "@hono/trpc-server": "^0.1.0",
+    "@skylar/api": "^0.1.0",
+    "hono": "^3.5.6"
   },
   "devDependencies": {
-    "@skylar/eslint-config": "^0.2.0",
+    "@cloudflare/workers-types": "^4.20230821.0",
+    "@skylar/eslint-config": "0.2.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
     "eslint": "^8.48.0",
-    "prettier": "^3.0.3",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "wrangler": "^3.6.0"
   },
   "eslintConfig": {
-    "root": true,
     "extends": [
       "@skylar/eslint-config/base"
     ]
