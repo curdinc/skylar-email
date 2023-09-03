@@ -72,7 +72,8 @@ jobs:
           wranglerVersion: "3.6.0"
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          command: deploy apps/backend/dist/index.js --no-bundle
+          workingDirectory: "apps/backend"
+          command: deploy src/index.ts --minify
           # secrets: |
           #   APP_URL
         env:
