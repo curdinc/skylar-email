@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "cross-env wrangler dev src/index.ts",
-    "build": "cross-env wrangler deploy src/index.ts --dry-run --outdir dist",
-    "clean": "rm -rf .turbo node_modules",
+    "dev": "wrangler dev src/index.ts",
+    "build": "wrangler deploy src/index.ts --dry-run --outdir dist",
+    "clean": "rm -rf .turbo dist node_modules",
     "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
     "typecheck": "tsc --noEmit"

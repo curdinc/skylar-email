@@ -12,48 +12,50 @@ export function useUser(): User | undefined {
   return user ?? undefined;
 }
 
-export function useSignInWithGithub({
-  onError,
-  onSuccess,
-}: {
-  onError?: (error: Error) => void;
-  onSuccess?: () => void;
-}) {
+export function useSignOut() {
   const client = useSupabaseClient();
   return async () => {
-    const result = await client.auth.signInWithOAuth({
-      provider: "github",
-      options: {
-        scopes: "read:user user:email",
-      },
-    });
-    if (result.error) {
-      return onError?.(result.error);
-    }
-    console.log("result.data", result.data);
-    onSuccess?.();
+    await client.auth.signOut();
   };
 }
 
-export function useSignInWithDiscord({
-  onError,
-  onSuccess,
-}: {
-  onSuccess?: () => void;
-  onError?: (error: Error) => void;
-}) {
+interface OauthArgs {
+  redirectTo?: string;
+  scopes?: string;
+}
+
+interface SignInWithOauthArgs {
+  oauthArgs?: OauthArgs;
+}
+
+export function useSignInWithGithub(args?: SignInWithOauthArgs) {
   const client = useSupabaseClient();
   return async () => {
-    const result = await client.auth.signInWithOAuth({
-      provider: "discord",
+    await client.auth.signInWithOAuth({
+      provider: "github",
       options: {
-        scopes: "read:user user:email",
+        ...args?.oauthArgs,
       },
     });
-    if (result.error) {
-      return onError?.(result.error);
-    }
-    console.log("result.data", result.data);
-    onSuccess?.();
+  };
+}
+
+export function useSignInWithDiscord(args?: SignInWithOauthArgs) {
+  const client = useSupabaseClient();
+  return async () => {
+    await client.auth.signInWithOAuth({
+      provider: "discord",
+      options: { ...args?.oauthArgs },
+    });
+  };
+}
+
+export function useSignInWithFacebook(args?: SignInWithOauthArgs) {
+  const client = useSupabaseClient();
+  return async () => {
+    await client.auth.signInWithOAuth({
+      provider: "facebook",
+      options: { ...args?.oauthArgs },
+    });
   };
 }
