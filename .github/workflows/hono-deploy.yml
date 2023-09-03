@@ -33,11 +33,13 @@ jobs:
       - name: Deploy
         uses: cloudflare/wrangler-action@v3.1.0
         with:
+          wranglerVersion: "3.6.0"
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           workingDirectory: .
           command: deploy ./apps/backend/src/index.ts
-          secrets: APP_URL
+          secrets: |
+            APP_URL
         env:
           APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
           CI: true
