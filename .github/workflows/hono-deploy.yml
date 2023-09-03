@@ -61,9 +61,7 @@ jobs:
       #  run: pnpm prune store
 
       - name: Install dependencies
-        shell: bash
-        working-directory: ./
-        run: pnpm install --frozen-lockfile --prefer-offline
+        run: pnpm install
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3.1.0
@@ -71,8 +69,7 @@ jobs:
           wranglerVersion: "3.6.0"
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          workingDirectory: ./
-          command: deploy ./apps/backend/src/index.ts
+          command: wrangler deploy apps/backend/src/index.ts
           # secrets: |
           #   APP_URL
         env:
