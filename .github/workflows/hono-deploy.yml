@@ -26,24 +26,17 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - name: 📥 Monorepo install
         uses: ./.github/actions/pnpm-install
-
-      - name: Migrate database
-        run: pnpm --filter @t4/api migrate
-        env:
-          NO_D1_WARNING: true
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-
       - name: Deploy
         uses: cloudflare/wrangler-action@v3.1.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          workingDirectory: apps/backend
-          command: deploy src/index.ts
+          workingDirectory: .
+          command: deploy ./app/backend/src/index.ts
           secrets: |
             APP_URL
         env:
