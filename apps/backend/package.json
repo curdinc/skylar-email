@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "cross-env wrangler dev src/index.ts",
-    "build": "wrangler deploy src/index.ts --dry-run --outdir dist",
+    "build": "tsup ./src/index.ts",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
@@ -21,6 +21,7 @@
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
     "eslint": "^8.48.0",
+    "tsup": "^7.2.0",
     "typescript": "^5.2.2",
     "wrangler": "^3.6.0"
   },
