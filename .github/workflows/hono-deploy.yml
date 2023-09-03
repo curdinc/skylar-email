@@ -69,7 +69,7 @@ jobs:
           wranglerVersion: "3.6.0"
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          command: deploy apps/backend/src/index.ts
+          command: deploy apps/backend/src/index.ts --minify --tsconfig apps/backend/tsconfig.json
           # secrets: |
           #   APP_URL
         env:
