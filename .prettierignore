@@ -1,1 +1,5 @@
 *.hbs
+.next
+node_modules
+.turbo
+migrations

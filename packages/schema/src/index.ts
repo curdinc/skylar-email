@@ -1,9 +1,18 @@
 import type { BaseSchema } from "valibot";
 import { flatten, object, parse, string, ValiError } from "valibot";
 
-export function validatorTrpcWrapper<T extends BaseSchema<any, any>>(
-  schema: T,
-) {
+export {
+  authCodeSchema,
+  gmailProviderIDTokenSchema,
+  oauth2TokenResponseSchema,
+  providerEnumList,
+} from "./emailProvider";
+
+export function validatorTrpcWrapper<
+  TInput,
+  TOutput,
+  T extends BaseSchema<TInput, TOutput>,
+>(schema: T) {
   return (raw: unknown) => {
     return parse(schema, raw);
   };

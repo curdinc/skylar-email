@@ -10,10 +10,10 @@ import { cn } from "~/lib/utils/ui";
 import { Icons } from "../icons";
 import { MobileNav } from "./mobile-nav";
 
-interface MainNavProps {
+type MainNavProps = {
   items?: (typeof marketingConfig)["mainNav"];
   children?: React.ReactNode;
-}
+};
 
 export function MainNav({ items, children }: MainNavProps) {
   const segment = useSelectedLayoutSegment();

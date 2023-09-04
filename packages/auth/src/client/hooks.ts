@@ -19,14 +19,14 @@ export function useSignOut() {
   };
 }
 
-interface OauthArgs {
+type OauthArgs = {
   redirectTo?: string;
   scopes?: string;
-}
+};
 
-interface SignInWithOauthArgs {
+type SignInWithOauthArgs = {
   oauthArgs?: OauthArgs;
-}
+};
 
 export function useSignInWithGithub(args?: SignInWithOauthArgs) {
   const client = useSupabaseClient();

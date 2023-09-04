@@ -11,7 +11,6 @@ export async function getSession(
   return { user };
 }
 
-
 export async function getUser(
   authHeader?: string,
   JWT_SECRET?: string,
