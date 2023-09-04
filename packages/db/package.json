@@ -11,7 +11,7 @@
     "migrate": "drizzle-kit generate:pg && tsx migrate.ts",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
-    "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
+    "format": "prettier --check \"**/*.{mjs,ts,md,json}\" --ignore-path ../../.prettierignore",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
