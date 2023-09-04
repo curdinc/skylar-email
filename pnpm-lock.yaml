@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -183,6 +187,9 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.0.2
         version: 1.0.2(@types/react@18.2.21)(react@18.2.0)
+      '@react-oauth/google':
+        specifier: ^0.11.1
+        version: 0.11.1(react-dom@18.2.0)(react@18.2.0)
       '@skylar/auth':
         specifier: ^0.1.0
         version: link:../../packages/auth
@@ -310,6 +317,9 @@ importers:
       '@trpc/server':
         specifier: ^10.38.1
         version: 10.38.1
+      '@tsndr/cloudflare-worker-jwt':
+        specifier: ^2.2.2
+        version: 2.2.2
       superjson:
         specifier: 1.13.1
         version: 1.13.1
@@ -393,6 +403,9 @@ importers:
       '@neondatabase/serverless':
         specifier: ^0.6.0
         version: 0.6.0
+      '@skylar/schema':
+        specifier: ^0.1.0
+        version: link:../schema
       drizzle-orm:
         specifier: ^0.28.5
         version: 0.28.5(@neondatabase/serverless@0.6.0)(postgres@3.3.5)
@@ -3925,6 +3938,16 @@ packages:
     resolution: {integrity: sha512-CEge+ZLhb1HBrSvv4RwOol7EKLW1QoqVIQlE9TN5MpxS/+VoQvP+cLbuz0Op53/iJfYhtXRFd1ZAd3RTRqto9w==}
     dependencies:
       nanoid: 3.3.6
+    dev: false
+
+  /@react-oauth/google@0.11.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-tywZisXbsdaRBVbEu0VX6dRbOSL2I6DgY97woq5NMOOOz+xtDsm418vqq+Vx10KMtra3kdHMRMf0hXLWrk2RMg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@segment/loosely-validate-event@2.0.0:
@@ -12838,7 +12861,3 @@ packages:
 
   /zod@3.22.2:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
