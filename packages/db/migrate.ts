@@ -9,7 +9,7 @@ dotenv.config({
 });
 
 const databaseUrl = drizzle(
-  postgres(`${process.env.DATABASE_URL}`, { ssl: "require", max: 1 }),
+  postgres(`${"process.env.DATABASE_URL"}`, { ssl: "require", max: 1 }),
 );
 
 const main = async () => {
