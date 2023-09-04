@@ -23,8 +23,6 @@ export default function ConnectEmailOnboardingForm() {
     "Gmail",
   );
 
-  const connectToGmail = () => {};
-
   return (
     <Card>
       <CardHeader>
