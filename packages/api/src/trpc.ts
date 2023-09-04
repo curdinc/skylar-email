@@ -25,7 +25,7 @@ import { formatValidatorError } from "@skylar/schema";
  */
 type CreateContextOptions = {
   session?: Session;
-}
+};
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use

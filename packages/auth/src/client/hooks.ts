@@ -22,11 +22,11 @@ export function useSignOut() {
 type OauthArgs = {
   redirectTo?: string;
   scopes?: string;
-}
+};
 
 type SignInWithOauthArgs = {
   oauthArgs?: OauthArgs;
-}
+};
 
 export function useSignInWithGithub(args?: SignInWithOauthArgs) {
   const client = useSupabaseClient();
