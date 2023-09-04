@@ -1,11 +1,74 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "bffb51ad-a793-4e50-af81-1d24b0604a87",
+  "id": "812b4242-e7bc-4ca0-8cf8-edfa85fbda6e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "products": {
-      "name": "products",
+    "providerAuthDetails": {
+      "name": "providerAuthDetails",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refreshToken": {
+          "name": "refreshToken",
+          "type": "varchar(512)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "providers": {
+          "name": "providers",
+          "type": "providers",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(800)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "providerAuthDetails_user_id_users_id_fk": {
+          "name": "providerAuthDetails_user_id_users_id_fk",
+          "tableFrom": "providerAuthDetails",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "providerAuthDetails_user_id_providers_email": {
+          "name": "providerAuthDetails_user_id_providers_email",
+          "columns": [
+            "user_id",
+            "providers",
+            "email"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "users": {
+      "name": "users",
       "schema": "",
       "columns": {
         "id": {
@@ -14,23 +77,11 @@
           "primaryKey": true,
           "notNull": true
         },
-        "name": {
-          "name": "name",
-          "type": "text",
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "price": {
-          "name": "price",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -39,7 +90,15 @@
       "uniqueConstraints": {}
     }
   },
-  "enums": {},
+  "enums": {
+    "providers": {
+      "name": "providers",
+      "values": {
+        "gmail": "gmail",
+        "outlook": "outlook"
+      }
+    }
+  },
   "schemas": {},
   "_meta": {
     "schemas": {},
