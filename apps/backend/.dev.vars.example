@@ -1,2 +1,3 @@
 APP_URL=http://localhost:3000
 SUPABASE_JWT_SECRET=""
+DATABASE_URL="postgres://full_url?sslmode=require"
