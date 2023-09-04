@@ -1,9 +1,11 @@
 import type { BaseSchema } from "valibot";
 import { flatten, object, parse, string, ValiError } from "valibot";
 
-export function validatorTrpcWrapper<T extends BaseSchema<any, any>>(
-  schema: T,
-) {
+export function validatorTrpcWrapper<
+  TInput,
+  TOutput,
+  T extends BaseSchema<TInput, TOutput>,
+>(schema: T) {
   return (raw: unknown) => {
     return parse(schema, raw);
   };
