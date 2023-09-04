@@ -1,7 +1,7 @@
 "use client";
 
-import { useGoogleLogin } from "@react-oauth/google";
 import { useEffect, useState } from "react";
+import { useGoogleLogin } from "@react-oauth/google";
 
 import { Button } from "~/components/ui/button";
 import { api } from "~/lib/utils/api";
@@ -34,10 +34,12 @@ function Providers() {
 
   useEffect(() => {
     if (authCode !== "") {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       getToken({ code: authCode, provider: "gmail" }).then((val) =>
         console.log(val),
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authCode]);
 
   return (
