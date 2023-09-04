@@ -13,7 +13,5 @@ export const schema = { ...providerAuthDetails, ...users };
 
 neonConfig.fetchConnectionCache = true;
 
-const sql = neon(
-  "postgres://curdcorp:Tfr9O3AIlcKt@ep-broken-bonus-09091505.us-west-2.aws.neon.tech/neondb?sslmode=require",
-); //process.env.DATABASE_URL!);
+const sql = neon("process.env.DATABASE_URL");
 export const db = drizzle(sql, { schema });
