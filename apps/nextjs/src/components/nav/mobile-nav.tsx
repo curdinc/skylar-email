@@ -1,14 +1,14 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import type { marketingNavConfig } from "~/lib/utils/config";
+import type { marketingConfig } from "~/lib/utils/config";
 import { siteConfig } from "~/lib/utils/config";
 import { cn } from "~/lib/utils/ui";
 import { Icons } from "../icons";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "../ui/sheet";
 
 type MobileNavProps = {
-  items?: (typeof marketingNavConfig)["mainNav"];
+  items?: (typeof marketingConfig)["mainNav"];
   children?: React.ReactNode;
 };
 
