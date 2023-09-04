@@ -5,7 +5,7 @@ import React from "react";
 import { useSignInWithDiscord, useSignInWithGithub } from "@skylar/auth";
 import { useSignInWithFacebook } from "@skylar/auth/src/client/hooks";
 
-import { Icons } from "~/components/icons";
+import { BrandIcons } from "~/components/icons/brand-icons";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils/ui";
 
@@ -29,7 +29,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       <Button
         variant="outline"
         isLoading={loadingOauth}
-        leftIcon={<Icons.gitHub className="mr-2 h-4 w-4" />}
+        leftIcon={<BrandIcons.gitHub className="mr-2 h-4 w-4" />}
         onClick={onClickOauthLogin(signInWithGithub)}
       >
         Github
@@ -37,7 +37,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       <Button
         variant="outline"
         isLoading={loadingOauth}
-        leftIcon={<Icons.discord className="mr-2 h-4 w-4" />}
+        leftIcon={<BrandIcons.discord className="mr-2 h-4 w-4" />}
         onClick={onClickOauthLogin(signInWithDiscord)}
       >
         Discord
@@ -45,7 +45,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       <Button
         variant="outline"
         isLoading={loadingOauth}
-        leftIcon={<Icons.facebook className="mr-2 h-4 w-4" />}
+        leftIcon={<BrandIcons.facebook className="mr-2 h-4 w-4" />}
         onClick={onClickOauthLogin(signInWithFacebook)}
       >
         Facebook

@@ -1,9 +1,4 @@
 import {
-  SiDiscord,
-  SiFacebook,
-  SiGithub,
-} from "@icons-pack/react-simple-icons";
-import {
   AlertTriangle,
   ArrowRight,
   Check,
@@ -24,7 +19,6 @@ import {
   Settings,
   SunMedium,
   Trash,
-  Twitter,
   User,
   X,
 } from "lucide-react";
@@ -51,9 +45,5 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
-  discord: SiDiscord,
-  gitHub: SiGithub,
-  facebook: SiFacebook,
-  twitter: Twitter,
   check: Check,
 };
