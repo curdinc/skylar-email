@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function AuthenticationPage() {
   return (
     <div className="container flex min-h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-      <div className="bg-muted relative hidden h-full flex-col p-10 text-white dark:border-r lg:flex">
+      <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center gap-2 text-lg font-medium">
           <Icons.logo />
@@ -36,23 +36,23 @@ export default function AuthenticationPage() {
             <h1 className="text-2xl font-semibold tracking-tight">
               Login to Continue
             </h1>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               Select your favorite provider to get started.
             </p>
           </div>
           <UserAuthForm />
-          <p className="text-muted-foreground px-8 text-center text-sm">
+          <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{" "}
             <Link
               href="#"
-              className="hover:text-primary underline underline-offset-4"
+              className="underline underline-offset-4 hover:text-primary"
             >
               Terms of Service
             </Link>{" "}
             and{" "}
             <Link
               href="#"
-              className="hover:text-primary underline underline-offset-4"
+              className="underline underline-offset-4 hover:text-primary"
             >
               Privacy Policy
             </Link>
