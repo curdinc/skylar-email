@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -251,6 +247,9 @@ importers:
         specifier: ^3.22.2
         version: 3.22.2
     devDependencies:
+      '@skylar/api':
+        specifier: ^0.1.0
+        version: link:../../packages/api
       '@skylar/eslint-config':
         specifier: ^0.2.0
         version: link:../../tooling/eslint
@@ -12839,3 +12838,7 @@ packages:
 
   /zod@3.22.2:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

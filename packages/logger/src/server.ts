@@ -1,5 +1,6 @@
 import { Logger as AxiomLogger } from "next-axiom/dist/logger";
 
+import { axiomLoggerToLogger } from "./shared";
 import type { Logger } from "./types";
 
 export function getServerLogger(

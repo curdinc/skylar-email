@@ -7,10 +7,10 @@ import { cn } from "~/lib/utils/ui";
 import { Icons } from "../icons";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "../ui/sheet";
 
-interface MobileNavProps {
+type MobileNavProps = {
   items?: (typeof marketingConfig)["mainNav"];
   children?: React.ReactNode;
-}
+};
 
 export function MobileNav({ items, children }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false);

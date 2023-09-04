@@ -3,6 +3,9 @@
   "compilerOptions": {
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
+  "parserOptions": {
+    "extraFileExtensions": [".md"]
+  },
   "include": ["."],
   "exclude": ["node_modules"]
 }

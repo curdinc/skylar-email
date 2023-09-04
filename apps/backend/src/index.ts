@@ -5,7 +5,6 @@ import { cors } from "hono/cors";
 
 import { appRouter, createTRPCContext } from "@skylar/api";
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type Bindings = {
   APP_URL: string;
   SUPABASE_JWT_SECRET: string;
