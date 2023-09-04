@@ -7,7 +7,7 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { api } from "~/lib/utils/api";
 
 export function TRPCReactProvider(props: {

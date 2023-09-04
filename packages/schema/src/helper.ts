@@ -1,6 +1,13 @@
 import type { BaseSchema } from "valibot";
 import { flatten, ValiError, parse as valiParse } from "valibot";
 
+export {
+  authCodeSchema,
+  gmailProviderIDTokenSchema,
+  oauth2TokenResponseSchema,
+  providerEnumList,
+} from "./emailProvider";
+
 export function validatorTrpcWrapper<
   TInput,
   TOutput,

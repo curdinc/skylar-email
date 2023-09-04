@@ -7,7 +7,7 @@ import { AxiomWebVitals } from "next-axiom";
 
 import { NextAuthProvider } from "@skylar/auth";
 
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { siteConfig } from "~/lib/utils/config";
 import { cn } from "~/lib/utils/ui";
 import { TRPCReactProvider } from "./providers";

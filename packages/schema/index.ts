@@ -1,4 +1,12 @@
-export * from "./src/backend/env";
+export { BackendEnvSchema, type BackendEnvType } from "./src/backend/env";
 export { createEnv } from "./src/createEnv";
-export * from "./src/helper";
-export * from "./src/nextjs/env";
+export {
+  formatValidatorError,
+  parse,
+  validatorTrpcWrapper,
+} from "./src/helper";
+export {
+  ClientEnvSchemaObject,
+  ServerEnvSchemaObject,
+  SharedEnvSchemaObject,
+} from "./src/nextjs/env";
