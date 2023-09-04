@@ -1,17 +1,19 @@
 import { Axiom } from "@axiomhq/js";
-import type { LogEvent, LoggerConfig } from "next-axiom/dist/logger";
-import { LogLevel } from "next-axiom/dist/logger";
 
 import type { Logger } from "./types";
 
 export function getServerLogger({
   token,
   dataset,
+  url,
+  orgId,
   req,
   meta,
 }: {
   token: string;
   dataset: string;
+  url: string;
+  orgId: string;
   req: Request;
   meta?: Record<string, unknown>;
 }): Logger {
@@ -26,6 +28,8 @@ export function getServerLogger({
   const logger = new AxiomLogger({
     token,
     dataset,
+    orgId,
+    url,
     config: {
       req: report,
       source: "server",
@@ -36,55 +40,86 @@ export function getServerLogger({
   return logger;
 }
 
+enum AxiomLogLevel {
+  debug = 0,
+  info = 1,
+  warn = 2,
+  error = 3,
+  off = 100,
+}
+export type LogEvent = {
+  level: string;
+  message: string;
+  fields: Record<string, unknown>;
+  _time: string;
+};
+
+export type LoggerConfig = {
+  args?: Record<string, unknown>;
+  logLevel?: AxiomLogLevel;
+  autoFlush?: boolean;
+  source?: string;
+  req?: unknown;
+};
+
 class AxiomLogger {
   private config;
   private axiom;
   private dataset;
   private token;
+  private url;
+  private orgId;
   constructor({
     token,
     dataset,
+    orgId,
+    url,
     config,
   }: {
     token: string;
     dataset: string;
+    url: string;
+    orgId: string;
     config: LoggerConfig;
   }) {
     this.config = config;
     this.dataset = dataset;
     this.token = token;
+    this.url = url;
+    this.orgId = orgId;
     this.axiom = new Axiom({
       token,
+      orgId,
+      url,
     });
   }
 
   debug = (message: string, args: Record<string, unknown> = {}) => {
-    this._log(LogLevel.debug, message, args);
+    this._log(AxiomLogLevel.debug, message, args);
   };
   info = (message: string, args: Record<string, unknown> = {}) => {
-    this._log(LogLevel.info, message, args);
+    this._log(AxiomLogLevel.info, message, args);
   };
   warn = (message: string, args: Record<string, unknown> = {}) => {
-    this._log(LogLevel.warn, message, args);
+    this._log(AxiomLogLevel.warn, message, args);
   };
   error = (message: string, args: Record<string, unknown> = {}) => {
-    this._log(LogLevel.error, message, args);
+    this._log(AxiomLogLevel.error, message, args);
   };
 
   _log = (
-    level: LogLevel,
+    level: AxiomLogLevel,
     message: string,
     args: Record<string, unknown> = {},
   ) => {
     const logEvent: LogEvent = {
-      level: LogLevel[level].toString(),
+      level: AxiomLogLevel[level].toString(),
       message,
       _time: new Date(Date.now()).toISOString(),
       fields: this.config.args ?? {},
     };
     // check if passed args is an object, if its not an object, add it to fields.args
     if (args instanceof Error) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       logEvent.fields = {
         ...logEvent.fields,
         message: args.message,
@@ -113,10 +148,10 @@ class AxiomLogger {
           return value;
         }),
       );
+
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       logEvent.fields = { ...logEvent.fields, ...parsedArgs };
     } else if (args?.length) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       logEvent.fields = { ...logEvent.fields, args: args };
     }
     this.axiom.ingest(this.dataset, logEvent);
@@ -133,6 +168,8 @@ class AxiomLogger {
       config: config,
       token: this.token,
       dataset: this.dataset,
+      orgId: this.orgId,
+      url: this.url,
     });
   };
 }

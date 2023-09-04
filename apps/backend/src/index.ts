@@ -6,7 +6,8 @@ import { cors } from "hono/cors";
 import { appRouter, createTRPCContext } from "@skylar/api";
 import { getDb } from "@skylar/db";
 import { getServerLogger } from "@skylar/logger";
-import { BackendEnvSchema, parse } from "@skylar/schema";
+import type { BackendEnvType } from "@skylar/schema";
+import { BackendEnvSchema, formatValidatorError, parse } from "@skylar/schema";
 
 type Bindings = {
   APP_URL: string;
@@ -16,7 +17,13 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.use("/trpc/*", async (c, next) => {
-  const envVars = parse(BackendEnvSchema, env(c));
+  let envVars: BackendEnvType;
+  try {
+    envVars = parse(BackendEnvSchema, env(c));
+  } catch (e) {
+    console.log(JSON.stringify(formatValidatorError(e), null, 2));
+    throw e;
+  }
 
   return await cors({
     origin: [envVars.APP_URL],
@@ -34,15 +41,24 @@ app.options("/trpc/*", (c) => {
 });
 
 app.use("/trpc/*", async (c, next) => {
-  const envVars = parse(BackendEnvSchema, env(c));
+  let envVars: BackendEnvType;
+  try {
+    envVars = parse(BackendEnvSchema, env(c));
+  } catch (e) {
+    console.log(JSON.stringify(formatValidatorError(e), null, 2));
+    throw e;
+  }
+
   const db = getDb(envVars.DATABASE_URL);
   const logger = getServerLogger({
     req: c.req.raw,
     token: envVars.AXIOM_TOKEN,
     dataset: envVars.AXIOM_DATASET,
+    orgId: envVars.AXIOM_ORG_ID,
+    url: envVars.AXIOM_URL,
   });
 
-  await trpcServer({
+  const response = await trpcServer({
     router: appRouter,
     endpoint: "/trpc",
     onError({ error, path }) {
@@ -58,6 +74,7 @@ app.use("/trpc/*", async (c, next) => {
   })(c, next);
 
   await logger.flush();
+  return response;
 });
 
 export default app;
