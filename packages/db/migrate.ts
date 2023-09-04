@@ -13,13 +13,15 @@ const databaseUrl = drizzle(
 );
 
 const main = async () => {
-  try {
-    await migrate(databaseUrl, { migrationsFolder: "migrations" });
-    console.log("Migration complete");
-  } catch (error) {
-    console.log(error);
-  }
-  process.exit(0);
+  return migrate(databaseUrl, { migrationsFolder: "migrations" });
 };
 
-main();
+main()
+  .then(() => {
+    console.log("Migration complete");
+    process.exit(0);
+  })
+  .catch((e) => {
+    console.log(e);
+    process.exit(1);
+  });

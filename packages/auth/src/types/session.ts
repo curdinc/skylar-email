@@ -1,5 +1,5 @@
 import type { User } from "./user";
 
-export interface Session {
+export type Session = {
   user?: User;
 }

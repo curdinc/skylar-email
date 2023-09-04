@@ -19,12 +19,12 @@ export function useSignOut() {
   };
 }
 
-interface OauthArgs {
+type OauthArgs = {
   redirectTo?: string;
   scopes?: string;
 }
 
-interface SignInWithOauthArgs {
+type SignInWithOauthArgs = {
   oauthArgs?: OauthArgs;
 }
 

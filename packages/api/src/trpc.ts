@@ -23,7 +23,7 @@ import { formatValidatorError } from "@skylar/schema";
  * processing a request
  *
  */
-interface CreateContextOptions {
+type CreateContextOptions = {
   session?: Session;
 }
 
