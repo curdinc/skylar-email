@@ -1,16 +1,15 @@
 import { neon, neonConfig } from "@neondatabase/serverless";
-import * as dotenv from "dotenv";
 import { drizzle } from "drizzle-orm/neon-http";
 
 import * as example from "./schema/example";
 
-dotenv.config({
-  path: "../../.env",
-});
-
 export const schema = { ...example };
 
-neonConfig.fetchConnectionCache = true;
+export function getDb(dbConnectionString: string) {
+  neonConfig.fetchConnectionCache = true;
+  const sql = neon(dbConnectionString);
+  const db = drizzle(sql, { schema });
+  return db;
+}
 
-const sql = neon(process.env.DATABASE_URL!);
-export const db = drizzle(sql, { schema });
+export type Db = ReturnType<typeof getDb>;

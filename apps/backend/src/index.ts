@@ -4,17 +4,22 @@ import { env } from "hono/adapter";
 import { cors } from "hono/cors";
 
 import { appRouter, createTRPCContext } from "@skylar/api";
+import { getDb } from "@skylar/db";
+import { getServerLogger } from "@skylar/logger";
+import { BackendEnvSchema, parse } from "@skylar/schema";
 
 type Bindings = {
   APP_URL: string;
-  SUPABASE_JWT_SECRET: string;
+  JWT_SECRET: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
 
 app.use("/trpc/*", async (c, next) => {
+  const envVars = parse(BackendEnvSchema, env(c));
+
   return await cors({
-    origin: [c.env.APP_URL],
+    origin: [envVars.APP_URL],
     allowMethods: ["POST", "GET", "OPTIONS"],
   })(c, next);
 });
@@ -28,8 +33,16 @@ app.options("/trpc/*", (c) => {
   return response;
 });
 
-app.use("/trpc/*", (c, next) => {
-  return trpcServer({
+app.use("/trpc/*", async (c, next) => {
+  const envVars = parse(BackendEnvSchema, env(c));
+  const db = getDb(envVars.DATABASE_URL);
+  const logger = getServerLogger({
+    req: c.req.raw,
+    token: envVars.AXIOM_TOKEN,
+    dataset: envVars.AXIOM_DATASET,
+  });
+
+  await trpcServer({
     router: appRouter,
     endpoint: "/trpc",
     onError({ error, path }) {
@@ -37,10 +50,14 @@ app.use("/trpc/*", (c, next) => {
     },
     createContext: ({ req }) =>
       createTRPCContext({
-        req: req,
-        JWT_SECRET: env(c).SUPABASE_JWT_SECRET,
+        req,
+        env: { JWT_SECRET: envVars.SUPABASE_JWT_SECRET },
+        db,
+        logger,
       }),
   })(c, next);
+
+  await logger.flush();
 });
 
 export default app;

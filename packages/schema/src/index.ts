@@ -1,5 +1,5 @@
 import type { BaseSchema } from "valibot";
-import { flatten, object, parse, string, ValiError } from "valibot";
+import { flatten, ValiError, parse as valiParse } from "valibot";
 
 export function validatorTrpcWrapper<
   TInput,
@@ -7,7 +7,7 @@ export function validatorTrpcWrapper<
   T extends BaseSchema<TInput, TOutput>,
 >(schema: T) {
   return (raw: unknown) => {
-    return parse(schema, raw);
+    return valiParse(schema, raw);
   };
 }
 
@@ -15,4 +15,9 @@ export function formatValidatorError(err: unknown) {
   return err instanceof ValiError ? flatten(err) : undefined;
 }
 
-export const testSchema = object({ name: string() });
+export function parse<TInput, TOutput, T extends BaseSchema<TInput, TOutput>>(
+  schema: T,
+  raw: unknown,
+) {
+  return valiParse(schema, raw);
+}
