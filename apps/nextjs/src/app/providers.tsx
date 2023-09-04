@@ -8,7 +8,7 @@ import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
 import { env } from "~/env.mjs";
-import { api } from "~/utils/api";
+import { api } from "~/lib/utils/api";
 
 export function TRPCReactProvider(props: {
   children: React.ReactNode;

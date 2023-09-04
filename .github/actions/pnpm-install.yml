@@ -1,3 +1,23 @@
+########################################################################################
+# "pnpm install" composite action for pnpm 7/8+                                        #
+#--------------------------------------------------------------------------------------#
+# Requirement: @setup/node should be run before                                        #
+#                                                                                      #
+# Usage in workflows steps:                                                            #
+#                                                                                      #
+#      - name: 📥 Monorepo install                                                     #
+#        uses: ./.github/actions/pnpm-install                                          #
+#        with:                                                                         #
+#          enable-corepack: false # (default)                                          #
+#          cwd: ${{ github.workspace }}/apps/my-app # (default = '.')                  #
+#                                                                                      #
+# Reference:                                                                           #
+#   - latest: https://gist.github.com/belgattitude/838b2eba30c324f1f0033a797bab2e31    #
+#                                                                                      #
+# Versions:                                                                            #
+#   - 1.1.0 - 15-07-2023 - Add project custom directory support.                       #
+########################################################################################
+
 name: "PNPM install"
 description: "Run pnpm install with cache enabled"
 

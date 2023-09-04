@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - "apps/backend"
-      - "packages/api"
+      - "packages/*"
 
 jobs:
   deploy:
@@ -28,17 +28,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: 📥 Monorepo install
+      - name: 📥 Install Dependencies
         uses: ./.github/actions/pnpm-install
+
       - name: Deploy
         uses: cloudflare/wrangler-action@v3.1.0
         with:
+          wranglerVersion: "3.6.0"
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          workingDirectory: .
-          command: deploy ./apps/backend/src/index.ts
-          secrets: APP_URL
+          workingDirectory: "apps/backend"
+          command: deploy src/index.ts --minify
+          # secrets: |
+          #   APP_URL
         env:
-          APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+          # APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
           CI: true
           NO_D1_WARNING: true
