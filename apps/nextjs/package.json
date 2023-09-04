@@ -17,6 +17,7 @@
     "@radix-ui/react-dialog": "^1.0.4",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@react-oauth/google": "^0.11.1",
     "@skylar/auth": "^0.1.0",
     "@skylar/logger": "^0.1.0",
     "@t3-oss/env-nextjs": "^0.6.1",

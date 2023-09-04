@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
@@ -51,12 +52,14 @@ export function TRPCReactProvider(props: {
 
   return (
     <api.Provider client={trpcClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryStreamedHydration transformer={superjson}>
-          {props.children}
-        </ReactQueryStreamedHydration>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <GoogleOAuthProvider clientId="358702612985-83ki10i9jtrb9jas0smbhvjtosil194c.apps.googleusercontent.com">
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryStreamedHydration transformer={superjson}>
+            {props.children}
+          </ReactQueryStreamedHydration>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      </GoogleOAuthProvider>
     </api.Provider>
   );
 }
