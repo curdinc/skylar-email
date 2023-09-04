@@ -6,14 +6,16 @@
   "types": "./index.ts",
   "license": "MIT",
   "scripts": {
+    "push": "drizzle-kit push:pg",
+    "generate": "drizzle-kit generate:pg",
+    "migrate": "drizzle-kit generate:pg && tsx migrate.ts",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
-    "push": "drizzle-kit push:mysql",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@planetscale/database": "^1.11.0",
+    "@neondatabase/serverless": "^0.6.0",
     "drizzle-orm": "^0.28.5"
   },
   "devDependencies": {
@@ -23,7 +25,9 @@
     "dotenv-cli": "^7.3.0",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.48.0",
+    "postgres": "^3.3.5",
     "prettier": "^3.0.3",
+    "tsx": "^3.12.8",
     "typescript": "^5.2.2"
   },
   "eslintConfig": {

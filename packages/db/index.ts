@@ -1,18 +1,16 @@
-import { Client } from "@planetscale/database";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
+import { neon, neonConfig } from "@neondatabase/serverless";
+import * as dotenv from "dotenv";
+import { drizzle } from "drizzle-orm/neon-http";
 
-import * as auth from "./schema/auth";
-import * as post from "./schema/post";
+import * as example from "./schema/example";
 
-export const schema = { ...auth, ...post };
+dotenv.config({
+  path: "../../.env",
+});
 
-export { mySqlTable as tableCreator } from "./schema/_table";
+export const schema = { ...example };
 
-export * from "drizzle-orm";
+neonConfig.fetchConnectionCache = true;
 
-export const db = drizzle(
-  new Client({
-    url: process.env.DATABASE_URL,
-  }).connection(),
-  { schema },
-);
+const sql = neon(process.env.DATABASE_URL!);
+export const db = drizzle(sql, { schema });
