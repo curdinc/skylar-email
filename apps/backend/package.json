@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "wrangler dev src/index.ts",
     "build": "wrangler deploy src/index.ts --dry-run --outdir dist",
-    "clean": "rm -rf .turbo node_modules",
+    "clean": "rm -rf .turbo dist node_modules",
     "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
     "typecheck": "tsc --noEmit"

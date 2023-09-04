@@ -13,9 +13,11 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@skylar/api": "^0.1.0",
+    "@icons-pack/react-simple-icons": "^9.0.0",
+    "@radix-ui/react-dialog": "^1.0.4",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-slot": "^1.0.2",
     "@skylar/auth": "^0.1.0",
-    "@skylar/db": "^0.1.0",
     "@skylar/logger": "^0.1.0",
     "@t3-oss/env-nextjs": "^0.6.1",
     "@tanstack/react-query": "^4.33.0",
@@ -25,11 +27,16 @@
     "@trpc/next": "^10.38.1",
     "@trpc/react-query": "^10.38.1",
     "@trpc/server": "^10.38.1",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.274.0",
     "next": "^13.4.19",
     "next-axiom": "1.0.0-rc.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "superjson": "1.13.1",
+    "tailwind-merge": "^1.14.0",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.2"
   },
   "devDependencies": {
@@ -40,6 +47,7 @@
     "@types/node": "^18.17.13",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
+    "autoprefixer": "^10.4.15",
     "dotenv-cli": "^7.3.0",
     "eslint": "^8.48.0",
     "prettier": "^3.0.3",
