@@ -40,6 +40,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@skylar/api": "^0.1.0",
     "@skylar/eslint-config": "^0.2.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tailwind-config": "^0.1.0",
