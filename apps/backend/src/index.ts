@@ -1,53 +1,58 @@
 import { trpcServer } from "@hono/trpc-server";
+import type { Context } from "hono";
 import { Hono } from "hono";
 import { env } from "hono/adapter";
 import { cors } from "hono/cors";
 
 import { appRouter, createTRPCContext } from "@skylar/api";
+import { honoAuthMiddleware } from "@skylar/auth";
 import { getDb } from "@skylar/db";
 import { getServerLogger } from "@skylar/logger";
-import type { BackendEnvType } from "@skylar/schema";
 import { BackendEnvSchema, formatValidatorError, parse } from "@skylar/schema";
 
 type Bindings = {
-  APP_URL: string;
   JWT_SECRET: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.use("/trpc/*", async (c, next) => {
-  let envVars: BackendEnvType;
+function getEnvVars(
+  c: Context<
+    {
+      Bindings: Bindings;
+    },
+    "*",
+    object
+  >,
+) {
   try {
-    envVars = parse(BackendEnvSchema, env(c));
+    const envVars = parse(BackendEnvSchema, env(c));
+    return envVars;
   } catch (e) {
     console.log(JSON.stringify(formatValidatorError(e), null, 2));
     throw e;
   }
+}
 
+app.use("/trpc/*", async (c, next) => {
+  const envVars = getEnvVars(c);
   return await cors({
     origin: [envVars.APP_URL],
     allowMethods: ["POST", "GET", "OPTIONS"],
   })(c, next);
 });
 
-app.options("/trpc/*", (c) => {
-  const response = c.newResponse(null, { status: 204 });
-  response.headers.set("Access-Control-Allow-Origin", "*");
-  response.headers.set("Access-Control-Request-Method", "*");
-  response.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
-  response.headers.set("Access-Control-Allow-Headers", "*");
-  return response;
+app.use("/trpc/*", async (c, next) => {
+  const envVars = getEnvVars(c);
+
+  return await honoAuthMiddleware({
+    SUPABASE_ANON_KEY: envVars.SUPABASE_ANON_KEY,
+    SUPABASE_URL: envVars.SUPABASE_URL,
+  })(c, next);
 });
 
 app.use("/trpc/*", async (c, next) => {
-  let envVars: BackendEnvType;
-  try {
-    envVars = parse(BackendEnvSchema, env(c));
-  } catch (e) {
-    console.log(JSON.stringify(formatValidatorError(e), null, 2));
-    throw e;
-  }
+  const envVars = getEnvVars(c);
 
   const db = getDb(envVars.DATABASE_URL);
   const logger = getServerLogger({
@@ -74,6 +79,15 @@ app.use("/trpc/*", async (c, next) => {
   })(c, next);
 
   await logger.flush();
+  return response;
+});
+
+app.options("/trpc/*", (c) => {
+  const response = c.newResponse(null, { status: 204 });
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  response.headers.set("Access-Control-Request-Method", "*");
+  response.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
+  response.headers.set("Access-Control-Allow-Headers", "*");
   return response;
 });
 

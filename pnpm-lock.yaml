@@ -34,6 +34,9 @@ importers:
       '@skylar/api':
         specifier: ^0.1.0
         version: link:../../packages/api
+      '@skylar/auth':
+        specifier: ^0.1.0
+        version: link:../../packages/auth
       '@skylar/db':
         specifier: ^0.1.0
         version: link:../../packages/db
@@ -198,9 +201,9 @@ importers:
       '@skylar/logger':
         specifier: ^0.1.0
         version: link:../../packages/logger
-      '@t3-oss/env-nextjs':
-        specifier: ^0.6.1
-        version: 0.6.1(typescript@5.2.2)(zod@3.22.2)
+      '@skylar/schema':
+        specifier: ^0.1.0
+        version: link:../../packages/schema
       '@tanstack/react-query':
         specifier: ^4.33.0
         version: 4.33.0(react-dom@18.2.0)(react-native@0.72.4)(react@18.2.0)
@@ -252,9 +255,6 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.3.2)
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
       '@skylar/api':
         specifier: ^0.1.0
@@ -353,24 +353,15 @@ importers:
       '@supabase/auth-helpers-react':
         specifier: ^0.4.2
         version: 0.4.2(@supabase/supabase-js@2.33.1)
-      '@supabase/auth-helpers-remix':
-        specifier: ^0.2.1
-        version: 0.2.1(@supabase/supabase-js@2.33.1)
       '@supabase/auth-helpers-shared':
         specifier: ^0.4.1
         version: 0.4.1(@supabase/supabase-js@2.33.1)
       '@supabase/supabase-js':
         specifier: ^2.33.1
         version: 2.33.1
-      '@t3-oss/env-nextjs':
-        specifier: ^0.6.1
-        version: 0.6.1(typescript@5.2.2)(zod@3.22.2)
       '@tsndr/cloudflare-worker-jwt':
         specifier: ^2.2.2
         version: 2.2.2
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
       '@skylar/eslint-config':
         specifier: ^0.2.0
@@ -4018,15 +4009,6 @@ packages:
       '@supabase/supabase-js': 2.33.1
     dev: false
 
-  /@supabase/auth-helpers-remix@0.2.1(@supabase/supabase-js@2.33.1):
-    resolution: {integrity: sha512-bSEIdsYZWDI647GwWW0xeoymRPof2npmJeATHyri/UPNqSp1Zxq7BWgwxL6fZ1HsNrYrcfAdtGg/QNh04MXPXA==}
-    peerDependencies:
-      '@supabase/supabase-js': ^2.19.0
-    dependencies:
-      '@supabase/auth-helpers-shared': 0.4.1(@supabase/supabase-js@2.33.1)
-      '@supabase/supabase-js': 2.33.1
-    dev: false
-
   /@supabase/auth-helpers-shared@0.4.1(@supabase/supabase-js@2.33.1):
     resolution: {integrity: sha512-IEDX9JzWkIjQiLUaP4Qy5YDiG0jFQatWfS+jw8cCQs6QfbNdEPd2Y3qonwGHnM90CZom9SvjuylBv2pFVAL7Lw==}
     peerDependencies:
@@ -4107,27 +4089,6 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       defer-to-connect: 1.1.3
-    dev: false
-
-  /@t3-oss/env-core@0.6.1(typescript@5.2.2)(zod@3.22.2):
-    resolution: {integrity: sha512-KQD7qEDJtkWIWWmTVjNvk0wnHpkvAQ6CRbUxbWMFNG/fiosBQDQvtRpBNu6USxBscJCoC4z6y7P9MN52/mLOzw==}
-    peerDependencies:
-      typescript: '>=4.7.2'
-      zod: ^3.0.0
-    dependencies:
-      typescript: 5.2.2
-      zod: 3.22.2
-    dev: false
-
-  /@t3-oss/env-nextjs@0.6.1(typescript@5.2.2)(zod@3.22.2):
-    resolution: {integrity: sha512-z1dIC++Vxj9kmzX5nSPfcrCSkszy3dTEPC4Ssx7Ap5AqR3c2Qa7S0xf8axn6coy7D/vCXDAAnHYnCMDhtcY3SQ==}
-    peerDependencies:
-      typescript: '>=4.7.2'
-      zod: ^3.0.0
-    dependencies:
-      '@t3-oss/env-core': 0.6.1(typescript@5.2.2)(zod@3.22.2)
-      typescript: 5.2.2
-      zod: 3.22.2
     dev: false
 
   /@tanstack/match-sorter-utils@8.8.4:
@@ -12859,6 +12820,7 @@ packages:
 
   /zod@3.22.2:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
+    dev: true
 
 settings:
   autoInstallPeers: true

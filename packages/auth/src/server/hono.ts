@@ -1,13 +1,15 @@
 import { CookieAuthStorageAdapter } from "@supabase/auth-helpers-shared";
 import { createClient } from "@supabase/supabase-js";
-import type { Context, Env, Next } from "hono";
-import { env } from "hono/adapter";
+import type { Context, Next } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import type { CookieOptions } from "hono/utils/cookie";
 
-class HonoMiddlewareAuthStorageAdapter extends CookieAuthStorageAdapter {
+class HonoMiddlewareAuthStorageAdapter<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends Context<any, "*", object>,
+> extends CookieAuthStorageAdapter {
   c;
-  constructor(c: Context<Env, "*", object>) {
+  constructor(c: T) {
     super();
     this.c = c;
   }
@@ -32,38 +34,23 @@ class HonoMiddlewareAuthStorageAdapter extends CookieAuthStorageAdapter {
     });
   }
 }
-function getSupabaseEnvVars(c: Context<Env, "*", object>) {
-  const { NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_SUPABASE_URL } = env<{
-    NEXT_PUBLIC_SUPABASE_URL?: string;
-    NEXT_PUBLIC_SUPABASE_ANON_KEY?: string;
-  }>(c);
 
-  if (!NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    throw new Error("NEXT_PUBLIC_SUPABASE_ANON_KEY is not set");
-  }
-  if (!NEXT_PUBLIC_SUPABASE_URL) {
-    throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set");
-  }
-  return {
-    NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    NEXT_PUBLIC_SUPABASE_URL,
-  };
-}
-export async function honoAuthMiddleware(
-  c: Context<Env, "*", object>,
-  next: Next,
-) {
-  const { NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_SUPABASE_URL } =
-    getSupabaseEnvVars(c);
-  const supabase = createClient(
-    NEXT_PUBLIC_SUPABASE_URL,
-    NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function honoAuthMiddleware<T extends Context<any, "*", object>>({
+  SUPABASE_ANON_KEY,
+  SUPABASE_URL,
+}: {
+  SUPABASE_URL: string;
+  SUPABASE_ANON_KEY: string;
+}) {
+  return async (c: T, next: Next) => {
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
         storage: new HonoMiddlewareAuthStorageAdapter(c),
       },
-    },
-  );
-  await supabase.auth.getSession();
-  await next();
+    });
+    const session = await supabase.auth.getSession();
+    console.log("session", JSON.stringify(session, null, 2));
+    return await next();
+  };
 }
