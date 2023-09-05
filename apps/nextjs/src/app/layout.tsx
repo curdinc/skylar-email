@@ -2,11 +2,12 @@ import { Inter, Montserrat } from "next/font/google";
 
 import "~/styles/globals.css";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { AxiomWebVitals } from "next-axiom";
 
 import { NextAuthProvider } from "@skylar/auth";
 
+import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
 import { siteConfig } from "~/lib/utils/config";
 import { cn } from "~/lib/utils/ui";
@@ -71,7 +72,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <head />
       <body
         className={cn(
-          "bg-background min-h-screen scroll-smooth font-sans antialiased",
+          "min-h-screen scroll-smooth bg-background font-sans antialiased",
           fontSans.variable,
           fontHeading.variable,
         )}
@@ -81,7 +82,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
         >
-          <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
+          <TRPCReactProvider cookies={cookies().getAll()} headers={headers()}>
+            {children}
+            <Toaster />
+          </TRPCReactProvider>
         </NextAuthProvider>
       </body>
     </html>

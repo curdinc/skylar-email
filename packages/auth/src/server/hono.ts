@@ -15,6 +15,10 @@ class HonoMiddlewareAuthStorageAdapter<
   }
 
   protected getCookie(name: string): string | null | undefined {
+    if (name.includes("sb") && name.includes("auth-token")) {
+      const authHeader = this.c.req.headers.get("Authorization");
+      return authHeader?.replace("Bearer ", "");
+    }
     return getCookie(this.c, name);
   }
   protected setCookie(name: string, value: string): void {
@@ -44,13 +48,13 @@ export function honoAuthMiddleware<T extends Context<any, "*", object>>({
   SUPABASE_ANON_KEY: string;
 }) {
   return async (c: T, next: Next) => {
+    const storage = new HonoMiddlewareAuthStorageAdapter(c);
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
-        storage: new HonoMiddlewareAuthStorageAdapter(c),
+        storage,
       },
     });
-    const session = await supabase.auth.getSession();
-    console.log("session", JSON.stringify(session, null, 2));
+    await supabase.auth.getSession();
     return await next();
   };
 }

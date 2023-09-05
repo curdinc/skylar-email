@@ -52,7 +52,6 @@ app.use("/trpc/*", async (c, next) => {
 
 app.use("/trpc/*", async (c, next) => {
   const envVars = getEnvVars(c);
-  console.log(JSON.stringify(c.req.headers.get("Content-Type"), null, 2));
 
   const db = getDb(envVars.DATABASE_URL);
   const logger = getServerLogger({

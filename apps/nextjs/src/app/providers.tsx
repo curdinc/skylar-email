@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -8,12 +9,15 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
+import { AUTH_TOKEN_COOKIE_NAME } from "@skylar/auth/client";
+
 import { env } from "~/env";
 import { api } from "~/lib/utils/api";
 
 export function TRPCReactProvider(props: {
   children: React.ReactNode;
   headers?: Headers;
+  cookies: RequestCookie[];
 }) {
   const [queryClient] = useState(
     () =>
@@ -36,13 +40,14 @@ export function TRPCReactProvider(props: {
             (opts.direction === "down" && opts.result instanceof Error),
         }),
         unstable_httpBatchStreamLink({
-          url:
-            process.env.NODE_ENV === "development"
-              ? "http://localhost:8787/trpc"
-              : env.NEXT_PUBLIC_BACKEND_URL,
+          url: env.NEXT_PUBLIC_BACKEND_URL,
           headers() {
             const headers = new Map(props.headers);
+            const auth = props.cookies.find((cookie) => {
+              return cookie.name === AUTH_TOKEN_COOKIE_NAME;
+            });
             headers.set("x-trpc-source", "nextjs-react");
+            headers.set("Authorization", `Bearer ${auth?.value}`);
             return Object.fromEntries(headers);
           },
         }),

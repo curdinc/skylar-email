@@ -13,6 +13,8 @@ export {
   type oauthOnboardingType,
 } from "./src/emailProvider/oauth";
 
+export * from "./src/api/onboarding";
+export * from "./src/auth";
 export { BackendEnvSchema, type BackendEnvType } from "./src/backend/env";
 export { createEnv } from "./src/createEnv";
 export {
