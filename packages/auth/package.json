@@ -6,7 +6,7 @@
   "types": "./index.ts",
   "license": "MIT",
   "scripts": {
-    "clean": "rm -rf .turbo node_modules",
+    "clean": "rm -rf .turbo node_modules ./**/*/*.js ./**/*/*.d.ts ./**/*/*/*.jsx ./**/*/*/*.d.ts",
     "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
     "typecheck": "tsc --noEmit"
