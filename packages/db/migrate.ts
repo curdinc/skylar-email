@@ -8,8 +8,12 @@ dotenv.config({
   path: "../../.env",
 });
 
+if (!process.env.DATABASE_URL) {
+  throw new Error("process.env.DATABASE_URL is undefined");
+}
+
 const databaseUrl = drizzle(
-  postgres(`${"process.env.DATABASE_URL"}`, { ssl: "require", max: 1 }),
+  postgres(process.env.DATABASE_URL!, { ssl: "require", max: 1 }),
 );
 
 const main = async () => {
