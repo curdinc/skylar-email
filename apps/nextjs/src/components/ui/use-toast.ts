@@ -47,9 +47,9 @@ type Action =
       toastId?: ToasterToast["id"];
     };
 
-interface State {
+type State = {
   toasts: ToasterToast[];
-}
+};
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
@@ -124,7 +124,7 @@ export const reducer = (state: State, action: Action): State => {
   }
 };
 
-const listeners: Array<(state: State) => void> = [];
+const listeners: ((state: State) => void)[] = [];
 
 let memoryState: State = { toasts: [] };
 

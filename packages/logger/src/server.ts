@@ -47,7 +47,7 @@ enum AxiomLogLevel {
   error = 3,
   off = 100,
 }
-export interface RequestReport {
+export type RequestReport = {
   startTime: number;
   statusCode?: number;
   ip?: string | null;
@@ -56,7 +56,7 @@ export interface RequestReport {
   host?: string | null;
   method: string;
   userAgent?: string | null;
-}
+};
 
 export type LogEvent = {
   level: string;

@@ -27,7 +27,6 @@ export default function ConnectEmailOnboardingForm() {
 
   const { mutate: checkValiAlphaCode, isLoading: isCheckingAlphaCode } =
     api.onboarding.validateAlphaCode.useMutation({
-      onSuccess() {},
       onError() {
         router.replace("/onboarding/code");
       },
@@ -36,7 +35,7 @@ export default function ConnectEmailOnboardingForm() {
     checkValiAlphaCode({
       alphaCode: params.get("code") ?? "",
     });
-  }, []);
+  }, [checkValiAlphaCode, params]);
 
   return (
     <Card>

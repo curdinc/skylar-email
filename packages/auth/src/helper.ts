@@ -1,6 +1,7 @@
-import { User as SupabaseUser } from "@supabase/supabase-js";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
-import { User } from "./types/user";
+import type { User } from "./types/user";
 
 export function mapSupabaseUserToUser(
   supabaseUser: Omit<SupabaseUser, "created_at" | "id">,

@@ -40,7 +40,7 @@ export default function AuthenticationPage() {
               Select your favorite provider to get started.
             </p>
           </div>
-          <UserAuthForm  />
+          <UserAuthForm />
           <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{" "}
             <Link
