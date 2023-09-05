@@ -1,6 +1,8 @@
 export {
   useSignInWithDiscord,
+  useSignInWithFacebook,
   useSignInWithGithub,
+  useSignOut,
   useUser,
 } from "./src/client/hooks";
 export { NextAuthProvider } from "./src/client/next/server";

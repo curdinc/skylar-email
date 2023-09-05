@@ -2,8 +2,11 @@
 
 import React from "react";
 
-import { useSignInWithDiscord, useSignInWithGithub } from "@skylar/auth";
-import { useSignInWithFacebook } from "@skylar/auth/src/client/hooks";
+import {
+  useSignInWithDiscord,
+  useSignInWithFacebook,
+  useSignInWithGithub,
+} from "@skylar/auth/client/hooks";
 
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
