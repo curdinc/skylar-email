@@ -26,9 +26,14 @@ import { formatValidatorError } from "@skylar/schema";
  */
 type CreateContextOptions = {
   session?: Session;
-  env: { JWT_SECRET: string };
+  env: {
+    JWT_SECRET: string;
+    GOOGLE_PROVIDER_CLIENT_ID: string;
+    GOOGLE_PROVIDER_CLIENT_SECRET: string;
+  };
   logger: Logger;
   db: DbType;
+  origin: string;
 };
 
 /**
@@ -46,6 +51,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
     env: opts.env,
     db: opts.db,
     logger: opts.logger,
+    origin: opts.origin,
   };
 };
 
@@ -79,6 +85,7 @@ export const createTRPCContext = async ({
     session,
     env,
     db,
+    origin: req.url,
   });
 };
 
@@ -139,6 +146,16 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
   });
 });
 
+const enforceExternalVendor = t.middleware(({ ctx, next }) => {
+  if (!ctx.origin) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Unauthorized origin",
+    });
+  }
+  return next();
+});
+
 /**
  * Protected (authed) procedure
  *
@@ -149,3 +166,4 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const externalVendorProcedure = t.procedure.use(enforceExternalVendor);

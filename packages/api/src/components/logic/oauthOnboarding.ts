@@ -10,7 +10,19 @@ import {
   validatorTrpcWrapper,
 } from "@skylar/schema";
 
-export async function userOnboarding(db: DbType, input: oauthOnboardingType) {
+import { getAccessToken, watchGmailInbox } from "../providerLogic/gmail";
+
+export async function userOnboarding({
+  clientId,
+  clientSecret,
+  db,
+  input,
+}: {
+  clientId: string;
+  clientSecret: string;
+  db: DbType;
+  input: oauthOnboardingType;
+}) {
   if (input.provider !== "gmail") {
     throw new TRPCError({
       code: "NOT_IMPLEMENTED",
@@ -19,24 +31,12 @@ export async function userOnboarding(db: DbType, input: oauthOnboardingType) {
   }
   //FIXME: const uid = ctx.session?.user?.id;
   const uid = 1;
-  //FIXME: inject env vars here
-  const data = new URLSearchParams({
-    client_id: "process.env.GOOGLE_PROVIDER_CLIENT_ID",
-    client_secret: "process.env.GOOGLE_PROVIDER_CLIENT_SECRET",
-    redirect_uri: "postmessage",
-    grant_type: "authorization_code",
-    code: input.code,
+  const res = await getAccessToken({
+    clientId: clientId,
+    clientSecret: clientSecret,
+    payload: input.code,
+    fromRefresh: false,
   });
-
-  const res = await fetch(
-    "https://oauth2.googleapis.com/token?" + data.toString(),
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-    },
-  );
 
   const parsedResponse = validatorTrpcWrapper(oauth2TokenResponseSchema)(
     await res.json(),
@@ -48,6 +48,9 @@ export async function userOnboarding(db: DbType, input: oauthOnboardingType) {
     payload,
   );
 
+  // request inbox watching (gmail)
+  const historyId = await watchGmailInbox(email, parsedResponse.access_token);
+
   await db
     .insert(schema.providerAuthDetails)
     .values({
@@ -56,6 +59,7 @@ export async function userOnboarding(db: DbType, input: oauthOnboardingType) {
       userId: uid,
       email: email,
       name: name,
+      lastCheckedHistoryId: historyId,
     })
     .onConflictDoUpdate({
       target: [
