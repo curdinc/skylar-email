@@ -2,9 +2,9 @@ import type { BaseSchema } from "valibot";
 import { flatten, object, parse, string, ValiError } from "valibot";
 
 export {
-  authCodeSchema,
   gmailProviderIDTokenSchema,
   oauth2TokenResponseSchema,
+  oauthOnboardingSchema,
   providerEnumList,
 } from "./emailProvider";
 

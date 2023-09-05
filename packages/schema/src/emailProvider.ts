@@ -1,3 +1,4 @@
+import type { Output } from "valibot";
 import { boolean, enumType, number, object, string } from "valibot";
 
 export const oauth2TokenResponseSchema = object({
@@ -12,10 +13,12 @@ export const oauth2TokenResponseSchema = object({
 export const providerEnumList = ["gmail", "outlook"] as const;
 const providerEnumSchema = enumType(providerEnumList);
 
-export const authCodeSchema = object({
+export const oauthOnboardingSchema = object({
   code: string(),
   provider: providerEnumSchema,
 });
+
+export type oauthOnboardingType = Output<typeof oauthOnboardingSchema>;
 
 export const gmailProviderIDTokenSchema = object({
   iss: string(),
