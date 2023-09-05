@@ -344,6 +344,9 @@ importers:
 
   packages/auth:
     dependencies:
+      '@skylar/schema':
+        specifier: ^0.1.0
+        version: link:../schema
       '@supabase/auth-helpers-nextjs':
         specifier: ^0.7.4
         version: 0.7.4(@supabase/supabase-js@2.33.1)

@@ -1,8 +1,10 @@
 import { blankRouter } from "./router/blank";
+import { onboardingRouter } from "./router/onbaording";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
   blank: blankRouter,
+  onboarding: onboardingRouter,
 });
 
 // export type definition of API

@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 
-import { buttonVariants } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,10 +13,26 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { api } from "~/lib/utils/api";
 import { siteConfig } from "~/lib/utils/config";
-import { cn } from "~/lib/utils/ui";
 
 export default function BetaCodeForm() {
+  const { mutate, isLoading } = api.onboarding.validateAlphaCode.useMutation({
+    onSuccess(data, variable, ctx) {
+      console.log("data", data);
+      console.log("variable", variable);
+      console.log("ctx", ctx);
+      // href="/onboarding/connect"
+    },
+    onError(error, variables, context) {
+      console.log("error", error);
+      console.log("variables", variables);
+      console.log("context", context);
+    },
+  });
+
+  const [alphaCode, setAlphaCode] = useState("");
+
   return (
     <Card>
       <CardHeader>
@@ -44,13 +60,27 @@ export default function BetaCodeForm() {
           <Label htmlFor="beta-code" className="sr-only">
             alpha Code
           </Label>
-          <Input id="alpha-code" placeholder="skylar_alpha_1234..." />
+          <Input
+            id="alpha-code"
+            placeholder="skylar_alpha_1234..."
+            value={alphaCode}
+            onChange={(e) => {
+              setAlphaCode(e.target.value);
+            }}
+          />
         </div>
       </CardContent>
       <CardFooter className="justify-end space-x-2">
-        <Link href="/onboarding/connect" className={cn(buttonVariants())}>
+        <Button
+          isLoading={isLoading}
+          onClick={() => {
+            mutate({
+              alphaCode,
+            });
+          }}
+        >
           Next
-        </Link>
+        </Button>
       </CardFooter>
     </Card>
   );

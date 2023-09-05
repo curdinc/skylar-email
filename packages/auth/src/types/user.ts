@@ -1,4 +1,3 @@
-export type User = {
-  email?: string;
-  createdAt?: string;
-};
+import type { UserType } from "@skylar/schema";
+
+export type User = UserType;

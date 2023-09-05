@@ -48,7 +48,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const Comp = asChild ? Slot : "button";
-    const leftIcon = isLoading ? <Icons.spinner /> : props.leftIcon;
+    const leftIcon = isLoading ? (
+      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+    ) : (
+      props.leftIcon
+    );
     delete props.leftIcon;
     const isDisabled = props.disabled ?? isLoading;
     return (

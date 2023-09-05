@@ -2,7 +2,7 @@ import { Inter, Montserrat } from "next/font/google";
 
 import "~/styles/globals.css";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { AxiomWebVitals } from "next-axiom";
 
 import { NextAuthProvider } from "@skylar/auth";
@@ -81,7 +81,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
         >
-          <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
+          <TRPCReactProvider cookies={cookies().getAll()} headers={headers()}>
+            {children}
+          </TRPCReactProvider>
         </NextAuthProvider>
       </body>
     </html>
