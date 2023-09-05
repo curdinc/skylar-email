@@ -24,38 +24,34 @@ type OauthArgs = {
   scopes?: string;
 };
 
-type SignInWithOauthArgs = {
-  oauthArgs?: OauthArgs;
-};
-
-export function useSignInWithGithub(args?: SignInWithOauthArgs) {
+export function useSignInWithGithub(args?: OauthArgs) {
   const client = useSupabaseClient();
   return async () => {
     await client.auth.signInWithOAuth({
       provider: "github",
       options: {
-        ...args?.oauthArgs,
+        ...args,
       },
     });
   };
 }
 
-export function useSignInWithDiscord(args?: SignInWithOauthArgs) {
+export function useSignInWithDiscord(args?: OauthArgs) {
   const client = useSupabaseClient();
   return async () => {
     await client.auth.signInWithOAuth({
       provider: "discord",
-      options: { ...args?.oauthArgs },
+      options: { ...args },
     });
   };
 }
 
-export function useSignInWithFacebook(args?: SignInWithOauthArgs) {
+export function useSignInWithFacebook(args?: OauthArgs) {
   const client = useSupabaseClient();
   return async () => {
     await client.auth.signInWithOAuth({
       provider: "facebook",
-      options: { ...args?.oauthArgs },
+      options: { ...args },
     });
   };
 }

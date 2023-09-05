@@ -12,13 +12,25 @@ import { BrandIcons } from "~/components/icons/brand-icons";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils/ui";
 
-type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement> & {
+  redirectTo: string;
+};
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function UserAuthForm({
+  className,
+  redirectTo,
+  ...props
+}: UserAuthFormProps) {
   const [loadingOauth, setIsLoading] = React.useState<boolean>(false);
-  const signInWithGithub = useSignInWithGithub();
-  const signInWithDiscord = useSignInWithDiscord();
-  const signInWithFacebook = useSignInWithFacebook();
+  const signInWithGithub = useSignInWithGithub({
+    redirectTo,
+  });
+  const signInWithDiscord = useSignInWithDiscord({
+    redirectTo,
+  });
+  const signInWithFacebook = useSignInWithFacebook({
+    redirectTo,
+  });
 
   const onClickOauthLogin = (oauthLogin: () => Promise<void>) => {
     return async () => {
