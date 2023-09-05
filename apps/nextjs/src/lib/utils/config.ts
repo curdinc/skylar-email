@@ -8,7 +8,7 @@ export const siteConfig = {
     twitter: "https://twitter.com/0x5kylar",
     github: "https://github.com/curdinc/skylar-email",
   },
-};
+} as const;
 
 export const marketingConfig: {
   mainNav: { title: string; href: string; disabled?: boolean }[];

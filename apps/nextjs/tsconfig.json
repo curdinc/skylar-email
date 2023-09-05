@@ -3,7 +3,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@skylar/auth": ["../../packages/auth/index.ts"],
+      "@skylar/auth/*": ["../../packages/auth/src/*"]
     },
     "plugins": [
       {
@@ -12,6 +14,11 @@
     ],
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
+  "references": [
+    {
+      "path": "../../packages/auth"
+    }
+  ],
   "include": [".", ".next/types/**/*.ts"],
   "exclude": ["node_modules", ".next", ".turbo"]
 }

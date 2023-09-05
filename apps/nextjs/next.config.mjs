@@ -1,9 +1,5 @@
 // Importing env files here to validate on build
-import "@skylar/auth/env.mjs";
-
 import { withAxiom } from "next-axiom";
-
-import "./src/env.mjs";
 
 /** @type {import("next").NextConfig} */
 const config = {

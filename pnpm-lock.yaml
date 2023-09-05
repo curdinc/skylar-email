@@ -34,6 +34,18 @@ importers:
       '@skylar/api':
         specifier: ^0.1.0
         version: link:../../packages/api
+      '@skylar/auth':
+        specifier: ^0.1.0
+        version: link:../../packages/auth
+      '@skylar/db':
+        specifier: ^0.1.0
+        version: link:../../packages/db
+      '@skylar/logger':
+        specifier: ^0.1.0
+        version: link:../../packages/logger
+      '@skylar/schema':
+        specifier: ^0.1.0
+        version: link:../../packages/schema
       hono:
         specifier: ^3.5.6
         version: 3.5.6
@@ -189,9 +201,9 @@ importers:
       '@skylar/logger':
         specifier: ^0.1.0
         version: link:../../packages/logger
-      '@t3-oss/env-nextjs':
-        specifier: ^0.6.1
-        version: 0.6.1(typescript@5.2.2)(zod@3.22.2)
+      '@skylar/schema':
+        specifier: ^0.1.0
+        version: link:../../packages/schema
       '@tanstack/react-query':
         specifier: ^4.33.0
         version: 4.33.0(react-dom@18.2.0)(react-native@0.72.4)(react@18.2.0)
@@ -243,9 +255,6 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.3.2)
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
       '@skylar/api':
         specifier: ^0.1.0
@@ -317,6 +326,9 @@ importers:
       '@skylar/eslint-config':
         specifier: ^0.2.0
         version: link:../../tooling/eslint
+      '@skylar/logger':
+        specifier: ^0.1.0
+        version: link:../logger
       '@skylar/prettier-config':
         specifier: ^0.1.0
         version: link:../../tooling/prettier
@@ -341,24 +353,15 @@ importers:
       '@supabase/auth-helpers-react':
         specifier: ^0.4.2
         version: 0.4.2(@supabase/supabase-js@2.33.1)
-      '@supabase/auth-helpers-remix':
-        specifier: ^0.2.1
-        version: 0.2.1(@supabase/supabase-js@2.33.1)
       '@supabase/auth-helpers-shared':
         specifier: ^0.4.1
         version: 0.4.1(@supabase/supabase-js@2.33.1)
       '@supabase/supabase-js':
         specifier: ^2.33.1
         version: 2.33.1
-      '@t3-oss/env-nextjs':
-        specifier: ^0.6.1
-        version: 0.6.1(typescript@5.2.2)(zod@3.22.2)
       '@tsndr/cloudflare-worker-jwt':
         specifier: ^2.2.2
         version: 2.2.2
-      zod:
-        specifier: ^3.22.2
-        version: 3.22.2
     devDependencies:
       '@skylar/eslint-config':
         specifier: ^0.2.0
@@ -378,9 +381,6 @@ importers:
       next:
         specifier: ^13.4.19
         version: 13.4.19(react-dom@18.2.0)(react@18.2.0)
-      prettier:
-        specifier: ^3.0.3
-        version: 3.0.3
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -406,9 +406,6 @@ importers:
       '@skylar/tsconfig':
         specifier: ^0.1.0
         version: link:../../tooling/typescript
-      dotenv-cli:
-        specifier: ^7.3.0
-        version: 7.3.0
       drizzle-kit:
         specifier: ^0.19.13
         version: 0.19.13
@@ -418,9 +415,6 @@ importers:
       postgres:
         specifier: ^3.3.5
         version: 3.3.5
-      prettier:
-        specifier: ^3.0.3
-        version: 3.0.3
       tsx:
         specifier: ^3.12.8
         version: 3.12.8
@@ -430,6 +424,9 @@ importers:
 
   packages/logger:
     dependencies:
+      '@axiomhq/js':
+        specifier: ^0.1.3
+        version: 0.1.3
       next-axiom:
         specifier: 1.0.0-rc.1
         version: 1.0.0-rc.1(next@13.4.19)(react@18.2.0)
@@ -589,6 +586,17 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.18
+
+  /@axiomhq/js@0.1.3:
+    resolution: {integrity: sha512-2HIHYHBw40V8Qu642aKvP6ZFNoeS0oTtsZNe9Fxv0lQgC2XxR6E9aiPmIuzmJIRKzhFMtyu1MLez15seYzyInw==}
+    engines: {node: '>=16'}
+    dependencies:
+      cross-fetch: 3.1.5
+      fetch-retry: 5.0.6
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - encoding
+    dev: false
 
   /@babel/code-frame@7.10.4:
     resolution: {integrity: sha512-vG6SvB6oYEhvgisZNFRmRCUkLz11c7rp+tbNTynGqc6mS1d5ATd/sGyV6W0KZZnXRKMTzZDRgQT3Ou9jhpAfUg==}
@@ -4001,15 +4009,6 @@ packages:
       '@supabase/supabase-js': 2.33.1
     dev: false
 
-  /@supabase/auth-helpers-remix@0.2.1(@supabase/supabase-js@2.33.1):
-    resolution: {integrity: sha512-bSEIdsYZWDI647GwWW0xeoymRPof2npmJeATHyri/UPNqSp1Zxq7BWgwxL6fZ1HsNrYrcfAdtGg/QNh04MXPXA==}
-    peerDependencies:
-      '@supabase/supabase-js': ^2.19.0
-    dependencies:
-      '@supabase/auth-helpers-shared': 0.4.1(@supabase/supabase-js@2.33.1)
-      '@supabase/supabase-js': 2.33.1
-    dev: false
-
   /@supabase/auth-helpers-shared@0.4.1(@supabase/supabase-js@2.33.1):
     resolution: {integrity: sha512-IEDX9JzWkIjQiLUaP4Qy5YDiG0jFQatWfS+jw8cCQs6QfbNdEPd2Y3qonwGHnM90CZom9SvjuylBv2pFVAL7Lw==}
     peerDependencies:
@@ -4090,27 +4089,6 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       defer-to-connect: 1.1.3
-    dev: false
-
-  /@t3-oss/env-core@0.6.1(typescript@5.2.2)(zod@3.22.2):
-    resolution: {integrity: sha512-KQD7qEDJtkWIWWmTVjNvk0wnHpkvAQ6CRbUxbWMFNG/fiosBQDQvtRpBNu6USxBscJCoC4z6y7P9MN52/mLOzw==}
-    peerDependencies:
-      typescript: '>=4.7.2'
-      zod: ^3.0.0
-    dependencies:
-      typescript: 5.2.2
-      zod: 3.22.2
-    dev: false
-
-  /@t3-oss/env-nextjs@0.6.1(typescript@5.2.2)(zod@3.22.2):
-    resolution: {integrity: sha512-z1dIC++Vxj9kmzX5nSPfcrCSkszy3dTEPC4Ssx7Ap5AqR3c2Qa7S0xf8axn6coy7D/vCXDAAnHYnCMDhtcY3SQ==}
-    peerDependencies:
-      typescript: '>=4.7.2'
-      zod: ^3.0.0
-    dependencies:
-      '@t3-oss/env-core': 0.6.1(typescript@5.2.2)(zod@3.22.2)
-      typescript: 5.2.2
-      zod: 3.22.2
     dev: false
 
   /@tanstack/match-sorter-utils@8.8.4:
@@ -7141,6 +7119,10 @@ packages:
 
   /fetch-retry@4.1.1:
     resolution: {integrity: sha512-e6eB7zN6UBSwGVwrbWVH+gdLnkW9WwHhmq2YDK1Sh30pzx1onRVGBvogTlUeWxwTa+L86NYdo4hFkh7O8ZjSnA==}
+    dev: false
+
+  /fetch-retry@5.0.6:
+    resolution: {integrity: sha512-3yurQZ2hD9VISAhJJP9bpYFNQrHHBXE2JxxjY5aLEcDi46RmAzJE2OC9FAde0yis5ElW0jTTzs0zfg/Cca4XqQ==}
     dev: false
 
   /figures@3.2.0:
@@ -12838,6 +12820,7 @@ packages:
 
   /zod@3.22.2:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
+    dev: true
 
 settings:
   autoInstallPeers: true

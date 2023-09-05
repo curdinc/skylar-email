@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@skylar/eslint-config": "^0.2.0",
+    "@skylar/logger": "^0.1.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
     "eslint": "^8.48.0",
