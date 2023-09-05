@@ -47,11 +47,23 @@ enum AxiomLogLevel {
   error = 3,
   off = 100,
 }
+export type RequestReport = {
+  startTime: number;
+  statusCode?: number;
+  ip?: string | null;
+  region?: string | null;
+  path: string;
+  host?: string | null;
+  method: string;
+  userAgent?: string | null;
+};
+
 export type LogEvent = {
   level: string;
   message: string;
   fields: Record<string, unknown>;
   _time: string;
+  request?: RequestReport;
 };
 
 export type LoggerConfig = {
@@ -59,7 +71,7 @@ export type LoggerConfig = {
   logLevel?: AxiomLogLevel;
   autoFlush?: boolean;
   source?: string;
-  req?: unknown;
+  req?: RequestReport;
 };
 
 class AxiomLogger {
@@ -117,6 +129,7 @@ class AxiomLogger {
       message,
       _time: new Date(Date.now()).toISOString(),
       fields: this.config.args ?? {},
+      request: this.config.req,
     };
     // check if passed args is an object, if its not an object, add it to fields.args
     if (args instanceof Error) {
@@ -154,6 +167,36 @@ class AxiomLogger {
     } else if (args?.length) {
       logEvent.fields = { ...logEvent.fields, args: args };
     }
+
+    switch (level) {
+      case AxiomLogLevel.debug:
+        console.debug(
+          "[DEBUG]: ",
+          logEvent.message,
+          "\nfields",
+          JSON.stringify(logEvent.fields, null, 2),
+        );
+        break;
+      case AxiomLogLevel.info:
+        console.info(
+          "[INFO]: ",
+          logEvent.message,
+          "\nfields",
+          JSON.stringify(logEvent.fields, null, 2),
+        );
+        break;
+      case AxiomLogLevel.warn:
+        console.warn("[WARN]: ", logEvent.message, "\nfields");
+        break;
+      case AxiomLogLevel.error:
+        console.error(
+          "[ERROR]: ",
+          logEvent.message,
+          JSON.stringify(logEvent.fields, null, 2),
+        );
+        break;
+    }
+
     this.axiom.ingest(this.dataset, logEvent);
   };
 

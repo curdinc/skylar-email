@@ -5,11 +5,15 @@ import {
   useUser as useSupabaseUser,
 } from "@supabase/auth-helpers-react";
 
+import { mapSupabaseUserToUser } from "../helper";
 import type { User } from "../types/user";
 
 export function useUser(): User | undefined {
   const user = useSupabaseUser();
-  return user ?? undefined;
+  if (!user) {
+    return undefined;
+  }
+  return mapSupabaseUserToUser(user);
 }
 
 export function useSignOut() {
@@ -24,38 +28,34 @@ type OauthArgs = {
   scopes?: string;
 };
 
-type SignInWithOauthArgs = {
-  oauthArgs?: OauthArgs;
-};
-
-export function useSignInWithGithub(args?: SignInWithOauthArgs) {
+export function useSignInWithGithub(args?: OauthArgs) {
   const client = useSupabaseClient();
   return async () => {
     await client.auth.signInWithOAuth({
       provider: "github",
       options: {
-        ...args?.oauthArgs,
+        ...args,
       },
     });
   };
 }
 
-export function useSignInWithDiscord(args?: SignInWithOauthArgs) {
+export function useSignInWithDiscord(args?: OauthArgs) {
   const client = useSupabaseClient();
   return async () => {
     await client.auth.signInWithOAuth({
       provider: "discord",
-      options: { ...args?.oauthArgs },
+      options: { ...args },
     });
   };
 }
 
-export function useSignInWithFacebook(args?: SignInWithOauthArgs) {
+export function useSignInWithFacebook(args?: OauthArgs) {
   const client = useSupabaseClient();
   return async () => {
     await client.auth.signInWithOAuth({
       provider: "facebook",
-      options: { ...args?.oauthArgs },
+      options: { ...args },
     });
   };
 }

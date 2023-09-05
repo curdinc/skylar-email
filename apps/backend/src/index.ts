@@ -5,7 +5,6 @@ import { env } from "hono/adapter";
 import { cors } from "hono/cors";
 
 import { appRouter, createTRPCContext } from "@skylar/api";
-import { honoAuthMiddleware } from "@skylar/auth";
 import { getDb } from "@skylar/db";
 import { getServerLogger } from "@skylar/logger";
 import { BackendEnvSchema, formatValidatorError, parse } from "@skylar/schema";
@@ -34,20 +33,20 @@ function getEnvVars(
   }
 }
 
+app.options("/trpc/*", (c) => {
+  const response = c.newResponse(null, { status: 204 });
+  response.headers.set("Access-Control-Allow-Origin", "*");
+  response.headers.set("Access-Control-Request-Method", "*");
+  response.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
+  response.headers.set("Access-Control-Allow-Headers", "*");
+  return response;
+});
+
 app.use("/trpc/*", async (c, next) => {
   const envVars = getEnvVars(c);
   return await cors({
     origin: [envVars.APP_URL],
     allowMethods: ["POST", "GET", "OPTIONS"],
-  })(c, next);
-});
-
-app.use("/trpc/*", async (c, next) => {
-  const envVars = getEnvVars(c);
-
-  return await honoAuthMiddleware({
-    SUPABASE_ANON_KEY: envVars.SUPABASE_ANON_KEY,
-    SUPABASE_URL: envVars.SUPABASE_URL,
   })(c, next);
 });
 
@@ -79,15 +78,6 @@ app.use("/trpc/*", async (c, next) => {
   })(c, next);
 
   await logger.flush();
-  return response;
-});
-
-app.options("/trpc/*", (c) => {
-  const response = c.newResponse(null, { status: 204 });
-  response.headers.set("Access-Control-Allow-Origin", "*");
-  response.headers.set("Access-Control-Request-Method", "*");
-  response.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
-  response.headers.set("Access-Control-Allow-Headers", "*");
   return response;
 });
 

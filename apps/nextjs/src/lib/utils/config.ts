@@ -1,3 +1,5 @@
+import type { MainNavItemType } from "~/types/main-nav";
+
 export const siteConfig = {
   name: "Skylar",
   description:
@@ -11,12 +13,35 @@ export const siteConfig = {
 } as const;
 
 export const marketingConfig: {
-  mainNav: { title: string; href: string; disabled?: boolean }[];
+  mainNav: MainNavItemType[];
 } = {
   mainNav: [
     {
       title: "Features",
       href: "/#features",
+    },
+  ],
+};
+
+export const dashboardConfig: {
+  mainNav: MainNavItemType[];
+} = {
+  mainNav: [
+    {
+      title: "Review",
+      href: "review",
+    },
+    {
+      title: "Important",
+      href: "important",
+    },
+    {
+      title: "Readings",
+      href: "readings",
+    },
+    {
+      title: "Receipts",
+      href: "receipts",
     },
   ],
 };

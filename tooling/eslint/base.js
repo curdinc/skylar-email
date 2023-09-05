@@ -1,11 +1,24 @@
 /** @type {import("eslint").Linter.Config} */
 const config = {
+  settings: {
+    "import/resolver": {
+      typescript: {
+        alwaysTryTypes: true,
+        project: [
+          "./tsconfig.json",
+          "../../packages/*/tsconfig.json",
+          "../../apps/*/tsconfig.json",
+        ],
+      },
+    },
+  },
   extends: [
     "turbo",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended-type-checked",
     "plugin:@typescript-eslint/stylistic-type-checked",
     "prettier",
+    "plugin:import/typescript",
   ],
   env: {
     es2022: true,
@@ -32,6 +45,7 @@ const config = {
     ],
     "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+    "import/no-unresolved": "error",
   },
   ignorePatterns: [
     "**/.eslintrc.cjs",
