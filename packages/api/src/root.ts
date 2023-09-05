@@ -1,5 +1,5 @@
 import { blankRouter } from "./router/blank";
-import { onboardingRouter } from "./router/onbaording";
+import { onboardingRouter } from "./router/onbaoarding";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({

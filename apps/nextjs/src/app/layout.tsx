@@ -7,6 +7,7 @@ import { AxiomWebVitals } from "next-axiom";
 
 import { NextAuthProvider } from "@skylar/auth";
 
+import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
 import { siteConfig } from "~/lib/utils/config";
 import { cn } from "~/lib/utils/ui";
@@ -83,6 +84,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         >
           <TRPCReactProvider cookies={cookies().getAll()} headers={headers()}>
             {children}
+            <Toaster />
           </TRPCReactProvider>
         </NextAuthProvider>
       </body>

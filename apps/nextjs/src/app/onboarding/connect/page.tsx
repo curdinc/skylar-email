@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { BrandIcons } from "~/components/icons/brand-icons";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -16,12 +16,27 @@ import {
 } from "~/components/ui/card";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+import { api } from "~/lib/utils/api";
 
 export default function ConnectEmailOnboardingForm() {
   const router = useRouter();
+  const params = useSearchParams();
   const [emailProvider, setEmailProvider] = useState<"Gmail" | "Outlook">(
     "Gmail",
   );
+
+  const { mutate: checkValiAlphaCode, isLoading: isCheckingAlphaCode } =
+    api.onboarding.validateAlphaCode.useMutation({
+      onSuccess() {},
+      onError() {
+        router.replace("/onboarding/code");
+      },
+    });
+  useEffect(() => {
+    checkValiAlphaCode({
+      alphaCode: params.get("code") ?? "",
+    });
+  }, []);
 
   return (
     <Card>
@@ -69,7 +84,9 @@ export default function ConnectEmailOnboardingForm() {
             </Label>
           </div>
         </RadioGroup>
-        <Button>Connect to {emailProvider}</Button>
+        <Button isLoading={isCheckingAlphaCode}>
+          Connect to {emailProvider}
+        </Button>
       </CardContent>
       <CardFooter className="justify-between space-x-2">
         <Button variant={"ghost"} onClick={() => router.back()}>

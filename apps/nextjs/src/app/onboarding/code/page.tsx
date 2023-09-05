@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -13,21 +14,24 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/lib/utils/api";
 import { siteConfig } from "~/lib/utils/config";
 
 export default function BetaCodeForm() {
+  const router = useRouter();
+  const { toast } = useToast();
+
   const { mutate, isLoading } = api.onboarding.validateAlphaCode.useMutation({
-    onSuccess(data, variable, ctx) {
-      console.log("data", data);
-      console.log("variable", variable);
-      console.log("ctx", ctx);
-      // href="/onboarding/connect"
+    onSuccess() {
+      router.push(`/onboarding/connect?code=${alphaCode}`);
     },
-    onError(error, variables, context) {
-      console.log("error", error);
-      console.log("variables", variables);
-      console.log("context", context);
+    onError(error) {
+      toast({
+        title: "Invalid Alpha Code",
+        description: error.message,
+        variant: "destructive",
+      });
     },
   });
 
