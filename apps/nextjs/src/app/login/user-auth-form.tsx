@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import {
@@ -18,7 +18,10 @@ type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const params = useSearchParams();
   const redirectToPath = params.get("redirectTo") ?? "/inbox";
-  const redirectTo = new URL(redirectToPath, window.location.origin).href;
+  const [redirectTo, setRedirectTo] = useState(redirectToPath);
+  React.useEffect(() => {
+    setRedirectTo(new URL(redirectToPath, window.location.origin).href);
+  }, [redirectToPath]);
 
   const [loadingOauth, setIsLoading] = React.useState<boolean>(false);
   const signInWithGithub = useSignInWithGithub({
