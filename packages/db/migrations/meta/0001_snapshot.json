@@ -1,0 +1,114 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "id": "68308f5f-d3a5-461d-99e8-784898a44b5b",
+  "prevId": "812b4242-e7bc-4ca0-8cf8-edfa85fbda6e",
+  "tables": {
+    "providerAuthDetails": {
+      "name": "providerAuthDetails",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refreshToken": {
+          "name": "refreshToken",
+          "type": "varchar(512)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "providers": {
+          "name": "providers",
+          "type": "providers",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(800)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lastCheckedHistoryId": {
+          "name": "lastCheckedHistoryId",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "providerAuthDetails_user_id_users_id_fk": {
+          "name": "providerAuthDetails_user_id_users_id_fk",
+          "tableFrom": "providerAuthDetails",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "providerAuthDetails_user_id_providers_email": {
+          "name": "providerAuthDetails_user_id_providers_email",
+          "columns": [
+            "user_id",
+            "providers",
+            "email"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "providers": {
+      "name": "providers",
+      "values": {
+        "gmail": "gmail",
+        "outlook": "outlook"
+      }
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}

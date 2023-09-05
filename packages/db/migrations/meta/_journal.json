@@ -8,6 +8,13 @@
       "when": 1693868103963,
       "tag": "0000_wooden_tiger_shark",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1693897640271,
+      "tag": "0001_foamy_silver_samurai",
+      "breakpoints": true
     }
   ]
 }

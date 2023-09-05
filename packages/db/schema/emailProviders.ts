@@ -23,6 +23,9 @@ export const providerAuthDetails = pgTable(
     provider: providerEnum("providers").notNull(),
     email: varchar("email", { length: 255 }).notNull(),
     name: varchar("name", { length: 800 }),
+    lastCheckedHistoryId: varchar("lastCheckedHistoryId", {
+      length: 100,
+    }).notNull(),
   },
   (table) => {
     return {
