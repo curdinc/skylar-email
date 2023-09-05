@@ -5,6 +5,20 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "license": "MIT",
+  "exports": {
+    ".": "./server.ts",
+    "./client": "./client.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./server.ts"
+      ],
+      "client": [
+        "./client.ts"
+      ]
+    }
+  },
   "scripts": {
     "clean": "rm -rf .turbo node_modules ./**/*/*.js ./**/*/*.d.ts ./**/*/*/*.jsx ./**/*/*/*.d.ts",
     "lint": "eslint .",
@@ -48,7 +62,8 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "@skylar/eslint-config/base"
+      "@skylar/eslint-config/base",
+      "@skylar/eslint-config/react"
     ]
   },
   "prettier": "@skylar/prettier-config"

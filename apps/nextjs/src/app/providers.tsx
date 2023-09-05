@@ -8,7 +8,7 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
-import { AUTH_TOKEN_COOKIE_NAME } from "@skylar/auth/constants";
+import { AUTH_TOKEN_COOKIE_NAME } from "@skylar/auth/client";
 
 import { env } from "~/env";
 import { api } from "~/lib/utils/api";

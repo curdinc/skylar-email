@@ -1,9 +1,7 @@
 {
   "extends": "@skylar/tsconfig/base.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-    "composite": true,
-    "noEmit": false
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
   "include": ["."],
   "exclude": ["node_modules", "**/*.{jsx,js,d.ts}"]

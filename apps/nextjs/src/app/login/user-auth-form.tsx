@@ -7,7 +7,7 @@ import {
   useSignInWithDiscord,
   useSignInWithFacebook,
   useSignInWithGithub,
-} from "@skylar/auth/client/hooks";
+} from "@skylar/auth/client";
 
 import { BrandIcons } from "~/components/icons/brand-icons";
 import { Button } from "~/components/ui/button";
