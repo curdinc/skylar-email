@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useSearchParams } from "next/navigation";
 
 import {
   useSignInWithDiscord,
@@ -12,15 +13,13 @@ import { BrandIcons } from "~/components/icons/brand-icons";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils/ui";
 
-type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement> & {
-  redirectTo: string;
-};
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function UserAuthForm({
-  className,
-  redirectTo,
-  ...props
-}: UserAuthFormProps) {
+export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+  const params = useSearchParams();
+  const redirectToPath = params.get("redirectTo") ?? "/inbox";
+  const redirectTo = new URL(redirectToPath, window.location.origin).href;
+
   const [loadingOauth, setIsLoading] = React.useState<boolean>(false);
   const signInWithGithub = useSignInWithGithub({
     redirectTo,

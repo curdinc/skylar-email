@@ -27,6 +27,7 @@ export type UserType = Output<typeof UserSchema>;
 export const SupabaseUserSchema = object({
   email: optional(string([email()])),
   phone: optional(string()),
+  aud: string(),
   app_metadata: object({
     provider: enumType(["github", "discord", "facebook", "google"]),
     providers: array(enumType(["github", "discord", "facebook", "google"])),

@@ -5,11 +5,15 @@ import {
   useUser as useSupabaseUser,
 } from "@supabase/auth-helpers-react";
 
+import { mapSupabaseUserToUser } from "../helper";
 import type { User } from "../types/user";
 
 export function useUser(): User | undefined {
   const user = useSupabaseUser();
-  return user ?? undefined;
+  if (!user) {
+    return undefined;
+  }
+  return mapSupabaseUserToUser(user);
 }
 
 export function useSignOut() {
