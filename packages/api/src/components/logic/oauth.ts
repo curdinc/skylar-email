@@ -1,16 +1,16 @@
 import { TRPCError } from "@trpc/server";
 import jwt from "@tsndr/cloudflare-worker-jwt";
 
-import type { dbType } from "@skylar/db";
+import type { DbType } from "@skylar/db";
 import { schema } from "@skylar/db";
+import type { oauthOnboardingType } from "@skylar/schema";
 import {
   gmailProviderIDTokenSchema,
   oauth2TokenResponseSchema,
   validatorTrpcWrapper,
 } from "@skylar/schema";
-import type { oauthOnboardingType } from "@skylar/schema/src/emailProvider";
 
-export async function userOnboarding(db: dbType, input: oauthOnboardingType) {
+export async function userOnboarding(db: DbType, input: oauthOnboardingType) {
   if (input.provider !== "gmail") {
     throw new TRPCError({
       code: "NOT_IMPLEMENTED",

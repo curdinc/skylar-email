@@ -11,7 +11,7 @@ import superjson from "superjson";
 
 import type { Session } from "@skylar/auth";
 import { getSession } from "@skylar/auth";
-import type { Db } from "@skylar/db";
+import type { DbType } from "@skylar/db";
 import type { Logger } from "@skylar/logger";
 import { formatValidatorError } from "@skylar/schema";
 
@@ -28,7 +28,7 @@ type CreateContextOptions = {
   session?: Session;
   env: { JWT_SECRET: string };
   logger: Logger;
-  db: Db;
+  db: DbType;
 };
 
 /**
@@ -45,6 +45,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
     session: opts.session,
     env: opts.env,
     db: opts.db,
+    logger: opts.logger,
   };
 };
 
@@ -62,7 +63,7 @@ export const createTRPCContext = async ({
   req: Request;
   logger: Logger;
   env: CreateContextOptions["env"];
-  db: Db;
+  db: DbType;
 }) => {
   const authHeader = req?.headers.get("Authorization") ?? undefined;
   const session = await getSession({
