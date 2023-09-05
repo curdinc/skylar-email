@@ -13,6 +13,10 @@
   "dependencies": {
     "@hono/trpc-server": "^0.1.0",
     "@skylar/api": "^0.1.0",
+    "@skylar/auth": "^0.1.0",
+    "@skylar/db": "^0.1.0",
+    "@skylar/logger": "^0.1.0",
+    "@skylar/schema": "^0.1.0",
     "hono": "^3.5.6"
   },
   "devDependencies": {

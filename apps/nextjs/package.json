@@ -9,7 +9,7 @@
     "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",
     "format": "prettier --check \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path ../../.prettierignore",
     "start": "pnpm with-env next start",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --build",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
@@ -21,7 +21,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@skylar/auth": "^0.1.0",
     "@skylar/logger": "^0.1.0",
-    "@t3-oss/env-nextjs": "^0.6.1",
+    "@skylar/schema": "^0.1.0",
     "@tanstack/react-query": "^4.33.0",
     "@tanstack/react-query-devtools": "^4.33.0",
     "@tanstack/react-query-next-experimental": "5.0.0-alpha.80",
@@ -37,8 +37,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "superjson": "1.13.1",
-    "tailwind-merge": "^1.14.0",
-    "zod": "^3.22.2"
+    "tailwind-merge": "^1.14.0"
   },
   "devDependencies": {
     "@skylar/api": "^0.1.0",
@@ -53,7 +52,6 @@
     "dotenv-cli": "^7.3.0",
     "encoding": "^0.1.13",
     "eslint": "^8.48.0",
-    "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   },
   "eslintConfig": {

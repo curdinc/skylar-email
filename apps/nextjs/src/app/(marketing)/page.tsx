@@ -2,16 +2,11 @@
 
 import Link from "next/link";
 
-import { useUser } from "@skylar/auth";
-
 import { buttonVariants } from "~/components/ui/button";
 import { siteConfig } from "~/lib/utils/config";
 import { cn } from "~/lib/utils/ui";
 
 export default function IndexPage() {
-  const user = useUser();
-  console.log("user", user);
-
   return (
     <>
       <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32">

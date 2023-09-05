@@ -37,5 +37,11 @@ export function axiomLoggerToLogger(logger: AxiomLogger): Logger {
       }
       logger.error(message, args);
     },
+    addMetadata(meta) {
+      return axiomLoggerToLogger(logger.with(meta));
+    },
+    async flush() {
+      await (logger.flush as () => Promise<void>)();
+    },
   };
 }

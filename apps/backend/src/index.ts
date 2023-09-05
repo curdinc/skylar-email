@@ -1,22 +1,85 @@
 import { trpcServer } from "@hono/trpc-server";
+import type { Context } from "hono";
 import { Hono } from "hono";
 import { env } from "hono/adapter";
 import { cors } from "hono/cors";
 
 import { appRouter, createTRPCContext } from "@skylar/api";
+import { honoAuthMiddleware } from "@skylar/auth";
+import { getDb } from "@skylar/db";
+import { getServerLogger } from "@skylar/logger";
+import { BackendEnvSchema, formatValidatorError, parse } from "@skylar/schema";
 
 type Bindings = {
-  APP_URL: string;
-  SUPABASE_JWT_SECRET: string;
+  JWT_SECRET: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
 
+function getEnvVars(
+  c: Context<
+    {
+      Bindings: Bindings;
+    },
+    "*",
+    object
+  >,
+) {
+  try {
+    const envVars = parse(BackendEnvSchema, env(c));
+    return envVars;
+  } catch (e) {
+    console.log(JSON.stringify(formatValidatorError(e), null, 2));
+    throw e;
+  }
+}
+
 app.use("/trpc/*", async (c, next) => {
+  const envVars = getEnvVars(c);
   return await cors({
-    origin: [c.env.APP_URL],
+    origin: [envVars.APP_URL],
     allowMethods: ["POST", "GET", "OPTIONS"],
   })(c, next);
+});
+
+app.use("/trpc/*", async (c, next) => {
+  const envVars = getEnvVars(c);
+
+  return await honoAuthMiddleware({
+    SUPABASE_ANON_KEY: envVars.SUPABASE_ANON_KEY,
+    SUPABASE_URL: envVars.SUPABASE_URL,
+  })(c, next);
+});
+
+app.use("/trpc/*", async (c, next) => {
+  const envVars = getEnvVars(c);
+
+  const db = getDb(envVars.DATABASE_URL);
+  const logger = getServerLogger({
+    req: c.req.raw,
+    token: envVars.AXIOM_TOKEN,
+    dataset: envVars.AXIOM_DATASET,
+    orgId: envVars.AXIOM_ORG_ID,
+    url: envVars.AXIOM_URL,
+  });
+
+  const response = await trpcServer({
+    router: appRouter,
+    endpoint: "/trpc",
+    onError({ error, path }) {
+      console.error(`>>> tRPC Error on '${path}'`, error);
+    },
+    createContext: ({ req }) =>
+      createTRPCContext({
+        req,
+        env: { JWT_SECRET: envVars.SUPABASE_JWT_SECRET },
+        db,
+        logger,
+      }),
+  })(c, next);
+
+  await logger.flush();
+  return response;
 });
 
 app.options("/trpc/*", (c) => {
@@ -26,21 +89,6 @@ app.options("/trpc/*", (c) => {
   response.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
   response.headers.set("Access-Control-Allow-Headers", "*");
   return response;
-});
-
-app.use("/trpc/*", (c, next) => {
-  return trpcServer({
-    router: appRouter,
-    endpoint: "/trpc",
-    onError({ error, path }) {
-      console.error(`>>> tRPC Error on '${path}'`, error);
-    },
-    createContext: ({ req }) =>
-      createTRPCContext({
-        req: req,
-        JWT_SECRET: env(c).SUPABASE_JWT_SECRET,
-      }),
-  })(c, next);
 });
 
 export default app;

@@ -3,8 +3,8 @@
 import { useLogger as useAxiomLogger } from "next-axiom";
 import { LogLevel as AxiomLogLevel } from "next-axiom/dist/logger";
 
-import { axiomLoggerToLogger } from "./shared";
-import type { Logger, LogLevel } from "./types";
+import type { Logger, LogLevel } from "@skylar/logger";
+import { axiomLoggerToLogger } from "@skylar/logger";
 
 function getAxiomLogLevel(logLevel: LogLevel): AxiomLogLevel {
   switch (logLevel) {

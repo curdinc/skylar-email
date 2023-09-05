@@ -11,7 +11,8 @@ import superjson from "superjson";
 
 import type { Session } from "@skylar/auth";
 import { getSession } from "@skylar/auth";
-import { db } from "@skylar/db";
+import type { Db } from "@skylar/db";
+import type { Logger } from "@skylar/logger";
 import { formatValidatorError } from "@skylar/schema";
 
 /**
@@ -25,6 +26,9 @@ import { formatValidatorError } from "@skylar/schema";
  */
 type CreateContextOptions = {
   session?: Session;
+  env: { JWT_SECRET: string };
+  logger: Logger;
+  db: Db;
 };
 
 /**
@@ -39,7 +43,8 @@ type CreateContextOptions = {
 const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     session: opts.session,
-    db,
+    env: opts.env,
+    db: opts.db,
   };
 };
 
@@ -48,18 +53,31 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * process every request that goes through your tRPC endpoint
  * @link https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: {
-  req?: Request;
-  JWT_SECRET?: string;
+export const createTRPCContext = async ({
+  req,
+  env,
+  logger,
+  db,
+}: {
+  req: Request;
+  logger: Logger;
+  env: CreateContextOptions["env"];
+  db: Db;
 }) => {
-  const authHeader = opts.req?.headers.get("Authorization") ?? undefined;
-  const session = await getSession(authHeader, opts.JWT_SECRET);
-  const source = opts.req?.headers.get("x-trpc-source") ?? "unknown";
+  const authHeader = req?.headers.get("Authorization") ?? undefined;
+  const session = await getSession({
+    JWT_SECRET: env.JWT_SECRET,
+    authHeader,
+  });
+  const source = req?.headers.get("x-trpc-source") ?? "unknown";
 
   console.log(">>> tRPC Request from", source, "by", session?.user);
 
   return createInnerTRPCContext({
+    logger,
     session,
+    env,
+    db,
   });
 };
 

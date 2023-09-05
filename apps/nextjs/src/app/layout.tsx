@@ -5,8 +5,9 @@ import "~/styles/globals.css";
 import { headers } from "next/headers";
 import { AxiomWebVitals } from "next-axiom";
 
-import { AuthProvider } from "@skylar/auth";
+import { NextAuthProvider } from "@skylar/auth";
 
+import { env } from "~/env";
 import { siteConfig } from "~/lib/utils/config";
 import { cn } from "~/lib/utils/ui";
 import { TRPCReactProvider } from "./providers";
@@ -76,9 +77,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       >
         <AxiomWebVitals />
-        <AuthProvider>
+        <NextAuthProvider
+          supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
+          supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
+        >
           <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
-        </AuthProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );
