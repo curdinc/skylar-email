@@ -2,8 +2,6 @@
 
 import React from "react";
 
-import { state$ } from "@skylar/logic";
-
 import { BrandIcons } from "~/components/icons/brand-icons";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils/ui";
@@ -17,8 +15,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     signInWithGithub,
     signInWithDiscord,
     signInWithFacebook,
+    loggingInto,
   } = useLogin();
-  const loggingInto = state$.LOGIN.loggingInto.use();
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>

@@ -13,6 +13,7 @@ export const useLogin = () => {
   const params = useSearchParams();
   const redirectToPath = params.get("redirectTo") ?? "/inbox";
   const [redirectTo, setRedirectTo] = useState(redirectToPath);
+  const loggingInto = state$.LOGIN.loggingInto.use();
 
   useEffect(() => {
     setRedirectTo(new URL(redirectToPath, window.location.origin).href);
@@ -39,6 +40,7 @@ export const useLogin = () => {
   };
 
   return {
+    loggingInto,
     onClickOauthLogin,
     signInWithGithub,
     signInWithDiscord,

@@ -18,10 +18,6 @@ export function useConnectEmailProviderPage() {
       },
     });
   useEffect(() => {
-    console.log(
-      "state$.ONBOARDING.alphaCode.peek(),",
-      state$.ONBOARDING.alphaCode.peek(),
-    );
     const code = state$.ONBOARDING.alphaCode.peek();
     if (!code) {
       router.replace("/onboarding/code");
