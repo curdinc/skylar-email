@@ -33,6 +33,40 @@ function getEnvVars(
   }
 }
 
+// provider routes
+app.use("/gmail.incomingEmail", async (c) => {
+  const envVars = getEnvVars(c);
+
+  const db = getDb(envVars.DATABASE_URL);
+  const logger = getServerLogger({
+    req: c.req.raw,
+    token: envVars.AXIOM_TOKEN,
+    dataset: envVars.AXIOM_DATASET,
+    orgId: envVars.AXIOM_ORG_ID,
+    url: envVars.AXIOM_URL,
+  });
+
+  const caller = appRouter.createCaller(
+    await createTRPCContext({
+      req: c.req.raw,
+      env: {
+        JWT_SECRET: envVars.SUPABASE_JWT_SECRET,
+        GOOGLE_PROVIDER_CLIENT_ID: envVars.GOOGLE_PROVIDER_CLIENT_ID,
+        GOOGLE_PROVIDER_CLIENT_SECRET: envVars.GOOGLE_PROVIDER_CLIENT_SECRET,
+      },
+      db,
+      logger,
+    }),
+  );
+
+  logger.debug(c.req.url);
+  const result = await caller.gmail.incomingEmail(await c.req.json());
+
+  await logger.flush();
+  return c.json(result);
+});
+
+// TRPC routes
 app.options("/trpc/*", (c) => {
   const response = c.newResponse(null, { status: 204 });
   response.headers.set("Access-Control-Allow-Origin", "*");
@@ -61,23 +95,16 @@ app.use("/trpc/*", async (c, next) => {
     orgId: envVars.AXIOM_ORG_ID,
     url: envVars.AXIOM_URL,
   });
-  // console.log("await c.req.raw.text()", await c.req.raw.text());
 
   const response = await trpcServer({
     router: appRouter,
     endpoint: "/trpc",
     onError({ error, path }) {
-      console.error(
-        `>>> tRPC Error on '${path}'`,
-        error,
-        JSON.stringify(formatValidatorError(error.cause), null, 2),
+      logger.error(
+        `>>> tRPC Error on '${path}' + ${JSON.stringify(error, null, 2)}`,
       );
     },
     createContext: () => {
-      // console.log(
-      //   "trpc_context_req",
-      //   JSON.stringify(await req.json(), null, 2),
-      // );
       return createTRPCContext({
         req: c.req.raw,
         env: {
