@@ -210,6 +210,9 @@ importers:
       '@skylar/logger':
         specifier: ^0.1.0
         version: link:../../packages/logger
+      '@skylar/logic':
+        specifier: ^0.1.0
+        version: link:../../packages/logic
       '@skylar/schema':
         specifier: ^0.1.0
         version: link:../../packages/schema
@@ -449,6 +452,46 @@ importers:
       next:
         specifier: ^13.4.19
         version: 13.4.19(react-dom@18.2.0)(react@18.2.0)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
+  packages/logic:
+    dependencies:
+      '@legendapp/state':
+        specifier: 2.0.0-beta.0
+        version: 2.0.0-beta.0(react@18.2.0)
+      '@skylar/auth':
+        specifier: ^0.1.0
+        version: link:../auth
+      '@trpc/client':
+        specifier: ^10.38.1
+        version: 10.38.1(@trpc/server@10.38.1)
+      superjson:
+        specifier: 1.13.1
+        version: 1.13.1
+    devDependencies:
+      '@skylar/api':
+        specifier: ^0.1.0
+        version: link:../api
+      '@skylar/eslint-config':
+        specifier: 0.2.0
+        version: link:../../tooling/eslint
+      '@skylar/prettier-config':
+        specifier: ^0.1.0
+        version: link:../../tooling/prettier
+      '@skylar/tsconfig':
+        specifier: ^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.48.0
+        version: 8.48.0
+      next:
+        specifier: ^13.4.19
+        version: 13.4.19(react-dom@18.2.0)(react@18.2.0)
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -3168,6 +3211,14 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.15
+    dev: false
+
+  /@legendapp/state@2.0.0-beta.0(react@18.2.0):
+    resolution: {integrity: sha512-8EFOt/Nc+vtkqxQ7Hj+kw/njnRkHTByDJaL2WEhHYNIp53cqWvPIfmjKW3wG0J1M2ZPKyKTjETV3eQgc6xawSg==}
+    dependencies:
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - react
     dev: false
 
   /@manypkg/cli@0.21.0:
@@ -11525,6 +11576,7 @@ packages:
 
   /semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
+    hasBin: true
 
   /semver@7.3.2:
     resolution: {integrity: sha512-OrOb32TeeambH6UrhtShmF7CRDqhL6/5XpPNp2DuRH6+9QLw/orhp72j87v8Qa1ScDkvrrBNpZcDejAirJmfXQ==}

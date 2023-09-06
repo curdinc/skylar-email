@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -14,28 +11,11 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { useToast } from "~/components/ui/use-toast";
-import { api } from "~/lib/utils/api";
 import { siteConfig } from "~/lib/utils/config";
+import { useCodePage } from "./useCodePage";
 
 export default function BetaCodeForm() {
-  const router = useRouter();
-  const { toast } = useToast();
-
-  const { mutate, isLoading } = api.onboarding.validateAlphaCode.useMutation({
-    onSuccess() {
-      router.push(`/onboarding/connect?code=${alphaCode}`);
-    },
-    onError(error) {
-      toast({
-        title: "Invalid Alpha Code",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-
-  const [alphaCode, setAlphaCode] = useState("");
+  const { code, isSubmittingCode, onCodeChange, onSubmitCode } = useCodePage();
 
   return (
     <Card>
@@ -59,33 +39,30 @@ export default function BetaCodeForm() {
           </span>
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-6">
-        <div className="grid gap-2">
-          <Label htmlFor="beta-code" className="sr-only">
-            alpha Code
-          </Label>
-          <Input
-            id="alpha-code"
-            placeholder="skylar_alpha_1234..."
-            value={alphaCode}
-            onChange={(e) => {
-              setAlphaCode(e.target.value);
-            }}
-          />
-        </div>
-      </CardContent>
-      <CardFooter className="justify-end space-x-2">
-        <Button
-          isLoading={isLoading}
-          onClick={() => {
-            mutate({
-              alphaCode,
-            });
-          }}
-        >
-          Next
-        </Button>
-      </CardFooter>
+      <form>
+        <CardContent className="grid gap-6">
+          <div className="grid gap-2">
+            <Label htmlFor="beta-code" className="sr-only">
+              alpha Code
+            </Label>
+            <Input
+              id="alpha-code"
+              placeholder="skylar_alpha_1234..."
+              value={code}
+              onChange={onCodeChange}
+            />
+          </div>
+        </CardContent>
+        <CardFooter className="justify-end space-x-2">
+          <Button
+            type="submit"
+            isLoading={isSubmittingCode}
+            onClick={onSubmitCode}
+          >
+            Next
+          </Button>
+        </CardFooter>
+      </form>
     </Card>
   );
 }

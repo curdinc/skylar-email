@@ -1,0 +1,44 @@
+{
+  "name": "@skylar/logic",
+  "private": true,
+  "version": "0.1.0",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./"
+      ]
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint .",
+    "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@legendapp/state": "2.0.0-beta.0",
+    "@skylar/auth": "^0.1.0",
+    "@trpc/client": "^10.38.1",
+    "superjson": "1.13.1"
+  },
+  "devDependencies": {
+    "@skylar/api": "^0.1.0",
+    "@skylar/eslint-config": "0.2.0",
+    "@skylar/prettier-config": "^0.1.0",
+    "@skylar/tsconfig": "^0.1.0",
+    "eslint": "^8.48.0",
+    "next": "^13.4.19",
+    "react": "18.2.0",
+    "typescript": "^5.2.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@skylar/eslint-config/base"
+    ]
+  },
+  "prettier": "@skylar/prettier-config"
+}
