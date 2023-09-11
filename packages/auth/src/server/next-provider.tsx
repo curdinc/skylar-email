@@ -74,10 +74,8 @@ export async function NextAuthProvider({
         redirect(pathToString(authSettings.onUnauthenticatedRedirectTo));
       }
     } else if (typeof authSettings.onUnauthenticatedRedirectTo === "function") {
-      const newRoute = await authSettings.onUnauthenticatedRedirectTo(
-        pathName,
-        queryParams,
-      );
+      const newRoute =
+        await authSettings.onUnauthenticatedRedirectTo(currentPath);
       if (!isPathEqual(newRoute, currentPath)) {
         redirect(pathToString(newRoute));
       }
@@ -90,10 +88,8 @@ export async function NextAuthProvider({
         redirect(pathToString(authSettings.onAuthenticatedRedirectTo));
       }
     } else if (typeof authSettings.onAuthenticatedRedirectTo === "function") {
-      const newRoute = await authSettings.onAuthenticatedRedirectTo(
-        pathName,
-        queryParams,
-      );
+      const newRoute =
+        await authSettings.onAuthenticatedRedirectTo(currentPath);
       if (!isPathEqual(newRoute, currentPath)) {
         redirect(pathToString(newRoute));
       }

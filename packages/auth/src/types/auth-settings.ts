@@ -8,32 +8,22 @@ export type AuthSettingServerType =
       guardByDefault?: true;
       onUnauthenticatedRedirectTo?:
         | PathType
-        | ((
-            currentRoute: string,
-            queryParams: URLSearchParams,
-          ) => Promise<PathType> | PathType);
+        | ((path: PathType) => Promise<PathType> | PathType);
     }
   | {
       guardByDefault?: false;
       onAuthenticatedRedirectTo?:
         | PathType
-        | ((
-            currentRoute: string,
-            queryParams: URLSearchParams,
-          ) => Promise<PathType> | PathType);
+        | ((path: PathType) => Promise<PathType> | PathType);
     };
 
 export type AuthSettingClientType = {
+  onLogin: (path: PathType) => void | Promise<void>;
   onLoginRedirectTo?:
     | PathType
-    | ((
-        currentRoute: string,
-        queryParams: URLSearchParams,
-      ) => Promise<PathType> | PathType);
+    | ((path: PathType) => Promise<PathType> | PathType);
+  onLogout: (path: PathType) => void | Promise<void>;
   onLogoutRedirectTo?:
     | PathType
-    | ((
-        currentRoute: string,
-        queryParams: URLSearchParams,
-      ) => Promise<PathType> | PathType);
+    | ((path: PathType) => Promise<PathType> | PathType);
 };

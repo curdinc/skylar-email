@@ -12,7 +12,7 @@ import { env } from "~/env";
 import { siteConfig } from "~/lib/utils/config";
 import { UNAUTHENTICATED_ROUTES } from "~/lib/utils/constants";
 import { cn } from "~/lib/utils/ui";
-import { AuthGuardSkylar, TRPCReactProvider } from "./providers";
+import { AuthListenerSkylar, TRPCReactProvider } from "./providers";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -84,25 +84,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
           authSettings={{
             guardByDefault: true,
-            onUnauthenticatedRedirectTo(currentRoute, queryParams) {
-              if (UNAUTHENTICATED_ROUTES.includes(currentRoute)) {
-                return { path: currentRoute, queryParams };
+            onUnauthenticatedRedirectTo({ path, queryParams }) {
+              if (UNAUTHENTICATED_ROUTES.includes(path)) {
+                return { path, queryParams };
               }
               const newSearchParams = new URLSearchParams();
               newSearchParams.set(
                 "redirectTo",
-                `${currentRoute}?${queryParams.toString()}`,
+                `${path}?${queryParams?.toString()}`,
               );
               return {
                 path:
-                  queryParams.size > 0
-                    ? `/login?${newSearchParams.toString()}}`
-                    : `/login?redirectTo=${currentRoute}`,
+                  (queryParams?.size ?? 0) > 0
+                    ? `/login?${newSearchParams.toString()}`
+                    : `/login?redirectTo=${path}`,
               };
             },
           }}
         >
-          <AuthGuardSkylar
+          <AuthListenerSkylar
             supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
             supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
           />

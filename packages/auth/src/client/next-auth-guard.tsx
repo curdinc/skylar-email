@@ -8,14 +8,18 @@ import { cookieOptions } from "../constants";
 import { isPathEqual, pathToString } from "../helper";
 import type { AuthSettingClientType } from "../types/auth-settings";
 
-export function AuthGuard({
+export function AuthListener({
   supabaseKey,
   supabaseUrl,
+  onLogin,
+  onLogout,
   onLoginRedirectTo,
   onLogoutRedirectTo,
 }: {
   supabaseKey: string;
   supabaseUrl: string;
+  onLogin?: AuthSettingClientType["onLogin"];
+  onLogout?: AuthSettingClientType["onLogout"];
   onLoginRedirectTo?: AuthSettingClientType["onLoginRedirectTo"];
   onLogoutRedirectTo?: AuthSettingClientType["onLogoutRedirectTo"];
 }) {
@@ -38,11 +42,9 @@ export function AuthGuard({
     const signOutListener = supabaseClient.auth.onAuthStateChange(
       async (event) => {
         if (event === "SIGNED_OUT") {
+          await onLogout?.(currentPath);
           if (typeof onLogoutRedirectTo === "function") {
-            const newRoute = await onLogoutRedirectTo(
-              pathName,
-              modifiableSearchParams,
-            );
+            const newRoute = await onLogoutRedirectTo(currentPath);
             if (!isPathEqual(newRoute, currentPath)) {
               router.push(pathToString(newRoute));
             }
@@ -53,11 +55,10 @@ export function AuthGuard({
           }
         }
         if (event === "SIGNED_IN") {
+          await onLogin?.(currentPath);
+
           if (typeof onLoginRedirectTo === "function") {
-            const newRoute = await onLoginRedirectTo(
-              pathName,
-              modifiableSearchParams,
-            );
+            const newRoute = await onLoginRedirectTo(currentPath);
             if (!isPathEqual(newRoute, currentPath)) {
               router.push(pathToString(newRoute));
             }
@@ -73,7 +74,9 @@ export function AuthGuard({
       signOutListener.data.subscription.unsubscribe();
     };
   }, [
+    onLogin,
     onLoginRedirectTo,
+    onLogout,
     onLogoutRedirectTo,
     pathName,
     router,
