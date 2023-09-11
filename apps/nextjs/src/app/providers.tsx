@@ -8,8 +8,9 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
-import type { PathType, User } from "@skylar/auth";
+import type { PathType } from "@skylar/auth";
 import { AUTH_TOKEN_COOKIE_NAME, AuthListener } from "@skylar/auth/client";
+import type { UserType } from "@skylar/schema";
 
 import { env } from "~/env";
 import { api } from "~/lib/utils/api";
@@ -86,7 +87,7 @@ export function AuthListenerSkylar({
     };
   }, []);
 
-  const onLogin = useCallback(async (user: User) => {
+  const onLogin = useCallback(async (user: UserType) => {
     console.log("user", user);
     // TODO: Initiate new user if needed and redirect to onboarding
     return Promise.resolve();

@@ -1,4 +1,4 @@
-import type { User } from "./user";
+import type { UserType } from "@skylar/schema";
 
 export type PathType = {
   path: string;
@@ -20,7 +20,7 @@ export type AuthSettingServerType =
     };
 
 export type AuthSettingClientType = {
-  onLogin: (user: User) => void | Promise<void>;
+  onLogin: (user: UserType) => void | Promise<void>;
   onLoginRedirectTo?:
     | PathType
     | ((path: PathType) => Promise<PathType> | PathType);

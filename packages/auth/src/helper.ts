@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
+import type { UserType } from "@skylar/schema";
+
 import type { PathType } from "./types/auth-settings";
-import type { User } from "./types/user";
 
 export function mapSupabaseUserToUser(
   supabaseUser: Omit<SupabaseUser, "created_at" | "id">,
-): User {
+): UserType {
+  console.log("supabaseUser", supabaseUser);
   return {
     name:
       supabaseUser.user_metadata.full_name ??

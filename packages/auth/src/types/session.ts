@@ -1,5 +1,5 @@
-import type { User } from "./user";
+import type { UserType } from "@skylar/schema";
 
 export type Session = {
-  user?: User;
+  user?: UserType;
 };

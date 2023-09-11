@@ -8,4 +8,3 @@ export type {
   PathType,
 } from "./src/types/auth-settings";
 export type { Session } from "./src/types/session";
-export type { User } from "./src/types/user";
