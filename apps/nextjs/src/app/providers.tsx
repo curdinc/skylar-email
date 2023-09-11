@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -8,6 +8,7 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
+import type { PathType, User } from "@skylar/auth";
 import { AUTH_TOKEN_COOKIE_NAME, AuthListener } from "@skylar/auth/client";
 
 import { env } from "~/env";
@@ -73,24 +74,30 @@ export function AuthListenerSkylar({
   supabaseKey: string;
   supabaseUrl: string;
 }) {
+  const onLogoutRedirectTo = useCallback(({ path, queryParams }: PathType) => {
+    const newSearchParams = new URLSearchParams();
+    if (queryParams) {
+      newSearchParams.set("redirectTo", `${path}?${queryParams.toString()}`);
+    } else {
+      newSearchParams.set("redirectTo", path);
+    }
+    return {
+      path: `/login?${newSearchParams.toString()}`,
+    };
+  }, []);
+
+  const onLogin = useCallback(async (user: User) => {
+    console.log("user", user);
+    // TODO: Intiate new user
+    return Promise.resolve();
+  }, []);
+
   return (
     <AuthListener
       supabaseKey={supabaseKey}
       supabaseUrl={supabaseUrl}
-      onLogoutRedirectTo={({ path, queryParams }) => {
-        const newSearchParams = new URLSearchParams();
-        if (queryParams) {
-          newSearchParams.set(
-            "redirectTo",
-            `${path}?${queryParams.toString()}`,
-          );
-        } else {
-          newSearchParams.set("redirectTo", path);
-        }
-        return {
-          path: `/login?${newSearchParams.toString()}`,
-        };
-      }}
+      onLogoutRedirectTo={onLogoutRedirectTo}
+      onLogin={onLogin}
     />
   );
 }

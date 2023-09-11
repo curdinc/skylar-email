@@ -1,3 +1,5 @@
+import type { User } from "./user";
+
 export type PathType = {
   path: string;
   queryParams?: URLSearchParams;
@@ -18,11 +20,11 @@ export type AuthSettingServerType =
     };
 
 export type AuthSettingClientType = {
-  onLogin: (path: PathType) => void | Promise<void>;
+  onLogin: (user: User) => void | Promise<void>;
   onLoginRedirectTo?:
     | PathType
     | ((path: PathType) => Promise<PathType> | PathType);
-  onLogout: (path: PathType) => void | Promise<void>;
+  onLogout: () => void | Promise<void>;
   onLogoutRedirectTo?:
     | PathType
     | ((path: PathType) => Promise<PathType> | PathType);

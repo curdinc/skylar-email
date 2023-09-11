@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 
 import { cookieOptions } from "../constants";
-import { isPathEqual, pathToString } from "../helper";
+import { isPathEqual, mapSupabaseUserToUser, pathToString } from "../helper";
 import type { AuthSettingClientType } from "../types/auth-settings";
 
 export function AuthListener({
@@ -40,9 +40,9 @@ export function AuthListener({
       queryParams: modifiableSearchParams,
     };
     const signOutListener = supabaseClient.auth.onAuthStateChange(
-      async (event) => {
+      async (event, session) => {
         if (event === "SIGNED_OUT") {
-          await onLogout?.(currentPath);
+          await onLogout?.();
           if (typeof onLogoutRedirectTo === "function") {
             const newRoute = await onLogoutRedirectTo(currentPath);
             if (!isPathEqual(newRoute, currentPath)) {
@@ -55,7 +55,10 @@ export function AuthListener({
           }
         }
         if (event === "SIGNED_IN") {
-          await onLogin?.(currentPath);
+          if (session?.user) {
+            console.log("user present");
+            await onLogin?.(mapSupabaseUserToUser(session?.user));
+          }
 
           if (typeof onLoginRedirectTo === "function") {
             const newRoute = await onLoginRedirectTo(currentPath);
