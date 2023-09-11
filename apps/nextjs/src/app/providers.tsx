@@ -88,7 +88,7 @@ export function AuthListenerSkylar({
 
   const onLogin = useCallback(async (user: User) => {
     console.log("user", user);
-    // TODO: Intiate new user
+    // TODO: Initiate new user if needed and redirect to onboarding
     return Promise.resolve();
   }, []);
 
