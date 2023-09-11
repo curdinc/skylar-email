@@ -56,7 +56,6 @@ export function AuthListener({
         }
         if (event === "SIGNED_IN") {
           if (session?.user) {
-            console.log("user present");
             await onLogin?.(mapSupabaseUserToUser(session?.user));
           }
 

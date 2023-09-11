@@ -8,7 +8,6 @@ import type { PathType } from "./types/auth-settings";
 export function mapSupabaseUserToUser(
   supabaseUser: Omit<SupabaseUser, "created_at" | "id">,
 ): UserType {
-  console.log("supabaseUser", supabaseUser);
   return {
     name:
       supabaseUser.user_metadata.full_name ??
