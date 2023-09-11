@@ -10,8 +10,9 @@ import { NextAuthProvider } from "@skylar/auth";
 import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
 import { siteConfig } from "~/lib/utils/config";
+import { UNAUTHENTICATED_ROUTES } from "~/lib/utils/constants";
 import { cn } from "~/lib/utils/ui";
-import { TRPCReactProvider } from "./providers";
+import { AuthGuardSkylar, TRPCReactProvider } from "./providers";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -81,7 +82,30 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <NextAuthProvider
           supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
+          authSettings={{
+            guardByDefault: true,
+            onUnauthenticatedRedirectTo(currentRoute, queryParams) {
+              if (UNAUTHENTICATED_ROUTES.includes(currentRoute)) {
+                return { path: currentRoute, queryParams };
+              }
+              const newSearchParams = new URLSearchParams();
+              newSearchParams.set(
+                "redirectTo",
+                `${currentRoute}?${queryParams.toString()}`,
+              );
+              return {
+                path:
+                  queryParams.size > 0
+                    ? `/login?${newSearchParams.toString()}}`
+                    : `/login?redirectTo=${currentRoute}`,
+              };
+            },
+          }}
         >
+          <AuthGuardSkylar
+            supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
+            supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
+          />
           <TRPCReactProvider cookies={cookies().getAll()} headers={headers()}>
             {children}
             <Toaster />

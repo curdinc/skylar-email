@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
+import type { PathType } from "./types/auth-settings";
 import type { User } from "./types/user";
 
 export function mapSupabaseUserToUser(
@@ -24,3 +25,15 @@ export function mapSupabaseUserToUser(
     providerId: supabaseUser.user_metadata.sub,
   };
 }
+
+export const isPathEqual = (path1: PathType, path2: PathType) => {
+  path1.queryParams?.sort();
+  path2.queryParams?.sort();
+  return pathToString(path1) === pathToString(path2);
+};
+
+export const pathToString = (path: PathType) => {
+  return (path.queryParams?.size ?? 0) > 0
+    ? `${path.path}?${path.queryParams?.toString()}`
+    : path.path;
+};

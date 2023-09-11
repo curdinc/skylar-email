@@ -28,12 +28,12 @@ export const dashboardConfig: {
 } = {
   mainNav: [
     {
-      title: "Review",
-      href: "review",
+      title: "Screen",
+      href: "screen",
     },
     {
       title: "Important",
-      href: "important",
+      href: "inbox",
     },
     {
       title: "Readings",

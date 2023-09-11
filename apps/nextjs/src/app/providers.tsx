@@ -8,7 +8,7 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
-import { AUTH_TOKEN_COOKIE_NAME } from "@skylar/auth/client";
+import { AUTH_TOKEN_COOKIE_NAME, AuthGuard } from "@skylar/auth/client";
 
 import { env } from "~/env";
 import { api } from "~/lib/utils/api";
@@ -63,5 +63,25 @@ export function TRPCReactProvider(props: {
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </api.Provider>
+  );
+}
+
+export function AuthGuardSkylar({
+  supabaseKey,
+  supabaseUrl,
+}: {
+  supabaseKey: string;
+  supabaseUrl: string;
+}) {
+  return (
+    <AuthGuard
+      supabaseKey={supabaseKey}
+      supabaseUrl={supabaseUrl}
+      onLogoutRedirectTo={(currentRoute, queryParams) => {
+        return {
+          path: `/login?redirectTo=${currentRoute}?${queryParams.toString()}`,
+        };
+      }}
+    />
   );
 }

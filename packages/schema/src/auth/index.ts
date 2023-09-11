@@ -7,6 +7,7 @@ import {
   nullable,
   object,
   optional,
+  record,
   string,
   url,
 } from "valibot";
@@ -45,3 +46,6 @@ export const SupabaseUserSchema = object({
     sub: string(),
   }),
 });
+
+export const QuerySchema = record(string());
+export type QueryType = Output<typeof QuerySchema>;
