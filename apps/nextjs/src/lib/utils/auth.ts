@@ -1,5 +1,5 @@
 import type { RedirectFnType } from "@skylar/auth/*";
-import { UserType } from "@skylar/schema";
+import type { UserType } from "@skylar/schema";
 
 import { UNAUTHENTICATED_ROUTES } from "./config";
 
