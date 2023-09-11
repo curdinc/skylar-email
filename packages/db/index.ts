@@ -2,8 +2,9 @@ import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
 import * as example from "./schema/example";
+import { user } from "./schema/user";
 
-export const schema = { ...example };
+export const schema = { ...example, ...user };
 
 export function getDb(dbConnectionString: string) {
   neonConfig.fetchConnectionCache = true;
@@ -12,4 +13,4 @@ export function getDb(dbConnectionString: string) {
   return db;
 }
 
-export type Db = ReturnType<typeof getDb>;
+export type DbType = ReturnType<typeof getDb>;
