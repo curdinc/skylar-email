@@ -5,5 +5,6 @@ export { NextAuthProvider } from "./src/server/next-provider";
 export type {
   AuthSettingServerType,
   PathType,
+  RedirectFnType,
 } from "./src/types/auth-settings";
 export type { Session } from "./src/types/session";

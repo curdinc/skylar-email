@@ -45,3 +45,5 @@ export const dashboardConfig: {
     },
   ],
 };
+
+export const UNAUTHENTICATED_ROUTES = ["/", "/login"];

@@ -8,12 +8,11 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
-import type { PathType } from "@skylar/auth";
 import { AUTH_TOKEN_COOKIE_NAME, AuthListener } from "@skylar/auth/client";
-import type { UserType } from "@skylar/schema";
 
 import { env } from "~/env";
 import { api } from "~/lib/utils/api";
+import { onLogoutRedirectTo, onUserLogin } from "~/lib/utils/auth";
 
 export function TRPCReactProvider(props: {
   children: React.ReactNode;
@@ -75,29 +74,14 @@ export function AuthListenerSkylar({
   supabaseKey: string;
   supabaseUrl: string;
 }) {
-  const onLogoutRedirectTo = useCallback(({ path, queryParams }: PathType) => {
-    const newSearchParams = new URLSearchParams();
-    if (queryParams) {
-      newSearchParams.set("redirectTo", `${path}?${queryParams.toString()}`);
-    } else {
-      newSearchParams.set("redirectTo", path);
-    }
-    return {
-      path: `/login?${newSearchParams.toString()}`,
-    };
-  }, []);
-
-  const onLogin = useCallback(async (user: UserType) => {
-    console.log("user", user);
-    // TODO: Initiate new user if needed and redirect to onboarding
-    return Promise.resolve();
-  }, []);
+  const onLogoutRedirectToFn = useCallback(onLogoutRedirectTo, []);
+  const onLogin = useCallback(onUserLogin, []);
 
   return (
     <AuthListener
       supabaseKey={supabaseKey}
       supabaseUrl={supabaseUrl}
-      onLogoutRedirectTo={onLogoutRedirectTo}
+      onLogoutRedirectTo={onLogoutRedirectToFn}
       onLogin={onLogin}
     />
   );

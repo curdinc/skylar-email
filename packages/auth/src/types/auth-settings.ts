@@ -5,27 +5,21 @@ export type PathType = {
   queryParams?: URLSearchParams;
 };
 
+export type RedirectFnType = (path: PathType) => Promise<PathType> | PathType;
+
 export type AuthSettingServerType =
   | {
       guardByDefault?: true;
-      onUnauthenticatedRedirectTo?:
-        | PathType
-        | ((path: PathType) => Promise<PathType> | PathType);
+      onUnauthenticatedRedirectTo?: PathType | RedirectFnType;
     }
   | {
       guardByDefault?: false;
-      onAuthenticatedRedirectTo?:
-        | PathType
-        | ((path: PathType) => Promise<PathType> | PathType);
+      onAuthenticatedRedirectTo?: PathType | RedirectFnType;
     };
 
 export type AuthSettingClientType = {
   onLogin: (user: UserType) => void | Promise<void>;
-  onLoginRedirectTo?:
-    | PathType
-    | ((path: PathType) => Promise<PathType> | PathType);
+  onLoginRedirectTo?: PathType | RedirectFnType;
   onLogout: () => void | Promise<void>;
-  onLogoutRedirectTo?:
-    | PathType
-    | ((path: PathType) => Promise<PathType> | PathType);
+  onLogoutRedirectTo?: PathType | RedirectFnType;
 };

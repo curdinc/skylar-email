@@ -9,8 +9,8 @@ import { NextAuthProvider } from "@skylar/auth";
 
 import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
+import { onUnauthenticatedRedirectTo } from "~/lib/utils/auth";
 import { siteConfig } from "~/lib/utils/config";
-import { UNAUTHENTICATED_ROUTES } from "~/lib/utils/constants";
 import { cn } from "~/lib/utils/ui";
 import { AuthListenerSkylar, TRPCReactProvider } from "./providers";
 
@@ -84,22 +84,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
           authSettings={{
             guardByDefault: true,
-            onUnauthenticatedRedirectTo({ path, queryParams }) {
-              if (UNAUTHENTICATED_ROUTES.includes(path)) {
-                return { path, queryParams };
-              }
-              const newSearchParams = new URLSearchParams();
-              newSearchParams.set(
-                "redirectTo",
-                `${path}?${queryParams?.toString()}`,
-              );
-              return {
-                path:
-                  (queryParams?.size ?? 0) > 0
-                    ? `/login?${newSearchParams.toString()}`
-                    : `/login?redirectTo=${path}`,
-              };
-            },
+            onUnauthenticatedRedirectTo,
           }}
         >
           <AuthListenerSkylar
