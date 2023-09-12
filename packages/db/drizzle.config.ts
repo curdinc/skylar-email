@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 import type { Config } from "drizzle-kit";
 
 dotenv.config({
-  path: "../../.env",
+  path: "../../apps/backend/.dev.vars",
 });
 
 if (!process.env.DATABASE_URL) {
