@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 
+import { parse, SupabaseUserSchema } from "@skylar/schema";
+
 import { cookieOptions } from "../constants";
 import { isPathEqual, mapSupabaseUserToUser, pathToString } from "../helper";
 import type { AuthSettingClientType } from "../types/auth-settings";
@@ -56,7 +58,8 @@ export function AuthListener({
         }
         if (event === "SIGNED_IN") {
           if (session?.user) {
-            await onLogin?.(mapSupabaseUserToUser(session?.user));
+            const supabaseUser = parse(SupabaseUserSchema, session.user);
+            await onLogin?.(mapSupabaseUserToUser(supabaseUser));
           }
 
           if (typeof onLoginRedirectTo === "function") {

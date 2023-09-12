@@ -399,6 +399,9 @@ importers:
       '@neondatabase/serverless':
         specifier: ^0.6.0
         version: 0.6.0
+      '@skylar/schema':
+        specifier: ^0.1.0
+        version: link:../schema
       drizzle-orm:
         specifier: ^0.28.5
         version: 0.28.5(@neondatabase/serverless@0.6.0)(postgres@3.3.5)
@@ -461,9 +464,9 @@ importers:
       '@legendapp/state':
         specifier: 2.0.0-beta.0
         version: 2.0.0-beta.0(react@18.2.0)
-      '@skylar/auth':
+      '@skylar/schema':
         specifier: ^0.1.0
-        version: link:../auth
+        version: link:../schema
       '@trpc/client':
         specifier: ^10.38.1
         version: 10.38.1(@trpc/server@10.38.1)

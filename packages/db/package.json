@@ -1,10 +1,20 @@
 {
   "name": "@skylar/db",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "main": "./index.ts",
   "types": "./index.ts",
-  "license": "MIT",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./*"
+      ]
+    }
+  },
   "scripts": {
     "push": "drizzle-kit push:pg",
     "generate": "drizzle-kit generate:pg",
@@ -16,6 +26,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.6.0",
+    "@skylar/schema": "^0.1.0",
     "drizzle-orm": "^0.28.5"
   },
   "devDependencies": {

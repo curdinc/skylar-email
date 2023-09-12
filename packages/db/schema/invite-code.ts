@@ -22,11 +22,13 @@ export const inviteCode = pgTable("inviteCode", {
   createdAt: timestamp("createdAt", {
     withTimezone: true,
     mode: "date",
-  }).default(sql`CURRENT_TIMESTAMP`),
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
   usedAt: timestamp("usedAt", {
     withTimezone: true,
     mode: "date",
-  }).default(sql`CURRENT_TIMESTAMP`),
+  }),
   deletedAt: timestamp("deletedAt", {
     withTimezone: true,
     mode: "date",

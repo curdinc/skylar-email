@@ -5,6 +5,7 @@ import {
   email,
   enumType,
   nullable,
+  number,
   object,
   optional,
   record,
@@ -14,12 +15,22 @@ import {
 
 export const AuthCookieSchema = array(nullable(string()));
 
+export const SUPPORTED_AUTH_PROVIDERS = [
+  "github",
+  "discord",
+  "facebook",
+  "google",
+] as const;
+export type SupportedAuthProvidersType =
+  (typeof SUPPORTED_AUTH_PROVIDERS)[number];
+
 export const UserSchema = object({
+  id: optional(number()),
   email: optional(string([email()])),
   phone: optional(string()),
   imageUri: optional(string([url()])),
   name: string(),
-  providers: array(enumType(["github", "discord", "facebook", "google"])),
+  provider: enumType(SUPPORTED_AUTH_PROVIDERS),
   providerId: string(),
 });
 
@@ -30,8 +41,8 @@ export const SupabaseUserSchema = object({
   phone: optional(string()),
   aud: string(),
   app_metadata: object({
-    provider: enumType(["github", "discord", "facebook", "google"]),
-    providers: array(enumType(["github", "discord", "facebook", "google"])),
+    provider: enumType(SUPPORTED_AUTH_PROVIDERS),
+    providers: array(enumType(SUPPORTED_AUTH_PROVIDERS)),
   }),
   user_metadata: object({
     avatar_url: optional(string([url()])),
@@ -46,6 +57,7 @@ export const SupabaseUserSchema = object({
     sub: string(),
   }),
 });
+export type SupabaseUserType = Output<typeof SupabaseUserSchema>;
 
 export const QuerySchema = record(string());
 export type QueryType = Output<typeof QuerySchema>;

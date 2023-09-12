@@ -1,11 +1,11 @@
 import { observable } from "@legendapp/state";
 
-export type SupportedAuthProviders = "github" | "facebook" | "discord";
+import type { SupportedAuthProvidersType } from "@skylar/schema";
 
 export const state$ = observable<{
   ONBOARDING: { alphaCode: string };
   LOGIN: {
-    loggingInto: SupportedAuthProviders | undefined;
+    loggingInto: SupportedAuthProvidersType | undefined;
   };
   env: {
     NEXT_PUBLIC_BACKEND_URL: "";

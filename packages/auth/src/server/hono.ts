@@ -4,6 +4,11 @@ import type { Context, Next } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import type { CookieOptions } from "hono/utils/cookie";
 
+import type { SupabaseUserType, UserType } from "@skylar/schema";
+import { parse, SupabaseUserSchema } from "@skylar/schema";
+
+import { mapSupabaseUserToUser } from "../helper";
+
 class HonoMiddlewareAuthStorageAdapter<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends Context<any, "*", object>,
@@ -43,9 +48,13 @@ class HonoMiddlewareAuthStorageAdapter<
 export function honoAuthMiddleware<T extends Context<any, "*", object>>({
   SUPABASE_ANON_KEY,
   SUPABASE_URL,
+  onNewUser,
 }: {
   SUPABASE_URL: string;
   SUPABASE_ANON_KEY: string;
+  onNewUser?: (
+    user: UserType,
+  ) => Promise<Partial<SupabaseUserType["user_metadata"]> | undefined>;
 }) {
   return async (c: T, next: Next) => {
     const storage = new HonoMiddlewareAuthStorageAdapter(c);
@@ -54,7 +63,19 @@ export function honoAuthMiddleware<T extends Context<any, "*", object>>({
         storage,
       },
     });
-    await supabase.auth.getSession();
+    const session = await supabase.auth.getSession();
+    if (session.data.session?.user) {
+      const supabaseUser = parse(SupabaseUserSchema, session.data.session.user);
+      const user = mapSupabaseUserToUser(supabaseUser);
+      if (!user.id) {
+        const userProperties = await onNewUser?.(user);
+        await supabase.auth.updateUser({
+          data: { ...userProperties },
+        });
+        await supabase.auth.refreshSession();
+      }
+    }
+
     return await next();
   };
 }

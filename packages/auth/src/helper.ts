@@ -1,14 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { User as SupabaseUser } from "@supabase/supabase-js";
-
-import type { UserType } from "@skylar/schema";
+import type { SupabaseUserType, UserType } from "@skylar/schema";
 
 import type { PathType } from "./types/auth-settings";
 
 export function mapSupabaseUserToUser(
-  supabaseUser: Omit<SupabaseUser, "created_at" | "id">,
+  supabaseUser: SupabaseUserType,
 ): UserType {
   return {
+    id: supabaseUser.user_metadata.skylar_id,
     name:
       supabaseUser.user_metadata.full_name ??
       supabaseUser.user_metadata.name ??
@@ -22,7 +20,7 @@ export function mapSupabaseUserToUser(
       "",
     email: supabaseUser.email ?? supabaseUser.user_metadata.email,
     phone: supabaseUser.phone,
-    providers: supabaseUser.app_metadata.providers,
+    provider: supabaseUser.app_metadata.provider,
     providerId: supabaseUser.user_metadata.sub,
   };
 }

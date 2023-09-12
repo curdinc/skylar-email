@@ -6,8 +6,8 @@ import {
   useSignInWithFacebook,
   useSignInWithGithub,
 } from "@skylar/auth/client";
-import type { SupportedAuthProviders } from "@skylar/logic";
 import { state$ } from "@skylar/logic";
+import type { SupportedAuthProvidersType } from "@skylar/schema";
 
 export const useLogin = () => {
   const params = useSearchParams();
@@ -30,7 +30,7 @@ export const useLogin = () => {
   });
 
   const onClickOauthLogin = (
-    provider: SupportedAuthProviders,
+    provider: SupportedAuthProvidersType,
     oauthLogin: () => Promise<void>,
   ) => {
     return async () => {
