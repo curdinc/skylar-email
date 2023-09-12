@@ -29,19 +29,19 @@ export const dashboardConfig: {
   mainNav: [
     {
       title: "Screen",
-      href: "screen",
+      href: "/screen",
     },
     {
       title: "Important",
-      href: "inbox",
+      href: "/inbox",
     },
     {
       title: "Readings",
-      href: "readings",
+      href: "/readings",
     },
     {
       title: "Receipts",
-      href: "receipts",
+      href: "/receipts",
     },
   ],
 };
