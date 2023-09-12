@@ -17,8 +17,12 @@ import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { useConnectEmailProviderPage } from "./useConnectPage";
 
 export default function ConnectEmailOnboardingForm() {
-  const { isCheckingCode, onSelectEmailProvider, emailProvider, goBack } =
-    useConnectEmailProviderPage();
+  const {
+    isCheckingUserOnboardStep,
+    onSelectEmailProvider,
+    emailProvider,
+    goBack,
+  } = useConnectEmailProviderPage();
 
   return (
     <Card>
@@ -59,7 +63,9 @@ export default function ConnectEmailOnboardingForm() {
             </Label>
           </div>
         </RadioGroup>
-        <Button isLoading={isCheckingCode}>Connect to {emailProvider}</Button>
+        <Button isLoading={isCheckingUserOnboardStep}>
+          Connect to {emailProvider}
+        </Button>
       </CardContent>
       <CardFooter className="justify-between space-x-2">
         <Button variant={"ghost"} onClick={goBack}>

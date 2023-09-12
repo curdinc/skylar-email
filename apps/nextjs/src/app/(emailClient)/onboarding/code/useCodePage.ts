@@ -8,15 +8,17 @@ import { api } from "~/lib/utils/api";
 export function useCodePage() {
   const router = useRouter();
   const { toast } = useToast();
+  const utils = api.useContext();
 
   const code = state$.ONBOARDING.alphaCode.use();
-  const { mutate, isLoading } = api.onboarding.validateAlphaCode.useMutation({
-    onSuccess() {
+  const { mutate, isLoading } = api.onboarding.applyAlphaCode.useMutation({
+    async onSuccess() {
+      await utils.onboarding.invalidate();
       router.push(`/onboarding/connect`);
     },
     onError(error) {
       toast({
-        title: "Invalid Alpha Code",
+        title: "Something went wrong.",
         description: error.message,
         variant: "destructive",
       });

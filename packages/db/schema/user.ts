@@ -16,7 +16,7 @@ export const user = pgTable(
     }).notNull(),
     imageUri: text("imageUri"),
     name: text("name").default("").notNull(),
-    email: text("email").notNull(),
+    email: text("email"),
     phone: text("phone"),
     createdAt: timestamp("createdAt", {
       withTimezone: true,

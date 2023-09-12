@@ -6,7 +6,6 @@ export function mapSupabaseUserToUser(
   supabaseUser: SupabaseUserType,
 ): UserType {
   return {
-    id: supabaseUser.user_metadata.skylar_id,
     name:
       supabaseUser.user_metadata.full_name ??
       supabaseUser.user_metadata.name ??

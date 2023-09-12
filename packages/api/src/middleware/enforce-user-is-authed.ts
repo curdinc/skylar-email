@@ -47,6 +47,7 @@ export const enforceUserIsAuthed = createMiddleware(
             ...skylarUser,
             imageUri: skylarUser.imageUri ?? undefined,
             phone: skylarUser.phone ?? undefined,
+            email: skylarUser.email ?? undefined,
           },
         },
       },

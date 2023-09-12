@@ -5,7 +5,6 @@ import {
   email,
   enumType,
   nullable,
-  number,
   object,
   optional,
   record,
@@ -25,7 +24,6 @@ export type SupportedAuthProvidersType =
   (typeof SUPPORTED_AUTH_PROVIDERS)[number];
 
 export const UserSchema = object({
-  id: optional(number()),
   email: optional(string([email()])),
   phone: optional(string()),
   imageUri: optional(string([url()])),

@@ -11,21 +11,28 @@ export function useConnectEmailProviderPage() {
     "Gmail",
   );
 
-  const { mutate: checkValiAlphaCode, isLoading: isCheckingCode } =
-    api.onboarding.validateAlphaCode.useMutation({
+  const { mutate: getUserOnboardStep, isLoading: isCheckingUserOnboardStep } =
+    api.onboarding.getUserOnboardStep.useMutation({
+      onSuccess(data) {
+        if (data === "invite-code") {
+          router.replace("/onboarding/code");
+        }
+        if (data === "done") {
+          router.replace("/inbox");
+        }
+      },
       onError() {
         router.replace("/onboarding/code");
       },
     });
+
   useEffect(() => {
     const code = state$.ONBOARDING.alphaCode.peek();
     if (!code) {
       router.replace("/onboarding/code");
     }
-    checkValiAlphaCode({
-      alphaCode: state$.ONBOARDING.alphaCode.peek(),
-    });
-  }, [checkValiAlphaCode, router]);
+    getUserOnboardStep();
+  }, [getUserOnboardStep, router]);
 
   const onSelectEmailProvider = (provider: string) => {
     if (provider === "Gmail" || provider === "Outlook") {
@@ -38,7 +45,7 @@ export function useConnectEmailProviderPage() {
   };
 
   return {
-    isCheckingCode,
+    isCheckingUserOnboardStep,
     onSelectEmailProvider,
     emailProvider,
     goBack,
