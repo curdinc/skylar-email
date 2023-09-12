@@ -14,7 +14,7 @@ export async function getSession({
   authHeader?: string;
 }): Promise<Session | undefined> {
   const user = await getUser({ JWT_SECRET, authHeader });
-  
+
   return { user };
 }
 
