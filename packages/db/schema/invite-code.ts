@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 import { user } from "./user";
@@ -32,3 +32,14 @@ export const inviteCode = pgTable("inviteCode", {
     mode: "date",
   }),
 });
+
+export const inviteCodeRelations = relations(inviteCode, ({ one }) => ({
+  createdByUser: one(user, {
+    fields: [inviteCode.createdByUserId],
+    references: [user.id],
+  }),
+  usedByUser: one(user, {
+    fields: [inviteCode.usedByUserId],
+    references: [user.id],
+  }),
+}));
