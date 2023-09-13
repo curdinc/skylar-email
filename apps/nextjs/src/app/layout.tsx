@@ -9,9 +9,10 @@ import { NextAuthProvider } from "@skylar/auth";
 
 import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
+import { onUnauthenticatedRedirectTo } from "~/lib/utils/auth";
 import { siteConfig } from "~/lib/utils/config";
 import { cn } from "~/lib/utils/ui";
-import { TRPCReactProvider } from "./providers";
+import { AuthListenerSkylar, TRPCReactProvider } from "./providers";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -81,7 +82,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <NextAuthProvider
           supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
+          authSettings={{
+            guardByDefault: true,
+            onUnauthenticatedRedirectTo,
+          }}
         >
+          <AuthListenerSkylar
+            supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
+            supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
+          />
           <TRPCReactProvider cookies={cookies().getAll()} headers={headers()}>
             {children}
             <Toaster />

@@ -5,7 +5,7 @@ import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import type { Session } from "@supabase/auth-helpers-react";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 
-import { cookieOptions } from "../../constants";
+import { cookieOptions } from "../constants";
 
 export function SupabaseAuthClientProvider({
   children,
@@ -15,8 +15,9 @@ export function SupabaseAuthClientProvider({
 }: {
   supabaseKey: string;
   supabaseUrl: string;
-  children: React.ReactNode;
   initialSession: Session | null;
+
+  children: React.ReactNode;
 }) {
   const [supabaseClient] = useState(() =>
     createPagesBrowserClient({

@@ -1,46 +1,41 @@
 {
-  "name": "@skylar/db",
-  "version": "0.1.0",
-  "license": "MIT",
+  "name": "@skylar/logic",
   "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "version": "0.1.0",
   "exports": {
     ".": "./index.ts"
   },
   "typesVersions": {
     "*": {
       "*": [
-        "./*"
+        "./"
       ]
     }
   },
+  "license": "MIT",
   "scripts": {
-    "push": "drizzle-kit push:pg",
-    "generate": "drizzle-kit generate:pg",
-    "migrate": "drizzle-kit generate:pg && tsx migrate.ts",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
-    "format": "prettier --check \"**/*.{mjs,ts,md,json}\" --ignore-path ../../.prettierignore",
+    "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.6.0",
+    "@legendapp/state": "2.0.0-beta.0",
     "@skylar/schema": "^0.1.0",
-    "drizzle-orm": "^0.28.5"
+    "@trpc/client": "^10.38.1",
+    "superjson": "1.13.1"
   },
   "devDependencies": {
-    "@skylar/eslint-config": "^0.2.0",
+    "@skylar/api": "^0.1.0",
+    "@skylar/eslint-config": "0.2.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
-    "drizzle-kit": "^0.19.13",
     "eslint": "^8.48.0",
-    "postgres": "^3.3.5",
-    "tsx": "^3.12.8",
+    "next": "^13.4.19",
+    "react": "18.2.0",
     "typescript": "^5.2.2"
   },
   "eslintConfig": {
-    "root": true,
     "extends": [
       "@skylar/eslint-config/base"
     ]

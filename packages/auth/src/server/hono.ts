@@ -55,6 +55,7 @@ export function honoAuthMiddleware<T extends Context<any, "*", object>>({
       },
     });
     await supabase.auth.getSession();
+
     return await next();
   };
 }

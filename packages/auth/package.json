@@ -2,8 +2,8 @@
   "name": "@skylar/auth",
   "version": "0.1.0",
   "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "main": "./server.ts",
+  "types": "./server.ts",
   "license": "MIT",
   "exports": {
     ".": "./server.ts",
