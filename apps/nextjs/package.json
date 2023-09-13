@@ -5,7 +5,7 @@
   "scripts": {
     "build": "pnpm with-env next build",
     "clean": "git clean -xdf .next .turbo node_modules",
-    "dev": "pnpm with-env next dev",
+    "dev": "concurrently \"lt --port 3000 --subdomain skylar-frontend-$(grep DEV_NAME ../../.env | cut -d '=' -f2)\" \"pnpm with-env next dev\"",
     "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",
     "format": "prettier --check \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path ../../.prettierignore",
     "start": "pnpm with-env next start",
@@ -51,9 +51,11 @@
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "autoprefixer": "^10.4.15",
+    "concurrently": "^8.2.1",
     "dotenv-cli": "^7.3.0",
     "encoding": "^0.1.13",
     "eslint": "^8.48.0",
+    "localtunnel": "^2.0.2",
     "typescript": "^5.2.2"
   },
   "eslintConfig": {

@@ -7,7 +7,8 @@ import {
 } from "@skylar/db";
 import { AlphaCodeCheckerSchema, validatorTrpcWrapper } from "@skylar/schema";
 
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter } from "../trpc/factory";
+import { protectedProcedure } from "../trpc/procedures";
 
 export const onboardingRouter = createTRPCRouter({
   applyAlphaCode: protectedProcedure

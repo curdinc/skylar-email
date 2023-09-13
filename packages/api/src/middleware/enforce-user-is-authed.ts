@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { getUserByProviderId, insertNewUser } from "@skylar/db";
 
-import { createMiddleware } from "../trpc";
+import { createMiddleware } from "../trpc/factory";
 
 /**
  * Reusable middleware that enforces users are logged in before running the
