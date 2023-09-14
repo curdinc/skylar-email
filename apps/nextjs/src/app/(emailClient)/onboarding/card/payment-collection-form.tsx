@@ -3,7 +3,7 @@
 import { PaymentElement } from "@stripe/react-stripe-js";
 
 import { Button } from "~/components/ui/button";
-import { useCardPage } from "./useCardPage";
+import { useCardPage } from "./use-card-page";
 
 export const PaymentCollectionForm = () => {
   const {

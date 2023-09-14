@@ -9,6 +9,7 @@ export {
 export {
   AlphaCodeCheckerSchema,
   CreateSubscriptionSchema,
+  SetDefaultPaymentMethodSchema,
 } from "./src/api/onboarding";
 export {
   AuthCookieSchema,

@@ -88,7 +88,7 @@ export const onboardingRouter = createTRPCRouter({
         db,
         userId: user.id,
       });
-      if (!stripeCustomer?.subscriptionId) {
+      if (!stripeCustomer?.payment_method_added_at) {
         return "card" as const;
       }
 

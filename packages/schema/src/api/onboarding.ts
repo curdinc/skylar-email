@@ -7,3 +7,7 @@ export const AlphaCodeCheckerSchema = object({
 export const CreateSubscriptionSchema = object({
   priceLookupKey: string(),
 });
+
+export const SetDefaultPaymentMethodSchema = object({
+  paymentMethodId: string(),
+});

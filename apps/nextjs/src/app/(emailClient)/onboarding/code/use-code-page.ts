@@ -4,7 +4,7 @@ import { state$ } from "@skylar/logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/lib/api";
-import { useUserOnboardingRouteGuard } from "../useUserOnboardingRouteGuard";
+import { useUserOnboardingRouteGuard } from "../use-user-onboarding-route-guard";
 
 export function useCodePage() {
   const router = useRouter();

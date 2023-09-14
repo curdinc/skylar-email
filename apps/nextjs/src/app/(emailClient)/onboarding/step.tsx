@@ -17,7 +17,8 @@ export function Step() {
           className={cn(
             "left absolute h-full w-1/4 bg-gradient-to-r from-primary",
             segment === "connect" && "w-4/5",
-            segment === "card" && "w-full bg-primary",
+            (segment === "card" || segment === "confirm") &&
+              "w-full bg-primary",
           )}
         />
       </div>

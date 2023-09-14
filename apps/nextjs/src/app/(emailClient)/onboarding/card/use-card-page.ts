@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
-import { useCallback, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import type { StripeError, StripePaymentElement } from "@stripe/stripe-js";
 import { useQuery } from "@tanstack/react-query";
@@ -40,6 +40,23 @@ function useCreateCustomer() {
   return {
     isCustomerCreated,
   };
+}
+
+function useErrorSettingUpPaymentMethod() {
+  const { toast } = useToast();
+  const searchparams = useSearchParams();
+  const errorMessage = searchparams.get("error-message");
+  const logger = useLogger();
+  useEffect(() => {
+    if (errorMessage) {
+      logger.error(`Error setting up payment method ${errorMessage}`);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: errorMessage,
+      });
+    }
+  }, [logger, errorMessage, toast]);
 }
 
 function useFocusPaymentElement() {
@@ -130,56 +147,8 @@ function useSubmitPaymentElement() {
   };
 }
 
-export function useCheckSuccessfulPayment() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const stripe = useStripe();
-  const paymentIntent = searchParams.get("payment_intent_client_secret");
-
-  useQuery({
-    queryKey: ["stripe", "checkPaymentIntent", paymentIntent],
-    enabled: !!stripe && !!paymentIntent,
-    queryFn: async () => {
-      if (!stripe || !paymentIntent) {
-        // this should not happen since we only run the query when both are defined
-        return { error: "card status check query fired before it was ready" };
-      }
-
-      const { error, setupIntent } =
-        await stripe.retrieveSetupIntent(paymentIntent);
-      if (error) {
-        return { error: error.message };
-      }
-      if (setupIntent) {
-        switch (setupIntent.status) {
-          case "succeeded": {
-            router.push("/inbox");
-            break;
-          }
-          case "processing": {
-            // TODO: poll for status
-            break;
-          }
-          case "requires_payment_method": {
-            const redirectParams = new URLSearchParams({
-              mgs: "Something went wrong confirming your card details. Please try again with another card",
-            });
-            router.push(`/onboarding/card?${redirectParams.toString()}`);
-            break;
-          }
-          default: {
-            return {
-              error: "Something went wrong confirming your card details",
-            };
-          }
-        }
-      }
-      return { error: "Something went wrong confirming your card details" };
-    },
-  });
-}
-
 export function useCardPage() {
+  useErrorSettingUpPaymentMethod();
   const { onPaymentElementLoad } = useFocusPaymentElement();
 
   const {

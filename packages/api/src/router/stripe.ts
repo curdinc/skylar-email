@@ -4,8 +4,13 @@ import {
   getStripeCustomerByUserId,
   getValidStripeCustomerByUserId,
   insertStripeCustomer,
+  updateStripeCustomer,
 } from "@skylar/db";
-import { CreateSubscriptionSchema, validatorTrpcWrapper } from "@skylar/schema";
+import {
+  CreateSubscriptionSchema,
+  SetDefaultPaymentMethodSchema,
+  validatorTrpcWrapper,
+} from "@skylar/schema";
 
 import { createMiddleware, createTRPCRouter } from "../trpc/factory";
 import { protectedProcedure } from "../trpc/procedures";
@@ -65,11 +70,7 @@ export const stripeRouter = createTRPCRouter({
       }) => {
         const prices = await stripe.prices.list({
           lookup_keys: [input.priceLookupKey],
-          expand: ["data.product"],
-        });
-        const noExpand = await stripe.prices.list({
-          lookup_keys: [input.priceLookupKey],
-          expand: ["data.product"],
+          expand: [],
         });
 
         const stripeCustomer = await getValidStripeCustomerByUserId({
@@ -86,6 +87,7 @@ export const stripeRouter = createTRPCRouter({
               price: prices.data[0]?.id,
             },
           ],
+          off_session: true,
           payment_behavior: "default_incomplete",
           payment_settings: { save_default_payment_method: "on_subscription" },
           expand: ["latest_invoice.payment_intent", "pending_setup_intent"],
@@ -115,4 +117,37 @@ export const stripeRouter = createTRPCRouter({
       return { clientSecret: setupIntent.client_secret };
     },
   ),
+  setDefaultPaymentMethod: stripeProcedure
+    .input(validatorTrpcWrapper(SetDefaultPaymentMethodSchema))
+    .mutation(
+      async ({
+        ctx: {
+          db,
+          session: { user },
+          stripe,
+        },
+        input,
+      }) => {
+        const stripeCustomer = await getValidStripeCustomerByUserId({
+          db,
+          userId: user.id,
+        });
+        await stripe.paymentMethods.attach(input.paymentMethodId, {
+          customer: stripeCustomer.customerId,
+        });
+        const customer = await stripe.customers.update(
+          stripeCustomer.customerId,
+          {
+            invoice_settings: {
+              default_payment_method: input.paymentMethodId,
+            },
+          },
+        );
+        await updateStripeCustomer({
+          db,
+          stripeCustomerId: customer.id,
+          set: { payment_method_added_at: new Date() },
+        });
+      },
+    ),
 });

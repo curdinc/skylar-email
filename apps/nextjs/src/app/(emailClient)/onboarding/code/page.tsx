@@ -12,7 +12,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { siteConfig } from "~/lib/config";
-import { useCodePage } from "./useCodePage";
+import { useCodePage } from "./use-code-page";
 
 export default function BetaCodeForm() {
   const {

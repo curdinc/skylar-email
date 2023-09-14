@@ -18,8 +18,12 @@ export const stripeCustomer = pgTable(
       .references(() => user.id)
       .unique()
       .notNull(),
-    customerId: varchar("customerId", { length: 255 }).notNull(),
+    customerId: varchar("customerId", { length: 255 }).notNull().unique(),
     subscriptionId: varchar("subscriptionId", { length: 255 }),
+    payment_method_added_at: timestamp("payment_method_added_at", {
+      withTimezone: true,
+      mode: "date",
+    }),
     createdAt: timestamp("createdAt", {
       withTimezone: true,
       mode: "date",
@@ -29,7 +33,8 @@ export const stripeCustomer = pgTable(
   },
   (table) => {
     return {
-      userIdx: index("userIdx").on(table.userId),
+      userIdIdx: index("userIdIdx").on(table.userId),
+      customerIdIdx: index("customerIdIdx").on(table.customerId),
     };
   },
 );
