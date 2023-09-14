@@ -11,6 +11,7 @@ export const BackendEnvSchema = object({
   AXIOM_DATASET: string(),
   AXIOM_ORG_ID: string(),
   AXIOM_URL: string(),
+  STRIPE_PUBLISHABLE_API_KEY: string(),
 });
 
 export type BackendEnvType = Output<typeof BackendEnvSchema>;
