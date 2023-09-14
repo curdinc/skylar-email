@@ -81,4 +81,11 @@ app.use("/trpc/*", async (c, next) => {
   return response;
 });
 
+// checking for alive-ness
+app.post("/", (c) => {
+  return c.json({
+    message: "Hello world",
+  });
+});
+
 export default app;
