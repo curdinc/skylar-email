@@ -47,7 +47,9 @@ export function TRPCReactProvider(props: {
               return cookie.name === AUTH_TOKEN_COOKIE_NAME;
             });
             headers.set("x-trpc-source", "nextjs-react");
-            headers.set("Authorization", `Bearer ${auth?.value}`);
+            if (auth?.value) {
+              headers.set("Authorization", `Bearer ${auth?.value}`);
+            }
             return Object.fromEntries(headers);
           },
         }),

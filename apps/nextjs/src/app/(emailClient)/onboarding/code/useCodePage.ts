@@ -4,14 +4,16 @@ import { state$ } from "@skylar/logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/lib/api";
+import { useUserOnboardingRouteGuard } from "../useUserOnboarding";
 
 export function useCodePage() {
   const router = useRouter();
   const { toast } = useToast();
   const utils = api.useContext();
+  const { isLoading: isCheckingOnboardStep } = useUserOnboardingRouteGuard();
 
   const code = state$.ONBOARDING.alphaCode.use();
-  const { mutate: applyCode, isLoading } =
+  const { mutate: applyCode, isLoading: isSubmittingCode } =
     api.onboarding.applyAlphaCode.useMutation({
       async onSuccess() {
         await utils.onboarding.invalidate();
@@ -37,7 +39,8 @@ export function useCodePage() {
 
   return {
     onSubmitCode,
-    isSubmittingCode: isLoading,
+    isSubmittingCode,
+    isCheckingOnboardStep,
     onCodeChange,
     code,
   };

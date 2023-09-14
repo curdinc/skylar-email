@@ -11,11 +11,17 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { siteConfig } from "~/lib/utils/config";
+import { siteConfig } from "~/lib/config";
 import { useCodePage } from "./useCodePage";
 
 export default function BetaCodeForm() {
-  const { code, isSubmittingCode, onCodeChange, onSubmitCode } = useCodePage();
+  const {
+    code,
+    isSubmittingCode,
+    onCodeChange,
+    onSubmitCode,
+    isCheckingOnboardStep,
+  } = useCodePage();
 
   return (
     <Card>
@@ -56,6 +62,7 @@ export default function BetaCodeForm() {
         <CardFooter className="justify-end space-x-2">
           <Button
             type="submit"
+            disabled={isCheckingOnboardStep}
             isLoading={isSubmittingCode}
             onClick={onSubmitCode}
           >

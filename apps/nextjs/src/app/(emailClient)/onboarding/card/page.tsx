@@ -23,9 +23,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { useUserOnboardingRouteGuard } from "../useUserOnboarding";
 
 export default function AddCardForm() {
   const router = useRouter();
+  const {isLoading} = useUserOnboardingRouteGuard();
 
   return (
     <Card>

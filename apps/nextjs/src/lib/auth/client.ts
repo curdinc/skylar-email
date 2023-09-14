@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-import type { RedirectFnType } from "@skylar/auth/*";
+import type { RedirectFnType } from "@skylar/auth";
 
 import { api } from "../api";
 
