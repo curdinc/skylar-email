@@ -3,8 +3,8 @@ import Link from "next/link";
 import { MainNav } from "~/components/nav/main-nav";
 import { SiteFooter } from "~/components/nav/site-footer";
 import { buttonVariants } from "~/components/ui/button";
-import { dashboardConfig } from "~/lib/utils/config";
-import { cn } from "~/lib/utils/ui";
+import { dashboardConfig } from "~/lib/config";
+import { cn } from "~/lib/ui";
 
 export default function EmailClientLayout({
   children,

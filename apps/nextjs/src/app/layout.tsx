@@ -87,11 +87,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             onUnauthenticatedRedirectTo,
           }}
         >
-          <AuthListenerSkylar
-            supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
-            supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
-          />
           <TRPCReactProvider cookies={cookies().getAll()} headers={headers()}>
+            <AuthListenerSkylar
+              supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
+              supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
+            />
             {children}
             <Toaster />
           </TRPCReactProvider>
