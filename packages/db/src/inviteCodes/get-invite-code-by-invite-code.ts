@@ -35,7 +35,10 @@ export async function getValidInviteCodeByInviteCode({
     db,
     inviteCodeToFind,
   });
-  if (!inviteCodeFound?.usedAt || !inviteCodeFound.usedByUserId) {
+  if (
+    !inviteCodeFound ||
+    (!!inviteCodeFound?.usedAt && !!inviteCodeFound.usedByUserId)
+  ) {
     throw new Error("Valid invite code not found");
   }
   return inviteCodeFound;

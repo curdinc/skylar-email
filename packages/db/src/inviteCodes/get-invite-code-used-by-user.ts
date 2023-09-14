@@ -17,7 +17,7 @@ export async function getInviteCodeUsedByUser({
     columns: {},
     where: eq(user.providerId, userObj.providerId),
     with: {
-      inviteCode: {
+      inviteCodeCreated: {
         where: eq(inviteCode.usedByUserId, user.id),
         columns: {
           inviteCode: true,
@@ -25,5 +25,5 @@ export async function getInviteCodeUsedByUser({
       },
     },
   });
-  return result?.inviteCode[0]?.inviteCode;
+  return result?.inviteCodeCreated[0]?.inviteCode;
 }
