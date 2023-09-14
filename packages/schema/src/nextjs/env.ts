@@ -12,6 +12,7 @@ export const ClientEnvSchemaObject = {
   NEXT_PUBLIC_BACKEND_URL: string([url()]),
   NEXT_PUBLIC_SUPABASE_URL: string([url()]),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: string(),
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_API_KEY: string(),
 };
 
 export const ServerEnvSchemaObject = {
