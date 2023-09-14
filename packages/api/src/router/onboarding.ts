@@ -4,6 +4,7 @@ import {
   applyInviteCode,
   getInviteCodeByInviteCode,
   getInviteCodeUsedByUser,
+  getStripeCustomerByUserId,
 } from "@skylar/db";
 import { AlphaCodeCheckerSchema, validatorTrpcWrapper } from "@skylar/schema";
 
@@ -83,6 +84,13 @@ export const onboardingRouter = createTRPCRouter({
       // email provider
 
       // subscription
+      const stripeCustomer = await getStripeCustomerByUserId({
+        db,
+        userId: user.id,
+      });
+      if (!stripeCustomer?.subscriptionId) {
+        return "card" as const;
+      }
 
       return "done" as const;
     },

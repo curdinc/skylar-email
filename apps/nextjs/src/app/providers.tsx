@@ -43,7 +43,15 @@ export function TRPCReactProvider(props: {
           url: env.NEXT_PUBLIC_BACKEND_URL,
           headers() {
             const headers = new Map(props.headers);
-            const auth = props.cookies.find((cookie) => {
+            const cookies = document.cookie
+              .split("; ")
+              .map((c) => {
+                const [key, v] = c.split("=");
+                if (!v) return;
+                return { name: key, value: decodeURIComponent(v) };
+              })
+              .filter((c) => !!c) as { name: string; value: string }[];
+            const auth = cookies.find((cookie) => {
               return cookie.name === AUTH_TOKEN_COOKIE_NAME;
             });
             headers.set("x-trpc-source", "nextjs-react");

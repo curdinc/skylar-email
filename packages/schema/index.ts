@@ -6,7 +6,10 @@ export {
 } from "./src/helper";
 
 // FEATURE SPECIFIC
-export { AlphaCodeCheckerSchema } from "./src/api/onboarding";
+export {
+  AlphaCodeCheckerSchema,
+  CreateSubscriptionSchema,
+} from "./src/api/onboarding";
 export {
   AuthCookieSchema,
   QuerySchema,

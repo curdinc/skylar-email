@@ -28,15 +28,16 @@ export const useOnUserLogin = () => {
 
   const onUserLogin = useCallback(async () => {
     const { data: userOnboardStep } = await getUserOnboardStep();
-    if (userOnboardStep === "invite-code") {
-      router.replace("/onboarding/code");
-    }
-
-    // Connect email provider
-    // Add payment method
-
-    if (userOnboardStep === "done") {
-      router.replace("/inbox");
+    switch (userOnboardStep) {
+      case "invite-code":
+        router.push("/onboarding/code");
+        break;
+      case "card":
+        router.push("/onboarding/card");
+        break;
+      case "done":
+        router.push("/inbox");
+        break;
     }
   }, [getUserOnboardStep, router]);
 

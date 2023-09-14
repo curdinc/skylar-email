@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useUserOnboardingRouteGuard } from "../useUserOnboarding";
+import { useUserOnboardingRouteGuard } from "../useUserOnboardingRouteGuard";
 
 export function useConnectEmailProviderPage() {
   const router = useRouter();

@@ -7,7 +7,7 @@ import { SiteFooter } from "~/components/nav/site-footer";
 import { buttonVariants } from "~/components/ui/button";
 import { dashboardConfig } from "~/lib/config";
 import { cn } from "~/lib/ui";
-import { useUserOnboardingRouteGuard } from "../onboarding/useUserOnboarding";
+import { useUserOnboardingRouteGuard } from "../onboarding/useUserOnboardingRouteGuard";
 
 export default function EmailClientLayout({
   children,

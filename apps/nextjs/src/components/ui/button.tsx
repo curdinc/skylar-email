@@ -54,7 +54,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       props.leftIcon
     );
     delete props.leftIcon;
-    const isDisabled = props.disabled ?? isLoading;
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const isDisabled = props.disabled || isLoading;
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}

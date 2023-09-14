@@ -73,7 +73,7 @@ app.use("/trpc/*", async (c, next) => {
         req,
         env: {
           JWT_SECRET: envVars.SUPABASE_JWT_SECRET,
-          STRIPE_PUBLISHABLE_API_KEY: envVars.STRIPE_PUBLISHABLE_API_KEY,
+          STRIPE_SECRET_KEY: envVars.STRIPE_SECRET_KEY,
         },
         db,
         logger,
