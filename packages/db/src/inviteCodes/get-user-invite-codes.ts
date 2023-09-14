@@ -2,9 +2,9 @@ import { eq } from "drizzle-orm";
 
 import type { UserType } from "@skylar/schema";
 
-import type { DbType } from "../../..";
-import { inviteCode } from "../../../schema/invite-code";
-import { user } from "../../../schema/user";
+import type { DbType } from "../..";
+import { inviteCode } from "../../schema/invite-code";
+import { user } from "../../schema/user";
 
 export async function getUserInviteCodes({
   db,
