@@ -1,9 +1,7 @@
-import { blankRouter } from "./router/blank";
 import { onboardingRouter } from "./router/onboarding";
-import { createTRPCRouter } from "./trpc";
+import { createTRPCRouter } from "./trpc/factory";
 
 export const appRouter = createTRPCRouter({
-  blank: blankRouter,
   onboarding: onboardingRouter,
 });
 
