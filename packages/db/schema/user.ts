@@ -4,6 +4,7 @@ import { index, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { SUPPORTED_AUTH_PROVIDERS } from "@skylar/schema";
 
 import { inviteCode } from "./invite-code";
+import { stripeCustomer } from "./stripe";
 
 // Do not use defaultNow, it's to be deprecated https://github.com/drizzle-team/drizzle-orm/issues/657
 export const user = pgTable(
@@ -38,6 +39,12 @@ export const user = pgTable(
   },
 );
 
-export const usersRelations = relations(user, ({ many }) => ({
-  inviteCode: many(inviteCode),
+export const usersRelations = relations(user, ({ many, one }) => ({
+  inviteCodeCreated: many(inviteCode, {
+    relationName: "inviteCodeCreated",
+  }),
+  inviteCodeUsed: many(inviteCode, {
+    relationName: "inviteCodeUsed",
+  }),
+  stripeCustomer: one(stripeCustomer),
 }));
