@@ -38,7 +38,7 @@ export const onboardingRouter = createTRPCRouter({
           });
         }
 
-        if (inviteCode.usedByUser?.providerId) {
+        if (inviteCode.usedByUserId) {
           logger.debug(
             `inviteCode ${inviteCode.inviteCode} has already been used by ${inviteCode.usedByUserId}`,
           );

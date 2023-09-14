@@ -43,7 +43,10 @@ export const enforceUserIsAuthed = createMiddleware(
       ctx: {
         // TODO: Assign additional information here, like email provider details etc.
         session: {
-          user: parse(UserSchema, skylarUser),
+          user: {
+            id: skylarUser.id,
+            ...parse(UserSchema, skylarUser),
+          },
         },
       },
     });
