@@ -67,8 +67,7 @@ export const onboardingRouter = createTRPCRouter({
         return "OK" as const;
       },
     ),
-  // we use mutation to be able to use trpc on the front end via an async mutate fn call
-  getUserOnboardStep: protectedProcedure.mutation(
+  getUserOnboardStep: protectedProcedure.query(
     async ({
       ctx: {
         db,
@@ -81,7 +80,9 @@ export const onboardingRouter = createTRPCRouter({
       }
 
       // email provider
+
       // subscription
+
       return "done" as const;
     },
   ),

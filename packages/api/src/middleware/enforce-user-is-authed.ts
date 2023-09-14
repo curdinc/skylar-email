@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { getUserByProviderId, insertNewUser } from "@skylar/db";
+import { parse, UserSchema } from "@skylar/schema";
 
 import { createMiddleware } from "../trpc";
 
@@ -42,13 +43,7 @@ export const enforceUserIsAuthed = createMiddleware(
       ctx: {
         // TODO: Assign additional information here, like email provider details etc.
         session: {
-          // TODO: Figure out a good way to consolidate between the DbUser schema and the authed user schema
-          user: {
-            ...skylarUser,
-            imageUri: skylarUser.imageUri ?? undefined,
-            phone: skylarUser.phone ?? undefined,
-            email: skylarUser.email ?? undefined,
-          },
+          user: parse(UserSchema, skylarUser),
         },
       },
     });

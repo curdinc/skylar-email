@@ -9,9 +9,9 @@ import { NextAuthProvider } from "@skylar/auth";
 
 import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
-import { onUnauthenticatedRedirectTo } from "~/lib/utils/auth";
-import { siteConfig } from "~/lib/utils/config";
-import { cn } from "~/lib/utils/ui";
+import { onUnauthenticatedRedirectTo } from "~/lib/auth/server";
+import { siteConfig } from "~/lib/config";
+import { cn } from "~/lib/ui";
 import { AuthListenerSkylar, TRPCReactProvider } from "./providers";
 
 const fontSans = Inter({

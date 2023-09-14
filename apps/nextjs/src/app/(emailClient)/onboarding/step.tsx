@@ -2,7 +2,7 @@
 
 import { useSelectedLayoutSegment } from "next/navigation";
 
-import { cn } from "~/lib/utils/ui";
+import { cn } from "~/lib/ui";
 
 export function Step() {
   const segment = useSelectedLayoutSegment();

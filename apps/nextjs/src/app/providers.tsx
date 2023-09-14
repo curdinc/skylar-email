@@ -11,8 +11,8 @@ import superjson from "superjson";
 import { AUTH_TOKEN_COOKIE_NAME, AuthListener } from "@skylar/auth/client";
 
 import { env } from "~/env";
-import { api } from "~/lib/utils/api";
-import { onLogoutRedirectTo, onUserLogin } from "~/lib/utils/auth";
+import { api } from "~/lib/api";
+import { onLogoutRedirectTo, useOnUserLogin } from "~/lib/auth/client";
 
 export function TRPCReactProvider(props: {
   children: React.ReactNode;
@@ -75,14 +75,14 @@ export function AuthListenerSkylar({
   supabaseUrl: string;
 }) {
   const onLogoutRedirectToFn = useCallback(onLogoutRedirectTo, []);
-  const onLogin = useCallback(onUserLogin, []);
+  const { onUserLogin } = useOnUserLogin();
 
   return (
     <AuthListener
       supabaseKey={supabaseKey}
       supabaseUrl={supabaseUrl}
       onLogoutRedirectTo={onLogoutRedirectToFn}
-      onLogin={onLogin}
+      onLogin={onUserLogin}
     />
   );
 }

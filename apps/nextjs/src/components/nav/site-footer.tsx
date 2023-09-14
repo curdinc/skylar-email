@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { siteConfig } from "~/lib/utils/config";
-import { cn } from "~/lib/utils/ui";
+import { siteConfig } from "~/lib/config";
+import { cn } from "~/lib/ui";
 import { Icons } from "../icons";
 
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
