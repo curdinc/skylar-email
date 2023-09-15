@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import type { marketingConfig } from "~/lib/utils/config";
-import { siteConfig } from "~/lib/utils/config";
-import { cn } from "~/lib/utils/ui";
+import type { marketingConfig } from "~/lib/config";
+import { siteConfig } from "~/lib/config";
+import { cn } from "~/lib/ui";
 import { Icons } from "../icons";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "../ui/sheet";
 

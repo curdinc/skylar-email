@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
-import type { DbType } from "../../..";
-import { user } from "../../../schema/user";
+import type { DbType } from "../..";
+import { user } from "../../schema/user";
 
 export async function getUserByProviderId({
   db,

@@ -140,11 +140,3 @@
 //     mode: "date",
 //   }).default(sql`CURRENT_TIMESTAMP`),
 // });
-
-// export const someStripeDbStorageItem = pgTable("subscription", {
-//   id: serial("id").primaryKey(),
-//   userId: integer("userId").references(() => user.id),
-//   customerId: varchar("customerId", { length: 255 }).notNull(),
-//   subscriptionId: varchar("subscriptionId", { length: 255 }).notNull(),
-//   // ...
-// });

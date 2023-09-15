@@ -11,8 +11,8 @@ import superjson from "superjson";
 import { AUTH_TOKEN_COOKIE_NAME, AuthListener } from "@skylar/auth/client";
 
 import { env } from "~/env";
-import { api } from "~/lib/utils/api";
-import { onLogoutRedirectTo, onUserLogin } from "~/lib/utils/auth";
+import { api } from "~/lib/api";
+import { onLogoutRedirectTo, useOnUserLogin } from "~/lib/auth/client";
 
 export function TRPCReactProvider(props: {
   children: React.ReactNode;
@@ -43,11 +43,21 @@ export function TRPCReactProvider(props: {
           url: env.NEXT_PUBLIC_BACKEND_URL,
           headers() {
             const headers = new Map(props.headers);
-            const auth = props.cookies.find((cookie) => {
+            const cookies = document.cookie
+              .split("; ")
+              .map((c) => {
+                const [key, v] = c.split("=");
+                if (!v) return;
+                return { name: key, value: decodeURIComponent(v) };
+              })
+              .filter((c) => !!c) as { name: string; value: string }[];
+            const auth = cookies.find((cookie) => {
               return cookie.name === AUTH_TOKEN_COOKIE_NAME;
             });
             headers.set("x-trpc-source", "nextjs-react");
-            headers.set("Authorization", `Bearer ${auth?.value}`);
+            if (auth?.value) {
+              headers.set("Authorization", `Bearer ${auth?.value}`);
+            }
             return Object.fromEntries(headers);
           },
         }),
@@ -75,14 +85,14 @@ export function AuthListenerSkylar({
   supabaseUrl: string;
 }) {
   const onLogoutRedirectToFn = useCallback(onLogoutRedirectTo, []);
-  const onLogin = useCallback(onUserLogin, []);
+  const { onUserLogin } = useOnUserLogin();
 
   return (
     <AuthListener
       supabaseKey={supabaseKey}
       supabaseUrl={supabaseUrl}
       onLogoutRedirectTo={onLogoutRedirectToFn}
-      onLogin={onLogin}
+      onLogin={onUserLogin}
     />
   );
 }

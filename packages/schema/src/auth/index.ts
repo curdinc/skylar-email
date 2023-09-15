@@ -2,6 +2,7 @@ import type { Output } from "valibot";
 import {
   array,
   boolean,
+  coerce,
   email,
   enumType,
   nullable,
@@ -11,6 +12,8 @@ import {
   string,
   url,
 } from "valibot";
+
+import { coerceNullToUndefined } from "../utils/coerce";
 
 export const AuthCookieSchema = array(nullable(string()));
 
@@ -24,9 +27,9 @@ export type SupportedAuthProvidersType =
   (typeof SUPPORTED_AUTH_PROVIDERS)[number];
 
 export const UserSchema = object({
-  email: optional(string([email()])),
-  phone: optional(string()),
-  imageUri: optional(string([url()])),
+  email: coerce(optional(string([email()])), coerceNullToUndefined(String)),
+  phone: coerce(optional(string()), coerceNullToUndefined(String)),
+  imageUri: coerce(optional(string([url()])), coerceNullToUndefined(String)),
   name: string(),
   provider: enumType(SUPPORTED_AUTH_PROVIDERS),
   providerId: string(),
@@ -35,22 +38,28 @@ export const UserSchema = object({
 export type UserType = Output<typeof UserSchema>;
 
 export const SupabaseUserSchema = object({
-  email: optional(string([email()])),
-  phone: optional(string()),
+  email: coerce(optional(string([email()])), coerceNullToUndefined(String)),
+  phone: coerce(optional(string()), coerceNullToUndefined(String)),
   aud: string(),
   app_metadata: object({
     provider: enumType(SUPPORTED_AUTH_PROVIDERS),
     providers: array(enumType(SUPPORTED_AUTH_PROVIDERS)),
   }),
   user_metadata: object({
-    avatar_url: optional(string([url()])),
-    picture: optional(string([url()])),
-    full_name: optional(string()),
-    name: optional(string()),
-    preferred_username: optional(string()),
-    user_name: optional(string()),
-    nickname: optional(string()),
-    email: optional(string([email()])),
+    avatar_url: coerce(
+      optional(string([url()])),
+      coerceNullToUndefined(String),
+    ),
+    picture: coerce(optional(string([url()])), coerceNullToUndefined(String)),
+    full_name: coerce(optional(string()), coerceNullToUndefined(String)),
+    name: coerce(optional(string()), coerceNullToUndefined(String)),
+    preferred_username: coerce(
+      optional(string()),
+      coerceNullToUndefined(String),
+    ),
+    user_name: coerce(optional(string()), coerceNullToUndefined(String)),
+    nickname: coerce(optional(string()), coerceNullToUndefined(String)),
+    email: coerce(optional(string([email()])), coerceNullToUndefined(String)),
     email_verified: optional(boolean()),
     sub: string(),
   }),

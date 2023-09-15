@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 
 import type { DbType } from "../..";
-import { getValidInviteCodeByInviteCode } from "../..";
 import { inviteCode } from "../../schema/invite-code";
+import { getValidInviteCodeByInviteCode } from "./get-invite-code-by-invite-code";
 
 export async function applyInviteCode({
   db,

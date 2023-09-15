@@ -19,6 +19,7 @@
     "push": "drizzle-kit push:pg",
     "generate": "drizzle-kit generate:pg",
     "migrate": "drizzle-kit generate:pg && tsx migrate.ts",
+    "studio": "drizzle-kit studio --verbose --port 9695",
     "clean": "rm -rf .turbo node_modules",
     "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\" --ignore-path ../../.prettierignore",
@@ -35,6 +36,7 @@
     "@skylar/tsconfig": "^0.1.0",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.48.0",
+    "pg": "^8.11.3",
     "postgres": "^3.3.5",
     "tsx": "^3.12.8",
     "typescript": "^5.2.2"

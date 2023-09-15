@@ -71,7 +71,10 @@ app.use("/trpc/*", async (c, next) => {
     createContext: ({ req }) =>
       createTRPCContext({
         req,
-        env: { JWT_SECRET: envVars.SUPABASE_JWT_SECRET },
+        env: {
+          JWT_SECRET: envVars.SUPABASE_JWT_SECRET,
+          STRIPE_SECRET_KEY: envVars.STRIPE_SECRET_KEY,
+        },
         db,
         logger,
       }),
