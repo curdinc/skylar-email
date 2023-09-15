@@ -173,26 +173,31 @@ class AxiomLogger {
         console.debug(
           "[DEBUG]: ",
           logEvent.message,
-          "\nfields",
-          JSON.stringify(logEvent.fields, null, 2),
+          // "\nfields",
+          // JSON.stringify(logEvent.fields, null, 2),
         );
         break;
       case AxiomLogLevel.info:
         console.info(
           "[INFO]: ",
           logEvent.message,
-          "\nfields",
-          JSON.stringify(logEvent.fields, null, 2),
+          // "\nfields",
+          // JSON.stringify(logEvent.fields, null, 2),
         );
         break;
       case AxiomLogLevel.warn:
-        console.warn("[WARN]: ", logEvent.message, "\nfields");
+        console.warn(
+          "[WARN]: ",
+          logEvent.message,
+          // "\nfields",
+          // JSON.stringify(logEvent.fields, null, 2),
+        );
         break;
       case AxiomLogLevel.error:
         console.error(
           "[ERROR]: ",
           logEvent.message,
-          JSON.stringify(logEvent.fields, null, 2),
+          // JSON.stringify(logEvent.fields, null, 2),
         );
         break;
     }
