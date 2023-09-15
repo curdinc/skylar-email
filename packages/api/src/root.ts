@@ -1,6 +1,6 @@
 import { blankRouter } from "./router/blank";
-import { emailProviderRouter } from "./router/emailProvider";
 import { gmailRouter } from "./router/gmail";
+import { emailProviderRouter } from "./router/oauth";
 import { onboardingRouter } from "./router/onboarding";
 import { createTRPCRouter } from "./trpc";
 
