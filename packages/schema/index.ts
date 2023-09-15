@@ -3,13 +3,17 @@ export {
   GmailPushNotificationSchema,
   gmailProviderIDTokenSchema,
   gmailWatchResponseSchema,
+  historyObjectSchema,
+  messageResponseSchema,
   type GmailPushNotificationType,
+  type MessagePartType,
 } from "./src/emailProvider/gmailProvider";
 
 export {
-  oauth2TokenResponseSchema,
   oauthOnboardingSchema,
   providerEnumList,
+  type Oauth2InitialTokenResponse,
+  type Oauth2TokenFromRefreshTokenResponse,
   type oauthOnboardingType,
 } from "./src/emailProvider/oauth";
 
