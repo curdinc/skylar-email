@@ -19,7 +19,7 @@ export function Step() {
             segment === "connect" && "w-4/5",
             segment === "card" && "w-full bg-primary",
           )}
-        ></div>
+        />
       </div>
       <ul className="relative flex w-full justify-between">
         <li className="text-left">

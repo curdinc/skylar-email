@@ -5,15 +5,17 @@ import {
   useUser as useSupabaseUser,
 } from "@supabase/auth-helpers-react";
 
-import { mapSupabaseUserToUser } from "../helper";
-import type { User } from "../types/user";
+import type { UserType } from "@skylar/schema";
+import { parse, SupabaseUserSchema } from "@skylar/schema";
 
-export function useUser(): User | undefined {
+import { mapSupabaseUserToUser } from "../helper";
+
+export function useUser(): UserType | undefined {
   const user = useSupabaseUser();
   if (!user) {
     return undefined;
   }
-  return mapSupabaseUserToUser(user);
+  return mapSupabaseUserToUser(parse(SupabaseUserSchema, user));
 }
 
 export function useSignOut() {

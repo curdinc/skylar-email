@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 
 import { BrandIcons } from "~/components/icons/brand-icons";
 import { Button, buttonVariants } from "~/components/ui/button";
@@ -16,26 +14,15 @@ import {
 } from "~/components/ui/card";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import { api } from "~/lib/utils/api";
+import { useConnectEmailProviderPage } from "./useConnectPage";
 
 export default function ConnectEmailOnboardingForm() {
-  const router = useRouter();
-  const params = useSearchParams();
-  const [emailProvider, setEmailProvider] = useState<"Gmail" | "Outlook">(
-    "Gmail",
-  );
-
-  const { mutate: checkValiAlphaCode, isLoading: isCheckingAlphaCode } =
-    api.onboarding.validateAlphaCode.useMutation({
-      onError() {
-        router.replace("/onboarding/code");
-      },
-    });
-  useEffect(() => {
-    checkValiAlphaCode({
-      alphaCode: params.get("code") ?? "",
-    });
-  }, [checkValiAlphaCode, params]);
+  const {
+    isCheckingUserOnboardStep,
+    onSelectEmailProvider,
+    emailProvider,
+    goBack,
+  } = useConnectEmailProviderPage();
 
   return (
     <Card>
@@ -47,11 +34,7 @@ export default function ConnectEmailOnboardingForm() {
         <RadioGroup
           defaultValue="card"
           className="grid grid-cols-2 gap-4"
-          onValueChange={(e) => {
-            if (e === "Gmail" || e === "Outlook") {
-              setEmailProvider(e);
-            }
-          }}
+          onValueChange={onSelectEmailProvider}
           value={emailProvider}
         >
           <div>
@@ -70,9 +53,6 @@ export default function ConnectEmailOnboardingForm() {
               value="Outlook"
               id="outlook"
               className="peer sr-only"
-              onChange={(e) => {
-                console.log("e.target.value", e.currentTarget.value);
-              }}
             />
             <Label
               htmlFor="outlook"
@@ -83,12 +63,12 @@ export default function ConnectEmailOnboardingForm() {
             </Label>
           </div>
         </RadioGroup>
-        <Button isLoading={isCheckingAlphaCode}>
+        <Button isLoading={isCheckingUserOnboardStep}>
           Connect to {emailProvider}
         </Button>
       </CardContent>
       <CardFooter className="justify-between space-x-2">
-        <Button variant={"ghost"} onClick={() => router.back()}>
+        <Button variant={"ghost"} onClick={goBack}>
           back
         </Button>
         <Link href="/onboarding/card" className={buttonVariants()}>

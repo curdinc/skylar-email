@@ -28,20 +28,22 @@ export const dashboardConfig: {
 } = {
   mainNav: [
     {
-      title: "Review",
-      href: "review",
+      title: "Screen",
+      href: "/screen",
     },
     {
       title: "Important",
-      href: "important",
+      href: "/inbox",
     },
     {
       title: "Readings",
-      href: "readings",
+      href: "/readings",
     },
     {
       title: "Receipts",
-      href: "receipts",
+      href: "/receipts",
     },
   ],
 };
+
+export const UNAUTHENTICATED_ROUTES = ["/", "/login"];

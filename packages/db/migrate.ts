@@ -5,7 +5,7 @@ import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 
 dotenv.config({
-  path: "../../.env",
+  path: "../../apps/backend/.dev.vars",
 });
 
 if (!process.env.DATABASE_URL) {

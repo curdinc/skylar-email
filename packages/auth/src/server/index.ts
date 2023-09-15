@@ -1,10 +1,10 @@
 import jwt from "@tsndr/cloudflare-worker-jwt";
 
+import type { UserType } from "@skylar/schema";
 import { AuthCookieSchema, parse, SupabaseUserSchema } from "@skylar/schema";
 
 import { mapSupabaseUserToUser } from "../helper";
 import type { Session } from "../types/session";
-import type { User } from "../types/user";
 
 export async function getSession({
   JWT_SECRET,
@@ -14,6 +14,7 @@ export async function getSession({
   authHeader?: string;
 }): Promise<Session | undefined> {
   const user = await getUser({ JWT_SECRET, authHeader });
+
   return { user };
 }
 
@@ -23,7 +24,7 @@ export async function getUser({
 }: {
   JWT_SECRET: string;
   authHeader?: string;
-}): Promise<User | undefined> {
+}): Promise<UserType | undefined> {
   const sessionToken = authHeader?.split(" ")[1];
 
   if (sessionToken) {

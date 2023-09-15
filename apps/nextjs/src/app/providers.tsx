@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -9,10 +9,11 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
-import { AUTH_TOKEN_COOKIE_NAME } from "@skylar/auth/client";
+import { AUTH_TOKEN_COOKIE_NAME, AuthListener } from "@skylar/auth/client";
 
 import { env } from "~/env";
 import { api } from "~/lib/utils/api";
+import { onLogoutRedirectTo, onUserLogin } from "~/lib/utils/auth";
 
 export function TRPCReactProvider(props: {
   children: React.ReactNode;
@@ -66,5 +67,25 @@ export function TRPCReactProvider(props: {
         </QueryClientProvider>
       </GoogleOAuthProvider>
     </api.Provider>
+  );
+}
+
+export function AuthListenerSkylar({
+  supabaseKey,
+  supabaseUrl,
+}: {
+  supabaseKey: string;
+  supabaseUrl: string;
+}) {
+  const onLogoutRedirectToFn = useCallback(onLogoutRedirectTo, []);
+  const onLogin = useCallback(onUserLogin, []);
+
+  return (
+    <AuthListener
+      supabaseKey={supabaseKey}
+      supabaseUrl={supabaseUrl}
+      onLogoutRedirectTo={onLogoutRedirectToFn}
+      onLogin={onLogin}
+    />
   );
 }
