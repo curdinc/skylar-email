@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { Icons } from "~/components/icons";
-import { siteConfig } from "~/lib/utils/config";
+import { siteConfig } from "~/lib/config";
 import { Step } from "./step";
 
 export const metadata: Metadata = {

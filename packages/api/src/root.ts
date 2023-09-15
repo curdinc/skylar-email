@@ -1,14 +1,14 @@
-import { blankRouter } from "./router/blank";
 import { gmailRouter } from "./router/gmail";
 import { emailProviderRouter } from "./router/oauth";
 import { onboardingRouter } from "./router/onboarding";
-import { createTRPCRouter } from "./trpc";
+import { stripeRouter } from "./router/stripe";
+import { createTRPCRouter } from "./trpc/factory";
 
 export const appRouter = createTRPCRouter({
-  blank: blankRouter,
   emailProviderRouter: emailProviderRouter,
   gmail: gmailRouter,
   onboarding: onboardingRouter,
+  stripe: stripeRouter,
 });
 
 // export type definition of API

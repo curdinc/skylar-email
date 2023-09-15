@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Icons } from "~/components/icons";
-import { siteConfig } from "~/lib/utils/config";
+import { siteConfig } from "~/lib/config";
 import { UserAuthForm } from "./user-auth-form";
 
 export const metadata: Metadata = {

@@ -3,8 +3,8 @@
 import Link from "next/link";
 
 import { buttonVariants } from "~/components/ui/button";
-import { siteConfig } from "~/lib/utils/config";
-import { cn } from "~/lib/utils/ui";
+import { siteConfig } from "~/lib/config";
+import { cn } from "~/lib/ui";
 
 export default function IndexPage() {
   return (

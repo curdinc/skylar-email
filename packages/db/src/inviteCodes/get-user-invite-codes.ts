@@ -2,9 +2,8 @@ import { eq } from "drizzle-orm";
 
 import type { UserType } from "@skylar/schema";
 
-import type { DbType } from "../../..";
-import { inviteCode } from "../../../schema/invite-code";
-import { user } from "../../../schema/user";
+import type { DbType } from "../..";
+import { user } from "../../schema/user";
 
 export async function getUserInviteCodes({
   db,
@@ -17,8 +16,7 @@ export async function getUserInviteCodes({
     columns: {},
     where: eq(user.providerId, userObj.providerId),
     with: {
-      inviteCode: {
-        where: eq(inviteCode.createdByUserId, user.id),
+      inviteCodeCreated: {
         with: {
           usedByUser: {
             columns: {
@@ -29,5 +27,5 @@ export async function getUserInviteCodes({
       },
     },
   });
-  return result?.inviteCode;
+  return result?.inviteCodeCreated;
 }

@@ -4,9 +4,9 @@ import * as React from "react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-import type { marketingConfig } from "~/lib/utils/config";
-import { siteConfig } from "~/lib/utils/config";
-import { cn } from "~/lib/utils/ui";
+import type { marketingConfig } from "~/lib/config";
+import { siteConfig } from "~/lib/config";
+import { cn } from "~/lib/ui";
 import { Icons } from "../icons";
 import { MobileNav } from "./mobile-nav";
 

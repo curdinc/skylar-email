@@ -13,6 +13,7 @@ export const BackendEnvSchema = object({
   AXIOM_URL: string(),
   GOOGLE_PROVIDER_CLIENT_SECRET: string(),
   GOOGLE_PROVIDER_CLIENT_ID: string(),
+  STRIPE_SECRET_KEY: string(),
 });
 
 export type BackendEnvType = Output<typeof BackendEnvSchema>;

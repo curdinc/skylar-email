@@ -25,6 +25,8 @@
     "@skylar/logger": "^0.1.0",
     "@skylar/logic": "^0.1.0",
     "@skylar/schema": "^0.1.0",
+    "@stripe/react-stripe-js": "^2.3.0",
+    "@stripe/stripe-js": "^2.1.5",
     "@tanstack/react-query": "^4.33.0",
     "@tanstack/react-query-devtools": "^4.33.0",
     "@tanstack/react-query-next-experimental": "5.0.0-alpha.80",

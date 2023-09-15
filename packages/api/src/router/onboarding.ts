@@ -4,6 +4,7 @@ import {
   applyInviteCode,
   getInviteCodeByInviteCode,
   getInviteCodeUsedByUser,
+  getStripeCustomerByUserId,
 } from "@skylar/db";
 import { AlphaCodeCheckerSchema, validatorTrpcWrapper } from "@skylar/schema";
 
@@ -39,7 +40,7 @@ export const onboardingRouter = createTRPCRouter({
           });
         }
 
-        if (inviteCode.usedByUser?.providerId) {
+        if (inviteCode.usedByUserId) {
           logger.debug(
             `inviteCode ${inviteCode.inviteCode} has already been used by ${inviteCode.usedByUserId}`,
           );
@@ -68,8 +69,7 @@ export const onboardingRouter = createTRPCRouter({
         return "OK" as const;
       },
     ),
-  // we use mutation to be able to use trpc on the front end via an async mutate fn call
-  getUserOnboardStep: protectedProcedure.mutation(
+  getUserOnboardStep: protectedProcedure.query(
     async ({
       ctx: {
         db,
@@ -82,7 +82,16 @@ export const onboardingRouter = createTRPCRouter({
       }
 
       // email provider
+
       // subscription
+      const stripeCustomer = await getStripeCustomerByUserId({
+        db,
+        userId: user.id,
+      });
+      if (!stripeCustomer?.payment_method_added_at) {
+        return "card" as const;
+      }
+
       return "done" as const;
     },
   ),

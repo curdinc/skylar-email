@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
-import type { DbType } from "../../..";
-import { inviteCode } from "../../../schema/invite-code";
+import type { DbType } from "../..";
+import { inviteCode } from "../../schema/invite-code";
 
 export async function getInviteCodeByInviteCode({
   db,
@@ -35,7 +35,10 @@ export async function getValidInviteCodeByInviteCode({
     db,
     inviteCodeToFind,
   });
-  if (!inviteCodeFound?.usedAt || !inviteCodeFound.usedByUserId) {
+  if (
+    !inviteCodeFound ||
+    (!!inviteCodeFound?.usedAt && !!inviteCodeFound.usedByUserId)
+  ) {
     throw new Error("Valid invite code not found");
   }
   return inviteCodeFound;

@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 
-import { cn } from "~/lib/utils/ui";
+import { cn } from "~/lib/ui";
 import { Icons } from "../icons";
 
 const buttonVariants = cva(
@@ -54,7 +54,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       props.leftIcon
     );
     delete props.leftIcon;
-    const isDisabled = props.disabled ?? isLoading;
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const isDisabled = props.disabled || isLoading;
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}

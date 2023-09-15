@@ -1,3 +1,5 @@
+import type { StripeElementsOptions } from "@stripe/stripe-js";
+
 import type { MainNavItemType } from "~/types/main-nav";
 
 export const siteConfig = {
@@ -47,3 +49,10 @@ export const dashboardConfig: {
 };
 
 export const UNAUTHENTICATED_ROUTES = ["/", "/login"];
+
+export const stripeConfig: StripeElementsOptions = {
+  mode: "subscription",
+  amount: 0,
+  currency: "usd",
+  appearance: {},
+} as const;

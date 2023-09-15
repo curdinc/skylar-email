@@ -111,6 +111,7 @@ app.use("/trpc/*", async (c, next) => {
           JWT_SECRET: envVars.SUPABASE_JWT_SECRET,
           GOOGLE_PROVIDER_CLIENT_ID: envVars.GOOGLE_PROVIDER_CLIENT_ID,
           GOOGLE_PROVIDER_CLIENT_SECRET: envVars.GOOGLE_PROVIDER_CLIENT_SECRET,
+          STRIPE_SECRET_KEY: envVars.STRIPE_SECRET_KEY,
         },
         db,
         logger,

@@ -18,6 +18,7 @@ type CreateContextOptions = {
     JWT_SECRET: string;
     GOOGLE_PROVIDER_CLIENT_ID: string;
     GOOGLE_PROVIDER_CLIENT_SECRET: string;
+    STRIPE_SECRET_KEY: string;
   };
   logger: Logger;
   db: DbType;
