@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { and, eq } from "@skylar/db";
-import { emailProviderOAuth } from "@skylar/db/schema/emailProviders";
+import { emailProviderOAuth } from "@skylar/db/schema/email-providers";
 import {
   GmailPushNotificationDataObjectSchema,
   GmailPushNotificationSchema,
@@ -10,22 +10,21 @@ import {
 } from "@skylar/parsers-and-types";
 
 import { getAccessToken } from "../components/providerLogic/gmail/api";
-import { getAndParseEmails } from "../components/providerLogic/gmail/getAndParseEmails";
-import { createTRPCRouter, externalVendorProcedure } from "../trpc";
+import { getAndParseEmails } from "../components/providerLogic/gmail/get-and-parse-emails";
+import { createTRPCRouter } from "../trpc/factory";
+import { externalVendorProcedure } from "../trpc/procedures";
 
 export const gmailRouter = createTRPCRouter({
   incomingEmail: externalVendorProcedure
     .input(validatorTrpcWrapper(GmailPushNotificationSchema))
     .mutation(async ({ input, ctx }) => {
-      const uid = 1;
-      //console.log("input.message.data", input.message.data);
-      //const data = input.message.data;
       const parsedData = parse(
         GmailPushNotificationDataObjectSchema,
         JSON.parse(Buffer.from(input.message.data, "base64").toString("utf-8")),
       );
       console.log("parsedData", parsedData);
 
+      // find refresh token
       const dbQueryResult = await ctx.db.query.providerAuthDetails.findFirst({
         columns: {
           refreshToken: true,
