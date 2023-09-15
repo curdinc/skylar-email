@@ -1,5 +1,5 @@
 import type { Logger } from "@skylar/logger";
-import type { MessagePartType } from "@skylar/schema";
+import type { MessagePartType } from "@skylar/parsers-and-types";
 
 export function getEmailMetadata(
   messageHeaders: { name: string; value: string }[],

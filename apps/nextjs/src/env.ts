@@ -3,7 +3,7 @@ import {
   createEnv,
   ServerEnvSchemaObject,
   SharedEnvSchemaObject,
-} from "@skylar/schema";
+} from "@skylar/parsers-and-types";
 
 export const env = createEnv({
   shared: SharedEnvSchemaObject,

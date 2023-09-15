@@ -1,4 +1,7 @@
-import { oauthOnboardingSchema, validatorTrpcWrapper } from "@skylar/schema";
+import {
+  oauthOnboardingSchema,
+  validatorTrpcWrapper,
+} from "@skylar/parsers-and-types";
 
 import { userOnboarding } from "../components/logic/oauthOnboarding";
 import { createTRPCRouter, publicProcedure } from "../trpc";

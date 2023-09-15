@@ -7,7 +7,11 @@ import { cors } from "hono/cors";
 import { appRouter, createTRPCContext } from "@skylar/api";
 import { getDb } from "@skylar/db";
 import { getServerLogger } from "@skylar/logger";
-import { BackendEnvSchema, formatValidatorError, parse } from "@skylar/schema";
+import {
+  BackendEnvSchema,
+  formatValidatorError,
+  parse,
+} from "@skylar/parsers-and-types";
 
 type Bindings = {
   JWT_SECRET: string;

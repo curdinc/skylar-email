@@ -5,8 +5,8 @@ import {
   useUser as useSupabaseUser,
 } from "@supabase/auth-helpers-react";
 
-import type { UserType } from "@skylar/schema";
-import { parse, SupabaseUserSchema } from "@skylar/schema";
+import type { UserType } from "@skylar/parsers-and-types";
+import { parse, SupabaseUserSchema } from "@skylar/parsers-and-types";
 
 import { mapSupabaseUserToUser } from "../helper";
 

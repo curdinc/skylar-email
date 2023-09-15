@@ -1,4 +1,4 @@
-import type { UserType } from "@skylar/schema";
+import type { UserType } from "@skylar/parsers-and-types";
 
 import type { DbType } from "../../index";
 import { user } from "../../schema/user";

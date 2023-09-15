@@ -10,7 +10,7 @@ import {
   CreateSubscriptionSchema,
   SetDefaultPaymentMethodSchema,
   validatorTrpcWrapper,
-} from "@skylar/schema";
+} from "@skylar/parsers-and-types";
 
 import { createMiddleware, createTRPCRouter } from "../trpc/factory";
 import { protectedProcedure } from "../trpc/procedures";

@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { getUserByProviderId, insertNewUser } from "@skylar/db";
-import { parse, UserSchema } from "@skylar/schema";
+import { parse, UserSchema } from "@skylar/parsers-and-types";
 
 import { createMiddleware } from "../trpc/factory";
 

@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@legendapp/state": "2.0.0-beta.0",
-    "@skylar/schema": "^0.1.0",
+    "@skylar/parsers-and-types": "^0.1.0",
     "@trpc/client": "^10.38.1",
     "superjson": "1.13.1"
   },

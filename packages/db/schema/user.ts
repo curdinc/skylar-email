@@ -1,7 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import { index, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
-import { SUPPORTED_AUTH_PROVIDERS } from "@skylar/schema";
+import { SUPPORTED_AUTH_PROVIDERS } from "@skylar/parsers-and-types";
 
 import { inviteCode } from "./invite-code";
 import { stripeCustomer } from "./stripe";

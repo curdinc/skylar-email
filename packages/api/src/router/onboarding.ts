@@ -6,7 +6,10 @@ import {
   getInviteCodeUsedByUser,
   getStripeCustomerByUserId,
 } from "@skylar/db";
-import { AlphaCodeCheckerSchema, validatorTrpcWrapper } from "@skylar/schema";
+import {
+  AlphaCodeCheckerSchema,
+  validatorTrpcWrapper,
+} from "@skylar/parsers-and-types";
 
 import { createTRPCRouter } from "../trpc/factory";
 import { protectedProcedure } from "../trpc/procedures";

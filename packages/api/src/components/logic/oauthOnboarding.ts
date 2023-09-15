@@ -3,11 +3,11 @@ import jwt from "@tsndr/cloudflare-worker-jwt";
 
 import type { DbType } from "@skylar/db";
 import { schema } from "@skylar/db";
-import type { oauthOnboardingType } from "@skylar/schema";
+import type { oauthOnboardingType } from "@skylar/parsers-and-types";
 import {
   gmailProviderIDTokenSchema,
   validatorTrpcWrapper,
-} from "@skylar/schema";
+} from "@skylar/parsers-and-types";
 
 import { getAccessToken, watchGmailInbox } from "../providerLogic/gmail/api";
 

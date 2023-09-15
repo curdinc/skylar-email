@@ -1,7 +1,7 @@
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
-import * as providerAuthDetails from "./schema/emailProviders";
+import * as providerAuthDetails from "./schema/email-providers";
 import * as inviteCode from "./schema/invite-code";
 import * as stripe from "./schema/stripe";
 import * as user from "./schema/user";

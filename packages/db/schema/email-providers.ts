@@ -11,7 +11,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { providerEnumList } from "@skylar/schema";
+import { providerEnumList } from "@skylar/parsers-and-types";
 
 import { users } from "./users";
 

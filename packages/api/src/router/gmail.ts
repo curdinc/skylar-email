@@ -7,7 +7,7 @@ import {
   GmailPushNotificationSchema,
   parse,
   validatorTrpcWrapper,
-} from "@skylar/schema";
+} from "@skylar/parsers-and-types";
 
 import { getAccessToken } from "../components/providerLogic/gmail/api";
 import { getAndParseEmails } from "../components/providerLogic/gmail/getAndParseEmails";

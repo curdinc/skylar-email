@@ -3,14 +3,14 @@ import { TRPCError } from "@trpc/server";
 import type {
   Oauth2InitialTokenResponse,
   Oauth2TokenFromRefreshTokenResponse,
-} from "@skylar/schema";
+} from "@skylar/parsers-and-types";
 import {
   formatValidatorError,
   gmailWatchResponseSchema,
   historyObjectSchema,
   messageResponseSchema,
   parse,
-} from "@skylar/schema";
+} from "@skylar/parsers-and-types";
 
 export async function getAccessToken<
   T extends "refresh_token" | "authorization_code",

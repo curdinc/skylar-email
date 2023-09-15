@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 
-import type { UserType } from "@skylar/schema";
+import type { UserType } from "@skylar/parsers-and-types";
 
 import type { DbType } from "../..";
 import { inviteCode } from "../../schema/invite-code";
