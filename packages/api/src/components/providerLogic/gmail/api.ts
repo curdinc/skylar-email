@@ -5,7 +5,6 @@ import type {
   Oauth2TokenFromRefreshTokenResponse,
 } from "@skylar/parsers-and-types";
 import {
-  formatValidatorError,
   gmailWatchResponseSchema,
   historyObjectSchema,
   messageResponseSchema,
@@ -54,7 +53,6 @@ export async function getAccessToken<
     },
   );
   if (!res.ok) {
-    console.log("err", JSON.stringify(await res.json(), null, 2));
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: `Failed to get access token.`,
@@ -131,14 +129,8 @@ export async function getInboxHistory({
   }
 
   const data = await res.json();
-  //console.log(JSON.stringify(data, null, 2));
-  try {
-    const parsedResponse = parse(historyObjectSchema, data);
-    return parsedResponse;
-  } catch (e) {
-    console.log(JSON.stringify(formatValidatorError(e)?.nested, null, 2));
-    throw e;
-  }
+  const parsedResponse = parse(historyObjectSchema, data);
+  return parsedResponse;
 }
 
 export async function getMessage({
@@ -169,11 +161,6 @@ export async function getMessage({
     });
   }
 
-  try {
-    const data = parse(messageResponseSchema, await res.json());
-    return data;
-  } catch (e) {
-    console.log(JSON.stringify(formatValidatorError(e)?.nested, null, 2));
-    throw e;
-  }
+  const data = parse(messageResponseSchema, await res.json());
+  return data;
 }
