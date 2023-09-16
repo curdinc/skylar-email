@@ -1,7 +1,29 @@
-// GENERAL
+export {
+  GmailPushNotificationDataObjectSchema,
+  GmailPushNotificationSchema,
+  gmailProviderIDTokenSchema,
+  gmailWatchResponseSchema,
+  historyObjectSchema,
+  messageResponseSchema,
+  type GmailPushNotificationType,
+  type MessagePartType,
+} from "./src/api/email-provider/gmail-provider";
+
+export { SUPPORTED_EMAIL_CATEGORIES } from "./src/api/email";
+export {
+  oauthOnboardingSchema,
+  providerEnumList,
+  type Oauth2InitialTokenResponse,
+  type Oauth2TokenFromRefreshTokenResponse,
+  type oauthOnboardingType,
+} from "./src/api/email-provider/oauth";
+export * from "./src/api/onboarding";
+export * from "./src/auth";
+
 export {
   formatValidatorError,
   parse,
+  testSchema,
   validatorTrpcWrapper,
 } from "./src/helper";
 
@@ -28,7 +50,7 @@ export type {
 // ENV ITEMS
 export { BackendEnvSchema } from "./src/backend/env";
 export type { BackendEnvType } from "./src/backend/env";
-export { createEnv } from "./src/createEnv";
+export { createEnv } from "./src/create-env";
 export {
   ClientEnvSchemaObject,
   ServerEnvSchemaObject,

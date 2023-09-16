@@ -1,4 +1,4 @@
-import type { SupabaseUserType, UserType } from "@skylar/schema";
+import type { SupabaseUserType, UserType } from "@skylar/parsers-and-types";
 
 import type { PathType } from "./types/auth-settings";
 

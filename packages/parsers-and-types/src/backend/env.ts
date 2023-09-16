@@ -11,6 +11,8 @@ export const BackendEnvSchema = object({
   AXIOM_DATASET: string(),
   AXIOM_ORG_ID: string(),
   AXIOM_URL: string(),
+  GOOGLE_PROVIDER_CLIENT_SECRET: string(),
+  GOOGLE_PROVIDER_CLIENT_ID: string(),
   STRIPE_SECRET_KEY: string(),
 });
 

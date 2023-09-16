@@ -10,7 +10,7 @@ const config = {
     "@skylar/auth",
     "@skylar/db",
     "@skylar/logger",
-    "@skylar/schema",
+    "@skylar/parsers-and-types",
   ],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },

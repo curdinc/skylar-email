@@ -5,25 +5,25 @@ import { user } from "../../schema/user";
 
 export async function getUserByProviderId({
   db,
-  providerId,
+  authProviderId,
 }: {
   db: DbType;
-  providerId: string;
+  authProviderId: string;
 }) {
   const foundUser = await db.query.user.findFirst({
-    where: eq(user.providerId, providerId),
+    where: eq(user.auth_provider_id, authProviderId),
   });
   return foundUser;
 }
 
 export async function getValidUserByProviderId({
   db,
-  providerId,
+  authProviderId,
 }: {
   db: DbType;
-  providerId: string;
+  authProviderId: string;
 }) {
-  const foundUser = await getUserByProviderId({ db, providerId });
+  const foundUser = await getUserByProviderId({ db, authProviderId });
   if (!foundUser) {
     throw new Error("User not found");
   }

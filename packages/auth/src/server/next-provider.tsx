@@ -2,7 +2,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
-import { parse, QuerySchema } from "@skylar/schema";
+import { parse, QuerySchema } from "@skylar/parsers-and-types";
 
 import { SupabaseAuthClientProvider } from "../client/next-provider";
 import { cookieOptions } from "../constants";

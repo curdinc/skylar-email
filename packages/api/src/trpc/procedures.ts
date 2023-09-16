@@ -1,3 +1,4 @@
+import { enforceExternalVendor } from "../middleware/enforce-external-vendor";
 import { enforceUserIsAuthed } from "../middleware/enforce-user-is-authed";
 import { procedure } from "./factory";
 
@@ -20,3 +21,5 @@ export const publicProcedure = procedure;
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = procedure.use(enforceUserIsAuthed);
+
+export const externalVendorProcedure = procedure.use(enforceExternalVendor);

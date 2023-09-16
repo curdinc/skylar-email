@@ -7,7 +7,11 @@ import { cors } from "hono/cors";
 import { appRouter, createTRPCContext } from "@skylar/api";
 import { getDb } from "@skylar/db";
 import { getServerLogger } from "@skylar/logger";
-import { BackendEnvSchema, formatValidatorError, parse } from "@skylar/schema";
+import {
+  BackendEnvSchema,
+  formatValidatorError,
+  parse,
+} from "@skylar/parsers-and-types";
 
 type Bindings = {
   JWT_SECRET: string;
@@ -33,6 +37,41 @@ function getEnvVars(
   }
 }
 
+// provider routes
+app.use("/gmail.incomingEmail", async (c) => {
+  const envVars = getEnvVars(c);
+
+  const db = getDb(envVars.DATABASE_URL);
+  const logger = getServerLogger({
+    req: c.req.raw,
+    token: envVars.AXIOM_TOKEN,
+    dataset: envVars.AXIOM_DATASET,
+    orgId: envVars.AXIOM_ORG_ID,
+    url: envVars.AXIOM_URL,
+  });
+
+  const caller = appRouter.createCaller(
+    await createTRPCContext({
+      req: c.req.raw,
+      env: {
+        JWT_SECRET: envVars.SUPABASE_JWT_SECRET,
+        GOOGLE_PROVIDER_CLIENT_ID: envVars.GOOGLE_PROVIDER_CLIENT_ID,
+        GOOGLE_PROVIDER_CLIENT_SECRET: envVars.GOOGLE_PROVIDER_CLIENT_SECRET,
+        STRIPE_SECRET_KEY: envVars.STRIPE_SECRET_KEY,
+      },
+      db,
+      logger,
+    }),
+  );
+
+  logger.debug(c.req.url);
+  const result = await caller.gmail.incomingEmail(await c.req.json());
+
+  await logger.flush();
+  return c.json(result);
+});
+
+// TRPC routes
 app.options("/trpc/*", (c) => {
   const response = c.newResponse(null, { status: 204 });
   response.headers.set("Access-Control-Allow-Origin", "*");
@@ -66,18 +105,23 @@ app.use("/trpc/*", async (c, next) => {
     router: appRouter,
     endpoint: "/trpc",
     onError({ error, path }) {
-      console.error(`>>> tRPC Error on '${path}'`, error);
+      logger.error(
+        `>>> tRPC Error on '${path}' + ${JSON.stringify(error, null, 2)}`,
+      );
     },
-    createContext: ({ req }) =>
-      createTRPCContext({
-        req,
+    createContext: () => {
+      return createTRPCContext({
+        req: c.req.raw,
         env: {
           JWT_SECRET: envVars.SUPABASE_JWT_SECRET,
+          GOOGLE_PROVIDER_CLIENT_ID: envVars.GOOGLE_PROVIDER_CLIENT_ID,
+          GOOGLE_PROVIDER_CLIENT_SECRET: envVars.GOOGLE_PROVIDER_CLIENT_SECRET,
           STRIPE_SECRET_KEY: envVars.STRIPE_SECRET_KEY,
         },
         db,
         logger,
-      }),
+      });
+    },
   })(c, next);
 
   await logger.flush();

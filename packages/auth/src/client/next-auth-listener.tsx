@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 
-import { parse, SupabaseUserSchema } from "@skylar/schema";
+import { parse, SupabaseUserSchema } from "@skylar/parsers-and-types";
 
 import { cookieOptions } from "../constants";
 import { isPathEqual, mapSupabaseUserToUser, pathToString } from "../helper";

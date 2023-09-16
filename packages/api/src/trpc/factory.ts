@@ -1,7 +1,7 @@
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 
-import { formatValidatorError } from "@skylar/schema";
+import { formatValidatorError } from "@skylar/parsers-and-types";
 
 import type { createTRPCContext } from "../..";
 
