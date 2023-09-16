@@ -7,7 +7,7 @@ import {
   useSignInWithGithub,
 } from "@skylar/auth/client";
 import { state$ } from "@skylar/logic";
-import type { SupportedAuthProvidersType } from "@skylar/schema";
+import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
 
 export const useLogin = () => {
   const params = useSearchParams();

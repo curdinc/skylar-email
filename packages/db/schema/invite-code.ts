@@ -11,55 +11,55 @@ import {
 import { user } from "./user";
 
 // Do not use defaultNow, it's to be deprecated https://github.com/drizzle-team/drizzle-orm/issues/657
-export const inviteCode = pgTable(
-  "inviteCode",
+export const invite_code = pgTable(
+  "invite_code",
   {
-    id: serial("id").primaryKey(),
-    inviteCode: text("inviteCode").unique().notNull(),
-    createdByUserId: integer("userId")
-      .references(() => user.id, {
+    invite_code_id: serial("invite_code_id").primaryKey(),
+    invite_code: text("invite_code").unique().notNull(),
+    created_by: integer("created_by")
+      .references(() => user.user_id, {
         onDelete: "cascade",
         onUpdate: "cascade",
       })
       .notNull(),
-    usedByUserId: integer("usedByUserId")
-      .references(() => user.id, {
+    used_by: integer("used_by")
+      .references(() => user.user_id, {
         onDelete: "cascade",
         onUpdate: "cascade",
       })
       .unique(),
-    createdAt: timestamp("createdAt", {
+    created_at: timestamp("created_at", {
       withTimezone: true,
       mode: "date",
     })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    usedAt: timestamp("usedAt", {
+    used_at: timestamp("used_at", {
       withTimezone: true,
       mode: "date",
     }),
-    deletedAt: timestamp("deletedAt", {
+    deleted_at: timestamp("deleted_at", {
       withTimezone: true,
       mode: "date",
     }),
   },
   (table) => {
     return {
-      inviteCodeIdx: index("inviteCodeIdx").on(table.inviteCode),
-      usedByUserId: index("usedByUserId").on(table.usedByUserId),
+      invite_code_idx: index("invite_code_idx").on(table.invite_code),
+      used_by_idx: index("used_by_idx").on(table.used_by),
     };
   },
 );
 
-export const inviteCodeRelations = relations(inviteCode, ({ one }) => ({
-  createdByUser: one(user, {
-    fields: [inviteCode.createdByUserId],
-    references: [user.id],
-    relationName: "inviteCodeCreated",
+export const inviteCodeRelations = relations(invite_code, ({ one }) => ({
+  creates_invite: one(user, {
+    fields: [invite_code.created_by],
+    references: [user.user_id],
+    relationName: "creates_invite",
   }),
-  usedByUser: one(user, {
-    fields: [inviteCode.usedByUserId],
-    references: [user.id],
-    relationName: "inviteCodeUsed",
+  uses_invite: one(user, {
+    fields: [invite_code.used_by],
+    references: [user.user_id],
+    relationName: "uses_invite",
   }),
 }));

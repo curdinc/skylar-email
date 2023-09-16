@@ -7,16 +7,16 @@ export {
   messageResponseSchema,
   type GmailPushNotificationType,
   type MessagePartType,
-} from "./src/emailProvider/gmailProvider";
+} from "./src/api/email-provider/gmail-provider";
 
+export { SUPPORTED_EMAIL_CATEGORIES } from "./src/api/email";
 export {
   oauthOnboardingSchema,
   providerEnumList,
   type Oauth2InitialTokenResponse,
   type Oauth2TokenFromRefreshTokenResponse,
   type oauthOnboardingType,
-} from "./src/emailProvider/oauth";
-
+} from "./src/api/email-provider/oauth";
 export * from "./src/api/onboarding";
 export * from "./src/auth";
 
@@ -50,7 +50,7 @@ export type {
 // ENV ITEMS
 export { BackendEnvSchema } from "./src/backend/env";
 export type { BackendEnvType } from "./src/backend/env";
-export { createEnv } from "./src/createEnv";
+export { createEnv } from "./src/create-env";
 export {
   ClientEnvSchemaObject,
   ServerEnvSchemaObject,

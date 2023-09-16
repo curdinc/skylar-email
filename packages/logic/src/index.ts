@@ -1,6 +1,6 @@
 import { observable } from "@legendapp/state";
 
-import type { SupportedAuthProvidersType } from "@skylar/schema";
+import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
 
 export const state$ = observable<{
   ONBOARDING: { alphaCode: string };

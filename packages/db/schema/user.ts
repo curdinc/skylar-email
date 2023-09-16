@@ -1,31 +1,31 @@
 import { relations, sql } from "drizzle-orm";
 import { index, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
-import { SUPPORTED_AUTH_PROVIDERS } from "@skylar/schema";
+import { SUPPORTED_AUTH_PROVIDERS } from "@skylar/parsers-and-types";
 
-import { inviteCode } from "./invite-code";
-import { stripeCustomer } from "./stripe";
+import { invite_code } from "./invite-code";
+import { stripe_customer } from "./stripe";
 
 // Do not use defaultNow, it's to be deprecated https://github.com/drizzle-team/drizzle-orm/issues/657
 export const user = pgTable(
   "user",
   {
-    id: serial("id").primaryKey(),
-    providerId: text("providerId").notNull().unique(),
-    provider: text("provider", {
+    user_id: serial("id").primaryKey(),
+    auth_provider_id: text("providerId").notNull().unique(),
+    auth_provider: text("provider", {
       enum: SUPPORTED_AUTH_PROVIDERS,
     }).notNull(),
-    imageUri: text("imageUri"),
+    image_uri: text("image_uri"),
     name: text("name").default("").notNull(),
     email: text("email"),
     phone: text("phone"),
-    createdAt: timestamp("createdAt", {
+    created_at: timestamp("created_at", {
       withTimezone: true,
       mode: "date",
     })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt", {
+    updated_at: timestamp("updated_at", {
       withTimezone: true,
       mode: "date",
     })
@@ -34,20 +34,20 @@ export const user = pgTable(
   },
   (table) => {
     return {
-      providerIdx: index("providerIdx").on(table.providerId),
+      provider_idx: index("provider_idx").on(table.auth_provider_id),
     };
   },
 );
 
 export const usersRelations = relations(user, ({ many, one }) => ({
-  inviteCodeCreated: many(inviteCode, {
-    relationName: "inviteCodeCreated",
+  creates_invite: many(invite_code, {
+    relationName: "creates_invite",
   }),
-  inviteCodeUsed: many(inviteCode, {
-    relationName: "inviteCodeUsed",
+  uses_invite: many(invite_code, {
+    relationName: "uses_invite",
   }),
-  stripeCustomer: one(stripeCustomer, {
-    fields: [user.id],
-    references: [stripeCustomer.userId],
+  stripe_customer: one(stripe_customer, {
+    fields: [user.user_id],
+    references: [stripe_customer.user_id],
   }),
 }));

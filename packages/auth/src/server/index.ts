@@ -1,7 +1,11 @@
 import jwt from "@tsndr/cloudflare-worker-jwt";
 
-import type { UserType } from "@skylar/schema";
-import { AuthCookieSchema, parse, SupabaseUserSchema } from "@skylar/schema";
+import type { UserType } from "@skylar/parsers-and-types";
+import {
+  AuthCookieSchema,
+  parse,
+  SupabaseUserSchema,
+} from "@skylar/parsers-and-types";
 
 import { mapSupabaseUserToUser } from "../helper";
 import type { Session } from "../types/session";

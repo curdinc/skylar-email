@@ -1,5 +1,5 @@
 {
-  "name": "@skylar/schema",
+  "name": "@skylar/parsers-and-types",
   "private": true,
   "version": "0.1.0",
   "exports": {

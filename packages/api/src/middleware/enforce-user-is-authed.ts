@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { getUserByProviderId, insertNewUser } from "@skylar/db";
-import { parse, UserSchema } from "@skylar/schema";
+import { parse, UserSchema } from "@skylar/parsers-and-types";
 
 import { createMiddleware } from "../trpc/factory";
 
@@ -18,7 +18,7 @@ export const enforceUserIsAuthed = createMiddleware(
     // TODO: Add caching for this and trim the return response
     let skylarUser = await getUserByProviderId({
       db,
-      providerId: user.providerId,
+      authProviderId: user.providerId,
     });
     if (!skylarUser) {
       // create new user
@@ -28,7 +28,7 @@ export const enforceUserIsAuthed = createMiddleware(
       });
       skylarUser = await getUserByProviderId({
         db,
-        providerId: user.providerId,
+        authProviderId: user.providerId,
       });
     }
 
@@ -44,7 +44,7 @@ export const enforceUserIsAuthed = createMiddleware(
         // TODO: Assign additional information here, like email provider details etc.
         session: {
           user: {
-            id: skylarUser.id,
+            id: skylarUser.auth_provider_id,
             ...parse(UserSchema, skylarUser),
           },
         },

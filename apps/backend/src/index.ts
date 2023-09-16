@@ -7,7 +7,11 @@ import { cors } from "hono/cors";
 import { appRouter, createTRPCContext } from "@skylar/api";
 import { getDb } from "@skylar/db";
 import { getServerLogger } from "@skylar/logger";
-import { BackendEnvSchema, formatValidatorError, parse } from "@skylar/schema";
+import {
+  BackendEnvSchema,
+  formatValidatorError,
+  parse,
+} from "@skylar/parsers-and-types";
 
 type Bindings = {
   JWT_SECRET: string;
@@ -53,6 +57,7 @@ app.use("/gmail.incomingEmail", async (c) => {
         JWT_SECRET: envVars.SUPABASE_JWT_SECRET,
         GOOGLE_PROVIDER_CLIENT_ID: envVars.GOOGLE_PROVIDER_CLIENT_ID,
         GOOGLE_PROVIDER_CLIENT_SECRET: envVars.GOOGLE_PROVIDER_CLIENT_SECRET,
+        STRIPE_SECRET_KEY: envVars.STRIPE_SECRET_KEY,
       },
       db,
       logger,

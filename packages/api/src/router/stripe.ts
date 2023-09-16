@@ -10,7 +10,7 @@ import {
   CreateSubscriptionSchema,
   SetDefaultPaymentMethodSchema,
   validatorTrpcWrapper,
-} from "@skylar/schema";
+} from "@skylar/parsers-and-types";
 
 import { createMiddleware, createTRPCRouter } from "../trpc/factory";
 import { protectedProcedure } from "../trpc/procedures";
@@ -39,7 +39,7 @@ export const stripeRouter = createTRPCRouter({
     }) => {
       const stripeCustomer = await getStripeCustomerByUserId({
         db,
-        userId: user.id,
+        userId: parseInt(user.id),
       });
       if (!stripeCustomer) {
         const customer = await stripe.customers.create({
@@ -51,7 +51,7 @@ export const stripeRouter = createTRPCRouter({
           db,
           customerDetails: {
             customerId: customer.id,
-            userId: user.id,
+            userId: parseInt(user.id),
           },
         });
       }
@@ -75,10 +75,10 @@ export const stripeRouter = createTRPCRouter({
 
         const stripeCustomer = await getValidStripeCustomerByUserId({
           db,
-          userId: user.id,
+          userId: parseInt(user.id),
         });
         const customer = await stripe.customers.retrieve(
-          stripeCustomer.customerId,
+          stripeCustomer.customer_id,
         );
         const subscription = await stripe.subscriptions.create({
           customer: customer.id,
@@ -106,11 +106,11 @@ export const stripeRouter = createTRPCRouter({
     }) => {
       const stripeCustomer = await getValidStripeCustomerByUserId({
         db,
-        userId: user.id,
+        userId: parseInt(user.id),
       });
 
       const setupIntent = await stripe.setupIntents.create({
-        customer: stripeCustomer.customerId,
+        customer: stripeCustomer.customer_id,
         automatic_payment_methods: { enabled: true },
         usage: "off_session",
       });
@@ -130,13 +130,13 @@ export const stripeRouter = createTRPCRouter({
       }) => {
         const stripeCustomer = await getValidStripeCustomerByUserId({
           db,
-          userId: user.id,
+          userId: parseInt(user.id),
         });
         await stripe.paymentMethods.attach(input.paymentMethodId, {
-          customer: stripeCustomer.customerId,
+          customer: stripeCustomer.customer_id,
         });
         const customer = await stripe.customers.update(
-          stripeCustomer.customerId,
+          stripeCustomer.customer_id,
           {
             invoice_settings: {
               default_payment_method: input.paymentMethodId,
