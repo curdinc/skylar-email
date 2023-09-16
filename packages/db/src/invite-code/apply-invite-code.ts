@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import type { DbType } from "../..";
-import { inviteCode } from "../../schema/invite-code";
+import { schema } from "../..";
 import { getValidInviteCodeByInviteCode } from "./get-invite-code-by-invite-code";
 
 export async function applyInviteCode({
@@ -19,10 +19,10 @@ export async function applyInviteCode({
   });
 
   await db
-    .update(inviteCode)
+    .update(schema.invite_code)
     .set({
-      usedAt: new Date(),
-      usedByUserId,
+      used_at: new Date(),
+      used_by: usedByUserId,
     })
-    .where(eq(inviteCode.inviteCode, validInviteCode.inviteCode));
+    .where(eq(schema.invite_code, validInviteCode.invite_code));
 }

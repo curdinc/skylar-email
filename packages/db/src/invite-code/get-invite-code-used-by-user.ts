@@ -3,8 +3,7 @@ import { eq } from "drizzle-orm";
 import type { UserType } from "@skylar/parsers-and-types";
 
 import type { DbType } from "../..";
-import { inviteCode } from "../../schema/invite-code";
-import { user } from "../../schema/user";
+import { schema } from "../..";
 
 export async function getInviteCodeUsedByUser({
   db,
@@ -15,15 +14,15 @@ export async function getInviteCodeUsedByUser({
 }) {
   const result = await db.query.user.findFirst({
     columns: {},
-    where: eq(user.providerId, userObj.providerId),
+    where: eq(schema.user.auth_provider_id, userObj.providerId),
     with: {
       inviteCodeCreated: {
-        where: eq(inviteCode.usedByUserId, user.id),
+        where: eq(schema.invite_code.used_by, schema.user.user_id),
         columns: {
           inviteCode: true,
         },
       },
     },
   });
-  return result?.inviteCodeCreated[0]?.inviteCode;
+  return result?.inviteCodeCreated[0].inviteCodeCreated;
 }

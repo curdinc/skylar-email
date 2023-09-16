@@ -66,7 +66,7 @@ export const onboardingRouter = createTRPCRouter({
         await applyInviteCode({
           db,
           inviteCodeToUse: input.alphaCode,
-          usedByUserId: user.id,
+          usedByUserId: parseInt(user.id),
         });
 
         return "OK" as const;

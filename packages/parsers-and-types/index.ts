@@ -9,6 +9,7 @@ export {
   type MessagePartType,
 } from "./src/api/email-provider/gmail-provider";
 
+export { SUPPORTED_EMAIL_CATEGORIES } from "./src/api/email";
 export {
   oauthOnboardingSchema,
   providerEnumList,
@@ -16,7 +17,6 @@ export {
   type Oauth2TokenFromRefreshTokenResponse,
   type oauthOnboardingType,
 } from "./src/api/email-provider/oauth";
-
 export * from "./src/api/onboarding";
 export * from "./src/auth";
 

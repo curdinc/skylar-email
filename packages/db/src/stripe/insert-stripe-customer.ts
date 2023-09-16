@@ -1,5 +1,5 @@
 import type { DbType } from "../..";
-import { stripeCustomer } from "../../schema/stripe";
+import { schema } from "../..";
 
 export async function insertStripeCustomer({
   db,
@@ -8,8 +8,8 @@ export async function insertStripeCustomer({
   db: DbType;
   customerDetails: { customerId: string; userId: number };
 }) {
-  await db.insert(stripeCustomer).values({
-    customerId: customerDetails.customerId,
-    userId: customerDetails.userId,
+  await db.insert(schema.stripe_customer).values({
+    customer_id: customerDetails.customerId,
+    user_id: customerDetails.userId,
   });
 }

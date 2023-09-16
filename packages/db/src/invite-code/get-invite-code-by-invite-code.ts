@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import type { DbType } from "../..";
-import { inviteCode } from "../../schema/invite-code";
+import { schema } from "../..";
 
 export async function getInviteCodeByInviteCode({
   db,
@@ -10,8 +10,8 @@ export async function getInviteCodeByInviteCode({
   db: DbType;
   inviteCodeToFind: string;
 }) {
-  const result = await db.query.inviteCode.findFirst({
-    where: eq(inviteCode.inviteCode, inviteCodeToFind),
+  const result = await db.query.invite_code.findFirst({
+    where: eq(schema.invite_code.invite_code, inviteCodeToFind),
     with: {
       usedByUser: {
         columns: {
@@ -37,7 +37,7 @@ export async function getValidInviteCodeByInviteCode({
   });
   if (
     !inviteCodeFound ||
-    (!!inviteCodeFound?.usedAt && !!inviteCodeFound.usedByUserId)
+    (!!inviteCodeFound?.used_at && !!inviteCodeFound.used_by)
   ) {
     throw new Error("Valid invite code not found");
   }

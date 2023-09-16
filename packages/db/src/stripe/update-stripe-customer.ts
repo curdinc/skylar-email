@@ -1,9 +1,11 @@
 import { eq } from "drizzle-orm";
 
 import type { DbType } from "../..";
-import { stripeCustomer } from "../../schema/stripe";
+import { schema } from "../..";
 
-type SetStripeCustomerType = Partial<(typeof stripeCustomer)["$inferSelect"]>;
+type SetStripeCustomerType = Partial<
+  (typeof schema.stripe_customer)["$inferSelect"]
+>;
 
 export async function updateStripeCustomer({
   db,
@@ -15,7 +17,7 @@ export async function updateStripeCustomer({
   set: SetStripeCustomerType;
 }) {
   await db
-    .update(stripeCustomer)
+    .update(schema.stripe_customer)
     .set(set)
-    .where(eq(stripeCustomer.customerId, stripeCustomerId));
+    .where(eq(schema.stripe_customer.customer_id, stripeCustomerId));
 }

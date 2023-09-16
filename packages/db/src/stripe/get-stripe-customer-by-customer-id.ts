@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
 import type { DbType } from "../..";
-import { stripeCustomer } from "../../schema/stripe";
+import { schema } from "../..";
 
 export async function getStripeCustomerByCustomerId({
   db,
@@ -10,8 +10,8 @@ export async function getStripeCustomerByCustomerId({
   db: DbType;
   customerId: string;
 }) {
-  const stripeCustomerFound = await db.query.stripeCustomer.findFirst({
-    where: eq(stripeCustomer.customerId, customerId),
+  const stripeCustomerFound = await db.query.stripe_customer.findFirst({
+    where: eq(schema.stripe_customer.customer_id, customerId),
   });
   return stripeCustomerFound;
 }
