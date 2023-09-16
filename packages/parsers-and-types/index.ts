@@ -26,7 +26,6 @@ export {
   testSchema,
   validatorTrpcWrapper,
 } from "./src/helper";
-
 // FEATURE SPECIFIC
 export {
   AlphaCodeCheckerSchema,
@@ -48,6 +47,7 @@ export type {
 } from "./src/auth";
 
 // ENV ITEMS
+export type { EmailProviderDetailType } from "./src/api/provider";
 export { BackendEnvSchema } from "./src/backend/env";
 export type { BackendEnvType } from "./src/backend/env";
 export { createEnv } from "./src/create-env";
