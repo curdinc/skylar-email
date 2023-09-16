@@ -43,9 +43,9 @@ export const onboardingRouter = createTRPCRouter({
           });
         }
 
-        if (inviteCode.usedByUserId) {
+        if (inviteCode.used_by) {
           logger.debug(
-            `inviteCode ${inviteCode.inviteCode} has already been used by ${inviteCode.usedByUserId}`,
+            `inviteCode ${inviteCode.invite_code} has already been used by ${inviteCode.used_by}`,
           );
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -54,7 +54,7 @@ export const onboardingRouter = createTRPCRouter({
         }
         if (userInviteCode) {
           logger.debug(
-            `User ${user.providerId} already has used code ${userInviteCode} to activate account`,
+            `User ${user.providerId} already has used code to activate account`, //  FIXME: ${}userInviteCode
           );
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -89,7 +89,7 @@ export const onboardingRouter = createTRPCRouter({
       // subscription
       const stripeCustomer = await getStripeCustomerByUserId({
         db,
-        userId: user.id,
+        userId: parseInt(user.id),
       });
       if (!stripeCustomer?.payment_method_added_at) {
         return "card" as const;
