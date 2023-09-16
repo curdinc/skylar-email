@@ -8,7 +8,7 @@ import { email_provider_detail } from "./email-provider-detail";
 export const email_detail = pgTable("email_detail", {
   email_detail_id: serial("message_detail_id").primaryKey(),
   email_provider_detail_id: integer("email_provider_detail_id").references(
-    () => email_provider_detail.email_provider_detail_id,
+    () => email_provider_detail.emailProviderDetailId,
     {
       onDelete: "cascade",
       onUpdate: "cascade",
@@ -23,6 +23,6 @@ export const email_detail = pgTable("email_detail", {
 export const messageCategoryRelations = relations(email_detail, ({ one }) => ({
   email_provider_detail: one(email_provider_detail, {
     fields: [email_detail.email_provider_detail_id],
-    references: [email_provider_detail.email_provider_detail_id],
+    references: [email_provider_detail.emailProviderDetailId],
   }),
 }));

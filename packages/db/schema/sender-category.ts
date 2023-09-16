@@ -11,7 +11,7 @@ import { email_provider_detail } from "./email-provider-detail";
 export const sender_category = pgTable("sender_category", {
   sender_category_id: serial("sender_category_id").primaryKey(),
   email_provider_detail_id: integer("email_provider_detail_id").references(
-    () => email_provider_detail.email_provider_detail_id,
+    () => email_provider_detail.emailProviderDetailId,
     {
       onDelete: "cascade",
       onUpdate: "cascade",
@@ -28,7 +28,7 @@ export const senderCategoryRelations = relations(
   ({ one }) => ({
     email_provider_detail: one(email_provider_detail, {
       fields: [sender_category.email_provider_detail_id],
-      references: [email_provider_detail.email_provider_detail_id],
+      references: [email_provider_detail.emailProviderDetailId],
     }),
   }),
 );

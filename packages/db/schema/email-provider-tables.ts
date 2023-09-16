@@ -7,7 +7,7 @@ import { email_provider_detail } from "./email-provider-detail";
 export const gmail_provider = pgTable("gmail_provider", {
   gmail_provider_id: serial("gmail_provider_id").primaryKey(),
   email_provider_detail_id: integer("email_provider_detail_id").references(
-    () => email_provider_detail.email_provider_detail_id,
+    () => email_provider_detail.emailProviderDetailId,
     {
       onDelete: "cascade",
       onUpdate: "cascade",
@@ -19,6 +19,6 @@ export const gmail_provider = pgTable("gmail_provider", {
 export const gmailProviderRelations = relations(gmail_provider, ({ one }) => ({
   email_provider_detail: one(email_provider_detail, {
     fields: [gmail_provider.email_provider_detail_id],
-    references: [email_provider_detail.email_provider_detail_id],
+    references: [email_provider_detail.emailProviderDetailId],
   }),
 }));

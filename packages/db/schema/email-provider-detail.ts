@@ -17,7 +17,7 @@ import { user } from "./user";
 export const providerEnum = pgEnum("email_provider", providerEnumList);
 
 export const email_provider_detail = pgTable("email_provider_detail", {
-  email_provider_detail_id: serial("email_provider_detail_id").primaryKey(),
+  emailProviderDetailId: serial("email_provider_detail_id").primaryKey(),
   user_id: integer("user_id").references(() => user.user_id),
   email_provider: text("email_provider", {
     enum: providerEnumList,
@@ -38,11 +38,11 @@ export const emailProviderDetailRelations = relations(
   ({ one }) => ({
     sender_category: one(sender_category, {
       references: [sender_category.email_provider_detail_id],
-      fields: [email_provider_detail.email_provider_detail_id],
+      fields: [email_provider_detail.emailProviderDetailId],
     }),
     message_category: one(email_detail, {
       references: [email_detail.email_provider_detail_id],
-      fields: [email_provider_detail.email_provider_detail_id],
+      fields: [email_provider_detail.emailProviderDetailId],
     }),
   }),
 );

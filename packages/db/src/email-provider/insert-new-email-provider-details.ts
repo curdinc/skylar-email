@@ -19,7 +19,7 @@ export async function insertNewEmailProvider({
     })
     .returning({
       email_provider_detail_id:
-        schema.email_provider_detail.email_provider_detail_id,
+        schema.email_provider_detail.emailProviderDetailId,
     });
 
   return { email_provider_detail_id: result[0]?.email_provider_detail_id };

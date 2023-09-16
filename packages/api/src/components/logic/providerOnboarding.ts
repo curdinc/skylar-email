@@ -33,7 +33,7 @@
 //   // request inbox watching (gmail)
 //   const historyId = await watchGmailInbox(email, parsedResponse.access_token);
 
-//   const userInsertResult = await db
+//   const providerInsertResult = await db
 //     .insert(schema.emailProviderOAuth)
 //     .values({
 //       provider: input.provider,
