@@ -24,5 +24,10 @@ export async function getInviteCodeUsedByUser({
       },
     },
   });
-  return result?.inviteCodeCreated[0].inviteCodeCreated;
+
+  if (!result) {
+    throw new Error("Valid invite code used-by not found");
+  }
+  // FIXME: what is this never value?
+  return result?.inviteCodeCreated;
 }

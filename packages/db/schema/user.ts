@@ -15,17 +15,17 @@ export const user = pgTable(
     auth_provider: text("provider", {
       enum: SUPPORTED_AUTH_PROVIDERS,
     }).notNull(),
-    image_uri: text("imageUri"),
+    image_uri: text("image_uri"),
     name: text("name").default("").notNull(),
     email: text("email"),
     phone: text("phone"),
-    created_at: timestamp("createdAt", {
+    created_at: timestamp("created_at", {
       withTimezone: true,
       mode: "date",
     })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updated_at: timestamp("updatedAt", {
+    updated_at: timestamp("updated_at", {
       withTimezone: true,
       mode: "date",
     })
