@@ -35,7 +35,6 @@ export function useConnectEmailProviderPage() {
     flow: "auth-code",
     scope: GMAIL_SCOPES,
     onSuccess: (codeResponse) => {
-      setIsConnectingToEmailProvider(false);
       exchangeCode({
         provider: "gmail",
         code: codeResponse.code,
