@@ -43,7 +43,9 @@ export const userRelations = relations(user, ({ many, one }) => ({
   createdInviteCode: many(inviteCode, {
     relationName: "created_invite_code",
   }),
-  usedInviteCode: many(inviteCode, {
+  usedInviteCode: one(inviteCode, {
+    fields: [user.userId],
+    references: [inviteCode.usedBy],
     relationName: "used_invite_code",
   }),
   stripeCustomer: one(stripeCustomer, {
