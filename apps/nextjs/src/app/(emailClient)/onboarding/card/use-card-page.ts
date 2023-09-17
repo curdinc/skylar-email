@@ -1,6 +1,6 @@
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import type { StripeError, StripePaymentElement } from "@stripe/stripe-js";
 import { useQuery } from "@tanstack/react-query";
@@ -46,6 +46,7 @@ function useErrorSettingUpPaymentMethod() {
   const { toast } = useToast();
   const searchparams = useSearchParams();
   const errorMessage = searchparams.get("error-message");
+  const router = useRouter();
   const logger = useLogger();
   useEffect(() => {
     if (errorMessage) {
@@ -55,8 +56,10 @@ function useErrorSettingUpPaymentMethod() {
         title: "Something went wrong",
         description: errorMessage,
       });
+      router.replace("/onboarding/card");
     }
-  }, [logger, errorMessage, toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 }
 
 function useFocusPaymentElement() {
