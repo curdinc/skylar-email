@@ -20,6 +20,9 @@ export default function ConnectEmailOnboardingForm() {
     onSelectEmailProvider,
     emailProvider,
     goBack,
+    connectToGmail,
+    connectToOutlook,
+    isConnectingToEmailProvider,
   } = useConnectEmailProviderPage();
 
   return (
@@ -66,7 +69,13 @@ export default function ConnectEmailOnboardingForm() {
         <Button variant={"ghost"} onClick={goBack}>
           back
         </Button>
-        <Button isLoading={isCheckingUserOnboardStep}>
+        <Button
+          isLoading={isConnectingToEmailProvider}
+          disabled={isCheckingUserOnboardStep}
+          onClick={
+            emailProvider === "Gmail" ? connectToGmail : connectToOutlook
+          }
+        >
           Connect to {emailProvider}
         </Button>
       </CardFooter>

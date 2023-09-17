@@ -12,7 +12,7 @@ import { env } from "~/env";
 import { onUnauthenticatedRedirectTo } from "~/lib/auth/server";
 import { siteConfig } from "~/lib/config";
 import { cn } from "~/lib/ui";
-import { AuthListenerSkylar, TRPCReactProvider } from "./providers";
+import { AuthListenerSkylar, ClientProvider } from "./providers";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -87,14 +87,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             onUnauthenticatedRedirectTo,
           }}
         >
-          <TRPCReactProvider cookies={cookies().getAll()} headers={headers()}>
+          <ClientProvider cookies={cookies().getAll()} headers={headers()}>
             <AuthListenerSkylar
               supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
               supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
             />
             {children}
             <Toaster />
-          </TRPCReactProvider>
+          </ClientProvider>
         </NextAuthProvider>
       </body>
     </html>
