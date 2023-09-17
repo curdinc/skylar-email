@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
-
 import { BrandIcons } from "~/components/icons/brand-icons";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -63,17 +61,14 @@ export default function ConnectEmailOnboardingForm() {
             </Label>
           </div>
         </RadioGroup>
-        <Button isLoading={isCheckingUserOnboardStep}>
-          Connect to {emailProvider}
-        </Button>
       </CardContent>
-      <CardFooter className="justify-between space-x-2">
+      <CardFooter className="justify-between">
         <Button variant={"ghost"} onClick={goBack}>
           back
         </Button>
-        <Link href="/onboarding/card" className={buttonVariants()}>
-          Continue
-        </Link>
+        <Button isLoading={isCheckingUserOnboardStep}>
+          Connect to {emailProvider}
+        </Button>
       </CardFooter>
     </Card>
   );
