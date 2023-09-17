@@ -19,8 +19,8 @@ export function mapSupabaseUserToUser(
       "",
     email: supabaseUser.email ?? supabaseUser.user_metadata.email,
     phone: supabaseUser.phone,
-    provider: supabaseUser.app_metadata.provider,
-    providerId: supabaseUser.user_metadata.sub,
+    authProvider: supabaseUser.app_metadata.provider,
+    authProviderId: supabaseUser.user_metadata.sub,
   };
 }
 

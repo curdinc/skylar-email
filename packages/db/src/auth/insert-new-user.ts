@@ -13,8 +13,8 @@ export async function insertNewUser({
   const result = await db
     .insert(schema.user)
     .values({
-      authProvider: newUser.provider,
-      authProviderId: newUser.providerId,
+      authProvider: newUser.authProvider,
+      authProviderId: newUser.authProviderId,
       name: newUser.name,
       email: newUser.email,
       phone: newUser.phone,

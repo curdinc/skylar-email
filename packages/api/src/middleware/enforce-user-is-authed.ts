@@ -18,7 +18,7 @@ export const enforceUserIsAuthed = createMiddleware(
     // TODO: Add caching for this and trim the return response
     let skylarUser = await getUserByProviderId({
       db,
-      authProviderId: user.providerId,
+      authProviderId: user.authProviderId,
     });
     if (!skylarUser) {
       // create new user
@@ -28,7 +28,7 @@ export const enforceUserIsAuthed = createMiddleware(
       });
       skylarUser = await getUserByProviderId({
         db,
-        authProviderId: user.providerId,
+        authProviderId: user.authProviderId,
       });
     }
 
@@ -44,7 +44,7 @@ export const enforceUserIsAuthed = createMiddleware(
         // TODO: Assign additional information here, like email provider details etc.
         session: {
           user: {
-            id: skylarUser.auth_provider_id,
+            userId: skylarUser.userId,
             ...parse(UserSchema, skylarUser),
           },
         },

@@ -14,7 +14,7 @@ export async function getInviteCodeUsedByUser({
 }) {
   const result = await db.query.user.findFirst({
     columns: {},
-    where: eq(schema.user.authProviderId, userObj.providerId),
+    where: eq(schema.user.authProviderId, userObj.authProviderId),
     with: {
       createdInviteCode: {
         where: eq(schema.inviteCode.usedBy, schema.user.userId),
