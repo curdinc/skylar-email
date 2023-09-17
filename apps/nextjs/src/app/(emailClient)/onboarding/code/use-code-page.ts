@@ -9,14 +9,12 @@ import { useUserOnboardingRouteGuard } from "../use-user-onboarding-route-guard"
 export function useCodePage() {
   const router = useRouter();
   const { toast } = useToast();
-  const utils = api.useContext();
   const { isLoading: isCheckingOnboardStep } = useUserOnboardingRouteGuard();
 
   const code = state$.ONBOARDING.alphaCode.use();
   const { mutate: applyCode, isLoading: isSubmittingCode } =
     api.onboarding.applyAlphaCode.useMutation({
-      async onSuccess() {
-        await utils.onboarding.invalidate();
+      onSuccess() {
         router.push(`/onboarding/connect`);
       },
       onError(error) {

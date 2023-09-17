@@ -15,7 +15,15 @@ import { env } from "~/env";
 import { api } from "~/lib/api";
 import { onLogoutRedirectTo, useOnUserLogin } from "~/lib/auth/client";
 
-export function TRPCReactProvider(props: {
+/**
+ * This wraps the entire app with the client providers needed.
+ * * TRPC Client
+ * * React Query Client
+ * * Google OAuth Provider
+ * @param props
+ * @returns
+ */
+export function ClientProvider(props: {
   children: React.ReactNode;
   headers?: Headers;
   cookies: RequestCookie[];
@@ -68,7 +76,7 @@ export function TRPCReactProvider(props: {
 
   return (
     <api.Provider client={trpcClient} queryClient={queryClient}>
-      <GoogleOAuthProvider clientId="358702612985-83ki10i9jtrb9jas0smbhvjtosil194c.apps.googleusercontent.com">
+      <GoogleOAuthProvider clientId={env.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID}>
         <QueryClientProvider client={queryClient}>
           <ReactQueryStreamedHydration transformer={superjson}>
             {props.children}

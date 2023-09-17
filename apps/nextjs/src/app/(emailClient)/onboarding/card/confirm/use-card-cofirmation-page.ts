@@ -30,7 +30,6 @@ export function useCheckSuccessfulSetupIntent() {
         return { error: error.message };
       }
       if (setupIntent) {
-        console.log("setupIntent", JSON.stringify(setupIntent, null, 2));
         switch (setupIntent.status) {
           case "succeeded": {
             await setDefaultPaymentMethod({

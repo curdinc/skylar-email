@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
-
 import { BrandIcons } from "~/components/icons/brand-icons";
-import { Button, buttonVariants } from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -21,7 +19,9 @@ export default function ConnectEmailOnboardingForm() {
     isCheckingUserOnboardStep,
     onSelectEmailProvider,
     emailProvider,
-    goBack,
+    connectToGmail,
+    connectToOutlook,
+    isConnectingToEmailProvider,
   } = useConnectEmailProviderPage();
 
   return (
@@ -63,17 +63,18 @@ export default function ConnectEmailOnboardingForm() {
             </Label>
           </div>
         </RadioGroup>
-        <Button isLoading={isCheckingUserOnboardStep}>
+      </CardContent>
+      <CardFooter>
+        <Button
+          isLoading={isConnectingToEmailProvider}
+          disabled={isCheckingUserOnboardStep}
+          onClick={
+            emailProvider === "Gmail" ? connectToGmail : connectToOutlook
+          }
+          className="w-full"
+        >
           Connect to {emailProvider}
         </Button>
-      </CardContent>
-      <CardFooter className="justify-between space-x-2">
-        <Button variant={"ghost"} onClick={goBack}>
-          back
-        </Button>
-        <Link href="/onboarding/card" className={buttonVariants()}>
-          Continue
-        </Link>
       </CardFooter>
     </Card>
   );

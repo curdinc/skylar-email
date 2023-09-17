@@ -10,8 +10,8 @@ import {
 
 import { providerEnumList } from "@skylar/parsers-and-types";
 
+import { gmailEmailDetail } from "./email-details";
 import { gmailProvider } from "./email-providers";
-import { gmailEmailDetail } from "./gmail-email-detail";
 import { user } from "./user";
 import { whitelistedContact } from "./whitelisted-contact";
 
@@ -19,16 +19,22 @@ export const providerEnum = pgEnum("email_provider", providerEnumList);
 
 export const emailProviderDetail = pgTable("email_provider_detail", {
   emailProviderDetailId: serial("email_provider_detail_id").primaryKey(),
-  userId: integer("user_id").references(() => user.userId),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => user.userId),
   emailProvider: text("email_provider", {
     enum: providerEnumList,
   }).notNull(),
   email: text("email").notNull(),
+  inboxName: text("inbox_name").notNull(),
+  imageUri: text("image_uri"),
   createdAt: timestamp("created_at", {
     withTimezone: true,
     mode: "date",
-  }).default(sql`CURRENT_TIMESTAMP`),
-  updated_at: timestamp("updated_at", {
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at", {
     withTimezone: true,
     mode: "date",
   })

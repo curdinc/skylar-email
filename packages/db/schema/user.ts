@@ -25,7 +25,7 @@ export const user = pgTable(
     })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updated_at: timestamp("updated_at", {
+    updatedAt: timestamp("updated_at", {
       withTimezone: true,
       mode: "date",
     })

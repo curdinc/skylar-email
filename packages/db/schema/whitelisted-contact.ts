@@ -10,13 +10,12 @@ import { emailProviderDetail } from "./email-provider-detail";
 
 export const whitelistedContact = pgTable("whitelisted_contact", {
   whitelistedContactId: serial("whitelisted_contact_id").primaryKey(),
-  emailProviderDetailId: integer("email_provider_detail_id").references(
-    () => emailProviderDetail.emailProviderDetailId,
-    {
+  emailProviderDetailId: integer("email_provider_detail_id")
+    .notNull()
+    .references(() => emailProviderDetail.emailProviderDetailId, {
       onDelete: "cascade",
       onUpdate: "cascade",
-    },
-  ),
+    }),
   email: text("email"),
   category: text("category", {
     enum: SUPPORTED_EMAIL_CATEGORIES,
@@ -27,7 +26,7 @@ export const whitelistedContact = pgTable("whitelisted_contact", {
   })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updated_at: timestamp("updated_at", {
+  updatedAt: timestamp("updated_at", {
     withTimezone: true,
     mode: "date",
   })

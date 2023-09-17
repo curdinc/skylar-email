@@ -7,15 +7,12 @@ import { SiteFooter } from "~/components/nav/site-footer";
 import { buttonVariants } from "~/components/ui/button";
 import { dashboardConfig } from "~/lib/config";
 import { cn } from "~/lib/ui";
-import { useUserOnboardingRouteGuard } from "../onboarding/use-user-onboarding-route-guard";
 
 export default function EmailClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  useUserOnboardingRouteGuard();
-
   return (
     <div className="flex min-h-screen flex-col">
       <header className="container z-40 bg-background">

@@ -21,6 +21,5 @@ export async function insertNewUser({
       image_uri: newUser.imageUri,
     })
     .returning({ id: schema.user.userId });
-  console.log("new user inserted", JSON.stringify(result, null, 2));
   return { id: result[0]?.id };
 }

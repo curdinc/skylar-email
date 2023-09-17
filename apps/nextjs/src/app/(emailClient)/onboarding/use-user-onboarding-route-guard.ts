@@ -8,15 +8,24 @@ export const useUserOnboardingRouteGuard = () => {
   const { isLoading } = api.onboarding.getUserOnboardStep.useQuery(undefined, {
     onSuccess(userOnboardStep) {
       switch (userOnboardStep) {
-        case "invite-code":
+        case "invite-code": {
           router.push("/onboarding/code");
           break;
-        case "card":
+        }
+        case "email-provider": {
+          {
+            router.push("/onboarding/connect");
+            break;
+          }
+        }
+        case "card": {
           router.push("/onboarding/card");
           break;
-        case "done":
+        }
+        case "done": {
           router.push("/inbox");
           break;
+        }
       }
     },
   });

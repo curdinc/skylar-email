@@ -32,7 +32,11 @@ export async function getAccessToken<
     client_secret: clientSecret,
     redirect_uri: "postmessage",
     grant_type: grantType,
-    ...payload,
+    ...("authorizationCode" in payload
+      ? { code: payload.authorizationCode }
+      : {
+          refresh_token: payload.refreshToken,
+        }),
   };
 
   const data = new URLSearchParams(urlData);
@@ -55,7 +59,7 @@ export async function getAccessToken<
   if (!res.ok) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: `Failed to get access token.`,
+      message: `Failed to get access token. Error: ${await res.text()}`,
     });
   }
   return await res.json();
