@@ -10,13 +10,13 @@ export async function getInviteCodeByInviteCode({
   db: DbType;
   inviteCodeToFind: string;
 }) {
-  const result = await db.query.invite_code.findFirst({
-    where: eq(schema.invite_code.invite_code, inviteCodeToFind),
+  const result = await db.query.inviteCode.findFirst({
+    where: eq(schema.inviteCode.inviteCode, inviteCodeToFind),
     with: {
       usedByUser: {
         columns: {
-          id: true,
-          providerId: true,
+          userId: true,
+          authProviderId: true,
         },
       },
     },
@@ -37,7 +37,7 @@ export async function getValidInviteCodeByInviteCode({
   });
   if (
     !inviteCodeFound ||
-    (!!inviteCodeFound?.used_at && !!inviteCodeFound.used_by)
+    (!!inviteCodeFound?.usedAt && !!inviteCodeFound.usedBy)
   ) {
     throw new Error("Valid invite code not found");
   }

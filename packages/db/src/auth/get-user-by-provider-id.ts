@@ -11,7 +11,7 @@ export async function getUserByProviderId({
   authProviderId: string;
 }) {
   const foundUser = await db.query.user.findFirst({
-    where: eq(user.auth_provider_id, authProviderId),
+    where: eq(user.authProviderId, authProviderId),
   });
   return foundUser;
 }

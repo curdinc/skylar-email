@@ -19,10 +19,10 @@ export async function applyInviteCode({
   });
 
   await db
-    .update(schema.invite_code)
+    .update(schema.inviteCode)
     .set({
-      used_at: new Date(),
-      used_by: usedByUserId,
+      usedAt: new Date(),
+      usedBy: usedByUserId,
     })
-    .where(eq(schema.invite_code, validInviteCode.invite_code));
+    .where(eq(schema.inviteCode, validInviteCode.inviteCode));
 }

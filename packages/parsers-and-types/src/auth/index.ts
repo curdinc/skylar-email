@@ -31,8 +31,8 @@ export const UserSchema = object({
   phone: coerce(optional(string()), coerceNullToUndefined(String)),
   imageUri: coerce(optional(string([url()])), coerceNullToUndefined(String)),
   name: string(),
-  provider: enumType(SUPPORTED_AUTH_PROVIDERS),
-  providerId: string(),
+  authProvider: enumType(SUPPORTED_AUTH_PROVIDERS),
+  authProviderId: string(),
 });
 
 export type UserType = Output<typeof UserSchema>;

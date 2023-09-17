@@ -10,8 +10,8 @@ export async function getStripeCustomerByCustomerId({
   db: DbType;
   customerId: string;
 }) {
-  const stripeCustomerFound = await db.query.stripe_customer.findFirst({
-    where: eq(schema.stripe_customer.customer_id, customerId),
+  const stripeCustomerFound = await db.query.stripeCustomer.findFirst({
+    where: eq(schema.stripeCustomer.customerId, customerId),
   });
   return stripeCustomerFound;
 }
