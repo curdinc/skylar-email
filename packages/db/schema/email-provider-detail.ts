@@ -19,7 +19,9 @@ export const providerEnum = pgEnum("email_provider", providerEnumList);
 
 export const emailProviderDetail = pgTable("email_provider_detail", {
   emailProviderDetailId: serial("email_provider_detail_id").primaryKey(),
-  userId: integer("user_id").references(() => user.userId),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => user.userId),
   emailProvider: text("email_provider", {
     enum: providerEnumList,
   }).notNull(),
@@ -27,7 +29,9 @@ export const emailProviderDetail = pgTable("email_provider_detail", {
   createdAt: timestamp("created_at", {
     withTimezone: true,
     mode: "date",
-  }).default(sql`CURRENT_TIMESTAMP`),
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
   updated_at: timestamp("updated_at", {
     withTimezone: true,
     mode: "date",
