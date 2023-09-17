@@ -16,8 +16,7 @@ export async function getInviteCodeUsedByUser({
     columns: {},
     where: eq(schema.user.authProviderId, userObj.authProviderId),
     with: {
-      createdInviteCode: {
-        where: eq(schema.inviteCode.usedBy, schema.user.userId),
+      usedInviteCode: {
         columns: {
           inviteCode: true,
         },
@@ -28,5 +27,5 @@ export async function getInviteCodeUsedByUser({
   if (!result) {
     throw new Error("Valid invite code used-by not found");
   }
-  return result?.createdInviteCode;
+  return result.usedInviteCode?.inviteCode;
 }
