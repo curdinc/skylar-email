@@ -19,7 +19,6 @@ export default function ConnectEmailOnboardingForm() {
     isCheckingUserOnboardStep,
     onSelectEmailProvider,
     emailProvider,
-    goBack,
     connectToGmail,
     connectToOutlook,
     isConnectingToEmailProvider,
@@ -65,16 +64,14 @@ export default function ConnectEmailOnboardingForm() {
           </div>
         </RadioGroup>
       </CardContent>
-      <CardFooter className="justify-between">
-        <Button variant={"ghost"} onClick={goBack}>
-          back
-        </Button>
+      <CardFooter>
         <Button
           isLoading={isConnectingToEmailProvider}
           disabled={isCheckingUserOnboardStep}
           onClick={
             emailProvider === "Gmail" ? connectToGmail : connectToOutlook
           }
+          className="w-full"
         >
           Connect to {emailProvider}
         </Button>

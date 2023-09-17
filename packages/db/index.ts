@@ -1,9 +1,9 @@
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
+import * as gmailEmailDetail from "./schema/email-details";
 import * as emailProviderDetail from "./schema/email-provider-detail";
 import * as gmailProvider from "./schema/email-providers";
-import * as gmailEmailDetail from "./schema/gmail-email-detail";
 import * as inviteCode from "./schema/invite-code";
 import * as stripeCustomer from "./schema/stripe";
 import * as user from "./schema/user";
@@ -44,3 +44,5 @@ export * from "./src/stripe/insert-stripe-customer";
 export * from "./src/stripe/update-stripe-customer";
 
 export * from "./src/email-providers/get-email-providers-by-user-id";
+export * from "./src/email-providers/insert-email-provider-detail";
+export * from "./src/email-providers/insert-gmail-provider";

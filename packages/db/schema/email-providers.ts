@@ -19,14 +19,14 @@ export const gmailProvider = pgTable("gmail_provider", {
       onDelete: "cascade",
       onUpdate: "cascade",
     }),
-  refresh_token: varchar("refresh_token", { length: 512 }).notNull(),
+  refreshToken: varchar("refresh_token", { length: 512 }).notNull(),
   createdAt: timestamp("created_at", {
     withTimezone: true,
     mode: "date",
   })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updated_at: timestamp("updated_at", {
+  updatedAt: timestamp("updated_at", {
     withTimezone: true,
     mode: "date",
   })

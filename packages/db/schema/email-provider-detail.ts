@@ -10,8 +10,8 @@ import {
 
 import { providerEnumList } from "@skylar/parsers-and-types";
 
+import { gmailEmailDetail } from "./email-details";
 import { gmailProvider } from "./email-providers";
-import { gmailEmailDetail } from "./gmail-email-detail";
 import { user } from "./user";
 import { whitelistedContact } from "./whitelisted-contact";
 
@@ -26,13 +26,15 @@ export const emailProviderDetail = pgTable("email_provider_detail", {
     enum: providerEnumList,
   }).notNull(),
   email: text("email").notNull(),
+  inboxName: text("inbox_name").notNull(),
+  imageUri: text("image_uri"),
   createdAt: timestamp("created_at", {
     withTimezone: true,
     mode: "date",
   })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updated_at: timestamp("updated_at", {
+  updatedAt: timestamp("updated_at", {
     withTimezone: true,
     mode: "date",
   })

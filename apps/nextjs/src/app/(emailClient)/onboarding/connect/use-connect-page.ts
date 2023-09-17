@@ -22,16 +22,13 @@ export function useConnectEmailProviderPage() {
     }
   };
 
-  const goBack = () => {
-    router.back();
-  };
-
   const [isConnectingToEmailProvider, setIsConnectingToEmailProvider] =
     useState(false);
-  const { mutateAsync: getToken } =
-    api.emailProviderRouter.getToken.useMutation({
+  const { mutate: exchangeCode } =
+    api.emailProviderRouter.googleCodeExchange.useMutation({
       onSuccess() {
-        console.log("first");
+        router.push("/onboarding/card");
+        setIsConnectingToEmailProvider(false);
       },
     });
   const initiateConnectToGmail = useGoogleLogin({
@@ -39,15 +36,10 @@ export function useConnectEmailProviderPage() {
     scope: GMAIL_SCOPES,
     onSuccess: (codeResponse) => {
       setIsConnectingToEmailProvider(false);
-      console.log("codeResponse", codeResponse);
-      // if (typeof codeResponse == CodeResponse)
-
-      // console.log(token);
-      // const { isLoading, error, data } = useQuery('repoData', () =>
-      //   fetch('https://api.github.com/repos/tannerlinsley/react-query').then(res =>
-      //     res.json()
-      //   )
-      // )
+      exchangeCode({
+        provider: "gmail",
+        code: codeResponse.code,
+      });
     },
     onError: (errorResponse) => {
       setIsConnectingToEmailProvider(false);
@@ -77,7 +69,6 @@ export function useConnectEmailProviderPage() {
     isCheckingUserOnboardStep,
     onSelectEmailProvider,
     emailProvider,
-    goBack,
     isConnectingToEmailProvider,
     connectToGmail,
     connectToOutlook,

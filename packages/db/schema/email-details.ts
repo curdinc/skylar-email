@@ -26,7 +26,7 @@ export const gmailEmailDetail = pgTable("gmail_email_detail", {
   })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updated_at: timestamp("updated_at", {
+  updatedAt: timestamp("updated_at", {
     withTimezone: true,
     mode: "date",
   })
