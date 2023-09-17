@@ -4,7 +4,7 @@ import type { DbType } from "../..";
 import { schema } from "../..";
 
 type SetStripeCustomerType = Partial<
-  (typeof schema.stripe_customer)["$inferSelect"]
+  (typeof schema.stripeCustomer)["$inferSelect"]
 >;
 
 export async function updateStripeCustomer({
@@ -17,7 +17,7 @@ export async function updateStripeCustomer({
   set: SetStripeCustomerType;
 }) {
   await db
-    .update(schema.stripe_customer)
+    .update(schema.stripeCustomer)
     .set(set)
-    .where(eq(schema.stripe_customer.customer_id, stripeCustomerId));
+    .where(eq(schema.stripeCustomer.customerId, stripeCustomerId));
 }
