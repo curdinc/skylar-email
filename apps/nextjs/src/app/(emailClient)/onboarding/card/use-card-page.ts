@@ -116,7 +116,7 @@ function useSubmitPaymentElement() {
           clientSecret: setupIntent.clientSecret ?? "",
           elements,
           confirmParams: {
-            return_url: `https://example.com/onboarding/card`,
+            return_url: `${location.origin}/onboarding/card/confirm`,
           },
         });
         if (confirmationError) {
