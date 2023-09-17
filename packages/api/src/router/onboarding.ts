@@ -21,7 +21,6 @@ export const onboardingRouter = createTRPCRouter({
     .mutation(
       async ({
         ctx: {
-          logger,
           db,
           session: { user },
         },
@@ -37,7 +36,6 @@ export const onboardingRouter = createTRPCRouter({
         });
 
         if (!inviteCode) {
-          logger.debug(`User code ${input.alphaCode} is not valid`);
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Invalid code. Please try again." as const,
@@ -45,18 +43,12 @@ export const onboardingRouter = createTRPCRouter({
         }
 
         if (inviteCode.usedBy) {
-          logger.debug(
-            `inviteCode ${inviteCode.inviteCode} has already been used by ${inviteCode.usedBy}`,
-          );
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Code already used. Please use another code." as const,
           });
         }
         if (userInviteCode) {
-          logger.debug(
-            `User ${user.authProviderId} already has used code to activate account`, //  FIXME: ${}userInviteCode
-          );
           throw new TRPCError({
             code: "BAD_REQUEST",
             message:
