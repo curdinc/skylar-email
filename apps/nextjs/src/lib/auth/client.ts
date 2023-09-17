@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import type { RedirectFnType } from "@skylar/auth";
 
@@ -25,6 +25,7 @@ export const useOnUserLogin = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
     });
+  const pathname = usePathname();
 
   const onUserLogin = useCallback(async () => {
     const { data: userOnboardStep } = await getUserOnboardStep();
@@ -42,11 +43,13 @@ export const useOnUserLogin = () => {
         break;
       }
       case "done": {
-        router.push("/inbox");
+        if (pathname.startsWith("/onboarding")) {
+          router.push("/inbox");
+        }
         break;
       }
     }
-  }, [getUserOnboardStep, router]);
+  }, [getUserOnboardStep, pathname, router]);
 
   return { onUserLogin };
 };
