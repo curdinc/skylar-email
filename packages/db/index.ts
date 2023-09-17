@@ -1,24 +1,25 @@
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
-import { email_provider_detail } from "./schema/email-provider-detail";
-import { gmail_provider } from "./schema/email-provider-tables";
-import { invite_code } from "./schema/invite-code";
-import { email_detail } from "./schema/message-category";
-import { sender_category } from "./schema/sender-category";
-import { stripe_customer } from "./schema/stripe";
-import { user } from "./schema/user";
+import * as emailProviderDetail from "./schema/email-provider-detail";
+import * as gmailProvider from "./schema/email-providers";
+import * as gmailEmailDetail from "./schema/gmail-email-detail";
+import * as inviteCode from "./schema/invite-code";
+import * as stripeCustomer from "./schema/stripe";
+import * as user from "./schema/user";
+import * as whitelistedContact from "./schema/whitelisted-contact";
 
 export { and, eq } from "drizzle-orm";
 
+// ! Note that you have to import everything including the relation in order for the db object to infer the correct types
 export const schema = {
-  gmail_provider,
-  email_provider_detail,
-  message_category: email_detail,
-  sender_category,
-  invite_code,
-  stripe_customer,
-  user,
+  ...gmailProvider,
+  ...emailProviderDetail,
+  ...gmailEmailDetail,
+  ...whitelistedContact,
+  ...inviteCode,
+  ...stripeCustomer,
+  ...user,
 };
 
 export function getDb(dbConnectionString: string) {

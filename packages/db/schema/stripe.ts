@@ -10,21 +10,24 @@ import {
 
 import { user } from "./user";
 
-export const stripe_customer = pgTable(
+export const stripeCustomer = pgTable(
   "stripe_customer",
   {
-    stripe_customer_id: serial("stripe_customer_id").primaryKey(),
-    user_id: integer("user_id")
-      .references(() => user.user_id)
+    stripeCustomerId: serial("stripe_customer_id").primaryKey(),
+    userId: integer("user_id")
+      .references(() => user.userId, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      })
       .unique()
       .notNull(),
-    customer_id: varchar("customer_id", { length: 255 }).notNull().unique(),
-    subscription_id: varchar("subscription_id", { length: 255 }),
-    payment_method_added_at: timestamp("payment_method_added_at", {
+    customerId: varchar("customer_id", { length: 255 }).notNull().unique(),
+    subscriptionId: varchar("subscription_id", { length: 255 }),
+    paymentMethodAddedAt: timestamp("payment_method_added_at", {
       withTimezone: true,
       mode: "date",
     }),
-    created_at: timestamp("created_at", {
+    createdAt: timestamp("created_at", {
       withTimezone: true,
       mode: "date",
     })
@@ -33,18 +36,15 @@ export const stripe_customer = pgTable(
   },
   (table) => {
     return {
-      user_id_idx: index("user_id_idx").on(table.user_id),
-      customer_id_idx: index("customer_id_idx").on(table.customer_id),
+      userIdIdx: index("user_id_idx").on(table.userId),
+      customerIdIdx: index("customer_id_idx").on(table.customerId),
     };
   },
 );
 
-export const stripeCustomersRelations = relations(
-  stripe_customer,
-  ({ one }) => ({
-    user: one(user, {
-      fields: [stripe_customer.user_id],
-      references: [user.user_id],
-    }),
+export const stripeCustomerRelations = relations(stripeCustomer, ({ one }) => ({
+  user: one(user, {
+    fields: [stripeCustomer.userId],
+    references: [user.userId],
   }),
-);
+}));
