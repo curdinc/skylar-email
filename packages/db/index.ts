@@ -42,3 +42,5 @@ export * from "./src/invite-code/get-user-invite-codes";
 export * from "./src/stripe/get-stripe-customer-by-user-id";
 export * from "./src/stripe/insert-stripe-customer";
 export * from "./src/stripe/update-stripe-customer";
+
+export * from "./src/email-providers/get-email-providers-by-user-id";

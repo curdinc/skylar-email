@@ -29,15 +29,22 @@ export const useOnUserLogin = () => {
   const onUserLogin = useCallback(async () => {
     const { data: userOnboardStep } = await getUserOnboardStep();
     switch (userOnboardStep) {
-      case "invite-code":
+      case "invite-code": {
         router.push("/onboarding/code");
         break;
-      case "card":
+      }
+      case "email-provider": {
+        router.push("/onboarding/connect");
+        break;
+      }
+      case "card": {
         router.push("/onboarding/card");
         break;
-      case "done":
+      }
+      case "done": {
         router.push("/inbox");
         break;
+      }
     }
   }, [getUserOnboardStep, router]);
 

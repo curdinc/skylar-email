@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import {
   applyInviteCode,
+  getEmailProvidersByUserId,
   getInviteCodeByInviteCode,
   getInviteCodeUsedByUser,
   getStripeCustomerByUserId,
@@ -85,6 +86,13 @@ export const onboardingRouter = createTRPCRouter({
       }
 
       // email provider
+      const emailProviders = await getEmailProvidersByUserId({
+        db,
+        userId: user.userId,
+      });
+      if (!emailProviders.length) {
+        return "email-provider" as const;
+      }
 
       // subscription
       const stripeCustomer = await getStripeCustomerByUserId({
