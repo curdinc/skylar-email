@@ -1,0 +1,435 @@
+[
+  {
+    "id": "18a7a82e2fa471bf",
+    "historyId": "70856",
+    "messages": [
+      {
+        "id": "18a7a82e2fa471bf",
+        "threadId": "18a7a82e2fa471bf",
+        "subject": "Welcome to Loom, Winston — we're so glad you're here",
+        "from": {
+          "email": "welcome@loom.com",
+          "raw": "The Loom Team <welcome@loom.com>",
+          "name": "The Loom Team",
+          "rawName": "The Loom Team"
+        },
+        "replyTo": [{ "email": "welcome@loom.com", "raw": "welcome@loom.com" }],
+        "deliveredTo": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "to": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "cc": [],
+        "bcc": [],
+        "rfc822Id": "<1694272503391.9274693d-a82b-4360-b401-0e4cfaa76e41@bf06x.hubspotemail.net>",
+        "inReplyToRfc822Id": "",
+        "date": "2023-09-09T15:15:03.000Z",
+        "attachments": [],
+        "labelIds": ["CATEGORY_PROMOTIONS", "UNREAD", "IMPORTANT"],
+        "listUnsubscribe": "<mailto:1axdiqkj28hq68yh67z9n0s177s4453820xzci-winston=thirdweb.com@bf06x.hubspotemail.net?subject=unsubscribe>",
+        "listUnsubscribePost": false,
+        "beenThere": [],
+        "snippet": "Loom logo it's joe from loom That's our CEO Joe explaining how he uses Loom. Truly the best thing about Loom, for you or Joe or anyone: it's so easy. All sorts of people in all different",
+        "size": 27611
+      }
+    ],
+    "gmailContacts": [
+      { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" },
+      {
+        "email": "welcome@loom.com",
+        "raw": "The Loom Team <welcome@loom.com>",
+        "name": "The Loom Team",
+        "rawName": "The Loom Team"
+      }
+    ],
+    "contactSetJson": {
+      "emailToSetIds": {
+        "winston@thirdweb.com": ["1"],
+        "welcome@loom.com": ["2"]
+      },
+      "formatToSetId": {
+        "winston@thirdweb.com": "1",
+        "The Loom Team <welcome@loom.com>": "2"
+      },
+      "setsById": {
+        "1": { "id": "1", "name": "", "email": "winston@thirdweb.com" },
+        "2": { "id": "2", "name": "The Loom Team", "email": "welcome@loom.com" }
+      }
+    }
+  },
+  {
+    "id": "18a477d174db8bd3",
+    "historyId": "79456",
+    "messages": [
+      {
+        "id": "18a477d174db8bd3",
+        "threadId": "18a477d174db8bd3",
+        "subject": "Edward Sun commented in Launch thirdweb embedded wallet (accelerated MVP)",
+        "from": {
+          "email": "notify@mail.notion.so",
+          "raw": "Notion <notify@mail.notion.so>",
+          "name": "Notion",
+          "rawName": "Notion"
+        },
+        "replyTo": [],
+        "deliveredTo": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "to": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "cc": [],
+        "bcc": [],
+        "rfc822Id": "<9E.C3.00327.D2C7FE46@jk.mta1vrest.cc.prd.sparkpost>",
+        "inReplyToRfc822Id": "",
+        "date": "2023-08-30T17:28:13.000Z",
+        "attachments": [],
+        "labelIds": ["IMPORTANT", "CATEGORY_UPDATES"],
+        "listId": "<spc.268494.0.sparkpostmail.com>",
+        "listUnsubscribe": "<mailto:unsubscribe@unsub.spmta.com?subject=unsubscribe:ld2zzKKZZDcyuDXuzj6g4gx6KSj87jizvGkwx0YABJg~|eyAicmNwdF90byI6ICJ3aW5zdG9uQHRoaXJkd2ViLmNvbSIsICJ0ZW5hbnRfaWQiOiAic3BjIiwgImN1c3RvbWVyX2lkIjogIjI2ODQ5NCIsICJzdWJhY2NvdW50X2lkIjogIjAiLCAibWVzc2FnZV9pZCI6ICI2NGU3MmQ3Y2VmNjRkNzI0ZTkzYyIgfQ~~>",
+        "listUnsubscribePost": false,
+        "beenThere": [],
+        "snippet": "Edward Sun commented in Launch thirdweb embedded wallet (accelerated MVP) Aug 30, 2023, 5:27 PM ·Project Specs Edward Sun I think what we're saying here is just that we can re-use the name field in",
+        "size": 7744
+      }
+    ],
+    "gmailContacts": [
+      { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" },
+      {
+        "email": "notify@mail.notion.so",
+        "raw": "Notion <notify@mail.notion.so>",
+        "name": "Notion",
+        "rawName": "Notion"
+      }
+    ],
+    "contactSetJson": {
+      "emailToSetIds": {
+        "winston@thirdweb.com": ["1"],
+        "notify@mail.notion.so": ["2"]
+      },
+      "formatToSetId": {
+        "winston@thirdweb.com": "1",
+        "Notion <notify@mail.notion.so>": "2"
+      },
+      "setsById": {
+        "1": { "id": "1", "name": "", "email": "winston@thirdweb.com" },
+        "2": { "id": "2", "name": "Notion", "email": "notify@mail.notion.so" }
+      }
+    }
+  },
+  {
+    "id": "18aa077bfd3f2e2d",
+    "historyId": "83322",
+    "messages": [
+      {
+        "id": "18aa077bfd3f2e2d",
+        "threadId": "18aa077bfd3f2e2d",
+        "subject": "test",
+        "from": {
+          "email": "curdcorp@gmail.com",
+          "raw": "Curd Inc <curdcorp@gmail.com>",
+          "name": "Curd Inc",
+          "rawName": "Curd Inc"
+        },
+        "replyTo": [],
+        "deliveredTo": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "to": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "cc": [],
+        "bcc": [],
+        "rfc822Id": "<CAG0CwZ8fF2sN0uxgPE6b1+t=0rMucVh3Kn=1um39RsbGWKVgQQ@mail.gmail.com>",
+        "inReplyToRfc822Id": "",
+        "date": "2023-09-17T00:08:24.000Z",
+        "attachments": [],
+        "labelIds": ["IMPORTANT", "CATEGORY_PERSONAL"],
+        "listUnsubscribePost": false,
+        "beenThere": [],
+        "snippet": "hello world",
+        "size": 47
+      },
+      {
+        "id": "18aa07e2f1b7dee8",
+        "threadId": "18aa077bfd3f2e2d",
+        "subject": "Re: test",
+        "from": {
+          "email": "curdcorp@gmail.com",
+          "raw": "Curd Inc <curdcorp@gmail.com>",
+          "name": "Curd Inc",
+          "rawName": "Curd Inc"
+        },
+        "replyTo": [],
+        "deliveredTo": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "to": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "cc": [],
+        "bcc": [],
+        "rfc822Id": "<CAG0CwZ-Vv6ZWFJxge0=Yy-oX9GsJkNXSQRutB3fDR=c1JOQgRQ@mail.gmail.com>",
+        "references": [
+          "<CAG0CwZ8fF2sN0uxgPE6b1+t=0rMucVh3Kn=1um39RsbGWKVgQQ@mail.gmail.com>"
+        ],
+        "inReplyToRfc822Id": "<CAG0CwZ8fF2sN0uxgPE6b1+t=0rMucVh3Kn=1um39RsbGWKVgQQ@mail.gmail.com>",
+        "date": "2023-09-17T00:15:26.000Z",
+        "attachments": [],
+        "labelIds": ["IMPORTANT", "CATEGORY_PERSONAL"],
+        "listUnsubscribePost": false,
+        "beenThere": [],
+        "snippet": "another one On Sat, Sep 16, 2023 at 5:08 PM Curd Inc <curdcorp@gmail.com> wrote: hello world",
+        "size": 504,
+        "inReplyTo": "18aa077bfd3f2e2d"
+      },
+      {
+        "id": "18aa081143adaa20",
+        "threadId": "18aa077bfd3f2e2d",
+        "subject": "Re: test",
+        "from": {
+          "email": "curdcorp@gmail.com",
+          "raw": "Curd Inc <curdcorp@gmail.com>",
+          "name": "Curd Inc",
+          "rawName": "Curd Inc"
+        },
+        "replyTo": [],
+        "deliveredTo": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "to": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "cc": [],
+        "bcc": [],
+        "rfc822Id": "<CAG0CwZ-m0ftL9+mwhA5hxA3vhQJp6ydFT8BZwUHsCv+VkVdXPQ@mail.gmail.com>",
+        "references": [
+          "<CAG0CwZ8fF2sN0uxgPE6b1+t=0rMucVh3Kn=1um39RsbGWKVgQQ@mail.gmail.com>",
+          "<CAG0CwZ-Vv6ZWFJxge0=Yy-oX9GsJkNXSQRutB3fDR=c1JOQgRQ@mail.gmail.com>"
+        ],
+        "inReplyToRfc822Id": "<CAG0CwZ-Vv6ZWFJxge0=Yy-oX9GsJkNXSQRutB3fDR=c1JOQgRQ@mail.gmail.com>",
+        "date": "2023-09-17T00:18:36.000Z",
+        "attachments": [
+          {
+            "size": 18208,
+            "name": "image.png",
+            "type": "image/png",
+            "attachmentId": "ANGjdJ_Sp95vrv5dCx_gF0s6Nmd713it74zsAIJjaXAuYndj6FBpWSmQlhrcPIsWNT-pGHenb4gMIiJS6vJIEO3-ZmtX3sOEfEhry_KUOZjBeaswOeOWRnZDm6midu3mYLwBZF1baCNPhpnL1ZmH9ik855ixBhdQLPBmXfwk5kAmymGpxxPkC92hiRRptBLjIYTh-SoMAdLKbLbhxUwxxb6TuBKOBAevDXCvmqhvPByO0QCTXW9Zg-mLObzLcFVR01InHV-GmL2Pctqr6CnCOr8AL_xyXStbbjtvu8HCwa2mPH_z-l9InbBuc-4MGXSIiq2gyN0XK6uNfXqvRVeCNhIyEukzoGqvwE2gAgQ6gYd9fEs5bFMCzzAHeF1PVNns9Rwv-JHcOuryXxlXT-3Z",
+            "messageId": "18aa081143adaa20",
+            "threadId": "18aa077bfd3f2e2d",
+            "cid": "ii_lmmplli10",
+            "fixedPartId": "0.1",
+            "inline": true
+          }
+        ],
+        "labelIds": ["IMPORTANT", "CATEGORY_PERSONAL"],
+        "listUnsubscribePost": false,
+        "beenThere": [],
+        "snippet": "Some inline image On Sat, Sep 16, 2023 at 5:15 PM Curd Inc <curdcorp@gmail.com> wrote: another one On Sat, Sep 16, 2023 at 5:08 PM Curd Inc <curdcorp@gmail.com> wrote: hello world",
+        "size": 19324,
+        "inReplyTo": "18aa07e2f1b7dee8"
+      },
+      {
+        "id": "18aa085651e44845",
+        "threadId": "18aa077bfd3f2e2d",
+        "subject": "Re: test",
+        "from": {
+          "email": "curdcorp@gmail.com",
+          "raw": "Curd Inc <curdcorp@gmail.com>",
+          "name": "Curd Inc",
+          "rawName": "Curd Inc"
+        },
+        "replyTo": [],
+        "deliveredTo": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "to": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "cc": [],
+        "bcc": [],
+        "rfc822Id": "<CAG0CwZ9fLApYsDU7oH=svvWJ-UbZJhbGG4vB7VoUmcgv5D56nw@mail.gmail.com>",
+        "references": [
+          "<CAG0CwZ8fF2sN0uxgPE6b1+t=0rMucVh3Kn=1um39RsbGWKVgQQ@mail.gmail.com>",
+          "<CAG0CwZ-Vv6ZWFJxge0=Yy-oX9GsJkNXSQRutB3fDR=c1JOQgRQ@mail.gmail.com>",
+          "<CAG0CwZ-m0ftL9+mwhA5hxA3vhQJp6ydFT8BZwUHsCv+VkVdXPQ@mail.gmail.com>"
+        ],
+        "inReplyToRfc822Id": "<CAG0CwZ-m0ftL9+mwhA5hxA3vhQJp6ydFT8BZwUHsCv+VkVdXPQ@mail.gmail.com>",
+        "date": "2023-09-17T00:23:19.000Z",
+        "attachments": [
+          {
+            "size": 18208,
+            "name": "image.png",
+            "type": "image/png",
+            "attachmentId": "ANGjdJ8umeVl0bj39nrLivrpnzt-euxJS_xiQqaXgBOYKHu_8kS9JVa1_-lki4_0Wcix-Nf1j3BuaO7N0dncWP5FDTjDKNPEkBFs6EkudzoTvoHVPByWi-HqXVcaiFL3z6MbVrtHwUBRw467X126KTyD7FwgIJgAoRE88BmkVo71n6SWeENPnL9ncAjjfayiVO2TmOb6EBjSmOIhDA5xrsrScA4TjtRu_EN3GcanaMPPsQdhogfIFmIHld8mg88VnXQekpEI1W2RlRrGOUfx6f4ETEkGpl-N__gnesn06_-wRl7BGzGEH4mURmCAEd13OudQIIk0w1-O_85wRfSBnqSLpfh8DI979CqAQ5jiXF6kfySDF_b9uRcQuB_-vaGp1IqqVkwPBM7PCEc9IiJK",
+            "messageId": "18aa085651e44845",
+            "threadId": "18aa077bfd3f2e2d",
+            "cid": "ii_lmmplli10",
+            "fixedPartId": "0.1",
+            "inline": true
+          },
+          {
+            "size": 15989,
+            "name": "image.png",
+            "type": "image/png",
+            "attachmentId": "ANGjdJ-qSxLwNPAKHEqFKYLv6vdqEN5cUctCFARNHLo1iAzgBWQa6wXO09zOJMqkAeaH6wv6fbiqWUG7pbeAyrNVhdmss9731LSmHjsI52-Ar3ERXe-rw5a3IGOpRopyMAjnwGlTiWU4ZGW3lP7Hpc5sO_NopQHED31XaXRhLVsIYniwut-gh8GfJHN-2CZTnqxAxSoKrJlI3VtKORh6JyGjkEWvAmJ3BSLyBRmxjBo9WhpMBtGcl-N1RVtFfUXlOEXeMJNikVtcRuBmlMqlMWIdRLKP4LQCmljdlojJqQhL7VIr19k2J8dmVJCueUf31VWEzfus02Gh1sLywANg2DlEiCNWy6rNHeJPMuk_IBzih3wXMvvbMnNv0qw45y3E_Xf8QPTAAWOtN92QS1nQ",
+            "messageId": "18aa085651e44845",
+            "threadId": "18aa077bfd3f2e2d",
+            "cid": "ii_lmmprlxl1",
+            "fixedPartId": "0.2",
+            "inline": true
+          }
+        ],
+        "labelIds": ["IMPORTANT", "CATEGORY_PERSONAL"],
+        "listUnsubscribePost": false,
+        "beenThere": [],
+        "snippet": "something is off here On Sat, Sep 16, 2023 at 5:18 PM Curd Inc <curdcorp@gmail.com> wrote: Some inline image On Sat, Sep 16, 2023 at 5:15 PM Curd Inc <curdcorp@gmail.com> wrote: another one",
+        "size": 35910,
+        "inReplyTo": "18aa081143adaa20"
+      },
+      {
+        "id": "18aa086840fdfd6c",
+        "threadId": "18aa077bfd3f2e2d",
+        "subject": "Re: test",
+        "from": {
+          "email": "curdcorp@gmail.com",
+          "raw": "Curd Inc <curdcorp@gmail.com>",
+          "name": "Curd Inc",
+          "rawName": "Curd Inc"
+        },
+        "replyTo": [],
+        "deliveredTo": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "to": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "cc": [],
+        "bcc": [],
+        "rfc822Id": "<CAG0CwZ_9R1y6DrOTtw9nmMShzm6SNARQG52p-Wb1j_sDoF8hHQ@mail.gmail.com>",
+        "references": [
+          "<CAG0CwZ8fF2sN0uxgPE6b1+t=0rMucVh3Kn=1um39RsbGWKVgQQ@mail.gmail.com>",
+          "<CAG0CwZ-Vv6ZWFJxge0=Yy-oX9GsJkNXSQRutB3fDR=c1JOQgRQ@mail.gmail.com>",
+          "<CAG0CwZ-m0ftL9+mwhA5hxA3vhQJp6ydFT8BZwUHsCv+VkVdXPQ@mail.gmail.com>",
+          "<CAG0CwZ9fLApYsDU7oH=svvWJ-UbZJhbGG4vB7VoUmcgv5D56nw@mail.gmail.com>"
+        ],
+        "inReplyToRfc822Id": "<CAG0CwZ9fLApYsDU7oH=svvWJ-UbZJhbGG4vB7VoUmcgv5D56nw@mail.gmail.com>",
+        "date": "2023-09-17T00:24:32.000Z",
+        "attachments": [
+          {
+            "size": 18208,
+            "name": "image.png",
+            "type": "image/png",
+            "attachmentId": "ANGjdJ8i4QVj2fF9Qt0MzB0S-VMhSa77T9QGoBLD5TL0Wse-jdkbgvR5siGECInUlKNeicXVdsCXxlxpJKqW7hrzvXmr30GPIvZbhmVD2HAh4YTfe_OJrWgCQz2t8-_ERxmXUC6lXIX2EyYUoa7nLz_PaUowU6kYzX5rYIrFa5pmpnWAInHwhspir8ysdvZ9ZdIZzPiBpTP2y0t72ZmvjofuAI_H4OLZzVu27pq6j_pUen9DeZ_5N_ZR0JwFVkH_Vexj_eKbi3GLT6M-2NH_-GgrNA8xeHqcw1__T75FkA9iEDjUqnGSnAfpv9ZKpnUH-J8MC4DprOOeEo-elBI_5XI52fnsSZgC046jshnbeBQps30uM8DOJ36AqzM1HlhIloPGOeSKeh2MnOQsk0LT",
+            "messageId": "18aa086840fdfd6c",
+            "threadId": "18aa077bfd3f2e2d",
+            "cid": "ii_lmmplli10",
+            "fixedPartId": "0.1",
+            "inline": true
+          },
+          {
+            "size": 15989,
+            "name": "image.png",
+            "type": "image/png",
+            "attachmentId": "ANGjdJ-nBL6fOs4WMLLXoxguVgYyVtHQGHrxnQNWynaEDLbwtjoiAWIkLK0EHDXr0vcYrEpSOrGaI-qEQ5-X-S2Oz5prQtH3nonAYEW-pHQ1MpjKQaJu0I16sXxJKjBFhvq54fhgEKlnmmeLtDOapSHbxQTnaaIkllS061vshama3MVyPVI4vG_t8PxrkrKxot0SKH6RQwI57hH-7W1X_HDp5FP7y0d_59HidkooapZKIjkJQGr8d3kUve4r7w90XoCUfMIxBepRD5Jguj7uNVOz3cyDRVbwoceY_JYdJYbV6FnJ4U3EH3CWSdPVUzxPp1ga45bpjW1goKHew-rBYjm2qg88pxp0yuHNtrJNyDFT0racAfVuOWh30EXKxMzLYvSzBCmwLJy1JRzkNaVe",
+            "messageId": "18aa086840fdfd6c",
+            "threadId": "18aa077bfd3f2e2d",
+            "cid": "ii_lmmprlxl1",
+            "fixedPartId": "0.2",
+            "inline": true
+          }
+        ],
+        "labelIds": ["IMPORTANT", "CATEGORY_PERSONAL"],
+        "listUnsubscribePost": false,
+        "beenThere": [],
+        "snippet": "w5stew On Sat, Sep 16, 2023 at 5:23 PM Curd Inc <curdcorp@gmail.com> wrote: something is off here On Sat, Sep 16, 2023 at 5:18 PM Curd Inc <curdcorp@gmail.com> wrote: Some inline image On",
+        "size": 36387,
+        "inReplyTo": "18aa085651e44845"
+      },
+      {
+        "id": "18aa0868ca24673c",
+        "threadId": "18aa077bfd3f2e2d",
+        "subject": "Re: test",
+        "from": {
+          "email": "curdcorp@gmail.com",
+          "raw": "Curd Inc <curdcorp@gmail.com>",
+          "name": "Curd Inc",
+          "rawName": "Curd Inc"
+        },
+        "replyTo": [],
+        "deliveredTo": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "to": [
+          { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" }
+        ],
+        "cc": [],
+        "bcc": [],
+        "rfc822Id": "<CAG0CwZ8LaZD08cGoieNNsYXvX7Y5rEJUy5a_WPUXRSb+rdOf7A@mail.gmail.com>",
+        "references": [
+          "<CAG0CwZ8fF2sN0uxgPE6b1+t=0rMucVh3Kn=1um39RsbGWKVgQQ@mail.gmail.com>",
+          "<CAG0CwZ-Vv6ZWFJxge0=Yy-oX9GsJkNXSQRutB3fDR=c1JOQgRQ@mail.gmail.com>",
+          "<CAG0CwZ-m0ftL9+mwhA5hxA3vhQJp6ydFT8BZwUHsCv+VkVdXPQ@mail.gmail.com>",
+          "<CAG0CwZ9fLApYsDU7oH=svvWJ-UbZJhbGG4vB7VoUmcgv5D56nw@mail.gmail.com>",
+          "<CAG0CwZ_9R1y6DrOTtw9nmMShzm6SNARQG52p-Wb1j_sDoF8hHQ@mail.gmail.com>"
+        ],
+        "inReplyToRfc822Id": "<CAG0CwZ_9R1y6DrOTtw9nmMShzm6SNARQG52p-Wb1j_sDoF8hHQ@mail.gmail.com>",
+        "date": "2023-09-17T00:24:34.000Z",
+        "attachments": [
+          {
+            "size": 18208,
+            "name": "image.png",
+            "type": "image/png",
+            "attachmentId": "ANGjdJ9710MXSFe2em4I-2jRRD78hxZaAgfrr8h0JU8wdOdyYLAUpuUptaPzM6SV1A2ofamfJrcei7hhy2UtJd1SEj3LLbrr79XYNeXNkvIfsDA4oHQ2p-pE-P_DM1WbtZX8pvNSKwTcpBclHMDHmBufegO_xJBP7MZw5HJjgXzyPn6Cl8CqAuqDKSsP3tHI3t2TLcuLgLL2ZqUcd5Avvn8E0P_eR90am-K6m8a7TXvGyoywhpfymC7h0lP9RuWsEFRjkTBUlpc0e5JHpvdDXwEVnUC3Pg3evbLoxxUSzY2qKx1uVkRCLFu64QujTq8-CiLH5RW3IHU5EjpTAPv926gLaJXk6BSQtCNtSyGBubumsyniuo4mbg0vrBbsGV_jNGV1FG6PexMoqn2BeTN8",
+            "messageId": "18aa0868ca24673c",
+            "threadId": "18aa077bfd3f2e2d",
+            "cid": "ii_lmmplli10",
+            "fixedPartId": "0.1",
+            "inline": true
+          },
+          {
+            "size": 15989,
+            "name": "image.png",
+            "type": "image/png",
+            "attachmentId": "ANGjdJ-drZmYZ4YvMIvaZuBTOIsh2ftGCtyE12PtCzLIJv_mgtoHmTC_GnCSWG37Ep5Qhc0_0KIESfbvyfdYyJ-Shb-nlg7TBDPUIrlyBd80FjaE-wH5DqOsC7JIFexVNoqYeodwocFElREWjI6es-deLHWfFgQxCCgFpcxI4TrSN40utdMnfv-we4J8Grx4TTdbWoqmjBAWhT8Tco7AvU0Yuo5GIpXWUeyeifKk5bHAtbb6o7kpFyaDfixiS-w9qlMOayp-EWx-oTyN3IXQH9knPEWdRf6ONo5YWOYH5LHwIgfY1_M7ebEGcD1R_RBrJNrALRRWR-Exj9j8RMZFoEiki-xXUhDLspYpPEmPeFAf2hIGaDH0zxe8ORkCcb85E-PjxDcTxZb3UgOTrbkw",
+            "messageId": "18aa0868ca24673c",
+            "threadId": "18aa077bfd3f2e2d",
+            "cid": "ii_lmmprlxl1",
+            "fixedPartId": "0.2",
+            "inline": true
+          }
+        ],
+        "labelIds": ["IMPORTANT", "CATEGORY_PERSONAL"],
+        "listUnsubscribePost": false,
+        "beenThere": [],
+        "snippet": "teste On Sat, Sep 16, 2023 at 5:24 PM Curd Inc <curdcorp@gmail.com> wrote: w5stew On Sat, Sep 16, 2023 at 5:23 PM Curd Inc <curdcorp@gmail.com> wrote: something is off here On Sat, Sep 16,",
+        "size": 36883,
+        "inReplyTo": "18aa086840fdfd6c"
+      }
+    ],
+    "gmailContacts": [
+      { "email": "winston@thirdweb.com", "raw": "winston@thirdweb.com" },
+      {
+        "email": "curdcorp@gmail.com",
+        "raw": "Curd Inc <curdcorp@gmail.com>",
+        "name": "Curd Inc",
+        "rawName": "Curd Inc"
+      }
+    ],
+    "contactSetJson": {
+      "emailToSetIds": {
+        "winston@thirdweb.com": ["1"],
+        "curdcorp@gmail.com": ["2"]
+      },
+      "formatToSetId": {
+        "winston@thirdweb.com": "1",
+        "Curd Inc <curdcorp@gmail.com>": "2"
+      },
+      "setsById": {
+        "1": { "id": "1", "name": "", "email": "winston@thirdweb.com" },
+        "2": { "id": "2", "name": "Curd Inc", "email": "curdcorp@gmail.com" }
+      }
+    }
+  }
+]

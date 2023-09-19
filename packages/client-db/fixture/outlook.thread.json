@@ -1,0 +1,132 @@
+[
+  {
+    "id": "AAQkAGQ4YzNiYmJkLTkwM2UtNDgyNi1iYmNjLTljYTAzNjljYjdhZAAQAPWHmj0OcVpDiGm-XVdwhnc=",
+    "messages": [
+      {
+        "cc": [],
+        "bcc": [],
+        "to": [
+          {
+            "attributes": {
+              "email": "khwyeo@uwaterloo.ca",
+              "name": "Winston Yeo"
+            },
+            "email": "khwyeo@uwaterloo.ca",
+            "name": "Winston Yeo",
+            "_domain": "uwaterloo.ca"
+          }
+        ],
+        "replyTo": [],
+        "isAutoReply": false,
+        "beenThere": [],
+        "deliveredTo": [],
+        "listUnsubscribePost": false,
+        "received": "2023-07-31T16:27:23.000Z",
+        "date": "2023-07-31T16:27:24Z",
+        "from": {
+          "attributes": {
+            "email": "no-reply@piazza.com",
+            "name": "CS 458/658 on Piazza"
+          },
+          "email": "no-reply@piazza.com",
+          "name": "CS 458/658 on Piazza",
+          "_domain": "piazza.com"
+        },
+        "rfc822Id": "<lkr32kb1zqd51b@piazza.com>",
+        "inReplyToHeader": "<lkr32kb1zqd51b@piazza.com>",
+        "references": ["<lkr32kb1zqd51b@piazza.com>"],
+        "subject": "IT-PIR matrix multiplication/XOR",
+        "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AmmQEfKoRvkqLPPJJk0gHQgAC7akZQgAA",
+        "threadId": "AAQkAGQ4YzNiYmJkLTkwM2UtNDgyNi1iYmNjLTljYTAzNjljYjdhZAAQAPWHmj0OcVpDiGm-XVdwhnc=",
+        "lastModifiedDateTime": "2023-07-31T16:27:25Z",
+        "attachments": [],
+        "snippet": "Your classmate posted a new Question.\r\n\r\nIT-PIR matrix multiplication/XOR\r\n\r\n\r\nI have a quick question about this slide (from the 3up slides):\r\n\r\nGiven query $$Q_1$$, what does the server actually do to calculate a response? From the answer, it looks like",
+        "labelIds": ["INBOX", "UNREAD"],
+        "size": 2005
+      }
+    ],
+    "historyId": "1690820845000",
+    "gmailContacts": [
+      {
+        "attributes": { "email": "khwyeo@uwaterloo.ca", "name": "Winston Yeo" },
+        "email": "khwyeo@uwaterloo.ca",
+        "name": "Winston Yeo",
+        "_domain": "uwaterloo.ca"
+      },
+      {
+        "attributes": {
+          "email": "no-reply@piazza.com",
+          "name": "CS 458/658 on Piazza"
+        },
+        "email": "no-reply@piazza.com",
+        "name": "CS 458/658 on Piazza",
+        "_domain": "piazza.com"
+      }
+    ]
+  },
+  {
+    "id": "AAQkAGQ4YzNiYmJkLTkwM2UtNDgyNi1iYmNjLTljYTAzNjljYjdhZAAQAGIIanrBazVHl_2XT4CoDW0=",
+    "messages": [
+      {
+        "cc": [],
+        "bcc": [],
+        "to": [
+          {
+            "attributes": {
+              "email": "khwyeo@uwaterloo.ca",
+              "name": "Winston Yeo"
+            },
+            "email": "khwyeo@uwaterloo.ca",
+            "name": "Winston Yeo",
+            "_domain": "uwaterloo.ca"
+          }
+        ],
+        "replyTo": [],
+        "isAutoReply": false,
+        "beenThere": [],
+        "deliveredTo": [],
+        "listUnsubscribePost": false,
+        "received": "2023-09-19T01:57:04.000Z",
+        "bulkMailer": "mailgun",
+        "date": "2023-09-19T01:57:04Z",
+        "subject": "Hopin Events and Session now part of RingCentral",
+        "from": {
+          "attributes": {
+            "email": "no-reply@hopin.com",
+            "name": "The RingCentral Team"
+          },
+          "email": "no-reply@hopin.com",
+          "name": "The RingCentral Team",
+          "_domain": "hopin.com"
+        },
+        "listUnsubscribe": "<mailto:32.MRTVIY3IKFTUIQKJJNDWYZ3RIJUHAWKLIFMXC4SIJRKEW522HBHXILKGIQ2GO32DJNTT2PI=@unsubscribe-eu.customer.io>, <http://email.hopin.com/unsubscribe/dgTchQgDAIKGlgqBhpYKAYqrHLTKwZ8Ot-FD4goCKg==>",
+        "rfc822Id": "<20230919014645.7dc890598724d946@cioeu76993.hopin.com>",
+        "id": "AAkALgAAAAAAHYQDEapmEc2byACqAC-EWg0AmmQEfKoRvkqLPPJJk0gHQgADDj-FBAAA",
+        "threadId": "AAQkAGQ4YzNiYmJkLTkwM2UtNDgyNi1iYmNjLTljYTAzNjljYjdhZAAQAGIIanrBazVHl_2XT4CoDW0=",
+        "lastModifiedDateTime": "2023-09-19T03:13:32Z",
+        "attachments": [],
+        "snippet": "Dear User,\r\n\r\nOn behalf of Hopin Ltd. and its affiliates (“Hopin”) and RingCentral, Inc. and its affiliates (“RingCentral”) we are contacting you as a previously registered Hopin Events account holder (for example, an admin or attendee of Hopin Events who",
+        "labelIds": ["TRASH"],
+        "size": 14033
+      }
+    ],
+    "historyId": "1695093212000",
+    "gmailContacts": [
+      {
+        "attributes": { "email": "khwyeo@uwaterloo.ca", "name": "Winston Yeo" },
+        "email": "khwyeo@uwaterloo.ca",
+        "name": "Winston Yeo",
+        "_domain": "uwaterloo.ca"
+      },
+      {
+        "attributes": {
+          "email": "no-reply@hopin.com",
+          "name": "The RingCentral Team"
+        },
+        "email": "no-reply@hopin.com",
+        "name": "The RingCentral Team",
+        "_domain": "hopin.com"
+      }
+    ]
+  }
+]
