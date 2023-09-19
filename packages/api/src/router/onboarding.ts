@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import {
   applyInviteCode,
+  getEmailProvidersByUserId,
   getInviteCodeByInviteCode,
   getInviteCodeUsedByUser,
   getStripeCustomerByUserId,
@@ -20,7 +21,6 @@ export const onboardingRouter = createTRPCRouter({
     .mutation(
       async ({
         ctx: {
-          logger,
           db,
           session: { user },
         },
@@ -36,26 +36,19 @@ export const onboardingRouter = createTRPCRouter({
         });
 
         if (!inviteCode) {
-          logger.debug(`User code ${input.alphaCode} is not valid`);
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Invalid code. Please try again." as const,
           });
         }
 
-        if (inviteCode.used_by) {
-          logger.debug(
-            `inviteCode ${inviteCode.invite_code} has already been used by ${inviteCode.used_by}`,
-          );
+        if (inviteCode.usedBy) {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Code already used. Please use another code." as const,
           });
         }
         if (userInviteCode) {
-          logger.debug(
-            `User ${user.providerId} already has used code to activate account`, //  FIXME: ${}userInviteCode
-          );
           throw new TRPCError({
             code: "BAD_REQUEST",
             message:
@@ -66,7 +59,7 @@ export const onboardingRouter = createTRPCRouter({
         await applyInviteCode({
           db,
           inviteCodeToUse: input.alphaCode,
-          usedByUserId: parseInt(user.id),
+          usedByUserId: user.userId,
         });
 
         return "OK" as const;
@@ -85,13 +78,20 @@ export const onboardingRouter = createTRPCRouter({
       }
 
       // email provider
+      const emailProviders = await getEmailProvidersByUserId({
+        db,
+        userId: user.userId,
+      });
+      if (!emailProviders.length) {
+        return "email-provider" as const;
+      }
 
       // subscription
       const stripeCustomer = await getStripeCustomerByUserId({
         db,
-        userId: parseInt(user.id),
+        userId: user.userId,
       });
-      if (!stripeCustomer?.payment_method_added_at) {
+      if (!stripeCustomer?.paymentMethodAddedAt) {
         return "card" as const;
       }
 

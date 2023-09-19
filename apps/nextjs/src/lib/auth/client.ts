@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import type { RedirectFnType } from "@skylar/auth";
 
@@ -25,21 +25,31 @@ export const useOnUserLogin = () => {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
     });
+  const pathname = usePathname();
 
   const onUserLogin = useCallback(async () => {
     const { data: userOnboardStep } = await getUserOnboardStep();
     switch (userOnboardStep) {
-      case "invite-code":
+      case "invite-code": {
         router.push("/onboarding/code");
         break;
-      case "card":
+      }
+      case "email-provider": {
+        router.push("/onboarding/connect");
+        break;
+      }
+      case "card": {
         router.push("/onboarding/card");
         break;
-      case "done":
-        router.push("/inbox");
+      }
+      case "done": {
+        if (pathname.startsWith("/onboarding")) {
+          router.push("/inbox");
+        }
         break;
+      }
     }
-  }, [getUserOnboardStep, router]);
+  }, [getUserOnboardStep, pathname, router]);
 
   return { onUserLogin };
 };

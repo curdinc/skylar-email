@@ -8,8 +8,8 @@ export async function insertStripeCustomer({
   db: DbType;
   customerDetails: { customerId: string; userId: number };
 }) {
-  await db.insert(schema.stripe_customer).values({
-    customer_id: customerDetails.customerId,
-    user_id: customerDetails.userId,
+  await db.insert(schema.stripeCustomer).values({
+    customerId: customerDetails.customerId,
+    userId: customerDetails.userId,
   });
 }

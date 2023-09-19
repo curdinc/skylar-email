@@ -59,7 +59,7 @@ export default function BetaCodeForm() {
             />
           </div>
         </CardContent>
-        <CardFooter className="justify-end space-x-2">
+        <CardFooter className="justify-end">
           <Button
             type="submit"
             disabled={isCheckingOnboardStep}

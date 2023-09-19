@@ -10,39 +10,50 @@ import {
 
 import { providerEnumList } from "@skylar/parsers-and-types";
 
-import { email_detail } from "./message-category";
-import { sender_category } from "./sender-category";
+import { gmailEmailDetail } from "./email-details";
+import { gmailProvider } from "./email-providers";
 import { user } from "./user";
+import { whitelistedContact } from "./whitelisted-contact";
 
 export const providerEnum = pgEnum("email_provider", providerEnumList);
 
-export const email_provider_detail = pgTable("email_provider_detail", {
+export const emailProviderDetail = pgTable("email_provider_detail", {
   emailProviderDetailId: serial("email_provider_detail_id").primaryKey(),
-  user_id: integer("user_id").references(() => user.user_id),
-  email_provider: text("email_provider", {
+  userId: integer("user_id")
+    .notNull()
+    .references(() => user.userId),
+  emailProvider: text("email_provider", {
     enum: providerEnumList,
   }).notNull(),
   email: text("email").notNull(),
-  created_at: timestamp("created_at", {
+  inboxName: text("inbox_name").notNull(),
+  imageUri: text("image_uri"),
+  createdAt: timestamp("created_at", {
     withTimezone: true,
     mode: "date",
-  }).default(sql`CURRENT_TIMESTAMP`),
-  updated_at: timestamp("updated_at", {
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at", {
     withTimezone: true,
     mode: "date",
-  }).default(sql`CURRENT_TIMESTAMP`),
+  })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 
 export const emailProviderDetailRelations = relations(
-  email_provider_detail,
-  ({ one }) => ({
-    sender_category: one(sender_category, {
-      references: [sender_category.email_provider_detail_id],
-      fields: [email_provider_detail.emailProviderDetailId],
+  emailProviderDetail,
+  ({ many, one }) => ({
+    user: one(user, {
+      fields: [emailProviderDetail.userId],
+      references: [user.userId],
     }),
-    message_category: one(email_detail, {
-      references: [email_detail.email_provider_detail_id],
-      fields: [email_provider_detail.emailProviderDetailId],
+    gmailProvider: one(gmailProvider, {
+      fields: [emailProviderDetail.emailProviderDetailId],
+      references: [gmailProvider.emailProviderDetailId],
     }),
+    gmailEmailDetails: many(gmailEmailDetail),
+    whitelistedContacts: many(whitelistedContact),
   }),
 );

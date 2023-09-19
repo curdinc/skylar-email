@@ -3,16 +3,16 @@ import { index, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 import { SUPPORTED_AUTH_PROVIDERS } from "@skylar/parsers-and-types";
 
-import { invite_code } from "./invite-code";
-import { stripe_customer } from "./stripe";
+import { inviteCode } from "./invite-code";
+import { stripeCustomer } from "./stripe";
 
 // Do not use defaultNow, it's to be deprecated https://github.com/drizzle-team/drizzle-orm/issues/657
 export const user = pgTable(
   "user",
   {
-    user_id: serial("id").primaryKey(),
-    auth_provider_id: text("providerId").notNull().unique(),
-    auth_provider: text("provider", {
+    userId: serial("user_id").primaryKey(),
+    authProviderId: text("auth_provider_id").notNull().unique(),
+    authProvider: text("auth_provider", {
       enum: SUPPORTED_AUTH_PROVIDERS,
     }).notNull(),
     image_uri: text("image_uri"),
@@ -25,7 +25,7 @@ export const user = pgTable(
     })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updated_at: timestamp("updated_at", {
+    updatedAt: timestamp("updated_at", {
       withTimezone: true,
       mode: "date",
     })
@@ -34,20 +34,22 @@ export const user = pgTable(
   },
   (table) => {
     return {
-      provider_idx: index("provider_idx").on(table.auth_provider_id),
+      providerIdx: index("provider_idx").on(table.authProviderId),
     };
   },
 );
 
-export const usersRelations = relations(user, ({ many, one }) => ({
-  creates_invite: many(invite_code, {
-    relationName: "creates_invite",
+export const userRelations = relations(user, ({ many, one }) => ({
+  createdInviteCode: many(inviteCode, {
+    relationName: "created_invite_code",
   }),
-  uses_invite: many(invite_code, {
-    relationName: "uses_invite",
+  usedInviteCode: one(inviteCode, {
+    fields: [user.userId],
+    references: [inviteCode.usedBy],
+    relationName: "used_invite_code",
   }),
-  stripe_customer: one(stripe_customer, {
-    fields: [user.user_id],
-    references: [stripe_customer.user_id],
+  stripeCustomer: one(stripeCustomer, {
+    fields: [user.userId],
+    references: [stripeCustomer.userId],
   }),
 }));

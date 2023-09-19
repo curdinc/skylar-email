@@ -23,12 +23,12 @@ const oauth2TokenFromRefreshTokenResponseSchema = merge([
   baseAuthTokenResponseSchema,
 ]);
 
-export const providerEnumList = ["gmail", "outlook"] as const;
-const providerEnumSchema = enumType(providerEnumList);
+export const SUPPORTED_EMAIL_PROVIDERS = ["gmail", "outlook"] as const;
+const supportedEmailProvidersSchema = enumType(SUPPORTED_EMAIL_PROVIDERS);
 
 export const oauthOnboardingSchema = object({
   code: string(),
-  provider: providerEnumSchema,
+  provider: supportedEmailProvidersSchema,
 });
 
 export type oauthOnboardingType = Output<typeof oauthOnboardingSchema>;

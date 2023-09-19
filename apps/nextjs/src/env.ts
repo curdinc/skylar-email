@@ -22,6 +22,8 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_API_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_API_KEY,
+    NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID:
+      process.env.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID,
   },
   skipValidation:
     !!process.env.CI ||

@@ -12,7 +12,7 @@ export {
 export { SUPPORTED_EMAIL_CATEGORIES } from "./src/api/email";
 export {
   oauthOnboardingSchema,
-  providerEnumList,
+  SUPPORTED_EMAIL_PROVIDERS as providerEnumList,
   type Oauth2InitialTokenResponse,
   type Oauth2TokenFromRefreshTokenResponse,
   type oauthOnboardingType,

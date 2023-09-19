@@ -14,10 +14,9 @@ export async function getInviteCodeUsedByUser({
 }) {
   const result = await db.query.user.findFirst({
     columns: {},
-    where: eq(schema.user.auth_provider_id, userObj.providerId),
+    where: eq(schema.user.authProviderId, userObj.authProviderId),
     with: {
-      inviteCodeCreated: {
-        where: eq(schema.invite_code.used_by, schema.user.user_id),
+      usedInviteCode: {
         columns: {
           inviteCode: true,
         },
@@ -28,6 +27,5 @@ export async function getInviteCodeUsedByUser({
   if (!result) {
     throw new Error("Valid invite code used-by not found");
   }
-  // FIXME: what is this never value?
-  return result?.inviteCodeCreated;
+  return result.usedInviteCode?.inviteCode;
 }

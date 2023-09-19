@@ -105,9 +105,7 @@ app.use("/trpc/*", async (c, next) => {
     router: appRouter,
     endpoint: "/trpc",
     onError({ error, path }) {
-      logger.error(
-        `>>> tRPC Error on '${path}' + ${JSON.stringify(error, null, 2)}`,
-      );
+      logger.error(`>>> tRPC Error on '${path}'`, { ...error });
     },
     createContext: () => {
       return createTRPCContext({

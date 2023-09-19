@@ -13,14 +13,13 @@ export async function insertNewUser({
   const result = await db
     .insert(schema.user)
     .values({
-      auth_provider: newUser.provider,
-      auth_provider_id: newUser.providerId,
+      authProvider: newUser.authProvider,
+      authProviderId: newUser.authProviderId,
       name: newUser.name,
       email: newUser.email,
       phone: newUser.phone,
       image_uri: newUser.imageUri,
     })
-    .returning({ id: schema.user.user_id });
-  console.log("new user inserted", JSON.stringify(result, null, 2));
+    .returning({ id: schema.user.userId });
   return { id: result[0]?.id };
 }
