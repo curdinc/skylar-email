@@ -3,8 +3,8 @@ import {
   validatorTrpcWrapper,
 } from "@skylar/parsers-and-types";
 
-import { createTRPCRouter } from "../trpc/factory";
-import { externalVendorProcedure } from "../trpc/procedures";
+import { createTRPCRouter } from "../../trpc/factory";
+import { externalVendorProcedure } from "../../trpc/procedures";
 
 export const gmailRouter = createTRPCRouter({
   incomingEmail: externalVendorProcedure

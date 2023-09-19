@@ -10,10 +10,10 @@ import {
 
 import { providerEnumList } from "@skylar/parsers-and-types";
 
-import { gmailEmailDetail } from "./email-details";
-import { gmailProvider } from "./email-providers";
+import { whitelistedContact } from "./categorized_contact";
+import { gmailEmailDetail } from "./providers/gmail/email-details";
+import { gmailProvider } from "./providers/gmail/provider";
 import { user } from "./user";
-import { whitelistedContact } from "./whitelisted-contact";
 
 export const providerEnum = pgEnum("email_provider", providerEnumList);
 

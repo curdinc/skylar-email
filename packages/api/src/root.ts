@@ -1,6 +1,6 @@
-import { gmailRouter } from "./router/gmail";
 import { emailProviderRouter } from "./router/oauth";
 import { onboardingRouter } from "./router/onboarding";
+import { gmailRouter } from "./router/providers/gmail";
 import { stripeRouter } from "./router/stripe";
 import { createTRPCRouter } from "./trpc/factory";
 

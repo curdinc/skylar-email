@@ -1,13 +1,13 @@
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
-import * as gmailEmailDetail from "./schema/email-details";
+import * as whitelistedContact from "./schema/categorized_contact";
 import * as emailProviderDetail from "./schema/email-provider-detail";
-import * as gmailProvider from "./schema/email-providers";
 import * as inviteCode from "./schema/invite-code";
+import * as gmailEmailDetail from "./schema/providers/gmail/email-details";
+import * as gmailProvider from "./schema/providers/gmail/provider";
 import * as stripeCustomer from "./schema/stripe";
 import * as user from "./schema/user";
-import * as whitelistedContact from "./schema/whitelisted-contact";
 
 export { and, eq } from "drizzle-orm";
 
