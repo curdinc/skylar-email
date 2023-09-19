@@ -8,7 +8,7 @@ import {
   validatorTrpcWrapper,
 } from "@skylar/parsers-and-types";
 
-import { getAccessToken } from "../components/providerLogic/gmail/api";
+import { getAccessToken } from "../components/provider_logic/gmail/api";
 import { createTRPCRouter } from "../trpc/factory";
 import { protectedProcedure } from "../trpc/procedures";
 

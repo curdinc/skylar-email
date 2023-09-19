@@ -1,6 +1,8 @@
 import type { Logger } from "@skylar/logger";
 import type { MessagePartType } from "@skylar/parsers-and-types";
 
+import { getInboxHistory, getMessage } from "./api";
+
 export function getEmailMetadata(
   messageHeaders: { name: string; value: string }[],
 ) {
@@ -115,4 +117,69 @@ export function getEmailBody({
     }
   }
   return data;
+}
+
+export async function getMessages({
+  emailId,
+  startHistoryId,
+  accessToken,
+  logger,
+}: {
+  emailId: string;
+  startHistoryId: string;
+  accessToken: string;
+  logger: Logger;
+}) {
+  const inboxHistory = await getInboxHistory({
+    emailId,
+    startHistoryId,
+    accessToken,
+  });
+
+  const messageIds = inboxHistory.history
+    .map((historyItem) => historyItem.messagesAdded)
+    .flat(1)
+    .map((messageMetadata) => messageMetadata.message);
+
+  // TODO: filter if they are unique
+  const messageDataResponse = await Promise.allSettled(
+    messageIds.map(async (mid) => {
+      const msg = await getMessage({
+        accessToken: accessToken,
+        emailId: emailId,
+        messageId: mid.id,
+      });
+      const emailMetadata = getEmailMetadata(msg.payload.headers);
+      const emailData = getEmailBody({
+        payloads: [msg.payload],
+        mid: mid.id,
+        emailId,
+        logger,
+      });
+      return { emailMetadata, emailData };
+    }),
+  );
+
+  const messageData = messageDataResponse
+    .map((m) => {
+      if (m.status === "fulfilled") {
+        return m.value;
+      }
+      console.log(m.reason);
+    })
+    .filter((m) => !!m) as {
+    emailMetadata: {
+      from: string;
+      subject: string;
+      name: string;
+      timestamp: Date;
+    };
+    emailData: {
+      html: string[];
+      plain: string[];
+      attachments: string[];
+    };
+  }[];
+
+  return messageData;
 }

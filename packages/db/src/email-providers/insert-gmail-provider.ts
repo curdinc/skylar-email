@@ -1,6 +1,6 @@
 import type { DbType } from "../..";
 import { schema } from "../..";
-import type { gmailProvider } from "../../schema/email-providers";
+import type { gmailProvider } from "../../schema/providers/gmail/provider";
 
 type insertGmailProviderInput = (typeof gmailProvider)["$inferInsert"];
 

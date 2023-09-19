@@ -3,7 +3,7 @@ import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 import { SUPPORTED_EMAIL_CATEGORIES } from "@skylar/parsers-and-types";
 
-import { emailProviderDetail } from "./email-provider-detail";
+import { emailProviderDetail } from "../../email-provider-detail";
 
 export const gmailEmailDetail = pgTable("gmail_email_detail", {
   gmailEmailDetailId: serial("gmail_email_detail_id").primaryKey(),
