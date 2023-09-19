@@ -338,6 +338,9 @@ importers:
       '@skylar/db':
         specifier: ^0.1.0
         version: link:../db
+      '@skylar/gmail-api':
+        specifier: ^0.1.0
+        version: link:../gmail-api
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../parsers-and-types
@@ -461,6 +464,28 @@ importers:
       tsx:
         specifier: ^3.12.8
         version: 3.12.8
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
+  packages/gmail-api:
+    dependencies:
+      '@skylar/parsers-and-types':
+        specifier: ^0.1.0
+        version: link:../parsers-and-types
+    devDependencies:
+      '@skylar/eslint-config':
+        specifier: 0.2.0
+        version: link:../../tooling/eslint
+      '@skylar/prettier-config':
+        specifier: ^0.1.0
+        version: link:../../tooling/prettier
+      '@skylar/tsconfig':
+        specifier: ^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.48.0
+        version: 8.48.0
       typescript:
         specifier: ^5.2.2
         version: 5.2.2

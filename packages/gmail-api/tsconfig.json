@@ -3,6 +3,6 @@
   "compilerOptions": {
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
-  "include": [".", "src/router/providers/gmail.ts", "../gmail-api/src/api.ts"],
+  "include": ["*.ts", "src", "../api/src/router/providers/gmail.ts"],
   "exclude": ["node_modules"]
 }

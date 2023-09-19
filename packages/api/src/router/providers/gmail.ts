@@ -1,8 +1,8 @@
 import { getGmailRefreshToken } from "@skylar/db";
+import { getAccessToken } from "@skylar/gmail-api";
 
-import { getAccessToken } from "../../api/src/components/provider_logic/gmail/apimail/api";
-import { createTRPCRouter } from "../../api/src/trpc/factory/factory";
-import { protectedProcedure } from "../../api/src/trpc/proceduresocedures";
+import { createTRPCRouter } from "../../trpc/factory";
+import { protectedProcedure } from "../../trpc/procedures";
 
 export const gmailRouter = createTRPCRouter({
   getAccessToken: protectedProcedure.query(async ({ ctx }) => {

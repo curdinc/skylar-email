@@ -1,7 +1,6 @@
+import { getInboxHistory, getMessage } from "@skylar/gmail-api";
 import type { Logger } from "@skylar/logger";
 import type { MessagePartType } from "@skylar/parsers-and-types";
-
-import { getInboxHistory, getMessage } from "./api";
 
 export function getEmailMetadata(
   messageHeaders: { name: string; value: string }[],
