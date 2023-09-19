@@ -1,7 +1,7 @@
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 
-import * as whitelistedContact from "./schema/categorized_contact";
+import * as categorizedContact from "./schema/categorized_contact";
 import * as emailProviderDetail from "./schema/email-provider-detail";
 import * as inviteCode from "./schema/invite-code";
 import * as gmailEmailDetail from "./schema/providers/gmail/email-details";
@@ -16,7 +16,7 @@ export const schema = {
   ...gmailProvider,
   ...emailProviderDetail,
   ...gmailEmailDetail,
-  ...whitelistedContact,
+  ...categorizedContact,
   ...inviteCode,
   ...stripeCustomer,
   ...user,

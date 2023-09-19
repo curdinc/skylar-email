@@ -34,7 +34,7 @@ export const categorizedContact = pgTable("categorized_contact", {
     .notNull(),
 });
 
-export const whitelistedContactRelations = relations(
+export const categorizedContactRelations = relations(
   categorizedContact,
   ({ one }) => ({
     emailProviderDetail: one(emailProviderDetail, {

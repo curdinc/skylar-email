@@ -1,7 +1,7 @@
 import type { Output } from "valibot";
 import { email, enumType, integer, number, object, string } from "valibot";
 
-import { providerEnumList } from "./email-provider/oauth";
+import { providerEnumList } from "../..";
 
 const EmailProviderDetailSchema = object({
   emailProvider: enumType(providerEnumList),

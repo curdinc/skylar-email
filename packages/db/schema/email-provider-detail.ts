@@ -10,7 +10,7 @@ import {
 
 import { providerEnumList } from "@skylar/parsers-and-types";
 
-import { whitelistedContact } from "./categorized_contact";
+import { categorizedContact } from "./categorized_contact";
 import { gmailEmailDetail } from "./providers/gmail/email-details";
 import { gmailProvider } from "./providers/gmail/provider";
 import { user } from "./user";
@@ -54,6 +54,6 @@ export const emailProviderDetailRelations = relations(
       references: [gmailProvider.emailProviderDetailId],
     }),
     gmailEmailDetails: many(gmailEmailDetail),
-    whitelistedContacts: many(whitelistedContact),
+    categorizedContact: many(categorizedContact),
   }),
 );
