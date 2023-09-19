@@ -8,8 +8,8 @@ import { SUPPORTED_EMAIL_CATEGORIES } from "@skylar/parsers-and-types";
 
 import { emailProviderDetail } from "./email-provider-detail";
 
-export const whitelistedContact = pgTable("whitelisted_contact", {
-  whitelistedContactId: serial("whitelisted_contact_id").primaryKey(),
+export const categorizedContact = pgTable("categorized_contact", {
+  categorizedContactId: serial("categorized_contact_id").primaryKey(),
   emailProviderDetailId: integer("email_provider_detail_id")
     .notNull()
     .references(() => emailProviderDetail.emailProviderDetailId, {
@@ -34,11 +34,11 @@ export const whitelistedContact = pgTable("whitelisted_contact", {
     .notNull(),
 });
 
-export const whitelistedContactRelations = relations(
-  whitelistedContact,
+export const categorizedContactRelations = relations(
+  categorizedContact,
   ({ one }) => ({
     emailProviderDetail: one(emailProviderDetail, {
-      fields: [whitelistedContact.emailProviderDetailId],
+      fields: [categorizedContact.categorizedContactId],
       references: [emailProviderDetail.emailProviderDetailId],
     }),
   }),
