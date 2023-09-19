@@ -35,7 +35,7 @@ export async function getAndParseEmails({
   //   }),
   // );
 
-  // console.log(db);
+  console.log(db);
   // db
   //   .insert(schema.email)
   //   .values({
