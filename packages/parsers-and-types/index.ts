@@ -4,6 +4,7 @@ export {
   gmailProviderIDTokenSchema,
   gmailWatchResponseSchema,
   historyObjectSchema,
+  messageListResponseSchema,
   messageResponseSchema,
   type GmailPushNotificationType,
   type MessagePartType,

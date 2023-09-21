@@ -1,1 +1,7 @@
-export { getAccessToken, getInboxHistory, getMessage } from "./src/api";
+export {
+  batchGetMessages,
+  getAccessToken,
+  getInboxHistory,
+  getMessage,
+  getMessageList,
+} from "./src/api";

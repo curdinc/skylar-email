@@ -102,6 +102,20 @@ export const historyObjectSchema = object({
 
 export const messageResponseSchema = object({
   payload: messagePartSchema,
+  historyId: string(),
+  id: string(),
+  labelIds: array(string()),
+});
+
+export const messageListResponseSchema = object({
+  messages: array(
+    object({
+      threadId: string(),
+      id: string(),
+    }),
+  ),
+  nextPageToken: string(),
+  resultSizeEstimate: number(),
 });
 
 export type MessagePartType = Output<typeof messagePartSchema>;
