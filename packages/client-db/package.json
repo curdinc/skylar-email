@@ -39,7 +39,7 @@
     "extends": [
       "@skylar/eslint-config/base",
       "@skylar/eslint-config/react",
-      "plugin@tanstack/eslint-plugin-query/recommended"
+      "plugin:@tanstack/eslint-plugin-query/recommended"
     ]
   },
   "prettier": "@skylar/prettier-config"
