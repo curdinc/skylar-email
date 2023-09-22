@@ -13,7 +13,6 @@ export type ThreadIndexType = {
   email_provider_labels: string[];
   skylar_labels: string[];
   attachment_names: string[];
-  latest_email_snippet: string;
   created_at: number;
   updated_at: number;
 };
