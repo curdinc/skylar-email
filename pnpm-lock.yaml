@@ -216,6 +216,9 @@ importers:
       '@skylar/auth':
         specifier: ^0.1.0
         version: link:../../packages/auth
+      '@skylar/client-db':
+        specifier: ^0.1.0
+        version: link:../../packages/client-db
       '@skylar/logger':
         specifier: ^0.1.0
         version: link:../../packages/logger
@@ -523,8 +526,8 @@ importers:
   packages/logic:
     dependencies:
       '@legendapp/state':
-        specifier: 2.0.0-beta.0
-        version: 2.0.0-beta.0(react@18.2.0)
+        specifier: 2.0.0-beta.3
+        version: 2.0.0-beta.3(react@18.2.0)
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../parsers-and-types
@@ -538,6 +541,9 @@ importers:
       '@skylar/api':
         specifier: ^0.1.0
         version: link:../api
+      '@skylar/client-db':
+        specifier: ^0.1.0
+        version: link:../client-db
       '@skylar/eslint-config':
         specifier: 0.2.0
         version: link:../../tooling/eslint
@@ -3243,8 +3249,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: false
 
-  /@legendapp/state@2.0.0-beta.0(react@18.2.0):
-    resolution: {integrity: sha512-8EFOt/Nc+vtkqxQ7Hj+kw/njnRkHTByDJaL2WEhHYNIp53cqWvPIfmjKW3wG0J1M2ZPKyKTjETV3eQgc6xawSg==}
+  /@legendapp/state@2.0.0-beta.3(react@18.2.0):
+    resolution: {integrity: sha512-+B0ajcNrq0gdEbppP+os5thMxdoBBhxTOtjlelgKtf6ymBBAkUJYp7Z1YWMaCfaekDx1FzVT0YV6Cm+iHFa8ew==}
     dependencies:
       use-sync-external-store: 1.2.0(react@18.2.0)
     transitivePeerDependencies:

@@ -20,13 +20,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@legendapp/state": "2.0.0-beta.0",
+    "@legendapp/state": "2.0.0-beta.3",
     "@skylar/parsers-and-types": "^0.1.0",
     "@trpc/client": "^10.38.1",
     "superjson": "1.13.1"
   },
   "devDependencies": {
     "@skylar/api": "^0.1.0",
+    "@skylar/client-db": "^0.1.0",
     "@skylar/eslint-config": "0.2.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",

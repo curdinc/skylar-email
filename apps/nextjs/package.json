@@ -22,6 +22,7 @@
     "@radix-ui/react-toast": "^1.1.4",
     "@react-oauth/google": "^0.11.1",
     "@skylar/auth": "^0.1.0",
+    "@skylar/client-db": "^0.1.0",
     "@skylar/logger": "^0.1.0",
     "@skylar/logic": "^0.1.0",
     "@skylar/parsers-and-types": "^0.1.0",
