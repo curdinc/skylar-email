@@ -1,6 +1,7 @@
 import { observable } from "@legendapp/state";
 
 import type { ClientDb } from "@skylar/client-db";
+import { initClientDb } from "@skylar/client-db";
 import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
 
 export const state$ = observable({
@@ -10,16 +11,23 @@ export const state$ = observable({
     clientDb: {} as Record<string, ClientDb>,
     activeClientDbName: undefined as string | undefined,
     getActiveClientDb: () => {
-      const activeClientDb = state$.EMAIL_CLIENT.activeClientDbName.get();
-      if (!activeClientDb) {
+      const activeClientDbName = state$.EMAIL_CLIENT.activeClientDbName.get();
+      if (!activeClientDbName) {
         throw new Error("activeClientDb is undefined");
       }
       const clientDbs = state$.EMAIL_CLIENT.clientDb.get();
       const clientDb = clientDbs[state$.EMAIL_CLIENT.activeClientDbName.get()];
-      if (!clientDb) {
-        throw new Error("no active clientDb present");
+      if (clientDb) {
+        return clientDb;
       }
-      return clientDb;
+      const newClientDb = initClientDb(activeClientDbName);
+      state$.EMAIL_CLIENT.clientDb.set((prev) => {
+        return {
+          ...prev,
+          [activeClientDbName]: newClientDb,
+        };
+      });
+      return newClientDb;
     },
   },
   // Not used right now. Needed to make the api stuff work

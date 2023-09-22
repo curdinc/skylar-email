@@ -2,6 +2,8 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 
+import { state$ } from "@skylar/logic";
+
 import { api } from "~/lib/api";
 import { GMAIL_SCOPES } from "~/lib/config";
 import { useLogger } from "~/lib/logger";
@@ -26,8 +28,9 @@ export function useConnectEmailProviderPage() {
     useState(false);
   const { mutate: exchangeCode } =
     api.emailProviderRouter.googleCodeExchange.useMutation({
-      onSuccess() {
+      onSuccess(emailProviderInfo) {
         router.push("/onboarding/card");
+        state$.EMAIL_CLIENT.activeClientDbName.set(emailProviderInfo.email);
         setIsConnectingToEmailProvider(false);
       },
     });
