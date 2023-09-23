@@ -91,6 +91,7 @@ const messageMetadataSchema = object({
 });
 
 const historyItemSchema = object({
+  messages: array(messageMetadataSchema),
   messagesAdded: array(messageMetadataSchema),
 });
 

@@ -108,7 +108,6 @@ export async function getHistoryList({
 }) {
   const params = new URLSearchParams({
     startHistoryId: startHistoryId,
-    historyTypes: "messageAdded",
   });
 
   const headers = new Headers({

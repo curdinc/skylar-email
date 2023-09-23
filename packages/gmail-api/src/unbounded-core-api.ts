@@ -1,6 +1,8 @@
 import { backOff } from "exponential-backoff";
 
-import { batchGetMessage, getMessageList } from "./core-api";
+import type { historyObjectType } from "@skylar/parsers-and-types";
+
+import { batchGetMessage, getHistoryList, getMessageList } from "./core-api";
 
 export function splitToNChunks<T>(array: T[], n: number) {
   const result = [];
@@ -82,36 +84,34 @@ export async function getMessageListUnbounded({
   return messageListResponses;
 }
 
-// export async function getHistoryListUnbounded({
-//   emailId,
-//   accessToken,
-//   startHistoryId,
-//   pageToken,
-// }: {
-//   emailId: string;
-//   startHistoryId: string;
-//   accessToken: string;
-//   pageToken?: string;
-// }) {
-//   // this requires pageToken so cannot use promises
-//   let historyListResponses: historyObjectType[] = [];
-//   let pageTokenIterable = pageToken;
-//   // let it sweep the entire list
-//   if (!pageToken) {
-//     pageTokenIterable = "";
-//   }
+export async function getHistoryListUnbounded({
+  emailId,
+  accessToken,
+  startHistoryId,
+  pageToken,
+}: {
+  emailId: string;
+  startHistoryId: string;
+  accessToken: string;
+  pageToken?: string;
+}) {
+  // this requires pageToken so cannot use promises
+  let historyListResponses: historyObjectType[] = [];
+  let pageTokenIterable = pageToken;
+  // let it sweep the entire list
+  if (!pageToken) {
+    pageTokenIterable = "";
+  }
 
-//   while (pageTokenIterable !== undefined) {
-//     const messageListResponse = await getHistoryList({
-//       accessToken,
-//       emailId,
-//       startHistoryId,
-//       pageToken: pageTokenIterable,
-//     });
-//     historyListResponses = historyListResponses.concat(
-//       messageListResponse.messages,
-//     );
-//     pageTokenIterable = messageListResponse.nextPageToken;
-//   }
-//   return historyListResponses;
-// }
+  while (pageTokenIterable !== undefined) {
+    const messageListResponse = await getHistoryList({
+      accessToken,
+      emailId,
+      startHistoryId,
+      pageToken: pageTokenIterable,
+    });
+    historyListResponses = historyListResponses.concat(messageListResponse);
+    pageTokenIterable = messageListResponse.nextPageToken;
+  }
+  return historyListResponses;
+}
