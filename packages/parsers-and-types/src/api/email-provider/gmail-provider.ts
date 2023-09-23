@@ -103,6 +103,7 @@ export const historyObjectSchema = object({
 export const messageResponseSchema = object({
   payload: messagePartSchema,
   historyId: string(),
+  snippet: string(),
   id: string(),
   labelIds: array(string()),
 });
@@ -114,8 +115,10 @@ export const messageListResponseSchema = object({
       id: string(),
     }),
   ),
-  nextPageToken: string(),
+  nextPageToken: optional(string()),
   resultSizeEstimate: number(),
 });
+
+export type messageListResponseType = Output<typeof messageListResponseSchema>;
 
 export type MessagePartType = Output<typeof messagePartSchema>;

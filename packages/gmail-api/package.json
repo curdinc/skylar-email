@@ -20,6 +20,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@skylar/logger": "^0.1.0",
     "@skylar/parsers-and-types": "^0.1.0"
   },
   "devDependencies": {
