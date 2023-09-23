@@ -11,7 +11,7 @@ import {
 import { providerEnumList } from "@skylar/parsers-and-types";
 
 import { categorizedContact } from "./categorized_contact";
-import { gmailEmailDetail } from "./providers/gmail/email-details";
+import { gmailEmailDetail } from "./providers/gmail/email-detail";
 import { gmailProvider } from "./providers/gmail/provider";
 import { user } from "./user";
 

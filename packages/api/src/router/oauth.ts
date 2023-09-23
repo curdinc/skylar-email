@@ -12,7 +12,7 @@ import { getAccessToken } from "../components/provider_logic/gmail/api";
 import { createTRPCRouter } from "../trpc/factory";
 import { protectedProcedure } from "../trpc/procedures";
 
-export const emailProviderRouter = createTRPCRouter({
+export const oauthRouter = createTRPCRouter({
   googleCodeExchange: protectedProcedure
     .input(validatorTrpcWrapper(oauthOnboardingSchema))
     .mutation(
@@ -77,6 +77,7 @@ export const emailProviderRouter = createTRPCRouter({
         }
 
         return {
+          email,
           idToken: parsedResponse.id_token,
           accessToken: parsedResponse.access_token,
           tokenType: parsedResponse.token_type,

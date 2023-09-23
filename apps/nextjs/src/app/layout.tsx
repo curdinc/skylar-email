@@ -12,7 +12,7 @@ import { env } from "~/env";
 import { onUnauthenticatedRedirectTo } from "~/lib/auth/server";
 import { siteConfig } from "~/lib/config";
 import { cn } from "~/lib/ui";
-import { AuthListenerSkylar, ClientProvider } from "./providers";
+import { ClientProvider } from "./providers";
 
 const fontSans = Inter({
   subsets: ["latin"],
@@ -87,11 +87,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             onUnauthenticatedRedirectTo,
           }}
         >
-          <ClientProvider cookies={cookies().getAll()} headers={headers()}>
-            <AuthListenerSkylar
-              supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
-              supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
-            />
+          <ClientProvider
+            cookies={cookies().getAll()}
+            headers={headers()}
+            googleProviderClientId={env.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID}
+            supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
+            supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
+          >
             {children}
             <Toaster />
           </ClientProvider>

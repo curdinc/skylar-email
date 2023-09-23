@@ -2,6 +2,8 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 
+import { state$ } from "@skylar/logic";
+
 import { api } from "~/lib/api";
 import { GMAIL_SCOPES } from "~/lib/config";
 import { useLogger } from "~/lib/logger";
@@ -24,13 +26,13 @@ export function useConnectEmailProviderPage() {
 
   const [isConnectingToEmailProvider, setIsConnectingToEmailProvider] =
     useState(false);
-  const { mutate: exchangeCode } =
-    api.emailProviderRouter.googleCodeExchange.useMutation({
-      onSuccess() {
-        router.push("/onboarding/card");
-        setIsConnectingToEmailProvider(false);
-      },
-    });
+  const { mutate: exchangeCode } = api.oauth.googleCodeExchange.useMutation({
+    onSuccess(emailProviderInfo) {
+      router.push("/onboarding/card");
+      state$.EMAIL_CLIENT.activeClientDbName.set(emailProviderInfo.email);
+      setIsConnectingToEmailProvider(false);
+    },
+  });
   const initiateConnectToGmail = useGoogleLogin({
     flow: "auth-code",
     scope: GMAIL_SCOPES,

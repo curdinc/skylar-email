@@ -48,7 +48,7 @@ export const dashboardConfig: {
   ],
 };
 
-export const UNAUTHENTICATED_ROUTES = ["/", "/login"];
+export const UNAUTHENTICATED_ROUTES = ["/", "/login", "/login/post-auth"];
 
 export const stripeConfig: StripeElementsOptions = {
   mode: "subscription",

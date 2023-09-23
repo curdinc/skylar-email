@@ -1,8 +1,5 @@
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-
-import "drizzle-orm/mysql-core";
-
 import { relations, sql } from "drizzle-orm";
+import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 import { SUPPORTED_EMAIL_CATEGORIES } from "@skylar/parsers-and-types";
 

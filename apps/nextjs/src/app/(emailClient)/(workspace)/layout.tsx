@@ -7,6 +7,7 @@ import { SiteFooter } from "~/components/nav/site-footer";
 import { buttonVariants } from "~/components/ui/button";
 import { dashboardConfig } from "~/lib/config";
 import { cn } from "~/lib/ui";
+import { ClientLayout } from "./client-layout";
 
 export default function EmailClientLayout({
   children,
@@ -25,6 +26,7 @@ export default function EmailClientLayout({
           </nav>
         </div>
       </header>
+      <ClientLayout />
       <main className="flex-1">{children}</main>
       <SiteFooter />
     </div>

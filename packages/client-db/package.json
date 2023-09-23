@@ -1,5 +1,5 @@
 {
-  "name": "@skylar/logic",
+  "name": "@skylar/client-db",
   "private": true,
   "version": "0.1.0",
   "exports": {
@@ -8,7 +8,7 @@
   "typesVersions": {
     "*": {
       "*": [
-        "./"
+        "./*"
       ]
     }
   },
@@ -20,30 +20,26 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@legendapp/state": "2.0.0-beta.3",
-    "@skylar/client-db": "^0.1.0",
-    "@skylar/parsers-and-types": "^0.1.0",
-    "@trpc/client": "^10.38.1",
-    "superjson": "1.13.1"
+    "dexie": "^3.2.4",
+    "dexie-react-hooks": "^1.1.6"
   },
   "devDependencies": {
-    "@skylar/api": "^0.1.0",
     "@skylar/eslint-config": "0.2.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
+    "@tanstack/eslint-plugin-query": "^4.34.1",
+    "@tanstack/react-query": "^4.33.0",
     "eslint": "^8.48.0",
-    "next": "^13.5.2",
-    "react": "18.2.0",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "next": "^13.5.2",
-    "react": "18.2.0"
+    "@tanstack/react-query": "^4.33.0"
   },
   "eslintConfig": {
-    "root": true,
     "extends": [
-      "@skylar/eslint-config/base"
+      "@skylar/eslint-config/base",
+      "@skylar/eslint-config/react",
+      "plugin:@tanstack/eslint-plugin-query/recommended"
     ]
   },
   "prettier": "@skylar/prettier-config"
