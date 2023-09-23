@@ -95,14 +95,16 @@ export async function watchGmailInbox(emailId: string, accessToken: string) {
   return watchResponse.historyId;
 }
 
-export async function getInboxHistory({
+export async function getHistoryList({
   emailId,
   startHistoryId,
   accessToken,
+  pageToken,
 }: {
   emailId: string;
   startHistoryId: string;
   accessToken: string;
+  pageToken?: string;
 }) {
   const params = new URLSearchParams({
     startHistoryId: startHistoryId,
@@ -114,13 +116,15 @@ export async function getInboxHistory({
     Authorization: `Bearer ${accessToken}`,
   });
 
-  const res = await fetch(
-    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/history?${params.toString()}`,
-    {
-      method: "GET",
-      headers: headers,
-    },
-  );
+  let url = `https://gmail.googleapis.com/gmail/v1/users/${emailId}/history?${params.toString()}`;
+  if (pageToken && pageToken !== "") {
+    url += `&pageToken=${pageToken}`;
+  }
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: headers,
+  });
   if (!res.ok) {
     throw new Error(
       `Failed to get history for ${emailId}. cause: ${await res.text()}`,
@@ -245,7 +249,6 @@ export async function batchGetMessage({
     try {
       return parse(messageResponseSchema, data.json());
     } catch (e) {
-      console.log("data.json()", data.json());
       console.log(JSON.stringify(formatValidatorError(e), null, 2));
       throw e;
     }

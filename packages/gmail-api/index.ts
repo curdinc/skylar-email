@@ -1,9 +1,9 @@
 export { fullSync } from "./src/routines/full-sync";
 
 export {
-  batchGetMessage as batchGetMessages,
+  batchGetMessage,
   getAccessToken,
-  getInboxHistory,
+  getHistoryList,
   getMessage,
   getMessageList,
 } from "./src/core-api";
