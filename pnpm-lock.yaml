@@ -220,6 +220,9 @@ importers:
       '@skylar/auth':
         specifier: ^0.1.0
         version: link:../../packages/auth
+      '@skylar/gmail-api':
+        specifier: ^0.1.0
+        version: link:../../packages/gmail-api
       '@skylar/logger':
         specifier: ^0.1.0
         version: link:../../packages/logger
@@ -470,6 +473,9 @@ importers:
 
   packages/gmail-api:
     dependencies:
+      '@skylar/logger':
+        specifier: ^0.1.0
+        version: link:../logger
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../parsers-and-types
