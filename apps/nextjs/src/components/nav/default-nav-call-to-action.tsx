@@ -21,6 +21,7 @@ import {
 export const DefaultNavCallToAction = () => {
   const user = useUser();
   const signOut = useLogOut();
+
   let navItem = (
     <Link href="/login" className={cn(buttonVariants())}>
       Login
