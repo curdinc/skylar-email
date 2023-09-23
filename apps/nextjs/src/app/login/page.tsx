@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { Icons } from "~/components/icons";
-import { siteConfig } from "~/lib/config";
+import { BrandIcons } from "~/components/icons/brand-icons";
 import { UserAuthForm } from "./user-auth-form";
 
 export const metadata: Metadata = {
@@ -16,8 +15,7 @@ export default function AuthenticationPage() {
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center gap-2 text-lg font-medium">
-          <Icons.logo />
-          {siteConfig.name}
+          <BrandIcons.skylarIconWithText />
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
