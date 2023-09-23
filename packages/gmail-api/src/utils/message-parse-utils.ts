@@ -2,6 +2,7 @@ import type { Logger } from "@skylar/logger";
 import type { MessagePartType } from "@skylar/parsers-and-types";
 
 type emailSenderType = { name?: string; email: string };
+
 function parseEmailSenderValue(value: string) {
   const stripStr = value.trim();
   if (stripStr.indexOf("<") < 0) {

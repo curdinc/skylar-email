@@ -3,15 +3,13 @@ import type { Logger } from "@skylar/logger";
 import { getMessageUnbounded } from "../unbounded-core-api";
 import { getEmailBody, getEmailMetadata } from "./message-parse-utils";
 
-export async function getAndParseMessagesBatch({
+export async function getAndParseMessages({
   messageIds,
-  threadIds,
   accessToken,
   emailId,
   logger,
 }: {
   messageIds: string[];
-  threadIds: string[];
   accessToken: string;
   emailId: string;
   logger: Logger;
@@ -22,7 +20,7 @@ export async function getAndParseMessagesBatch({
     emailId,
   });
 
-  const parsedMessages = rawMessages.map((msg, ind) => {
+  const parsedMessages = rawMessages.map((msg) => {
     const emailMetadata = getEmailMetadata(msg.payload.headers);
     const emailData = getEmailBody({
       payloads: [msg.payload],
@@ -36,8 +34,8 @@ export async function getAndParseMessagesBatch({
       providerLabels: msg.labelIds,
       emailMetadata,
       emailData,
-      emailProviderMessageId: messageIds[ind],
-      emailProviderThreadId: threadIds[ind],
+      emailProviderMessageId: msg.id,
+      emailProviderThreadId: msg.threadId,
     };
   });
 

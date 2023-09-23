@@ -104,6 +104,7 @@ export const historyObjectSchema = object({
 export const messageResponseSchema = object({
   payload: messagePartSchema,
   historyId: string(),
+  threadId: string(),
   snippet: string(),
   id: string(),
   labelIds: array(string()),

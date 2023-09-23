@@ -1,7 +1,7 @@
 import type { Logger } from "@skylar/logger";
 
 import { getMessageListUnbounded } from "../unbounded-core-api";
-import { getAndParseMessagesBatch } from "../utils/get-and-parse-messages-batch";
+import { getAndParseMessages } from "../utils/get-and-parse-messages";
 
 export async function fullSync({
   accessToken,
@@ -18,13 +18,11 @@ export async function fullSync({
     emailId,
   });
   const messageIds = messages.map((m) => m.id);
-  const threadIds = messages.map((m) => m.threadId);
 
-  const emailDataMerged = await getAndParseMessagesBatch({
+  const emailDataMerged = await getAndParseMessages({
     accessToken: accessToken,
     emailId,
     messageIds,
-    threadIds,
     logger,
   });
   return emailDataMerged;

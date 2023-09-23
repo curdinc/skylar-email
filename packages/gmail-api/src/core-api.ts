@@ -11,7 +11,7 @@ import {
   parse,
 } from "@skylar/parsers-and-types";
 
-import { MultipartMixedService } from "./utils/multipart-parse";
+import { MultipartMixedService } from "./utils/multipart-parser";
 
 export async function getAccessToken<
   T extends "refresh_token" | "authorization_code",
