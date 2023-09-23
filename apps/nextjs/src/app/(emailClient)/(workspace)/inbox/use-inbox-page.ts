@@ -10,6 +10,6 @@ export function useInboxPage() {
       enabled: !!activeClientDbName,
     },
   });
-  console.log('threads', threads)
-  return {};
+  const isLoadingThreads = !threads;
+  return { threads, isLoadingThreads };
 }
