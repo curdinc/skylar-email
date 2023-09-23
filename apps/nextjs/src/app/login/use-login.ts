@@ -16,7 +16,14 @@ export const useLogin = () => {
   const loggingInto = state$.LOGIN.loggingInto.use();
 
   useEffect(() => {
-    setRedirectTo(new URL(redirectToPath, window.location.origin).href);
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    urlSearchParams.set("redirectTo", redirectToPath);
+    setRedirectTo(
+      new URL(
+        `/login/post-auth?${urlSearchParams.toString()}`,
+        window.location.origin,
+      ).href,
+    );
   }, [redirectToPath]);
 
   const signInWithGithub = useSignInWithGithub({

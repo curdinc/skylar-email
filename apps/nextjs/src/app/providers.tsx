@@ -13,7 +13,25 @@ import { AUTH_TOKEN_COOKIE_NAME, AuthListener } from "@skylar/auth/client";
 
 import { env } from "~/env";
 import { api } from "~/lib/api";
-import { onLogoutRedirectTo, useOnUserLogin } from "~/lib/auth/client";
+import { onLogoutRedirectTo } from "~/lib/auth/client";
+
+export function AuthListenerSkylar({
+  supabaseKey,
+  supabaseUrl,
+}: {
+  supabaseKey: string;
+  supabaseUrl: string;
+}) {
+  const onLogoutRedirectToFn = useCallback(onLogoutRedirectTo, []);
+
+  return (
+    <AuthListener
+      supabaseKey={supabaseKey}
+      supabaseUrl={supabaseUrl}
+      onLogoutRedirectTo={onLogoutRedirectToFn}
+    />
+  );
+}
 
 /**
  * This wraps the entire app with the client providers needed.
@@ -23,11 +41,14 @@ import { onLogoutRedirectTo, useOnUserLogin } from "~/lib/auth/client";
  * @param props
  * @returns
  */
-export function ClientProvider(props: {
-  children: React.ReactNode;
-  headers?: Headers;
-  cookies: RequestCookie[];
-}) {
+export function ClientProvider(
+  props: {
+    children: React.ReactNode;
+    headers?: Headers;
+    cookies: RequestCookie[];
+    googleProviderClientId: string;
+  } & Parameters<typeof AuthListenerSkylar>[0],
+) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -52,17 +73,22 @@ export function ClientProvider(props: {
           url: env.NEXT_PUBLIC_BACKEND_URL,
           headers() {
             const headers = new Map(props.headers);
-            const cookies = document.cookie
-              .split("; ")
-              .map((c) => {
-                const [key, v] = c.split("=");
-                if (!v) return;
-                return { name: key, value: decodeURIComponent(v) };
-              })
-              .filter((c) => !!c) as { name: string; value: string }[];
-            const auth = cookies.find((cookie) => {
+            let auth = props.cookies.find((cookie) => {
               return cookie.name === AUTH_TOKEN_COOKIE_NAME;
             });
+            if (!auth && window !== undefined) {
+              const clientCookies = document.cookie
+                .split("; ")
+                .map((c) => {
+                  const [key, v] = c.split("=");
+                  if (!v) return;
+                  return { name: key, value: decodeURIComponent(v) };
+                })
+                .filter((c) => !!c) as { name: string; value: string }[];
+              auth = clientCookies.find((cookie) => {
+                return cookie.name === AUTH_TOKEN_COOKIE_NAME;
+              });
+            }
             headers.set("x-trpc-source", "nextjs-react");
             if (auth?.value) {
               headers.set("Authorization", `Bearer ${auth?.value}`);
@@ -75,35 +101,19 @@ export function ClientProvider(props: {
   );
 
   return (
-    <api.Provider client={trpcClient} queryClient={queryClient}>
-      <GoogleOAuthProvider clientId={env.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={props.googleProviderClientId}>
+      <api.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <ReactQueryStreamedHydration transformer={superjson}>
+            <AuthListenerSkylar
+              supabaseKey={props.supabaseKey}
+              supabaseUrl={props.supabaseUrl}
+            />
             {props.children}
           </ReactQueryStreamedHydration>
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
-      </GoogleOAuthProvider>
-    </api.Provider>
-  );
-}
-
-export function AuthListenerSkylar({
-  supabaseKey,
-  supabaseUrl,
-}: {
-  supabaseKey: string;
-  supabaseUrl: string;
-}) {
-  const onLogoutRedirectToFn = useCallback(onLogoutRedirectTo, []);
-  const { onUserLogin } = useOnUserLogin();
-
-  return (
-    <AuthListener
-      supabaseKey={supabaseKey}
-      supabaseUrl={supabaseUrl}
-      onLogoutRedirectTo={onLogoutRedirectToFn}
-      onLogin={onUserLogin}
-    />
+      </api.Provider>
+    </GoogleOAuthProvider>
   );
 }

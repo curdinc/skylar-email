@@ -1,5 +1,5 @@
-import { EmailIndexType } from "../../schema/email";
-import { ClientDb } from "../db";
+import type { EmailIndexType } from "../../schema/email";
+import type { ClientDb } from "../db";
 
 export async function getEmailThread(
   db: ClientDb,

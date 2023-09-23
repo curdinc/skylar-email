@@ -1,8 +1,12 @@
-import Dexie, { Table } from "dexie";
+import type { Table } from "dexie";
+import Dexie from "dexie";
 
-import { EMAIL_INDEX, EmailType } from "../schema/email";
-import { SYNC_INDEX, SyncType } from "../schema/sync";
-import { THREAD_INDEX, ThreadType } from "../schema/thread";
+import type { EmailType } from "../schema/email";
+import { EMAIL_INDEX } from "../schema/email";
+import type { SyncType } from "../schema/sync";
+import { SYNC_INDEX } from "../schema/sync";
+import type { ThreadType } from "../schema/thread";
+import { THREAD_INDEX } from "../schema/thread";
 
 /**
  *  When adding a new table, add it to the type below and add a new variable to the {@link ClientDb} class
@@ -14,7 +18,7 @@ export class ClientDb extends Dexie {
   email!: Table<EmailType, string>;
   sync!: Table<SyncType, string>;
   constructor(userEmail: string) {
-    super(userEmail);
+    super(userEmail, {});
     this.version(1).stores({
       thread: THREAD_INDEX,
       email: EMAIL_INDEX,

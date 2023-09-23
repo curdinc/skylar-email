@@ -1,13 +1,15 @@
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { api } from "~/lib/api";
 
-export const useUserOnboardingRouteGuard = () => {
+export const usePostLogin = () => {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const redirectToPath = searchParams.get("redirectTo") ?? "/inbox";
 
   const { data: userOnboardStep, isLoading } =
     api.onboarding.getUserOnboardStep.useQuery(undefined);
-
   if (!isLoading) {
     switch (userOnboardStep) {
       case "invite-code": {
@@ -25,7 +27,7 @@ export const useUserOnboardingRouteGuard = () => {
         break;
       }
       case "done": {
-        router.push("/inbox");
+        router.push(redirectToPath);
         break;
       }
     }

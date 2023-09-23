@@ -16,10 +16,14 @@ export const state$ = observable({
         throw new Error("activeClientDb is undefined");
       }
       const clientDbs = state$.EMAIL_CLIENT.clientDb.get();
-      const clientDb = clientDbs[state$.EMAIL_CLIENT.activeClientDbName.get()];
-      if (clientDb) {
-        return clientDb;
+      const clientDb = clientDbs[activeClientDbName];
+      if (!clientDb) {
+        return initClientDb(activeClientDbName);
       }
+      return clientDb;
+    },
+    initializeActiveClientDb: () => {
+      const activeClientDbName = state$.EMAIL_CLIENT.activeClientDbName.get();
       const newClientDb = initClientDb(activeClientDbName);
       state$.EMAIL_CLIENT.clientDb.set((prev) => {
         return {

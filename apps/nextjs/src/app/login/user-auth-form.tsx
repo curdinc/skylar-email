@@ -5,7 +5,7 @@ import React from "react";
 import { BrandIcons } from "~/components/icons/brand-icons";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/ui";
-import { useLogin } from "./useLogin";
+import { useLogin } from "./use-login";
 
 type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 

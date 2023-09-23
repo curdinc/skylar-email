@@ -1,6 +1,6 @@
-import { EmailType } from "../../schema/email";
-import { ThreadType } from "../../schema/thread";
-import { ClientDb } from "../db";
+import type { EmailType } from "../../schema/email";
+import type { ThreadType } from "../../schema/thread";
+import type { ClientDb } from "../db";
 
 function buildSearchableString(text: string) {
   const allWordsIncludingDuplicates = text.split(" ");
@@ -83,7 +83,7 @@ export async function bulkPutEmails({
   emails: EmailType[];
 }) {
   await db.transaction("rw", db.email, db.thread, async () => {
-    await db.email.bulkAdd(emails);
-    await db.thread.bulkAdd(buildThreadList(emails));
+    await db.email.bulkPut(emails);
+    await db.thread.bulkPut(buildThreadList(emails));
   });
 }

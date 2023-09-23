@@ -1,15 +1,16 @@
-import { ThreadIndexType, ThreadType } from "../../schema/thread";
-import { ClientDb } from "../db";
+import type { ThreadIndexType, ThreadType } from "../../schema/thread";
+import type { ClientDb } from "../db";
 
 export async function getLatestThreadSnippets({
-  db,
+  getDb,
   limit = 25,
   lastEntry,
 }: {
-  db: ClientDb;
+  getDb: () => ClientDb;
   limit?: number;
   lastEntry?: ThreadType;
 }) {
+  const db = getDb();
   if (lastEntry) {
     return db.thread
       .where("updated_at")

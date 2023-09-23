@@ -26,14 +26,13 @@ export function useConnectEmailProviderPage() {
 
   const [isConnectingToEmailProvider, setIsConnectingToEmailProvider] =
     useState(false);
-  const { mutate: exchangeCode } =
-    api.emailProviderRouter.googleCodeExchange.useMutation({
-      onSuccess(emailProviderInfo) {
-        router.push("/onboarding/card");
-        state$.EMAIL_CLIENT.activeClientDbName.set(emailProviderInfo.email);
-        setIsConnectingToEmailProvider(false);
-      },
-    });
+  const { mutate: exchangeCode } = api.oauth.googleCodeExchange.useMutation({
+    onSuccess(emailProviderInfo) {
+      router.push("/onboarding/card");
+      state$.EMAIL_CLIENT.activeClientDbName.set(emailProviderInfo.email);
+      setIsConnectingToEmailProvider(false);
+    },
+  });
   const initiateConnectToGmail = useGoogleLogin({
     flow: "auth-code",
     scope: GMAIL_SCOPES,
