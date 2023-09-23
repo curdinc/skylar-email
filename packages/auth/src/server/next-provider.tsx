@@ -62,13 +62,7 @@ export async function NextAuthProvider({
     path: pathName,
     queryParams,
   };
-  // we do not guard if there is a `code` query param bc supabase uses that to do auth on the client side after the page loads.
-  // a little hacky right now
-  if (
-    authSettings?.guardByDefault &&
-    !session.data.session &&
-    !queryParams.has("code")
-  ) {
+  if (authSettings?.guardByDefault && !session.data.session) {
     if (typeof authSettings.onUnauthenticatedRedirectTo === "object") {
       if (!isPathEqual(authSettings.onUnauthenticatedRedirectTo, currentPath)) {
         redirect(pathToString(authSettings.onUnauthenticatedRedirectTo));
