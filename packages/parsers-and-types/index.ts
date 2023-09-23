@@ -4,9 +4,11 @@ export {
   gmailProviderIDTokenSchema,
   gmailWatchResponseSchema,
   historyObjectSchema,
+  messageListResponseSchema,
   messageResponseSchema,
   type GmailPushNotificationType,
   type MessagePartType,
+  type historyObjectType,
 } from "./src/api/email-provider/gmail-provider";
 
 export { SUPPORTED_EMAIL_CATEGORIES } from "./src/api/email";

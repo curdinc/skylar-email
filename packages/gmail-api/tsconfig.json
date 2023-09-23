@@ -1,0 +1,8 @@
+{
+  "extends": "@skylar/tsconfig/base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+  },
+  "include": ["*.ts", "src", "../api/src/router/providers/gmail.ts"],
+  "exclude": ["node_modules"]
+}

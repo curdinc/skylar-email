@@ -1,30 +1,78 @@
 import type { Logger } from "@skylar/logger";
 import type { MessagePartType } from "@skylar/parsers-and-types";
 
-import { getInboxHistory, getMessage } from "./api";
+type emailSenderType = { name?: string; email: string };
+function parseEmailSenderValue(value: string) {
+  const stripStr = value.trim();
+  if (stripStr.indexOf("<") < 0) {
+    return {
+      email: stripStr,
+    };
+  }
+  const splitStr = stripStr.split("<");
+  const firstPart = splitStr[0]!;
+
+  const firstChar = firstPart.at(0);
+
+  const name = firstChar == '"' ? "" : splitStr[0]?.trim();
+  const email = splitStr[1]!.replace(">", "");
+  return {
+    name,
+    email,
+  };
+}
 
 export function getEmailMetadata(
   messageHeaders: { name: string; value: string }[],
 ) {
-  const emailHeaders = {
-    from: "",
+  const emailHeaders: {
+    from: emailSenderType;
+    subject: string;
+    inReplyTo: emailSenderType;
+    bcc: emailSenderType;
+    cc: emailSenderType[];
+    createdAt: Date;
+    deliveredTo: emailSenderType;
+    replyTo: emailSenderType[];
+  } = {
+    from: { email: "" },
     subject: "",
-    name: "",
-    timestamp: new Date(),
+    inReplyTo: { email: "" },
+    bcc: { email: "" },
+    cc: [],
+    deliveredTo: { email: "" },
+    replyTo: [],
+    createdAt: new Date(),
   };
 
   for (const header of messageHeaders) {
     if (header.name === "Date") {
-      emailHeaders.timestamp = new Date(header.value);
+      emailHeaders.createdAt = new Date(header.value);
     }
     if (header.name === "Subject") {
       emailHeaders.subject = header.value;
     }
+    if (header.name === "In-Reply-To") {
+      emailHeaders.inReplyTo = parseEmailSenderValue(header.value);
+    }
+    if (header.name === "Bcc") {
+      emailHeaders.bcc = parseEmailSenderValue(header.value);
+    }
+    if (header.name === "Cc") {
+      emailHeaders.cc = header.value
+        .split(",")
+        .map((val) => parseEmailSenderValue(val));
+    }
     if (header.name === "From") {
-      const fromEmail = header.value?.match(/<(.*)>/)?.[1];
-      const fromName = header.value?.split(" ")[0];
-      emailHeaders.name = fromName ?? "";
-      emailHeaders.from = fromEmail ?? "";
+      emailHeaders.from = parseEmailSenderValue(header.value);
+    }
+    if (header.name === "Reply-To") {
+      emailHeaders.replyTo = header.value
+        .split(",")
+        .map((val) => parseEmailSenderValue(val));
+    }
+    if (header.name === "Delivered-To") {
+      emailHeaders.from = parseEmailSenderValue(header.value);
     }
   }
 
@@ -49,11 +97,11 @@ export function getEmailBody({
   };
 
   for (const payload of payloads) {
-    if (!payload.parts) {
-      continue;
-    }
     if (payload.mimeType === "multipart/alternative") {
       // text/plain + text/html
+      if (!payload.parts) {
+        continue;
+      }
       for (const part of payload.parts) {
         if (!part.body.data) {
           continue;
@@ -63,7 +111,8 @@ export function getEmailBody({
         } else if (part.mimeType === "text/html") {
           data.html.push(part.body.data);
         } else {
-          logger.debug("unhandled mimeType", {
+          logger.debug("unhandled multipart/alternative mimeType", {
+            mimeType: payload.mimeType,
             emailId,
             payload,
             mid,
@@ -71,6 +120,9 @@ export function getEmailBody({
         }
       }
     } else if (payload.mimeType === "multipart/mixed") {
+      if (!payload.parts) {
+        continue;
+      }
       const pieces = getEmailBody({
         payloads: payload.parts,
         mid,
@@ -81,6 +133,9 @@ export function getEmailBody({
       data.html = data.html.concat(pieces.html);
       data.plain = data.plain.concat(pieces.plain);
     } else if (payload.mimeType === "multipart/related") {
+      if (!payload.parts) {
+        continue;
+      }
       const pieces = getEmailBody({
         payloads: payload.parts,
         mid,
@@ -91,6 +146,9 @@ export function getEmailBody({
       data.html = data.html.concat(pieces.html);
       data.plain = data.plain.concat(pieces.plain);
     } else if (payload.mimeType === "multipart/report") {
+      if (!payload.parts) {
+        continue;
+      }
       const pieces = getEmailBody({
         payloads: payload.parts,
         mid,
@@ -112,74 +170,10 @@ export function getEmailBody({
       logger.debug("unhandled mimeType", {
         mimeType: payload.mimeType,
         emailId,
+        payload,
         mid,
       });
     }
   }
   return data;
-}
-
-export async function getMessages({
-  emailId,
-  startHistoryId,
-  accessToken,
-  logger,
-}: {
-  emailId: string;
-  startHistoryId: string;
-  accessToken: string;
-  logger: Logger;
-}) {
-  const inboxHistory = await getInboxHistory({
-    emailId,
-    startHistoryId,
-    accessToken,
-  });
-
-  const messageIds = inboxHistory.history
-    .map((historyItem) => historyItem.messagesAdded)
-    .flat(1)
-    .map((messageMetadata) => messageMetadata.message);
-
-  // TODO: filter if they are unique
-  const messageDataResponse = await Promise.allSettled(
-    messageIds.map(async (mid) => {
-      const msg = await getMessage({
-        accessToken: accessToken,
-        emailId: emailId,
-        messageId: mid.id,
-      });
-      const emailMetadata = getEmailMetadata(msg.payload.headers);
-      const emailData = getEmailBody({
-        payloads: [msg.payload],
-        mid: mid.id,
-        emailId,
-        logger,
-      });
-      return { emailMetadata, emailData };
-    }),
-  );
-
-  const messageData = messageDataResponse
-    .map((m) => {
-      if (m.status === "fulfilled") {
-        return m.value;
-      }
-      console.log(m.reason);
-    })
-    .filter((m) => !!m) as {
-    emailMetadata: {
-      from: string;
-      subject: string;
-      name: string;
-      timestamp: Date;
-    };
-    emailData: {
-      html: string[];
-      plain: string[];
-      attachments: string[];
-    };
-  }[];
-
-  return messageData;
 }

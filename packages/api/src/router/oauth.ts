@@ -2,13 +2,13 @@ import { TRPCError } from "@trpc/server";
 import jwt from "@tsndr/cloudflare-worker-jwt";
 
 import { insertEmailProviderDetail, insertGmailProvider } from "@skylar/db";
+import { getAccessToken } from "@skylar/gmail-api";
 import {
   gmailProviderIDTokenSchema,
   oauthOnboardingSchema,
   validatorTrpcWrapper,
 } from "@skylar/parsers-and-types";
 
-import { getAccessToken } from "../components/provider_logic/gmail/api";
 import { createTRPCRouter } from "../trpc/factory";
 import { protectedProcedure } from "../trpc/procedures";
 

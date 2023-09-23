@@ -37,40 +37,6 @@ function getEnvVars(
   }
 }
 
-// provider routes
-app.use("/gmail.incomingEmail", async (c) => {
-  const envVars = getEnvVars(c);
-
-  const db = getDb(envVars.DATABASE_URL);
-  const logger = getServerLogger({
-    req: c.req.raw,
-    token: envVars.AXIOM_TOKEN,
-    dataset: envVars.AXIOM_DATASET,
-    orgId: envVars.AXIOM_ORG_ID,
-    url: envVars.AXIOM_URL,
-  });
-
-  const caller = appRouter.createCaller(
-    await createTRPCContext({
-      req: c.req.raw,
-      env: {
-        JWT_SECRET: envVars.SUPABASE_JWT_SECRET,
-        GOOGLE_PROVIDER_CLIENT_ID: envVars.GOOGLE_PROVIDER_CLIENT_ID,
-        GOOGLE_PROVIDER_CLIENT_SECRET: envVars.GOOGLE_PROVIDER_CLIENT_SECRET,
-        STRIPE_SECRET_KEY: envVars.STRIPE_SECRET_KEY,
-      },
-      db,
-      logger,
-    }),
-  );
-
-  logger.debug(c.req.url);
-  const result = await caller.gmail.incomingEmail(await c.req.json());
-
-  await logger.flush();
-  return c.json(result);
-});
-
 // TRPC routes
 app.options("/trpc/*", (c) => {
   const response = c.newResponse(null, { status: 204 });

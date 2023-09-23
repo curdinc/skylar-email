@@ -9,6 +9,8 @@ import * as gmailProvider from "./schema/providers/gmail/provider";
 import * as stripeCustomer from "./schema/stripe";
 import * as user from "./schema/user";
 
+export { getGmailRefreshToken } from "./src/email-providers/get-gmail-refresh-token";
+
 export { and, eq } from "drizzle-orm";
 
 // ! Note that you have to import everything including the relation in order for the db object to infer the correct types

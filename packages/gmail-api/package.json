@@ -1,9 +1,17 @@
 {
-  "name": "@skylar/api",
-  "version": "0.1.0",
+  "name": "@skylar/gmail-api",
   "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./*"
+      ]
+    }
+  },
   "license": "MIT",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
@@ -12,27 +20,18 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@skylar/auth": "^0.1.0",
-    "@skylar/db": "^0.1.0",
-    "@skylar/gmail-api": "^0.1.0",
+    "@skylar/logger": "^0.1.0",
     "@skylar/parsers-and-types": "^0.1.0",
-    "@trpc/client": "^10.38.1",
-    "@trpc/server": "^10.38.1",
-    "@tsndr/cloudflare-worker-jwt": "^2.2.2",
-    "stripe": "^13.5.0",
-    "superjson": "1.13.1"
+    "exponential-backoff": "^3.1.1"
   },
   "devDependencies": {
-    "@skylar/eslint-config": "^0.2.0",
-    "@skylar/logger": "^0.1.0",
+    "@skylar/eslint-config": "0.2.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
     "eslint": "^8.48.0",
-    "prettier": "^3.0.3",
     "typescript": "^5.2.2"
   },
   "eslintConfig": {
-    "root": true,
     "extends": [
       "@skylar/eslint-config/base"
     ]

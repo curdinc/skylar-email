@@ -91,6 +91,7 @@ const messageMetadataSchema = object({
 });
 
 const historyItemSchema = object({
+  messages: array(messageMetadataSchema),
   messagesAdded: array(messageMetadataSchema),
 });
 
@@ -102,6 +103,25 @@ export const historyObjectSchema = object({
 
 export const messageResponseSchema = object({
   payload: messagePartSchema,
+  historyId: string(),
+  snippet: string(),
+  id: string(),
+  labelIds: array(string()),
 });
+
+export const messageListResponseSchema = object({
+  messages: array(
+    object({
+      threadId: string(),
+      id: string(),
+    }),
+  ),
+  nextPageToken: optional(string()),
+  resultSizeEstimate: number(),
+});
+
+export type historyObjectType = Output<typeof historyObjectSchema>;
+
+export type messageListResponseType = Output<typeof messageListResponseSchema>;
 
 export type MessagePartType = Output<typeof messagePartSchema>;
