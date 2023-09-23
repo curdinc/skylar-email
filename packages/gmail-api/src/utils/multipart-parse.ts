@@ -1,8 +1,14 @@
+/* eslint-disable */
+// source: https://stackoverflow.com/questions/66149669/javascript-fetch-fails-to-read-multipart-response-from-gmail-api-batch-request
+
 export class MultipartMixedService {
   static async parseAsync(r: Response): Promise<MultipartMixedEntry[]> {
     const text = await r.text();
     const contentType = r.headers.get("Content-Type");
 
+    if (!contentType) {
+      throw new Error("null content type");
+    }
     return this.parse(text, contentType);
   }
 
@@ -18,7 +24,7 @@ export class MultipartMixedService {
 
     let line: string;
     let pos = -1;
-    let currEntry: MultipartMixedEntry = null;
+    let currEntry: MultipartMixedEntry | null = null;
     let parsingEntryHeaders = false;
     let parsingBodyHeaders = false;
     let parsingBodyFirstLine = false;
@@ -75,10 +81,13 @@ export class MultipartMixedService {
             : currEntry.bodyHeaders;
           const headerParts = line.split(":", 2);
 
+          if (headerParts.length === 0) {
+            throw new Error("Invalid Header Parts length");
+          }
           if (headerParts.length == 1) {
-            headers.append("X-Extra", headerParts[0].trim());
+            headers.append("X-Extra", headerParts[0]!.trim());
           } else {
-            headers.append(headerParts[0]?.trim(), headerParts[1].trim());
+            headers.append(headerParts[0]!.trim(), headerParts[1]!.trim());
           }
         } else {
           // Body
@@ -100,13 +109,13 @@ export class MultipartMixedService {
     result.fullText = headerValue;
 
     const parts = headerValue.split(/;/g);
-    result.value = parts[0];
+    result.value = parts[0]!;
 
     for (let i = 1; i < parts.length; i++) {
-      const part = parts[i].trim();
+      const part = parts[i]!.trim();
       const partData = part.split("=", 2);
 
-      result.directives.append(partData[0], partData[1]);
+      result.directives.append(partData[0]!, partData[1]!);
     }
 
     return result;
@@ -117,10 +126,10 @@ export class MultipartMixedService {
 
     let line = text.substring(
       lastPos + 1,
-      nextLinePos == -1 ? null : nextLinePos,
+      nextLinePos == -1 ? undefined : nextLinePos,
     );
     while (line.endsWith("\r")) {
-      line = line.substr(0, line.length - 1);
+      line = line.substring(0, line.length - 1);
     }
 
     return [line, nextLinePos];
@@ -139,7 +148,7 @@ export class MultipartMixedEntry {
 }
 
 export class HeaderData {
-  fullText: string;
-  value: string;
+  fullText: string = "";
+  value: string = "";
   directives: Headers = new Headers();
 }

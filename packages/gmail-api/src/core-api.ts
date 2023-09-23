@@ -1,10 +1,9 @@
-import { TRPCError } from "@trpc/server";
-
 import type {
   Oauth2InitialTokenResponse,
   Oauth2TokenFromRefreshTokenResponse,
 } from "@skylar/parsers-and-types";
 import {
+  formatValidatorError,
   gmailWatchResponseSchema,
   historyObjectSchema,
   messageListResponseSchema,
@@ -12,7 +11,7 @@ import {
   parse,
 } from "@skylar/parsers-and-types";
 
-import { MultipartMixedService } from "./multipart-parse";
+import { MultipartMixedService } from "./utils/multipart-parse";
 
 export async function getAccessToken<
   T extends "refresh_token" | "authorization_code",
@@ -60,10 +59,7 @@ export async function getAccessToken<
     },
   );
   if (!res.ok) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: `Failed to get access token. Error: ${await res.text()}`,
-    });
+    throw new Error(`Failed to get access token. cause: ${await res.text()}`);
   }
   return await res.json();
 }
@@ -89,11 +85,9 @@ export async function watchGmailInbox(emailId: string, accessToken: string) {
     },
   );
   if (!res.ok) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: `Failed to subscribe to gmail account ${emailId}`,
-      cause: await res.text(),
-    });
+    throw new Error(
+      `Failed to subscribe to gmail account ${emailId}. cause: ${await res.text()}`,
+    );
   }
 
   const watchResponse = parse(gmailWatchResponseSchema, await res.json());
@@ -128,11 +122,9 @@ export async function getInboxHistory({
     },
   );
   if (!res.ok) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: `Failed to get history for ${emailId}.`,
-      cause: await res.text(),
-    });
+    throw new Error(
+      `Failed to get history for ${emailId}. cause: ${await res.text()}`,
+    );
   }
 
   const data = await res.json();
@@ -161,11 +153,9 @@ export async function getMessage({
     },
   );
   if (!res.ok) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: `Failed to get history for ${emailId}.`,
-      cause: await res.text(),
-    });
+    throw new Error(
+      `Failed to get history for ${emailId}. cause: ${await res.text()}`,
+    );
   }
 
   const data = parse(messageResponseSchema, await res.json());
@@ -175,19 +165,19 @@ export async function getMessage({
 export async function getMessageList({
   emailId,
   accessToken,
-  pageToken = undefined,
+  pageToken,
   maxResults = 500,
 }: {
   emailId: string;
   accessToken: string;
-  pageToken?: undefined | string;
+  pageToken?: string;
   maxResults?: number;
 }) {
   if (maxResults > 500) {
     throw new Error("Cannot show more than 500 messages.");
   }
   let url = `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages?maxResults=${maxResults}`;
-  if (pageToken) {
+  if (pageToken && pageToken !== "") {
     url += `&pageToken=${pageToken}`;
   }
 
@@ -200,18 +190,16 @@ export async function getMessageList({
     headers: headers,
   });
   if (!res.ok) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: `Failed to get history for ${emailId}.`,
-      cause: await res.text(),
-    });
+    throw new Error(
+      `Failed to get history for ${emailId}. cause: ${await res.text()}`,
+    );
   }
-
-  const data = parse(messageListResponseSchema, await res.json());
-  return data;
+  const data = await res.json();
+  const parsedData = parse(messageListResponseSchema, data);
+  return parsedData;
 }
 
-export async function batchGetMessages({
+export async function batchGetMessage({
   messageIds,
   accessToken,
   emailId,
@@ -220,6 +208,9 @@ export async function batchGetMessages({
   accessToken: string;
   emailId: string;
 }) {
+  if (messageIds.length > 100) {
+    throw new Error("Cannot batch more than 100 requests.");
+  }
   const boundary = "yellow_lemonades_" + Date.now();
   const url = "https://gmail.googleapis.com/batch/gmail/v1";
 
@@ -235,8 +226,6 @@ export async function batchGetMessages({
       })
       .join("") + `--${boundary}--`;
 
-  console.log("batchRequestBody", batchRequestBody);
-
   const headers = new Headers({
     "Content-Type": `multipart/form-data; boundary=${boundary}`,
     Authorization: `Bearer ${accessToken}`,
@@ -247,17 +236,20 @@ export async function batchGetMessages({
     body: batchRequestBody,
   });
   if (!res.ok) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: `Failed to get messages.`,
-      cause: await res.text(),
-    });
+    throw new Error(`Failed to get messages. cause: ${await res.text()}`);
   }
 
   const contentData = await MultipartMixedService.parseAsync(res);
 
   const messageData = contentData.map((data) => {
-    return parse(messageResponseSchema, data.json());
+    try {
+      return parse(messageResponseSchema, data.json());
+    } catch (e) {
+      console.log("data.json()", data.json());
+      console.log(JSON.stringify(formatValidatorError(e), null, 2));
+      throw e;
+    }
   });
-  console.log("m", messageData);
+
+  return messageData;
 }
