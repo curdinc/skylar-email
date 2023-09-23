@@ -27,6 +27,5 @@ export async function fullSync({
     threadIds,
     logger,
   });
-
   return emailDataMerged;
 }

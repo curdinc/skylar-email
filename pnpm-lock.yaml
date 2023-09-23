@@ -479,6 +479,9 @@ importers:
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../parsers-and-types
+      exponential-backoff:
+        specifier: ^3.1.1
+        version: 3.1.1
     devDependencies:
       '@skylar/eslint-config':
         specifier: 0.2.0
@@ -7566,6 +7569,10 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /exponential-backoff@3.1.1:
+    resolution: {integrity: sha512-dX7e/LHVJ6W3DE1MHWi9S1EYzDESENfLrYohG2G++ovZrYOkm4Knwa0mc1cn84xJOR4KEU0WSchhLbd0UklbHw==}
     dev: false
 
   /ext@1.7.0:

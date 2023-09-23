@@ -1,3 +1,5 @@
+import { backOff } from "exponential-backoff";
+
 import { batchGetMessage, getMessageList } from "./core-api";
 
 export function splitToNChunks<T>(array: T[], n: number) {
@@ -21,15 +23,32 @@ export async function getMessageUnbounded({
   const messageIdChunks = splitToNChunks(messageIds, 100);
   // iterate over slices of 100
   const messageIdBatchPromises = messageIdChunks.map((chunk) =>
-    batchGetMessage({
-      accessToken,
-      emailId,
-      messageIds: chunk,
-    }),
+    backOff(
+      () =>
+        batchGetMessage({
+          accessToken,
+          emailId,
+          messageIds: chunk,
+        }),
+      {
+        startingDelay: 250,
+        timeMultiple: 4,
+        jitter: "full",
+      },
+    ),
   );
 
-  const messageDataBatches = await Promise.all(messageIdBatchPromises);
-  return messageDataBatches.flat();
+  const rawMessageDataBatches = await Promise.allSettled(
+    messageIdBatchPromises,
+  );
+  const parseMessageDataBatches = rawMessageDataBatches.map((m) => {
+    if (m.status === "fulfilled") {
+      return m.value;
+    }
+    console.error(`Failed to retrieve message batch. Error: ${m.reason} `);
+    return [];
+  });
+  return parseMessageDataBatches.flat();
 }
 
 export async function getMessageListUnbounded({
@@ -62,3 +81,37 @@ export async function getMessageListUnbounded({
   }
   return messageListResponses;
 }
+
+// export async function getHistoryListUnbounded({
+//   emailId,
+//   accessToken,
+//   startHistoryId,
+//   pageToken,
+// }: {
+//   emailId: string;
+//   startHistoryId: string;
+//   accessToken: string;
+//   pageToken?: string;
+// }) {
+//   // this requires pageToken so cannot use promises
+//   let historyListResponses: historyObjectType[] = [];
+//   let pageTokenIterable = pageToken;
+//   // let it sweep the entire list
+//   if (!pageToken) {
+//     pageTokenIterable = "";
+//   }
+
+//   while (pageTokenIterable !== undefined) {
+//     const messageListResponse = await getHistoryList({
+//       accessToken,
+//       emailId,
+//       startHistoryId,
+//       pageToken: pageTokenIterable,
+//     });
+//     historyListResponses = historyListResponses.concat(
+//       messageListResponse.messages,
+//     );
+//     pageTokenIterable = messageListResponse.nextPageToken;
+//   }
+//   return historyListResponses;
+// }

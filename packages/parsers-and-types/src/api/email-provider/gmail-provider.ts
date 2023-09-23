@@ -119,6 +119,8 @@ export const messageListResponseSchema = object({
   resultSizeEstimate: number(),
 });
 
+export type historyObjectType = Output<typeof historyObjectSchema>;
+
 export type messageListResponseType = Output<typeof messageListResponseSchema>;
 
 export type MessagePartType = Output<typeof messagePartSchema>;
