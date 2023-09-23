@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { useSignOut, useUser } from "@skylar/auth/client";
+import { useLogOut, useUser } from "@skylar/auth/client";
 
 import { cn } from "~/lib/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -20,7 +20,7 @@ import {
 
 export const DefaultNavCallToAction = () => {
   const user = useUser();
-  const signOut = useSignOut();
+  const signOut = useLogOut();
   let navItem = (
     <Link href="/login" className={cn(buttonVariants())}>
       Login

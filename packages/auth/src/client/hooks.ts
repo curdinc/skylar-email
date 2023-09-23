@@ -18,7 +18,7 @@ export function useUser(): UserType | undefined {
   return mapSupabaseUserToUser(parse(SupabaseUserSchema, user));
 }
 
-export function useSignOut() {
+export function useLogOut() {
   const client = useSupabaseClient();
   return async () => {
     await client.auth.signOut();
@@ -30,7 +30,7 @@ type OauthArgs = {
   scopes?: string;
 };
 
-export function useSignInWithGithub(args?: OauthArgs) {
+export function useLoginWithGithub(args?: OauthArgs) {
   const client = useSupabaseClient();
   return async () => {
     await client.auth.signInWithOAuth({
@@ -42,7 +42,7 @@ export function useSignInWithGithub(args?: OauthArgs) {
   };
 }
 
-export function useSignInWithDiscord(args?: OauthArgs) {
+export function useLoginWithDiscord(args?: OauthArgs) {
   const client = useSupabaseClient();
   return async () => {
     await client.auth.signInWithOAuth({
@@ -52,7 +52,7 @@ export function useSignInWithDiscord(args?: OauthArgs) {
   };
 }
 
-export function useSignInWithFacebook(args?: OauthArgs) {
+export function useLoginWithFacebook(args?: OauthArgs) {
   const client = useSupabaseClient();
   return async () => {
     await client.auth.signInWithOAuth({
