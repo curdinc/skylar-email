@@ -16,7 +16,7 @@ export default function EmailClientLayout({
         <TopNav items={dashboardConfig.mainNav} />
       </header>
       <ClientLayout />
-      <main className="flex-1">{children}</main>
+      <main className="container flex-1">{children}</main>
       <SiteFooter />
     </div>
   );
