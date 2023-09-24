@@ -1,5 +1,5 @@
+import { MainNav } from "~/components/nav/main-nav";
 import { SiteFooter } from "~/components/nav/site-footer";
-import { TopNav } from "~/components/nav/top-nav";
 import { marketingConfig } from "~/lib/config";
 
 export default function MarketingLayout({
@@ -10,7 +10,7 @@ export default function MarketingLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <header className="container z-40 bg-background">
-        <TopNav items={marketingConfig.mainNav} />
+        <MainNav items={marketingConfig.mainNav} />
       </header>
       <main className="flex-1">{children}</main>
       <SiteFooter />

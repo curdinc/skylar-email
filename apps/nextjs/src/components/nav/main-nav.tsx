@@ -7,7 +7,7 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import { cn } from "~/lib/ui";
 import { BrandIcons } from "../icons/brand-icons";
 import { DefaultNavCallToAction } from "./default-nav-call-to-action";
-import { TopNavMobile } from "./top-nav-mobile";
+import { MobileNav } from "./mobile-nav";
 
 export type MainNavItemType = {
   title: string;
@@ -20,7 +20,7 @@ type MainNavProps = {
   children?: React.ReactNode;
 };
 
-export function TopNav({ items, children }: MainNavProps) {
+export function MainNav({ items, children }: MainNavProps) {
   const segment = useSelectedLayoutSegment();
 
   return (
@@ -47,7 +47,7 @@ export function TopNav({ items, children }: MainNavProps) {
           </nav>
         ) : null}
       </div>
-      <TopNavMobile items={items}>{children}</TopNavMobile>
+      <MobileNav items={items}>{children}</MobileNav>
       <div className="hidden md:flex md:items-center">
         {children ?? <DefaultNavCallToAction />}
       </div>

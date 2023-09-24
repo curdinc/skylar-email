@@ -1,6 +1,6 @@
 import type { StripeElementsOptions } from "@stripe/stripe-js";
 
-import type { MainNavItemType } from "~/components/nav/top-nav";
+import type { MainNavItemType } from "~/components/nav/main-nav";
 
 export const siteConfig = {
   name: "Skylar",

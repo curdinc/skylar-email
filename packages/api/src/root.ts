@@ -1,5 +1,4 @@
 import { emailClientMeRouter } from "./router/email-client/me";
-import { inviteCodeRouter } from "./router/invite-code";
 import { oauthRouter } from "./router/oauth";
 import { onboardingRouter } from "./router/onboarding";
 import { gmailRouter } from "./router/providers/gmail";
@@ -12,7 +11,6 @@ export const appRouter = createTRPCRouter({
   onboarding: onboardingRouter,
   stripe: stripeRouter,
   me: emailClientMeRouter,
-  inviteCode: inviteCodeRouter,
 });
 
 // export type definition of API
