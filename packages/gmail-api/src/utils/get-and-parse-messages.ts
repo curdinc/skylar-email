@@ -1,4 +1,5 @@
 import type { Logger } from "@skylar/logger";
+import type { messageDetailsType } from "@skylar/parsers-and-types";
 
 import { getMessageUnbounded } from "../unbounded-core-api";
 import { getEmailBody, getEmailMetadata } from "./message-parse-utils";
@@ -13,7 +14,7 @@ export async function getAndParseMessages({
   accessToken: string;
   emailId: string;
   logger: Logger;
-}) {
+}): Promise<messageDetailsType[]> {
   const rawMessages = await getMessageUnbounded({
     messageIds,
     accessToken,

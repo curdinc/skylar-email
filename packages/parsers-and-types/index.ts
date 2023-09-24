@@ -7,8 +7,14 @@ export {
   messageListResponseSchema,
   messageResponseSchema,
   type GmailPushNotificationType,
+  type HistoryObjectType,
   type MessagePartType,
-  type historyObjectType,
+  type ModifiedLabelType,
+  type SyncResponseType,
+  type emailBodyParseResultType,
+  type emailMetadataParseResultType,
+  type emailSenderType,
+  type messageDetailsType,
 } from "./src/api/email-provider/gmail-provider";
 
 export { SUPPORTED_EMAIL_CATEGORIES } from "./src/api/email";

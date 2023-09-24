@@ -1,13 +1,15 @@
 import { backOff } from "exponential-backoff";
 
-import type { historyObjectType } from "@skylar/parsers-and-types";
+import type { HistoryObjectType } from "@skylar/parsers-and-types";
 
+import { GMAIL_MAX_BATCH_REQUEST_SIZE } from "./constants";
 import { batchGetMessage, getHistoryList, getMessageList } from "./core-api";
 
 export function splitToNChunks<T>(array: T[], n: number) {
+  const maxIterations = Math.ceil(array.length / n);
   const result = [];
-  for (let i = n; i > 0; i--) {
-    result.push(array.splice(0, Math.ceil(array.length / i)));
+  for (let i = 0; i < maxIterations; ++i) {
+    result.push(array.splice(0, n));
   }
   return result;
 }
@@ -22,7 +24,10 @@ export async function getMessageUnbounded({
   emailId: string;
 }) {
   // create batches
-  const messageIdChunks = splitToNChunks(messageIds, 100);
+  const messageIdChunks = splitToNChunks(
+    messageIds,
+    GMAIL_MAX_BATCH_REQUEST_SIZE,
+  );
   // iterate over slices of 100
   const messageIdBatchPromises = messageIdChunks.map((chunk) =>
     backOff(
@@ -96,7 +101,7 @@ export async function getHistoryListUnbounded({
   pageToken?: string;
 }) {
   // this requires pageToken so cannot use promises
-  let historyListResponses: historyObjectType[] = [];
+  let historyListResponses: HistoryObjectType[] = [];
   let pageTokenIterable = pageToken;
   // let it sweep the entire list
   if (!pageToken) {
