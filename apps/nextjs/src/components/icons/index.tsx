@@ -51,5 +51,5 @@ export const Icons = {
   laptop: Laptop,
   check: Check,
   copy: Copy,
-  copyChecked: CopyCheck
+  copyChecked: CopyCheck,
 };
