@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 
 import { state$ } from "@skylar/logic";
+import type { SupportedEmailProviderType } from "@skylar/parsers-and-types";
 
 import { api } from "~/lib/api";
 import { GMAIL_SCOPES } from "~/lib/config";
@@ -15,11 +16,10 @@ export function useConnectEmailProviderPage() {
   const { isLoading: isCheckingUserOnboardStep } =
     useUserOnboardingRouteGuard();
 
-  const [emailProvider, setEmailProvider] = useState<"Gmail" | "Outlook">(
-    "Gmail",
-  );
+  const [emailProvider, setEmailProvider] =
+    useState<SupportedEmailProviderType>("gmail");
   const onSelectEmailProvider = (provider: string) => {
-    if (provider === "Gmail" || provider === "Outlook") {
+    if (provider === "gmail" || provider === "outlook") {
       setEmailProvider(provider);
     }
   };
@@ -29,7 +29,7 @@ export function useConnectEmailProviderPage() {
   const { mutate: exchangeCode } = api.oauth.googleCodeExchange.useMutation({
     onSuccess(emailProviderInfo) {
       router.push("/onboarding/card");
-      state$.EMAIL_CLIENT.activeClientDbName.set(emailProviderInfo.email);
+      state$.EMAIL_CLIENT.activeEmailClient.set(emailProviderInfo.email);
       setIsConnectingToEmailProvider(false);
     },
   });
@@ -70,6 +70,8 @@ export function useConnectEmailProviderPage() {
     isCheckingUserOnboardStep,
     onSelectEmailProvider,
     emailProvider,
+    emailProviderDisplayName:
+      emailProvider.charAt(0).toUpperCase() + emailProvider.slice(1),
     isConnectingToEmailProvider,
     connectToGmail,
     connectToOutlook,

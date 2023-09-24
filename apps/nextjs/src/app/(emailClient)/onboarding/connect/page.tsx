@@ -19,6 +19,7 @@ export default function ConnectEmailOnboardingForm() {
     isCheckingUserOnboardStep,
     onSelectEmailProvider,
     emailProvider,
+    emailProviderDisplayName,
     connectToGmail,
     connectToOutlook,
     isConnectingToEmailProvider,
@@ -69,11 +70,11 @@ export default function ConnectEmailOnboardingForm() {
           isLoading={isConnectingToEmailProvider}
           disabled={isCheckingUserOnboardStep}
           onClick={
-            emailProvider === "Gmail" ? connectToGmail : connectToOutlook
+            emailProvider === "gmail" ? connectToGmail : connectToOutlook
           }
           className="w-full"
         >
-          Connect to {emailProvider}
+          Connect to {emailProviderDisplayName}
         </Button>
       </CardFooter>
     </Card>
