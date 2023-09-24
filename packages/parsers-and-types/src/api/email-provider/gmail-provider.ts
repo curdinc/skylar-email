@@ -92,6 +92,7 @@ const messageMetadataSchema = object({
 
 const historyItemSchema = object({
   id: string(),
+  messages: array(messageMetadataSchema),
   messagesAdded: optional(array(object({ message: messageMetadataSchema }))),
   messagesDeleted: optional(array(object({ message: messageMetadataSchema }))),
   labelsAdded: optional(array(object({ message: messageMetadataSchema }))),
@@ -170,6 +171,7 @@ const syncResponseSchema = object({
   newMessages: array(messageDetailsSchema),
   messagesDeleted: optional(array(string())),
   labelsModified: optional(array(modifiedLabelSchema)),
+  lastCheckedHistoryId: string(),
 });
 
 export type emailMetadataParseResultType = Output<
