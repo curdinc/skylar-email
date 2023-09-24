@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 
 import type { DbType } from "../..";
 import { schema } from "../..";
@@ -11,7 +11,10 @@ export async function getInviteCodeByInviteCode({
   inviteCodeToFind: string;
 }) {
   const result = await db.query.inviteCode.findFirst({
-    where: eq(schema.inviteCode.inviteCode, inviteCodeToFind),
+    where: and(
+      eq(schema.inviteCode.inviteCode, inviteCodeToFind),
+      isNull(schema.inviteCode.deletedAt),
+    ),
     with: {
       usedByUser: {
         columns: {

@@ -13,7 +13,7 @@ type MobileNavProps = {
   children?: React.ReactNode;
 };
 
-export function MobileNav({ items, children }: MobileNavProps) {
+export function TopNavMobile({ items, children }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
