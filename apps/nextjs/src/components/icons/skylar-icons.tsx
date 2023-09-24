@@ -6,12 +6,17 @@ import { useUser } from "@skylar/auth/client";
 
 import { siteConfig } from "~/lib/config";
 import { cn } from "~/lib/ui";
-import SkylarLogoSrc from "../../../public/favicon-32x32.png";
 import { ImageLogo } from "../ui/image-logo";
 
 export const SkylarIcon = ({ className }: { className?: string }) => {
   return (
-    <ImageLogo src={SkylarLogoSrc} alt="Skylar Icon" className={className} />
+    <ImageLogo
+      src={"/favicon-32x32.png"}
+      alt="Skylar Icon"
+      className={className}
+      width={64}
+      height={64}
+    />
   );
 };
 
