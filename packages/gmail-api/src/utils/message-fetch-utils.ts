@@ -33,6 +33,12 @@ function parseMessageChangesFromHistoryObject(
         newLabels: m.message.labelIds,
       })) ?? [],
     );
+    labelsModified = labelsModified.concat(
+      historyObj.labelsRemoved?.map((m) => ({
+        mid: m.message.id,
+        newLabels: m.message.labelIds,
+      })) ?? [],
+    );
   });
   return {
     messagesAdded,
