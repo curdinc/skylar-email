@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import {
-  useSignInWithDiscord,
-  useSignInWithFacebook,
-  useSignInWithGithub,
+  useLoginWithDiscord,
+  useLoginWithFacebook,
+  useLoginWithGithub,
 } from "@skylar/auth/client";
 import { state$ } from "@skylar/logic";
 import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
@@ -26,13 +26,13 @@ export const useLogin = () => {
     );
   }, [redirectToPath]);
 
-  const signInWithGithub = useSignInWithGithub({
+  const signInWithGithub = useLoginWithGithub({
     redirectTo,
   });
-  const signInWithDiscord = useSignInWithDiscord({
+  const signInWithDiscord = useLoginWithDiscord({
     redirectTo,
   });
-  const signInWithFacebook = useSignInWithFacebook({
+  const signInWithFacebook = useLoginWithFacebook({
     redirectTo,
   });
 

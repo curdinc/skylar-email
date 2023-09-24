@@ -7,6 +7,9 @@ import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
 export const state$ = observable({
   ONBOARDING: { alphaCode: "" },
   LOGIN: { loggingInto: undefined as SupportedAuthProvidersType | undefined },
+  INVITE_CODE: {
+    inviteCodeIdBeingDeleted: undefined as number | undefined,
+  },
   EMAIL_CLIENT: {
     clientDb: {} as Record<string, ClientDb>,
     activeClientDbName: undefined as string | undefined,

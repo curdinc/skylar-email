@@ -44,7 +44,7 @@ function parseMessageChangesFromHistoryObject(
   return {
     messagesAdded,
     messagesDeleted,
-    labelsModified: labelsModified.reverse(), // reverse since history list is ascending
+    labelsModified: labelsModified.reverse(), // reverse since history list is ascending so dedupe takes last
   };
 }
 

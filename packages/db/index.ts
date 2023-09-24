@@ -37,6 +37,8 @@ export * from "./src/auth/get-user-by-provider-id";
 export * from "./src/auth/insert-new-user";
 
 export * from "./src/invite-code/apply-invite-code";
+export * from "./src/invite-code/create-invite-code";
+export * from "./src/invite-code/delete-invite-code";
 export * from "./src/invite-code/get-invite-code-by-invite-code";
 export * from "./src/invite-code/get-invite-code-used-by-user";
 export * from "./src/invite-code/get-user-invite-codes";

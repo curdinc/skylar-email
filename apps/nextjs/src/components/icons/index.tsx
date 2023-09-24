@@ -5,6 +5,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Command,
+  Copy,
+  CopyCheck,
   CreditCard,
   File,
   FileText,
@@ -12,6 +14,7 @@ import {
   Image,
   Laptop,
   Loader2,
+  Menu,
   Moon,
   MoreVertical,
   Pizza,
@@ -26,6 +29,7 @@ import {
 export const Icons = {
   logo: Command,
   close: X,
+  menu: Menu,
   spinner: Loader2,
   chevronLeft: ChevronLeft,
   chevronRight: ChevronRight,
@@ -46,4 +50,6 @@ export const Icons = {
   moon: Moon,
   laptop: Laptop,
   check: Check,
+  copy: Copy,
+  copyChecked: CopyCheck,
 };

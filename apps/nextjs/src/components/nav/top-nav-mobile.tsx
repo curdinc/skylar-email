@@ -2,17 +2,18 @@ import { useState } from "react";
 import Link from "next/link";
 
 import type { marketingConfig } from "~/lib/config";
-import { siteConfig } from "~/lib/config";
 import { cn } from "~/lib/ui";
 import { Icons } from "../icons";
+import { BrandIcons } from "../icons/brand-icons";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "../ui/sheet";
+import { DefaultNavCallToAction } from "./default-nav-call-to-action";
 
 type MobileNavProps = {
   items?: (typeof marketingConfig)["mainNav"];
   children?: React.ReactNode;
 };
 
-export function MobileNav({ items, children }: MobileNavProps) {
+export function TopNavMobile({ items, children }: MobileNavProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -22,15 +23,12 @@ export function MobileNav({ items, children }: MobileNavProps) {
       }}
     >
       <SheetTrigger className="flex grow justify-end md:hidden">
-        {isOpen ? <Icons.close /> : <Icons.logo />}
+        {isOpen ? <Icons.close /> : <Icons.menu />}
       </SheetTrigger>
 
-      <SheetContent side={"top"}>
+      <SheetContent side={"right"} className="flex flex-col">
         <SheetHeader>
-          <Link href="/" className="flex items-center space-x-2">
-            <Icons.logo />
-            <span className="font-bold">{siteConfig.name}</span>
-          </Link>
+          <BrandIcons.skylarIconWithText textClassName="inline-block" />
         </SheetHeader>
         {items?.length ? (
           <nav className="grid grid-flow-row auto-rows-max text-sm">
@@ -48,7 +46,11 @@ export function MobileNav({ items, children }: MobileNavProps) {
             ))}
           </nav>
         ) : null}
-        {children}
+        {children ?? (
+          <div className="flex grow items-end">
+            <DefaultNavCallToAction />
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

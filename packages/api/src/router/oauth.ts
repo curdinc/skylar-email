@@ -6,6 +6,7 @@ import { getAccessToken } from "@skylar/gmail-api";
 import {
   gmailProviderIDTokenSchema,
   oauthOnboardingSchema,
+  parse,
   validatorTrpcWrapper,
 } from "@skylar/parsers-and-types";
 
@@ -39,9 +40,10 @@ export const oauthRouter = createTRPCRouter({
 
         const { payload } = jwt.decode(parsedResponse.id_token);
 
-        const { email, name, picture } = validatorTrpcWrapper(
+        const { email, name, picture } = parse(
           gmailProviderIDTokenSchema,
-        )(payload);
+          payload,
+        );
 
         const emailProviderDetail = await insertEmailProviderDetail({
           db,
