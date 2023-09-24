@@ -11,7 +11,11 @@ import {
   parse,
 } from "@skylar/parsers-and-types";
 
-import { MultipartMixedService } from "./utils/multipart-parse";
+import {
+  GMAIL_MAX_BATCH_REQUEST_SIZE,
+  GMAIL_MAX_MESSAGE_LIST_REQUEST_SIZE,
+} from "./constants";
+import { MultipartMixedService } from "./utils/multipart-parser";
 
 export async function getAccessToken<
   T extends "refresh_token" | "authorization_code",
@@ -131,8 +135,13 @@ export async function getHistoryList({
   }
 
   const data = await res.json();
-  const parsedResponse = parse(historyObjectSchema, data);
-  return parsedResponse;
+  try {
+    const parsedResponse = parse(historyObjectSchema, data);
+    return parsedResponse;
+  } catch (e) {
+    console.log(JSON.stringify(formatValidatorError(e), null, 2));
+    throw e;
+  }
 }
 
 export async function getMessage({
@@ -169,15 +178,17 @@ export async function getMessageList({
   emailId,
   accessToken,
   pageToken,
-  maxResults = 500,
+  maxResults = GMAIL_MAX_MESSAGE_LIST_REQUEST_SIZE,
 }: {
   emailId: string;
   accessToken: string;
   pageToken?: string;
   maxResults?: number;
 }) {
-  if (maxResults > 500) {
-    throw new Error("Cannot show more than 500 messages.");
+  if (maxResults > GMAIL_MAX_MESSAGE_LIST_REQUEST_SIZE) {
+    throw new Error(
+      `Cannot show more than ${GMAIL_MAX_MESSAGE_LIST_REQUEST_SIZE} messages.`,
+    );
   }
   let url = `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages?maxResults=${maxResults}`;
   if (pageToken && pageToken !== "") {
@@ -211,8 +222,10 @@ export async function batchGetMessage({
   accessToken: string;
   emailId: string;
 }) {
-  if (messageIds.length > 100) {
-    throw new Error("Cannot batch more than 100 requests.");
+  if (messageIds.length > GMAIL_MAX_BATCH_REQUEST_SIZE) {
+    throw new Error(
+      `Cannot batch more than ${GMAIL_MAX_BATCH_REQUEST_SIZE} requests.`,
+    );
   }
   const boundary = "yellow_lemonades_" + Date.now();
   const url = "https://gmail.googleapis.com/batch/gmail/v1";

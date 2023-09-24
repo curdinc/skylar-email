@@ -1,7 +1,12 @@
 import type { Logger } from "@skylar/logger";
-import type { MessagePartType } from "@skylar/parsers-and-types";
+import type {
+  emailBodyParseResultType,
+  emailMetadataParseResultType,
+  emailSenderType,
+  MessagePartType,
+} from "@skylar/parsers-and-types";
 
-type emailSenderType = { name?: string; email: string };
+// parses "email", "<email>", "firstname lastname <email>"
 function parseEmailSenderValue(value: string) {
   const stripStr = value.trim();
   if (stripStr.indexOf("<") < 0) {
@@ -24,7 +29,7 @@ function parseEmailSenderValue(value: string) {
 
 export function getEmailMetadata(
   messageHeaders: { name: string; value: string }[],
-) {
+): emailMetadataParseResultType {
   const emailHeaders: {
     from: emailSenderType;
     subject: string;
@@ -89,8 +94,8 @@ export function getEmailBody({
   mid: string;
   logger: Logger;
   emailId: string;
-}) {
-  const data: { html: string[]; plain: string[]; attachments: string[] } = {
+}): emailBodyParseResultType {
+  const data: emailBodyParseResultType = {
     html: [],
     plain: [],
     attachments: [],
@@ -114,7 +119,6 @@ export function getEmailBody({
           logger.debug("unhandled multipart/alternative mimeType", {
             mimeType: payload.mimeType,
             emailId,
-            payload,
             mid,
           });
         }
@@ -170,7 +174,6 @@ export function getEmailBody({
       logger.debug("unhandled mimeType", {
         mimeType: payload.mimeType,
         emailId,
-        payload,
         mid,
       });
     }

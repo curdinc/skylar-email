@@ -2,6 +2,7 @@ import type { BaseSchema, Output } from "valibot";
 import {
   array,
   boolean,
+  date,
   integer,
   merge,
   number,
@@ -84,15 +85,17 @@ const messagePartSchema: BaseSchema<InputMessagePartType> = merge([
 ]);
 
 const messageMetadataSchema = object({
-  message: object({
-    id: string(),
-    threadId: string(),
-  }),
+  id: string(),
+  threadId: string(),
+  labelIds: array(string()),
 });
 
 const historyItemSchema = object({
-  messages: array(messageMetadataSchema),
-  messagesAdded: array(messageMetadataSchema),
+  id: string(),
+  messagesAdded: optional(array(object({ message: messageMetadataSchema }))),
+  messagesDeleted: optional(array(object({ message: messageMetadataSchema }))),
+  labelsAdded: optional(array(object({ message: messageMetadataSchema }))),
+  labelsRemoved: optional(array(object({ message: messageMetadataSchema }))),
 });
 
 export const historyObjectSchema = object({
@@ -104,6 +107,7 @@ export const historyObjectSchema = object({
 export const messageResponseSchema = object({
   payload: messagePartSchema,
   historyId: string(),
+  threadId: string(),
   snippet: string(),
   id: string(),
   labelIds: array(string()),
@@ -120,8 +124,62 @@ export const messageListResponseSchema = object({
   resultSizeEstimate: number(),
 });
 
-export type historyObjectType = Output<typeof historyObjectSchema>;
+export type HistoryObjectType = Output<typeof historyObjectSchema>;
 
-export type messageListResponseType = Output<typeof messageListResponseSchema>;
+export type MessageListResponseType = Output<typeof messageListResponseSchema>;
 
 export type MessagePartType = Output<typeof messagePartSchema>;
+
+const emailSenderSchema = object({
+  name: optional(string()),
+  email: string(),
+});
+const modifiedLabelSchema = object({
+  mid: string(),
+  newLabels: array(string()),
+});
+
+const emailBodyParseResultSchema = object({
+  html: array(string()),
+  plain: array(string()),
+  attachments: array(string()),
+});
+
+const emailMetadataParseResultSchema = object({
+  from: emailSenderSchema,
+  subject: string(),
+  inReplyTo: emailSenderSchema,
+  bcc: emailSenderSchema,
+  cc: array(emailSenderSchema),
+  createdAt: date(),
+  deliveredTo: emailSenderSchema,
+  replyTo: array(emailSenderSchema),
+});
+
+const messageDetailsSchema = object({
+  snippet: string(),
+  historyId: string(),
+  providerLabels: array(string()),
+  emailMetadata: emailMetadataParseResultSchema,
+  emailData: emailBodyParseResultSchema,
+  emailProviderMessageId: string(),
+  emailProviderThreadId: string(),
+});
+
+const syncResponseSchema = object({
+  newMessages: array(messageDetailsSchema),
+  messagesDeleted: optional(array(string())),
+  labelsModified: optional(array(modifiedLabelSchema)),
+});
+
+export type emailMetadataParseResultType = Output<
+  typeof emailMetadataParseResultSchema
+>;
+
+export type emailBodyParseResultType = Output<
+  typeof emailBodyParseResultSchema
+>;
+export type messageDetailsType = Output<typeof messageDetailsSchema>;
+export type ModifiedLabelType = Output<typeof modifiedLabelSchema>;
+export type SyncResponseType = Output<typeof syncResponseSchema>;
+export type emailSenderType = Output<typeof emailSenderSchema>;

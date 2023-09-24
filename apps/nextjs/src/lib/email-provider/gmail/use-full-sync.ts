@@ -28,6 +28,7 @@ export const useFullSync = () => {
         });
         console.log("emailData", emailData);
       } catch (e) {
+        console.log("client side: operation failed");
         console.log(JSON.stringify(formatValidatorError(e), null, 2));
         throw e;
       }

@@ -1,9 +1,4 @@
 export { fullSync } from "./src/routines/full-sync";
+export { partialSync } from "./src/routines/partial-sync";
 
-export {
-  batchGetMessage,
-  getAccessToken,
-  getHistoryList,
-  getMessage,
-  getMessageList,
-} from "./src/core-api";
+export { getAccessToken } from "./src/core-api";
