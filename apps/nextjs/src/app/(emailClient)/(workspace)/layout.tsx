@@ -1,9 +1,14 @@
-"use client";
+import type { Metadata } from "next";
 
 import { SiteFooter } from "~/components/nav/site-footer";
 import { TopNav } from "~/components/nav/top-nav";
 import { dashboardConfig } from "~/lib/config";
 import { ClientLayout } from "./client-layout";
+
+export const metadata: Metadata = {
+  title: "Inbox",
+  description: "Where productivity begins",
+};
 
 export default function EmailClientLayout({
   children,
