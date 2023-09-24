@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 
 import type { UserType } from "@skylar/parsers-and-types";
 
@@ -14,7 +14,7 @@ export async function getUserInviteCodes({
 }) {
   const result = await db.query.user.findFirst({
     columns: {},
-    where: eq(schema.user.authProviderId, userObj.authProviderId),
+    where: and(eq(schema.user.authProviderId, userObj.authProviderId)),
     with: {
       createdInviteCode: {
         with: {
@@ -23,6 +23,10 @@ export async function getUserInviteCodes({
               email: true,
             },
           },
+        },
+        where: isNull(schema.inviteCode.deletedAt),
+        orderBy(fields, { desc }) {
+          return desc(fields.createdAt);
         },
       },
     },
