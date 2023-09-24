@@ -12,6 +12,7 @@ import {
 } from "@skylar/parsers-and-types";
 
 import {
+  GMAIL_BATCH_SEPARATOR_PREFIX,
   GMAIL_MAX_BATCH_REQUEST_SIZE,
   GMAIL_MAX_HISTORY_LIST_REQUEST_SIZE,
   GMAIL_MAX_MESSAGE_LIST_REQUEST_SIZE,
@@ -111,7 +112,7 @@ export async function getHistoryList({
   startHistoryId: string;
   accessToken: string;
   pageToken?: string;
-  maxResults: number;
+  maxResults?: number;
 }) {
   if (maxResults > GMAIL_MAX_HISTORY_LIST_REQUEST_SIZE) {
     throw new Error(
@@ -120,7 +121,7 @@ export async function getHistoryList({
   }
 
   const url = new URL(
-    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/history?${params.toString()}`,
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/history`,
   );
 
   url.search = new URLSearchParams(
@@ -263,7 +264,7 @@ export async function batchGetMessage({
   }
 
   const url = new URL("https://gmail.googleapis.com/batch/gmail/v1");
-  const boundary = "yellow_lemonades_" + Date.now();
+  const boundary = GMAIL_BATCH_SEPARATOR_PREFIX + Date.now();
   const headers = new Headers({
     "Content-Type": `multipart/form-data; boundary=${boundary}`,
     Authorization: `Bearer ${accessToken}`,
