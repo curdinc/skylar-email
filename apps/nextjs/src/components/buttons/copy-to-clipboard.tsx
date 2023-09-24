@@ -27,7 +27,7 @@ export const CopyToClipboard = ({
   };
 
   return (
-    <Button size={"icon"} variant={"ghost"} onClick={onClickCopy} {...props}>
+    <Button size={"icon-md"} variant={"ghost"} onClick={onClickCopy} {...props}>
       {copied ? <Icons.copyChecked /> : <Icons.copy />}
     </Button>
   );
