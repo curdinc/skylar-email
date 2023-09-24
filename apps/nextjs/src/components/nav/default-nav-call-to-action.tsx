@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useLogOut, useUser } from "@skylar/auth/client";
 
@@ -21,6 +22,10 @@ import {
 export const DefaultNavCallToAction = () => {
   const user = useUser();
   const signOut = useLogOut();
+  const router = useRouter();
+  const goToSetting = () => {
+    router.push("/settings");
+  };
 
   let navItem = (
     <Link href="/login" className={cn(buttonVariants())}>
@@ -39,10 +44,10 @@ export const DefaultNavCallToAction = () => {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={goToSetting}>
               Settings
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
             </DropdownMenuItem>

@@ -5,6 +5,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Command,
+  Copy,
+  CopyCheck,
   CreditCard,
   File,
   FileText,
@@ -48,4 +50,6 @@ export const Icons = {
   moon: Moon,
   laptop: Laptop,
   check: Check,
+  copy: Copy,
+  copyChecked: CopyCheck,
 };

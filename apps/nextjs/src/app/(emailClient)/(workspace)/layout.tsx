@@ -1,9 +1,14 @@
-"use client";
+import type { Metadata } from "next";
 
-import { MainNav } from "~/components/nav/main-nav";
 import { SiteFooter } from "~/components/nav/site-footer";
+import { TopNav } from "~/components/nav/top-nav";
 import { dashboardConfig } from "~/lib/config";
 import { ClientLayout } from "./client-layout";
+
+export const metadata: Metadata = {
+  title: "Inbox",
+  description: "Where productivity begins",
+};
 
 export default function EmailClientLayout({
   children,
@@ -13,10 +18,10 @@ export default function EmailClientLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <header className="container z-40 bg-background">
-        <MainNav items={dashboardConfig.mainNav} />
+        <TopNav items={dashboardConfig.mainNav} />
       </header>
       <ClientLayout />
-      <main className="flex-1">{children}</main>
+      <main className="container flex-1">{children}</main>
       <SiteFooter />
     </div>
   );
