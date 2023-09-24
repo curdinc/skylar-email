@@ -1,7 +1,6 @@
 "use client";
 
 import { Icons } from "~/components/icons";
-import { TypographyH2 } from "~/components/ui/typography";
 import { usePostLogin } from "./use-post-login";
 
 export default function PostAuthPage() {
@@ -9,7 +8,12 @@ export default function PostAuthPage() {
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center space-y-5">
-      <TypographyH2>Logging you in. Hang tight.</TypographyH2>
+      <div className="flex flex-col items-center space-y-2">
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Logging you in.
+        </h2>
+        <p className="text-muted-foreground">Hang tight.</p>
+      </div>
       <Icons.spinner className="h-10 w-10 animate-spin" />
     </div>
   );

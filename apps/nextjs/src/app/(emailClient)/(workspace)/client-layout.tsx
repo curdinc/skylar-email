@@ -14,7 +14,7 @@ export const ClientLayout = () => {
     api.me.getActiveEmailProvider.useQuery(undefined);
 
   useEffect(() => {
-    if (isLoadingEmailProvider) return;
+    if (isLoadingEmailProvider || activeClientDbName) return;
     if (!activeClientDbName && !emailProvider) {
       router.push("/onboarding/code");
     }

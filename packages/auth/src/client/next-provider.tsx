@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import type { Session } from "@supabase/auth-helpers-react";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
 
@@ -20,7 +20,7 @@ export function SupabaseAuthClientProvider({
   children: React.ReactNode;
 }) {
   const [supabaseClient] = useState(() =>
-    createPagesBrowserClient({
+    createClientComponentClient({
       cookieOptions,
       supabaseKey,
       supabaseUrl,
