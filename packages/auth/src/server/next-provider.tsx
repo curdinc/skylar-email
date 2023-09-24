@@ -2,28 +2,31 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
-import { parse, QuerySchema } from "@skylar/parsers-and-types";
-
 import { SupabaseAuthClientProvider } from "../client/next-provider";
-import { cookieOptions } from "../constants";
+import {
+  cookieOptions,
+  PATHNAME_HEADER,
+  QUERY_HEADER,
+  REDIRECT_TO_SEARCH_STRING,
+} from "../constants";
 import { isPathEqual, pathToString } from "../helper";
 import type { AuthSettingServerType } from "../types/auth-settings";
 
 const getCurrentPath = () => {
   const headersList = headers();
-  const activePath = headersList.get("x-invoke-path");
+  const activePath = headersList.get(PATHNAME_HEADER);
   return activePath ?? "/";
 };
 const getCurrentQuery = () => {
   const headersList = headers();
-  const activeQuery = headersList.get("x-invoke-query");
-  const query = decodeURIComponent(activeQuery ?? "{}");
-  return new URLSearchParams(parse(QuerySchema, JSON.parse(query))) ?? {};
+  const activeQuery = headersList.get(QUERY_HEADER);
+  const query = new URLSearchParams(activeQuery ?? "");
+  return query;
 };
 
 export const defaultOnLoginRedirectTo = () => {
   const query = getCurrentQuery();
-  const redirectTo = query.get("redirectTo");
+  const redirectTo = query.get(REDIRECT_TO_SEARCH_STRING);
   if (redirectTo) {
     return { path: redirectTo };
   }

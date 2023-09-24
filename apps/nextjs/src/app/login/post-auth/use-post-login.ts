@@ -1,12 +1,15 @@
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { REDIRECT_TO_SEARCH_STRING } from "@skylar/auth/client";
+
 import { api } from "~/lib/api";
 
 export const usePostLogin = () => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const redirectToPath = searchParams.get("redirectTo") ?? "/inbox";
+  const redirectToPath =
+    searchParams.get(REDIRECT_TO_SEARCH_STRING) ?? "/inbox";
 
   const { data: userOnboardStep, isLoading } =
     api.onboarding.getUserOnboardStep.useQuery(undefined);

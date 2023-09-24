@@ -1,4 +1,4 @@
-export { cookieOptions } from "./src/constants";
+export { PATHNAME_HEADER, QUERY_HEADER, cookieOptions } from "./src/constants";
 export { getSession } from "./src/server";
 export { honoAuthMiddleware } from "./src/server/hono";
 export { NextAuthProvider } from "./src/server/next-provider";

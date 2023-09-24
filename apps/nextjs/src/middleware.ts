@@ -1,3 +1,3 @@
-import { NextMiddleware } from "@skylar/auth/middleware";
+import { NextAuthMiddleware } from "@skylar/auth/middleware";
 
-export default NextMiddleware;
+export default NextAuthMiddleware;

@@ -1,4 +1,5 @@
 import type { RedirectFnType } from "@skylar/auth/*";
+import { REDIRECT_TO_SEARCH_STRING } from "@skylar/auth/client";
 
 import { UNAUTHENTICATED_ROUTES } from "../config";
 
@@ -10,7 +11,10 @@ export const onUnauthenticatedRedirectTo: RedirectFnType = ({
     return { path, queryParams };
   }
   const newSearchParams = new URLSearchParams();
-  newSearchParams.set("redirectTo", `${path}?${queryParams?.toString()}`);
+  newSearchParams.set(
+    REDIRECT_TO_SEARCH_STRING,
+    `${path}?${queryParams?.toString()}`,
+  );
   return {
     path:
       (queryParams?.size ?? 0) > 0
