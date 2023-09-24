@@ -40,10 +40,11 @@ function parseMessageChangesFromHistoryObject(
       })) ?? [],
     );
   });
+
   return {
     messagesAdded,
     messagesDeleted,
-    labelsModified,
+    labelsModified: labelsModified.reverse(), // reverse since history list is ascending
   };
 }
 
@@ -65,11 +66,15 @@ export async function getMessageChangesFromHistoryId({
     pageToken,
   });
 
-  const historyId = batchHistoryObject[0]?.historyId;
-
-  if (!historyId) {
-    throw new Error("Error grabbing history id.");
+  const lastCheckedHistoryId = batchHistoryObject
+    .slice(-1)[0]
+    ?.history.slice(-1)[0]?.id;
+  if (!lastCheckedHistoryId) {
+    throw new Error("Unknown error in getting history id.", {
+      cause: "getMessageChangesFromHistoryId",
+    });
   }
+
   let messagesAdded: string[] = [];
   let messagesDeleted: string[] = [];
   let labelsModified: ModifiedLabelType[] = [];
@@ -94,6 +99,6 @@ export async function getMessageChangesFromHistoryId({
     messagesAdded: dedupe(subtractArray(messagesAdded, messagesDeleted)),
     messagesDeleted: dedupe(messagesDeleted),
     labelsModified: dedupedLabelsModified,
-    historyId,
+    lastCheckedHistoryId,
   };
 }

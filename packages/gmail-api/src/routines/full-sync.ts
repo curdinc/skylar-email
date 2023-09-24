@@ -13,38 +13,37 @@ export async function fullSync({
   emailId: string;
   logger: Logger;
 }): Promise<SyncResponseType> {
-  try {
-    // get all messages
-    const messages = await getMessageListUnbounded({
-      accessToken,
-      emailId,
-    });
-    const messageIds = messages.map((m) => m.id);
+  // get all messages
+  const messages = await getMessageListUnbounded({
+    accessToken,
+    emailId,
+  });
 
-    const newMessages = await getAndParseMessages({
-      accessToken: accessToken,
-      emailId,
-      messageIds,
-      logger,
+  if (messages.length === 0) {
+    throw new Error("No messages found", {
+      cause: "full-sync",
     });
-    return {
-      newMessages,
-    };
-  } catch (e) {
-    if (e instanceof Error) {
-      logger.error("Error in partial sync.", {
-        e,
-        cause: "known",
-        emailId,
-      });
-    } else {
-      logger.error("Error in partial sync.", {
-        cause: "unknown",
-        emailId,
-      });
-    }
-    return {
-      newMessages: [],
-    };
   }
+
+  const messageIds = messages.map((m) => m.id);
+
+  const newMessages = await getAndParseMessages({
+    accessToken: accessToken,
+    emailId,
+    messageIds,
+    logger,
+  });
+
+  const lastCheckedHistoryId = newMessages[0]?.historyId;
+
+  if (!lastCheckedHistoryId) {
+    throw new Error(`Error in lastCheckedHistoryId: undefined.`, {
+      cause: "full-sync",
+    });
+  }
+
+  return {
+    newMessages,
+    lastCheckedHistoryId,
+  };
 }
