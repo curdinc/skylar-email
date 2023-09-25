@@ -21,6 +21,7 @@ export { SUPPORTED_EMAIL_CATEGORIES } from "./src/api/email";
 export {
   GmailPushNotificationDataObjectSchema,
   GmailPushNotificationSchema,
+  getAttachmentResponseSchema,
   gmailProviderIDTokenSchema,
   gmailWatchResponseSchema,
   historyObjectSchema,

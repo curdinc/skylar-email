@@ -2,6 +2,7 @@ import type { Logger } from "@skylar/logger";
 import type { messageDetailsType } from "@skylar/parsers-and-types";
 
 import { getMessageUnbounded } from "../unbounded-core-api";
+import { resolveAttachements } from "./attachment-fetch-utils";
 import { getEmailBody, getEmailMetadata } from "./message-parse-utils";
 
 export async function getAndParseMessages({
@@ -40,5 +41,11 @@ export async function getAndParseMessages({
     };
   });
 
-  return parsedMessages;
+  const parsedMessagesWithAttachments = await resolveAttachements({
+    accessToken,
+    emailId,
+    messageDetailList: parsedMessages,
+  });
+
+  return parsedMessagesWithAttachments;
 }

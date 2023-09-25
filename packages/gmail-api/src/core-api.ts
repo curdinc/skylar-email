@@ -4,6 +4,7 @@ import type {
 } from "@skylar/parsers-and-types";
 import {
   formatValidatorError,
+  getAttachmentResponseSchema,
   gmailWatchResponseSchema,
   historyObjectSchema,
   messageListResponseSchema,
@@ -191,9 +192,15 @@ export async function getMessage({
       `Failed to get history for ${emailId}. cause: ${await res.text()}`,
     );
   }
-
-  const data = parse(messageResponseSchema, await res.json());
-  return data;
+  const response = await res.json();
+  try {
+    const data = parse(messageResponseSchema, response);
+    return data;
+  } catch (e) {
+    console.log("response", response);
+    console.log(JSON.stringify(formatValidatorError(e), null, 2));
+    throw e;
+  }
 }
 
 export async function getMessageList({
@@ -249,6 +256,42 @@ export async function getMessageList({
   return parsedData;
 }
 
+export async function getAttachment({
+  emailId,
+  messageId,
+  attachmentId,
+  accessToken,
+}: {
+  emailId: string;
+  messageId: string;
+  attachmentId: string;
+  accessToken: string;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages/${messageId}/attachments/${attachmentId}`,
+  );
+
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: headers,
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to get attachmentId "${attachmentId}" with messageId "${messageId}" for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const data = await res.json();
+  const parsedData = parse(getAttachmentResponseSchema, data);
+  return parsedData;
+}
+
 export async function batchGetMessage({
   messageIds,
   accessToken,
@@ -298,6 +341,7 @@ export async function batchGetMessage({
     try {
       return parse(messageResponseSchema, data.json());
     } catch (e) {
+      console.log("data", data.json());
       console.log(JSON.stringify(formatValidatorError(e), null, 2));
       throw e;
     }

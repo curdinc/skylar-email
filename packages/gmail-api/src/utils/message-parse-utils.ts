@@ -117,12 +117,21 @@ export function getEmailBody({
     } else if (part.mimeType === "text/html") {
       result.html.push(part.body.data ?? "");
     } else if (part.body.attachmentId) {
-      result.attachments.push({
-        partId: part.partId,
-        mimeType: part.mimeType,
-        filename: part.filename,
-        body: part.body,
-      });
+      const attachmentId = part.body.attachmentId;
+      if (attachmentId) {
+        result.attachments.push({
+          partId: part.partId,
+          mimeType: part.mimeType,
+          filename: part.filename,
+          body: { ...part.body, attachmentId },
+        });
+      } else {
+        logger.debug("Weird state reached: attachment without id", {
+          mimeType: part.mimeType,
+          emailId,
+          mid,
+        });
+      }
     } else {
       logger.debug("unhandled mimeType", {
         mimeType: part.mimeType,

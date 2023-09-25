@@ -130,14 +130,6 @@ export const messageListResponseSchema = object({
   resultSizeEstimate: number(),
 });
 
-export type MessageResponseType = Output<typeof messageResponseSchema>;
-
-export type HistoryObjectType = Output<typeof historyObjectSchema>;
-
-export type MessageListResponseType = Output<typeof messageListResponseSchema>;
-
-export type MessagePartType = Output<typeof messagePartSchema>;
-
 const emailSenderSchema = object({
   name: optional(string()),
   email: string(),
@@ -155,7 +147,11 @@ const emailBodyParseResultSchema = object({
       partId: string(),
       mimeType: string(),
       filename: string(),
-      body: messagePartBodySchema,
+      body: object({
+        attachmentId: string(),
+        size: number([integer()]),
+        data: optional(string()),
+      }),
     }),
   ),
 });
@@ -187,6 +183,19 @@ const syncResponseSchema = object({
   labelsModified: optional(array(modifiedLabelSchema)),
   lastCheckedHistoryId: string(),
 });
+
+export const getAttachmentResponseSchema = object({
+  size: number([integer()]),
+  data: string(),
+});
+
+export type MessageResponseType = Output<typeof messageResponseSchema>;
+
+export type HistoryObjectType = Output<typeof historyObjectSchema>;
+
+export type MessageListResponseType = Output<typeof messageListResponseSchema>;
+
+export type MessagePartType = Output<typeof messagePartSchema>;
 
 export type emailMetadataParseResultType = Output<
   typeof emailMetadataParseResultSchema
