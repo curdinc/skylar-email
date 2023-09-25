@@ -93,6 +93,12 @@ const messageMetadataSchema = object({
 
 const historyItemSchema = object({
   id: string(),
+  messages: array(
+    object({
+      threadId: string(),
+      id: string(),
+    }),
+  ),
   messagesAdded: optional(array(object({ message: messageMetadataSchema }))),
   messagesDeleted: optional(array(object({ message: messageMetadataSchema }))),
   labelsAdded: optional(array(object({ message: messageMetadataSchema }))),
@@ -125,12 +131,6 @@ export const messageListResponseSchema = object({
   resultSizeEstimate: number(),
 });
 
-export type HistoryObjectType = Output<typeof historyObjectSchema>;
-
-export type MessageListResponseType = Output<typeof messageListResponseSchema>;
-
-export type MessagePartType = Output<typeof messagePartSchema>;
-
 const emailSenderSchema = object({
   name: optional(string()),
   email: string(),
@@ -143,7 +143,18 @@ const modifiedLabelSchema = object({
 const emailBodyParseResultSchema = object({
   html: array(string()),
   plain: array(string()),
-  attachments: array(string()),
+  attachments: array(
+    object({
+      partId: string(),
+      mimeType: string(),
+      filename: string(),
+      body: object({
+        attachmentId: string(),
+        size: number([integer()]),
+        data: optional(string()),
+      }),
+    }),
+  ),
 });
 
 const emailMetadataParseResultSchema = object({
@@ -171,7 +182,21 @@ const syncResponseSchema = object({
   newMessages: array(messageDetailsSchema),
   messagesDeleted: optional(array(string())),
   labelsModified: optional(array(modifiedLabelSchema)),
+  lastCheckedHistoryId: string(),
 });
+
+export const getAttachmentResponseSchema = object({
+  size: number([integer()]),
+  data: string(),
+});
+
+export type MessageResponseType = Output<typeof messageResponseSchema>;
+
+export type HistoryObjectType = Output<typeof historyObjectSchema>;
+
+export type MessageListResponseType = Output<typeof messageListResponseSchema>;
+
+export type MessagePartType = Output<typeof messagePartSchema>;
 
 export type emailMetadataParseResultType = Output<
   typeof emailMetadataParseResultSchema

@@ -19,6 +19,26 @@ export type {
 export { SUPPORTED_EMAIL_CATEGORIES } from "./src/api/email";
 export * from "./src/api/email-provider/gmail-provider";
 export {
+  GmailPushNotificationDataObjectSchema,
+  GmailPushNotificationSchema,
+  getAttachmentResponseSchema,
+  gmailProviderIDTokenSchema,
+  gmailWatchResponseSchema,
+  historyObjectSchema,
+  messageListResponseSchema,
+  messageResponseSchema,
+  type GmailPushNotificationType,
+  type HistoryObjectType,
+  type MessagePartType,
+  type MessageResponseType,
+  type ModifiedLabelType,
+  type SyncResponseType,
+  type emailBodyParseResultType,
+  type emailMetadataParseResultType,
+  type emailSenderType,
+  type messageDetailsType,
+} from "./src/api/email-provider/gmail-provider";
+export {
   SUPPORTED_EMAIL_PROVIDER_LIST,
   oauthOnboardingSchema,
   type Oauth2InitialTokenResponse,

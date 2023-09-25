@@ -18,6 +18,13 @@ export async function fullSync({
     accessToken,
     emailId,
   });
+
+  if (messages.length === 0) {
+    throw new Error("No messages found", {
+      cause: "full-sync",
+    });
+  }
+
   const messageIds = messages.map((m) => m.id);
 
   const newMessages = await getAndParseMessages({
@@ -26,7 +33,17 @@ export async function fullSync({
     messageIds,
     logger,
   });
+
+  const lastCheckedHistoryId = newMessages[0]?.historyId;
+
+  if (!lastCheckedHistoryId) {
+    throw new Error(`Error in lastCheckedHistoryId: undefined.`, {
+      cause: "full-sync",
+    });
+  }
+
   return {
     newMessages,
+    lastCheckedHistoryId,
   };
 }

@@ -27,6 +27,7 @@ export async function partialSync({
       newMessages: [],
       messagesDeleted: messageChanges.messagesDeleted,
       labelsModified: messageChanges.labelsModified,
+      lastCheckedHistoryId: messageChanges.lastCheckedHistoryId,
     };
   }
 
@@ -36,9 +37,11 @@ export async function partialSync({
     messageIds: messageChanges.messagesAdded,
     logger,
   });
+
   return {
     newMessages,
     messagesDeleted: messageChanges.messagesDeleted,
     labelsModified: messageChanges.labelsModified,
+    lastCheckedHistoryId: messageChanges.lastCheckedHistoryId,
   };
 }
