@@ -87,13 +87,15 @@ export async function getMessageChangesFromHistoryId({
   });
 
   const uniqueItems: Record<string, boolean> = {};
-  const dedupedLabelsModified = labelsModified.reduce((result, labelObj) => {
-    if (!uniqueItems[labelObj.mid]) {
-      result.push(labelObj);
-      uniqueItems[labelObj.mid] = true;
-    }
-    return result;
-  }, Array<ModifiedLabelType>());
+  const dedupedLabelsModified = labelsModified
+    .reverse()
+    .reduce((result, labelObj) => {
+      if (!uniqueItems[labelObj.mid]) {
+        result.push(labelObj);
+        uniqueItems[labelObj.mid] = true;
+      }
+      return result;
+    }, Array<ModifiedLabelType>());
 
   return {
     messagesAdded: dedupe(subtractArray(messagesAdded, messagesDeleted)),

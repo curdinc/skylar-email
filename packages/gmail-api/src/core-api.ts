@@ -157,6 +157,7 @@ export async function getHistoryList({
     const parsedResponse = parse(historyObjectSchema, data);
     return parsedResponse;
   } catch (e) {
+    console.log("data", data);
     console.log(JSON.stringify(formatValidatorError(e), null, 2));
     throw e;
   }

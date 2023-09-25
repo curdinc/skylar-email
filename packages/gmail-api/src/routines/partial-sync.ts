@@ -22,6 +22,7 @@ export async function partialSync({
     startHistoryId,
   });
 
+  console.log("messageChanges", messageChanges);
   if (messageChanges.messagesAdded.length === 0) {
     return {
       newMessages: [],

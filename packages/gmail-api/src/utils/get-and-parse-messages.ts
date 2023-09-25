@@ -24,7 +24,7 @@ export async function getAndParseMessages({
   const parsedMessages = rawMessages.map((msg) => {
     const emailMetadata = getEmailMetadata(msg.payload.headers);
     const emailData = getEmailBody({
-      payloads: [msg.payload],
+      messageResponse: msg,
       mid: msg.id,
       emailId,
       logger,

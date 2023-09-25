@@ -3,7 +3,7 @@ import type {
   emailBodyParseResultType,
   emailMetadataParseResultType,
   emailSenderType,
-  MessagePartType,
+  MessageResponseType,
 } from "@skylar/parsers-and-types";
 
 // parses "email", "<email>", "firstname lastname <email>"
@@ -84,99 +84,53 @@ export function getEmailMetadata(
   return emailHeaders;
 }
 
+// Found at https://stackoverflow.com/questions/37445865/where-to-find-body-of-email-depending-of-mimetype
 export function getEmailBody({
-  payloads,
+  messageResponse,
   mid,
   logger,
   emailId,
 }: {
-  payloads: MessagePartType[];
+  messageResponse: MessageResponseType;
   mid: string;
   logger: Logger;
   emailId: string;
-}): emailBodyParseResultType {
-  const data: emailBodyParseResultType = {
-    html: [],
+}) {
+  const result: emailBodyParseResultType = {
     plain: [],
+    html: [],
     attachments: [],
   };
 
-  for (const payload of payloads) {
-    if (payload.mimeType === "multipart/alternative") {
-      // text/plain + text/html
-      if (!payload.parts) {
-        continue;
-      }
-      for (const part of payload.parts) {
-        if (!part.body.data) {
-          continue;
-        }
-        if (part.mimeType === "text/plain") {
-          data.plain.push(part.body.data);
-        } else if (part.mimeType === "text/html") {
-          data.html.push(part.body.data);
-        } else {
-          logger.debug("unhandled multipart/alternative mimeType", {
-            mimeType: payload.mimeType,
-            emailId,
-            mid,
-          });
-        }
-      }
-    } else if (payload.mimeType === "multipart/mixed") {
-      if (!payload.parts) {
-        continue;
-      }
-      const pieces = getEmailBody({
-        payloads: payload.parts,
-        mid,
-        logger,
-        emailId,
+  let parts = [messageResponse.payload];
+
+  while (parts.length) {
+    const part = parts.shift();
+    if (!part) {
+      continue;
+    }
+
+    if (part.parts) {
+      parts = parts.concat(part.parts);
+    } else if (part.mimeType === "text/plain") {
+      result.plain.push(part.body.data ?? "");
+    } else if (part.mimeType === "text/html") {
+      result.html.push(part.body.data ?? "");
+    } else if (part.body.attachmentId) {
+      result.attachments.push({
+        partId: part.partId,
+        mimeType: part.mimeType,
+        filename: part.filename,
+        body: part.body,
       });
-      data.attachments = data.attachments.concat(pieces.attachments);
-      data.html = data.html.concat(pieces.html);
-      data.plain = data.plain.concat(pieces.plain);
-    } else if (payload.mimeType === "multipart/related") {
-      if (!payload.parts) {
-        continue;
-      }
-      const pieces = getEmailBody({
-        payloads: payload.parts,
-        mid,
-        logger,
-        emailId,
-      });
-      data.attachments = data.attachments.concat(pieces.attachments);
-      data.html = data.html.concat(pieces.html);
-      data.plain = data.plain.concat(pieces.plain);
-    } else if (payload.mimeType === "multipart/report") {
-      if (!payload.parts) {
-        continue;
-      }
-      const pieces = getEmailBody({
-        payloads: payload.parts,
-        mid,
-        logger,
-        emailId,
-      });
-      data.attachments = data.attachments.concat(pieces.attachments);
-      data.html = data.html.concat(pieces.html);
-      data.plain = data.plain.concat(pieces.plain);
-    } else if (payload.mimeType === "text/plain") {
-      if (payload.body.data) {
-        data.plain.push(payload.body.data);
-      }
-    } else if (payload.mimeType === "text/html") {
-      if (payload.body.data) {
-        data.html.push(payload.body.data);
-      }
     } else {
       logger.debug("unhandled mimeType", {
-        mimeType: payload.mimeType,
+        mimeType: part.mimeType,
         emailId,
         mid,
       });
     }
   }
-  return data;
+
+  return result;
 }

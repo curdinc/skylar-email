@@ -29,6 +29,7 @@ export {
   type GmailPushNotificationType,
   type HistoryObjectType,
   type MessagePartType,
+  type MessageResponseType,
   type ModifiedLabelType,
   type SyncResponseType,
   type emailBodyParseResultType,
