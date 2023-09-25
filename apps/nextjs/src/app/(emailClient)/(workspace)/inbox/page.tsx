@@ -15,7 +15,9 @@ export default function ImportantInbox() {
       <Button
         className="ml-10"
         onClick={() => {
-          partialSync().catch((err) => console.log("err", err));
+          partialSync("name@example.com").catch((err) =>
+            console.log("err", err),
+          );
         }}
         isLoading={isFetchingPartialSync}
       >
