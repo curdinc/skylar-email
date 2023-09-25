@@ -5,7 +5,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { stripeConfig } from "~/lib/config";
 import { stripePromise } from "~/lib/stripe";
 
-export default function CardCofirmationPageLayout({
+export default function CardConfirmationPageLayout({
   children,
 }: {
   children: React.ReactNode;

@@ -11,13 +11,13 @@ export * from "./src/api/invite-code";
 export * from "./src/api/onboarding";
 export * from "./src/auth";
 export type {
-  QueryType,
   SupabaseUserType,
   SupportedAuthProvidersType,
   UserType,
 } from "./src/auth";
 
 export { SUPPORTED_EMAIL_CATEGORIES } from "./src/api/email";
+export * from "./src/api/email-provider/gmail-provider";
 export {
   GmailPushNotificationDataObjectSchema,
   GmailPushNotificationSchema,
@@ -39,10 +39,11 @@ export {
   type messageDetailsType,
 } from "./src/api/email-provider/gmail-provider";
 export {
+  SUPPORTED_EMAIL_PROVIDER_LIST,
   oauthOnboardingSchema,
-  SUPPORTED_EMAIL_PROVIDERS as providerEnumList,
   type Oauth2InitialTokenResponse,
   type Oauth2TokenFromRefreshTokenResponse,
+  type SupportedEmailProviderType,
   type oauthOnboardingType,
 } from "./src/api/email-provider/oauth";
 

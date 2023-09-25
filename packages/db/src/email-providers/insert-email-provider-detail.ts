@@ -18,8 +18,6 @@ export async function insertEmailProviderDetail({
       ...input,
     })
     .onConflictDoNothing()
-    .returning({
-      emailProviderDetailId: schema.emailProviderDetail.emailProviderDetailId,
-    });
+    .returning();
   return result[0];
 }

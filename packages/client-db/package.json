@@ -30,10 +30,12 @@
     "@tanstack/eslint-plugin-query": "^4.34.1",
     "@tanstack/react-query": "^4.33.0",
     "eslint": "^8.48.0",
+    "react": "18.2.0",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
-    "@tanstack/react-query": "^4.33.0"
+    "@tanstack/react-query": "^4.33.0",
+    "react": "18.2.0"
   },
   "eslintConfig": {
     "extends": [

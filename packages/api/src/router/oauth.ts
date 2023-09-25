@@ -79,7 +79,7 @@ export const oauthRouter = createTRPCRouter({
         }
 
         return {
-          email,
+          emailProviderDetail,
           idToken: parsedResponse.id_token,
           accessToken: parsedResponse.access_token,
           tokenType: parsedResponse.token_type,

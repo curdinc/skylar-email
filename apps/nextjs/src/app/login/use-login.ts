@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import {
+  REDIRECT_TO_SEARCH_STRING,
   useLoginWithDiscord,
   useLoginWithFacebook,
   useLoginWithGithub,
@@ -11,13 +12,13 @@ import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
 
 export const useLogin = () => {
   const params = useSearchParams();
-  const redirectToPath = params.get("redirectTo") ?? "/inbox";
+  const redirectToPath = params.get(REDIRECT_TO_SEARCH_STRING) ?? "/inbox";
   const [redirectTo, setRedirectTo] = useState(redirectToPath);
   const loggingInto = state$.LOGIN.loggingInto.use();
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
-    urlSearchParams.set("redirectTo", redirectToPath);
+    urlSearchParams.set(REDIRECT_TO_SEARCH_STRING, redirectToPath);
     setRedirectTo(
       new URL(
         `/login/post-auth?${urlSearchParams.toString()}`,

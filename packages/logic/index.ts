@@ -11,8 +11,11 @@ enableReactUse();
 configureObservablePersistence({
   pluginLocal: ObservablePersistLocalStorage,
 });
-persistObservable(state$.EMAIL_CLIENT.activeClientDbName, {
-  local: "skylar_active_email_client",
+persistObservable(state$.EMAIL_CLIENT.emailProviders, {
+  local: "skylar_active_email_providers",
+});
+persistObservable(state$.EMAIL_CLIENT.activeEmailProviderIndex, {
+  local: "skylar_active_active_email_provider_index",
 });
 
 export * from "./src";

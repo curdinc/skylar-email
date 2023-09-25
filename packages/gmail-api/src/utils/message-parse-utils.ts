@@ -55,42 +55,42 @@ export function getEmailMetadata(
   };
 
   for (const header of messageHeaders) {
-    if (header.name === "Date") {
+    if (header.name.toLowerCase() === "Date".toLowerCase()) {
       emailHeaders.createdAt = new Date(header.value);
     }
-    if (header.name === "Subject") {
+    if (header.name.toLowerCase() === "Subject".toLowerCase()) {
       emailHeaders.subject = header.value;
     }
-    if (header.name === "In-Reply-To") {
+    if (header.name.toLowerCase() === "In-Reply-To".toLowerCase()) {
       emailHeaders.inReplyTo = parseEmailSenderValue(header.value);
     }
-    if (header.name === "Bcc") {
+    if (header.name.toLowerCase() === "Bcc".toLowerCase()) {
       emailHeaders.bcc = parseEmailSenderValue(header.value);
     }
-    if (header.name === "Cc") {
+    if (header.name.toLowerCase() === "Cc".toLowerCase()) {
       emailHeaders.cc = header.value
         .split(",")
         .map((val) => parseEmailSenderValue(val));
     }
-    if (header.name === "From") {
+    if (header.name.toLowerCase() === "From".toLowerCase()) {
       emailHeaders.from = parseEmailSenderValue(header.value);
     }
-    if (header.name === "Reply-To") {
+    if (header.name.toLowerCase() === "Reply-To".toLowerCase()) {
       emailHeaders.replyTo = header.value
         .split(",")
         .map((val) => parseEmailSenderValue(val));
     }
-    if (header.name === "Delivered-To") {
+    if (header.name.toLowerCase() === "Delivered-To".toLowerCase()) {
       emailHeaders.deliveredTo = header.value
         .split(",")
         .map((val) => parseEmailSenderValue(val));
     }
-    if (header.name === "To") {
+    if (header.name.toLowerCase() === "To".toLowerCase()) {
       emailHeaders.to = header.value
         .split(",")
         .map((val) => parseEmailSenderValue(val));
     }
-    if (header.name === "Message-ID") {
+    if (header.name.toLowerCase() === "Message-ID".toLowerCase()) {
       emailHeaders.rfc822MessageId = header.value;
     }
   }

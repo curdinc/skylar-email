@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import { parse, SupabaseUserSchema } from "@skylar/parsers-and-types";
 
@@ -26,7 +26,7 @@ export function AuthListener({
   onLogoutRedirectTo?: AuthSettingClientType["onLogoutRedirectTo"];
 }) {
   const [supabaseClient] = useState(() =>
-    createPagesBrowserClient({
+    createClientComponentClient({
       cookieOptions,
       supabaseKey,
       supabaseUrl,

@@ -10,15 +10,29 @@ export type EmailType = EmailIndexType & {
   from: EmailSenderType;
   to: EmailSenderType[];
   cc: EmailSenderType[];
-  bcc: EmailSenderType[];
+  bcc: EmailSenderType;
   reply_to: EmailSenderType[];
   delivered_to: EmailSenderType[];
   in_reply_to?: string;
   content_html?: string;
   content_text: string;
-  labels: string[];
+  skylar_labels: string[];
+  email_provider_labels: string[];
+  snippet: string;
   attachment_names: string[];
-  attachments?: Record<string, string>;
+  attachments: Record<
+    string,
+    {
+      partId: string;
+      mimeType: string;
+      filename: string;
+      body: {
+        attachmentId: string;
+        size: number;
+        data?: string;
+      };
+    }
+  >;
 };
 
 type EmailSenderType = { name?: string; email: string };

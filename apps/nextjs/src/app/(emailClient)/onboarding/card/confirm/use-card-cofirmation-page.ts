@@ -13,6 +13,7 @@ export function useCheckSuccessfulSetupIntent() {
   );
   const { mutateAsync: setDefaultPaymentMethod } =
     api.stripe.setDefaultPaymentMethod.useMutation();
+  const utils = api.useContext();
 
   useQuery({
     queryKey: ["stripe", "checkPaymentIntent", setupIntentClientSecret],
@@ -38,7 +39,8 @@ export function useCheckSuccessfulSetupIntent() {
                   ? setupIntent.payment_method
                   : setupIntent.payment_method?.id ?? "",
             });
-            router.push("/inbox");
+            await utils.onboarding.getUserOnboardStep.invalidate();
+            router.push("/onboarding/sync");
             break;
           }
           case "processing": {

@@ -66,7 +66,9 @@ export async function getAccessToken<
   if (!res.ok) {
     throw new Error(`Failed to get access token. cause: ${await res.text()}`);
   }
-  return await res.json();
+  return (await res.json()) as T extends "refresh_token"
+    ? Oauth2TokenFromRefreshTokenResponse
+    : Oauth2InitialTokenResponse;
 }
 
 export async function watchGmailInbox(emailId: string, accessToken: string) {
@@ -153,15 +155,8 @@ export async function getHistoryList({
     );
   }
 
-  const data = await res.json();
-  try {
-    const parsedResponse = parse(historyObjectSchema, data);
-    return parsedResponse;
-  } catch (e) {
-    console.log("data", data);
-    console.log(JSON.stringify(formatValidatorError(e), null, 2));
-    throw e;
-  }
+  const parsedResponse = parse(historyObjectSchema, await res.json());
+  return parsedResponse;
 }
 
 export async function getMessage({
@@ -192,15 +187,8 @@ export async function getMessage({
       `Failed to get history for ${emailId}. cause: ${await res.text()}`,
     );
   }
-  const response = await res.json();
-  try {
-    const data = parse(messageResponseSchema, response);
-    return data;
-  } catch (e) {
-    console.log("response", response);
-    console.log(JSON.stringify(formatValidatorError(e), null, 2));
-    throw e;
-  }
+  const data = parse(messageResponseSchema, await res.json());
+  return data;
 }
 
 export async function getMessageList({
@@ -251,8 +239,7 @@ export async function getMessageList({
     );
   }
 
-  const data = await res.json();
-  const parsedData = parse(messageListResponseSchema, data);
+  const parsedData = parse(messageListResponseSchema, await res.json());
   return parsedData;
 }
 
@@ -287,8 +274,7 @@ export async function getAttachment({
     );
   }
 
-  const data = await res.json();
-  const parsedData = parse(getAttachmentResponseSchema, data);
+  const parsedData = parse(getAttachmentResponseSchema, await res.json());
   return parsedData;
 }
 

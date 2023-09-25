@@ -1,18 +1,18 @@
 import { getLatestThreadSnippets } from "../emails/get-latest-thread-snippets";
-import type { ClientDbHookOptionType } from "../types/base-client-db-hook-types";
+import type { MakeDbOptional } from "../types/use-client-db-helper-type";
 import { useClientDb } from "./use-client-db";
 
 export function useLatestThreadSnippets(
-  args: Parameters<typeof getLatestThreadSnippets>[0] & {
-    options?: ClientDbHookOptionType;
-  },
+  args: MakeDbOptional<Parameters<typeof getLatestThreadSnippets>[0]>,
 ) {
-  return useClientDb({
-    query: async () => {
-      const threadSnippets = await getLatestThreadSnippets(args);
+  const { result: threads, isLoading } = useClientDb({
+    db: args.db,
+    query: async (db) => {
+      const threadSnippets = await getLatestThreadSnippets({ ...args, db });
       return threadSnippets;
     },
     deps: [args.lastEntry, args.limit],
-    options: args.options,
   });
+
+  return { threads, isLoading };
 }

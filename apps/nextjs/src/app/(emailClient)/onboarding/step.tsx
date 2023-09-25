@@ -8,7 +8,7 @@ export function Step() {
   const segment = useSelectedLayoutSegment();
 
   return (
-    <div className="relative">
+    <div className={cn("relative", segment === "sync" && "hidden")}>
       <div
         className="absolute left-0 top-2 h-0.5 w-full bg-muted"
         aria-hidden="true"

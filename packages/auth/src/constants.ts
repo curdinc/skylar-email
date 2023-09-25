@@ -7,3 +7,7 @@ export const cookieOptions = {
   name: AUTH_TOKEN_COOKIE_NAME,
   secure: true,
 };
+
+export const PATHNAME_HEADER = "x-skylar-pathname";
+export const QUERY_HEADER = "x-skylar-search";
+export const REDIRECT_TO_SEARCH_STRING = "redirectTo";

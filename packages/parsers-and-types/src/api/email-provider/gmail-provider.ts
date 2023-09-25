@@ -3,6 +3,7 @@ import {
   array,
   boolean,
   date,
+  email,
   integer,
   merge,
   number,
@@ -210,3 +211,7 @@ export type messageDetailsType = Output<typeof messageDetailsSchema>;
 export type ModifiedLabelType = Output<typeof modifiedLabelSchema>;
 export type SyncResponseType = Output<typeof syncResponseSchema>;
 export type emailSenderType = Output<typeof emailSenderSchema>;
+
+export const GetGmailAccessTokenSchema = object({
+  email: string([email()]),
+});

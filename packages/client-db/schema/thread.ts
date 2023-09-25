@@ -18,6 +18,7 @@ export type ThreadIndexType = {
 export type ThreadType = ThreadIndexType & {
   subject: string;
   content: string[];
+  latest_snippet: string;
   rfc822_message_id: string[];
   email_provider_message_id: string[];
 };

@@ -1,21 +1,23 @@
-import { useRouter } from "next/navigation";
-
 import { state$ } from "@skylar/logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/lib/api";
+import { useLogger } from "~/lib/logger";
 import { useUserOnboardingRouteGuard } from "../use-user-onboarding-route-guard";
 
 export function useCodePage() {
-  const router = useRouter();
+  const logger = useLogger();
   const { toast } = useToast();
   const { isLoading: isCheckingOnboardStep } = useUserOnboardingRouteGuard();
 
   const code = state$.ONBOARDING.alphaCode.use();
+  const utils = api.useContext();
   const { mutate: applyCode, isLoading: isSubmittingCode } =
     api.onboarding.applyAlphaCode.useMutation({
       onSuccess() {
-        router.push(`/onboarding/connect`);
+        utils.onboarding.getUserOnboardStep.invalidate().catch((e) => {
+          logger.error("Error invalidating user onboarding step", { error: e });
+        });
       },
       onError(error) {
         toast({
