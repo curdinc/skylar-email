@@ -1,3 +1,5 @@
+export const DEFAULT_SYNC_ID = "email_sync_info";
+
 export type SyncIndexType = {
   sync_id: string;
   last_sync_history_id: string;

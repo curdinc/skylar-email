@@ -1,22 +1,28 @@
+import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 
-import type { ClientDbHookOptionType } from "../types/base-client-db-hook-types";
-import { DEFAULT_CLIENT_DB_HOOK_OPTIONS } from "../types/base-client-db-hook-types";
+import type { ClientDb } from "../db";
 
 export function useClientDb<T>({
+  db,
   query,
   deps,
-  options = DEFAULT_CLIENT_DB_HOOK_OPTIONS,
 }: {
-  query: Parameters<typeof useLiveQuery<T>>[0];
+  db?: ClientDb;
+  query: (db: ClientDb) => Promise<T> | T;
   deps: Parameters<typeof useLiveQuery<T>>[1];
-  options?: ClientDbHookOptionType;
 }) {
-  return useLiveQuery(async () => {
-    if (!options.enabled) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const result = useLiveQuery(async () => {
+    if (!db) {
       return;
     }
-    const result = await query();
+    setIsLoading(true);
+    const result = await query(db);
+    setIsLoading(false);
     return result;
-  }, deps);
+  }, [...((deps as unknown[]) ?? []), db?.name]);
+
+  return { result, isLoading };
 }
