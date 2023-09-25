@@ -3,7 +3,12 @@ import { backOff } from "exponential-backoff";
 import type { HistoryObjectType } from "@skylar/parsers-and-types";
 
 import { GMAIL_MAX_BATCH_REQUEST_SIZE } from "./constants";
-import { batchGetMessage, getHistoryList, getMessageList } from "./core-api";
+import {
+  batchGetMessage,
+  getAttachment,
+  getHistoryList,
+  getMessageList,
+} from "./core-api";
 
 export function splitToNChunks<T>(array: T[], n: number) {
   const maxIterations = Math.ceil(array.length / n);
@@ -119,4 +124,38 @@ export async function getHistoryListUnbounded({
     pageTokenIterable = messageListResponse.nextPageToken;
   }
   return historyListResponses;
+}
+
+// get more that one attachment per email
+export async function getAttachmentUnbouned({
+  emailId,
+  messageId,
+  attachmentIds,
+  accessToken,
+}: {
+  emailId: string;
+  messageId: string;
+  attachmentIds: string[];
+  accessToken: string;
+}) {
+  const attachmentBatch = attachmentIds.map(async (aid) => {
+    return await getAttachment({
+      accessToken,
+      attachmentId: aid,
+      emailId,
+      messageId,
+    });
+  });
+
+  const attachments = await Promise.allSettled(attachmentBatch);
+
+  const parsedAttachments = attachments.map((m) => {
+    if (m.status === "fulfilled") {
+      return m.value;
+    }
+    console.error(`Failed to retrieve message batch. Error: ${m.reason} `);
+    return [];
+  });
+
+  return parsedAttachments.flat();
 }

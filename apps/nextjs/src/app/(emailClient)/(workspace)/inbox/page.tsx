@@ -14,7 +14,7 @@ export default function ImportantInbox() {
 
   return (
     <div>
-      <div>Important Inbox</div>
+      <div>Important Inbox!</div>
       <Button
         onClick={() => {
           fullSync().catch((err) => console.log("err", err));
