@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useLogger as useAxiomLogger } from "next-axiom";
 import { LogLevel as AxiomLogLevel } from "next-axiom/dist/logger";
 
@@ -37,5 +38,7 @@ export function useLogger(args?: {
       : undefined,
   });
 
-  return axiomLoggerToLogger(logger);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const genericLogger = useMemo(() => axiomLoggerToLogger(logger), []);
+  return genericLogger;
 }

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { REDIRECT_TO_SEARCH_STRING } from "@skylar/auth/client";
@@ -13,27 +14,29 @@ export const usePostLogin = () => {
 
   const { data: userOnboardStep, isLoading } =
     api.onboarding.getUserOnboardStep.useQuery(undefined);
-  if (!isLoading) {
-    switch (userOnboardStep) {
-      case "invite-code": {
-        router.push("/onboarding/code");
-        break;
-      }
-      case "email-provider": {
-        {
-          router.push("/onboarding/connect");
+  useEffect(() => {
+    if (!isLoading) {
+      switch (userOnboardStep) {
+        case "invite-code": {
+          router.push("/onboarding/code");
+          break;
+        }
+        case "email-provider": {
+          {
+            router.push("/onboarding/connect");
+            break;
+          }
+        }
+        case "card": {
+          router.push("/onboarding/card");
+          break;
+        }
+        case "done": {
+          router.push(redirectToPath);
           break;
         }
       }
-      case "card": {
-        router.push("/onboarding/card");
-        break;
-      }
-      case "done": {
-        router.push(redirectToPath);
-        break;
-      }
     }
-  }
+  }, [isLoading, redirectToPath, router, userOnboardStep]);
   return { isLoading };
 };

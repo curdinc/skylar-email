@@ -1,7 +1,8 @@
-import { observable } from "@legendapp/state";
+import { observable, opaqueObject } from "@legendapp/state";
 
 import type { ClientDb } from "@skylar/client-db";
 import { initClientDb } from "@skylar/client-db";
+import type { schema } from "@skylar/db";
 import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
 
 export const state$ = observable({
@@ -11,30 +12,17 @@ export const state$ = observable({
     inviteCodeIdBeingDeleted: undefined as number | undefined,
   },
   EMAIL_CLIENT: {
-    clientDb: {} as Record<string, ClientDb>,
-    activeClientDbName: undefined as string | undefined,
-    getActiveClientDb: () => {
-      const activeClientDbName = state$.EMAIL_CLIENT.activeClientDbName.get();
-      if (!activeClientDbName) {
-        throw new Error("activeClientDb is undefined");
+    activeEmailProviderIndex: 0,
+    emailProviders: [] as (typeof schema.emailProviderDetail.$inferSelect)[],
+    clientDbs: {} as Record<string, ClientDb>,
+    initializeClientDbs: () => {
+      const emailProviders = state$.EMAIL_CLIENT.emailProviders.get();
+      const clientDbs: Record<string, ClientDb> = {};
+      for (const emailProvider of emailProviders) {
+        const clientDb = initClientDb(emailProvider.email);
+        clientDbs[emailProvider.email] = opaqueObject(clientDb);
       }
-      const clientDbs = state$.EMAIL_CLIENT.clientDb.get();
-      const clientDb = clientDbs[activeClientDbName];
-      if (!clientDb) {
-        return initClientDb(activeClientDbName);
-      }
-      return clientDb;
-    },
-    initializeActiveClientDb: () => {
-      const activeClientDbName = state$.EMAIL_CLIENT.activeClientDbName.get();
-      const newClientDb = initClientDb(activeClientDbName);
-      state$.EMAIL_CLIENT.clientDb.set((prev) => {
-        return {
-          ...prev,
-          [activeClientDbName]: newClientDb,
-        };
-      });
-      return newClientDb;
+      state$.EMAIL_CLIENT.clientDbs.set(clientDbs);
     },
   },
   // Not used right now. Needed to make the api stuff work
@@ -45,3 +33,21 @@ export const state$ = observable({
     getHeaders: () => ({}) as Record<string, string>,
   },
 });
+
+export const useActiveEmailProvider = () => {
+  const activeIndex = state$.EMAIL_CLIENT.activeEmailProviderIndex.use();
+  const emailProviders = state$.EMAIL_CLIENT.emailProviders.use();
+  const activeEmailProvider = emailProviders[activeIndex];
+  return activeEmailProvider;
+};
+export const useActiveEmailClientDb = () => {
+  const activeIndex = state$.EMAIL_CLIENT.activeEmailProviderIndex.use();
+  const emailProviders = state$.EMAIL_CLIENT.emailProviders.use();
+  const clientDbs = state$.EMAIL_CLIENT.clientDbs.use();
+  const email = emailProviders[activeIndex]?.email;
+  if (!email) {
+    return undefined;
+  }
+  const db = clientDbs[email];
+  return db;
+};

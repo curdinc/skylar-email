@@ -24,7 +24,10 @@ export const emailProviderDetail = pgTable("email_provider_detail", {
   emailProviderDetailId: serial("email_provider_detail_id").primaryKey(),
   userId: integer("user_id")
     .notNull()
-    .references(() => user.userId),
+    .references(() => user.userId, {
+      onDelete: "cascade",
+      onUpdate: "cascade",
+    }),
   emailProvider: text("email_provider", {
     enum: SUPPORTED_EMAIL_PROVIDER_LIST,
   }).notNull(),

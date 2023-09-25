@@ -3,25 +3,35 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { state$ } from "@skylar/logic";
+import { useEmailSyncInfo } from "@skylar/client-db";
+import { state$, useActiveEmailClientDb } from "@skylar/logic";
 
 import { api } from "~/lib/api";
 
 export const ClientLayout = () => {
-  const activeClientDbName = state$.EMAIL_CLIENT.activeClientDbName.use();
+  const activeClientDb = useActiveEmailClientDb();
   const router = useRouter();
-  const { data: emailProvider, isLoading: isLoadingEmailProvider } =
-    api.me.getActiveEmailProvider.useQuery(undefined);
+  const { data: emailProviders, isLoading: isLoadingEmailProviders } =
+    api.emailProvider.getAll.useQuery();
+
+  const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
+    { db: activeClientDb },
+  );
 
   useEffect(() => {
-    if (isLoadingEmailProvider || activeClientDbName) return;
-    if (!activeClientDbName && !emailProvider) {
-      router.push("/onboarding/code");
+    if (isLoadingEmailProviders) {
+      return;
+    } else if (emailProviders) {
+      state$.EMAIL_CLIENT.emailProviders.set(emailProviders);
+      state$.EMAIL_CLIENT.initializeClientDbs();
     }
-    if (!activeClientDbName && emailProvider) {
-      state$.EMAIL_CLIENT.activeClientDbName.set(emailProvider.email);
+  }, [emailProviders, isLoadingEmailProviders]);
+
+  useEffect(() => {
+    if (!isLoadingEmailSyncInfo && !emailSyncInfo) {
+      router.push("/onboarding/sync");
     }
-  }, [activeClientDbName, emailProvider, isLoadingEmailProvider, router]);
+  });
 
   return <></>;
 };

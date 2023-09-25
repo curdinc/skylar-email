@@ -3,6 +3,7 @@ import { useStripe } from "@stripe/react-stripe-js";
 import { useQuery } from "@tanstack/react-query";
 
 import { api } from "~/lib/api";
+import { useLogger } from "~/lib/logger";
 
 export function useCheckSuccessfulSetupIntent() {
   const searchParams = useSearchParams();
@@ -13,6 +14,8 @@ export function useCheckSuccessfulSetupIntent() {
   );
   const { mutateAsync: setDefaultPaymentMethod } =
     api.stripe.setDefaultPaymentMethod.useMutation();
+  const utils = api.useContext();
+  const logger = useLogger();
 
   useQuery({
     queryKey: ["stripe", "checkPaymentIntent", setupIntentClientSecret],
@@ -38,7 +41,11 @@ export function useCheckSuccessfulSetupIntent() {
                   ? setupIntent.payment_method
                   : setupIntent.payment_method?.id ?? "",
             });
-            router.push("/inbox");
+            utils.onboarding.getUserOnboardStep.invalidate().catch((e) => {
+              logger.error("Error invalidating user onboarding step", {
+                error: e,
+              });
+            });
             break;
           }
           case "processing": {

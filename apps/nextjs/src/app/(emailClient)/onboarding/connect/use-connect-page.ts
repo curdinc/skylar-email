@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 
 import { state$ } from "@skylar/logic";
@@ -11,7 +10,6 @@ import { useLogger } from "~/lib/logger";
 import { useUserOnboardingRouteGuard } from "../use-user-onboarding-route-guard";
 
 export function useConnectEmailProviderPage() {
-  const router = useRouter();
   const logger = useLogger();
   const { isLoading: isCheckingUserOnboardStep } =
     useUserOnboardingRouteGuard();
@@ -23,16 +21,23 @@ export function useConnectEmailProviderPage() {
       setEmailProvider(provider);
     }
   };
+  const utils = api.useContext();
 
   const [isConnectingToEmailProvider, setIsConnectingToEmailProvider] =
     useState(false);
   const { mutate: exchangeCode } = api.oauth.googleCodeExchange.useMutation({
     onSuccess(emailProviderInfo) {
-      router.push("/onboarding/card");
-      state$.EMAIL_CLIENT.activeEmailClient.set(emailProviderInfo.email);
+      utils.onboarding.getUserOnboardStep.invalidate().catch((e) => {
+        logger.error("Error invalidating user onboarding step", { error: e });
+      });
+      state$.EMAIL_CLIENT.emailProviders.set([
+        emailProviderInfo.emailProviderDetail,
+      ]);
+      state$.EMAIL_CLIENT.activeEmailProviderIndex.set(0);
       setIsConnectingToEmailProvider(false);
     },
   });
+
   const initiateConnectToGmail = useGoogleLogin({
     flow: "auth-code",
     scope: GMAIL_SCOPES,

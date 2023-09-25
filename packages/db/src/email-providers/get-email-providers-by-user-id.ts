@@ -10,6 +10,9 @@ export async function getEmailProvidersByUserId({
 }) {
   const emailProviders = await db.query.emailProviderDetail.findMany({
     where: eq(schema.user.userId, userId),
+    orderBy(emailProvider, { asc }) {
+      return asc(emailProvider.createdAt);
+    },
   });
 
   return emailProviders;

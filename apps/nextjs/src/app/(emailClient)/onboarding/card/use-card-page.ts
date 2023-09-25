@@ -15,6 +15,7 @@ function useCreateCustomer() {
   const [isCustomerCreated, setIsCustomerCreated] = useState(false);
   const { mutate: maybeCreateCustomer } =
     api.stripe.maybeCreateCustomer.useMutation({
+       
       onSuccess: () => {
         setIsCustomerCreated(true);
       },

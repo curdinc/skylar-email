@@ -3,8 +3,8 @@ import { getEmailProvidersByUserId } from "@skylar/db";
 import { createTRPCRouter } from "../../trpc/factory";
 import { protectedProcedure } from "../../trpc/procedures";
 
-export const emailClientMeRouter = createTRPCRouter({
-  getActiveEmailProvider: protectedProcedure.query(
+export const emailProviderRouter = createTRPCRouter({
+  getAll: protectedProcedure.query(
     async ({
       ctx: {
         db,
@@ -15,7 +15,8 @@ export const emailClientMeRouter = createTRPCRouter({
         db,
         userId: user.userId,
       });
-      return emailProviders[0];
+
+      return emailProviders;
     },
   ),
 });

@@ -3,12 +3,14 @@
 import { useSelectedLayoutSegment } from "next/navigation";
 
 import { cn } from "~/lib/ui";
+import { useUserOnboardingRouteGuard } from "./use-user-onboarding-route-guard";
 
 export function Step() {
   const segment = useSelectedLayoutSegment();
+  useUserOnboardingRouteGuard();
 
   return (
-    <div className="relative">
+    <div className={cn("relative", segment === "sync" && "hidden")}>
       <div
         className="absolute left-0 top-2 h-0.5 w-full bg-muted"
         aria-hidden="true"

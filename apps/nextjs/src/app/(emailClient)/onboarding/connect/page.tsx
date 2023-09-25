@@ -39,7 +39,7 @@ export default function ConnectEmailOnboardingForm() {
           value={emailProvider}
         >
           <div>
-            <RadioGroupItem value="Gmail" id="gmail" className="peer sr-only" />
+            <RadioGroupItem value="gmail" id="gmail" className="peer sr-only" />
             <Label
               htmlFor="gmail"
               className="flex h-[105px] flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
@@ -51,7 +51,7 @@ export default function ConnectEmailOnboardingForm() {
           <div>
             <RadioGroupItem
               disabled
-              value="Outlook"
+              value="outlook"
               id="outlook"
               className="peer sr-only"
             />
