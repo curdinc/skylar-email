@@ -3,8 +3,8 @@ import Dexie from "dexie";
 
 import type { EmailType } from "../schema/email";
 import { EMAIL_INDEX } from "../schema/email";
-import type { SyncType } from "../schema/sync";
-import { SYNC_INDEX } from "../schema/sync";
+import type { EmailSyncInfoType } from "../schema/sync";
+import { EMAIL_SYNC_INFO_INDEX } from "../schema/sync";
 import type { ThreadType } from "../schema/thread";
 import { THREAD_INDEX } from "../schema/thread";
 
@@ -16,13 +16,13 @@ type DbTablesType = "thread" | "email" | "sync";
 export class ClientDb extends Dexie {
   thread!: Table<ThreadType, string>;
   email!: Table<EmailType, string>;
-  sync!: Table<SyncType, string>;
+  sync!: Table<EmailSyncInfoType, string>;
   constructor(userEmail: string) {
     super(userEmail, {});
     this.version(1).stores({
       thread: THREAD_INDEX,
       email: EMAIL_INDEX,
-      sync: SYNC_INDEX,
+      sync: EMAIL_SYNC_INFO_INDEX,
     } satisfies Record<DbTablesType, string>);
   }
 }

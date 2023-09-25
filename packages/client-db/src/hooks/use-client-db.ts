@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 
 import type { ClientDb } from "../db";
@@ -12,17 +11,16 @@ export function useClientDb<T>({
   query: (db: ClientDb) => Promise<T> | T;
   deps: Parameters<typeof useLiveQuery<T>>[1];
 }) {
-  const [isLoading, setIsLoading] = useState(true);
-
   const result = useLiveQuery(async () => {
     if (!db) {
       return;
     }
-    setIsLoading(true);
     const result = await query(db);
-    setIsLoading(false);
-    return result;
+    return [result].flat() ?? [];
   }, [...((deps as unknown[]) ?? []), db?.name]);
 
-  return { result, isLoading };
+  return {
+    result: result,
+    isLoading: !result,
+  };
 }

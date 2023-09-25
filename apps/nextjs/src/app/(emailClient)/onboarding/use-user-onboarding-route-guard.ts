@@ -1,8 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { state$ } from "@skylar/logic";
-
 import { api } from "~/lib/api";
 
 export const useUserOnboardingRouteGuard = () => {
@@ -27,7 +25,6 @@ export const useUserOnboardingRouteGuard = () => {
           break;
         }
         case "done": {
-          state$.EMAIL_CLIENT.initializeClientDbs();
           router.push("/onboarding/sync");
           break;
         }

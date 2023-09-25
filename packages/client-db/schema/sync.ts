@@ -1,15 +1,15 @@
-export const DEFAULT_SYNC_ID = "email_sync_info";
+export const DEFAULT_EMAIL_SYNC_INFO_ID = "email_sync_info";
 
-export type SyncIndexType = {
-  sync_id: string;
+export type EmailSyncInfoIndexType = {
+  email_sync_info_id: string;
   last_sync_history_id: string;
   last_sync_history_id_updated_at: number;
 };
 
-export type SyncType = SyncIndexType & {
+export type EmailSyncInfoType = EmailSyncInfoIndexType & {
   full_sync_completed_on: number;
 };
 
-export const SYNC_INDEX = `&sync_id,
+export const EMAIL_SYNC_INFO_INDEX = `&email_sync_info_id,
 last_sync_history_id,
 last_sync_history_id_updated_at` as const;

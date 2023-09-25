@@ -10,8 +10,17 @@ export default function ImportantInbox() {
     usePartialSync(startHistoryId);
   const { isLoadingThreads, threads } = useInboxPage();
   console.log("isLoadingThreads,threads", isLoadingThreads, threads);
+
+  if (isLoadingThreads) {
+    return <div>Loading...</div>;
+  }
+  const ThreadList = threads?.map((thread) => {
+    return (
+      <div key={thread.email_provider_thread_id}>{thread.latest_snippet}</div>
+    );
+  });
   return (
-    <div>
+    <div className="grid gap-3">
       <Button
         className="ml-10"
         onClick={() => {
@@ -23,6 +32,7 @@ export default function ImportantInbox() {
       >
         Partial-sync
       </Button>
+      {ThreadList}
     </div>
   );
 }

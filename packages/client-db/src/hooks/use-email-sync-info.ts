@@ -14,5 +14,5 @@ export function useEmailSyncInfo(
     },
   });
 
-  return { emailSyncInfo, isLoading };
+  return { emailSyncInfo: emailSyncInfo?.[0], isLoading };
 }

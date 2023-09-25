@@ -1,11 +1,20 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { useEmailSyncInfo } from "@skylar/client-db";
-import { useActiveEmailClientDb, useActiveEmailProvider } from "@skylar/logic";
+import {
+  bulkPutEmails,
+  upsertEmailSyncInfo,
+  useEmailSyncInfo,
+} from "@skylar/client-db";
+import {
+  state$,
+  useActiveEmailClientDb,
+  useActiveEmailProvider,
+} from "@skylar/logic";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
+import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useLogger } from "~/lib/logger";
 import { useEmailFullSync } from "./use-email-full-sync";
 
@@ -21,10 +30,18 @@ export function useSyncPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    console.log("Running sync page info");
+    state$.EMAIL_CLIENT.initializeClientDbs();
+  }, []);
+
+  useEffect(() => {
     console.log("isLoadingEmailSyncInfo", isLoadingEmailSyncInfo);
     console.log("activeEmailProvider?.email", activeEmailProvider?.email);
-    if (isLoadingEmailSyncInfo || !activeEmailProvider?.email) {
+    console.log("emailSyncInfo", emailSyncInfo);
+    if (
+      isLoadingEmailSyncInfo ||
+      !activeEmailProvider?.email ||
+      !activeClientDb
+    ) {
       return;
     } else if (
       !isLoadingEmailSyncInfo &&
@@ -37,8 +54,25 @@ export function useSyncPage() {
         activeEmailProvider.email,
         activeEmailProvider.emailProvider,
       )
-        .then((emailData) => {
+        .then(async (emailData) => {
           console.log("emailData", emailData);
+          const emailToSave = convertGmailEmailToClientDbEmail(emailData);
+          try {
+            await bulkPutEmails({
+              db: activeClientDb,
+              emails: emailToSave,
+            });
+            await upsertEmailSyncInfo({
+              db: activeClientDb,
+              emailSyncInfo: {
+                full_sync_completed_on: new Date().getTime(),
+                last_sync_history_id: emailData.lastCheckedHistoryId,
+                last_sync_history_id_updated_at: new Date().getTime(),
+              },
+            });
+          } catch (e) {
+            console.error("something went wrong", e);
+          }
         })
         .catch((e) => {
           logger.error("Error performing full sync for user gmail inbox", {
@@ -61,6 +95,8 @@ export function useSyncPage() {
     logger,
     toast,
     startEmailFullSync,
+    activeClientDb,
+    emailSyncInfo,
   ]);
 
   return { activeEmailProvider, syncProgress, syncStep, startEmailFullSync };

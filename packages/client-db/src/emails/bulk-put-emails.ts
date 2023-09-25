@@ -26,6 +26,7 @@ function buildThreadList(emails: EmailType[]) {
       cc: [],
       reply_to: [],
       delivered_to: [],
+      latest_snippet: "",
       content: [],
       content_search: [],
       email_provider_labels: [],
@@ -44,10 +45,10 @@ function buildThreadList(emails: EmailType[]) {
         email.rfc822_message_id,
       ]),
       subject: thread.subject ? thread.subject : email.subject,
-      subject_search: thread.subject_search
+      subject_search: thread.subject_search.length
         ? thread.subject_search
         : buildSearchableString(email.subject),
-      bcc: email.bcc.map((bcc) => bcc.email).concat(thread.bcc),
+      bcc: [email.bcc.email].concat(thread.bcc),
       cc: email.cc.map((cc) => cc.email).concat(thread.cc),
       from: thread.from.concat([email.from.email]),
       to: email.to.map((to) => to.email).concat(thread.to ?? []),
@@ -57,10 +58,17 @@ function buildThreadList(emails: EmailType[]) {
       delivered_to: email.delivered_to
         .map((deliveredTo) => deliveredTo.email)
         .concat(thread.delivered_to ?? []),
+      latest_snippet: thread.latest_snippet
+        ? thread.latest_snippet
+        : email.snippet,
       content: thread.content.concat([email.content_text]),
-      content_search: thread.content_search.concat(),
-      email_provider_labels: email.labels.concat(thread.email_provider_labels),
-      skylar_labels: thread.skylar_labels,
+      content_search: thread.content_search.concat(
+        buildSearchableString(email.content_text),
+      ),
+      email_provider_labels: email.email_provider_labels.concat(
+        thread.email_provider_labels,
+      ),
+      skylar_labels: email.skylar_labels.concat(thread.skylar_labels),
       attachment_names: email.attachment_names.concat(
         thread.attachment_names ?? [],
       ),

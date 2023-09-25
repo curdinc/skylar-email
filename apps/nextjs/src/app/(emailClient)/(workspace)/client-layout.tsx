@@ -31,7 +31,7 @@ export const ClientLayout = () => {
     if (!isLoadingEmailSyncInfo && !emailSyncInfo) {
       router.push("/onboarding/sync");
     }
-  });
+  }, [emailSyncInfo, isLoadingEmailSyncInfo, router]);
 
   return <></>;
 };
