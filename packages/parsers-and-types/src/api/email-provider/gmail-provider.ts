@@ -163,8 +163,10 @@ const emailMetadataParseResultSchema = object({
   bcc: emailSenderSchema,
   cc: array(emailSenderSchema),
   createdAt: date(),
-  deliveredTo: emailSenderSchema,
+  deliveredTo: array(emailSenderSchema),
   replyTo: array(emailSenderSchema),
+  rfc822MessageId: string(),
+  to: array(emailSenderSchema),
 });
 
 const messageDetailsSchema = object({

@@ -37,17 +37,21 @@ export function getEmailMetadata(
     bcc: emailSenderType;
     cc: emailSenderType[];
     createdAt: Date;
-    deliveredTo: emailSenderType;
+    deliveredTo: emailSenderType[];
     replyTo: emailSenderType[];
+    rfc822MessageId: string;
+    to: emailSenderType[];
   } = {
     from: { email: "" },
     subject: "",
     inReplyTo: { email: "" },
     bcc: { email: "" },
     cc: [],
-    deliveredTo: { email: "" },
+    deliveredTo: [],
     replyTo: [],
     createdAt: new Date(),
+    rfc822MessageId: "",
+    to: [],
   };
 
   for (const header of messageHeaders) {
@@ -77,7 +81,17 @@ export function getEmailMetadata(
         .map((val) => parseEmailSenderValue(val));
     }
     if (header.name === "Delivered-To") {
-      emailHeaders.from = parseEmailSenderValue(header.value);
+      emailHeaders.deliveredTo = header.value
+        .split(",")
+        .map((val) => parseEmailSenderValue(val));
+    }
+    if (header.name === "To") {
+      emailHeaders.to = header.value
+        .split(",")
+        .map((val) => parseEmailSenderValue(val));
+    }
+    if (header.name === "Message-ID") {
+      emailHeaders.rfc822MessageId = header.value;
     }
   }
 
