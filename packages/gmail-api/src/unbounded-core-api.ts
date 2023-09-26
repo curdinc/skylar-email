@@ -34,7 +34,7 @@ export async function getMessageUnbounded({
     GMAIL_MAX_BATCH_REQUEST_SIZE,
   );
   // iterate over slices of 100
-  const messageIdBatchPromises = messageIdChunks.map((chunk) =>
+  const messageIdBatchPromises = messageIdChunks.map((chunk, ind) =>
     backOff(
       () =>
         batchGetMessage({
@@ -43,9 +43,9 @@ export async function getMessageUnbounded({
           messageIds: chunk,
         }),
       {
-        startingDelay: 250,
-        timeMultiple: 4,
-        jitter: "full",
+        startingDelay: ind * 2100,
+        timeMultiple: 1.5,
+        jitter: "none",
       },
     ),
   );
