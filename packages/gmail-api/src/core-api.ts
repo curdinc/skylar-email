@@ -10,6 +10,7 @@ import {
   messageListResponseSchema,
   messageResponseSchema,
   parse,
+  trashMessageResponseSchema,
 } from "@skylar/parsers-and-types";
 
 import {
@@ -66,9 +67,7 @@ export async function getAccessToken<
   if (!res.ok) {
     throw new Error(`Failed to get access token. cause: ${await res.text()}`);
   }
-  return (await res.json()) as T extends "refresh_token"
-    ? Oauth2TokenFromRefreshTokenResponse
-    : Oauth2InitialTokenResponse;
+  return await res.json();
 }
 
 export async function watchGmailInbox(emailId: string, accessToken: string) {
@@ -334,4 +333,68 @@ export async function batchGetMessage({
   });
 
   return messageData;
+}
+
+export async function trashMessage({
+  messageId,
+  accessToken,
+  emailId,
+}: {
+  messageId: string;
+  accessToken: string;
+  emailId: string;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages/${messageId}/trash`,
+  );
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to get history for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const response = parse(trashMessageResponseSchema, await res.json());
+  return response;
+}
+
+export async function untrashMessage({
+  messageId,
+  accessToken,
+  emailId,
+}: {
+  messageId: string;
+  accessToken: string;
+  emailId: string;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages/${messageId}/untrash`,
+  );
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to get history for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const response = parse(trashMessageResponseSchema, await res.json());
+  return response;
 }
