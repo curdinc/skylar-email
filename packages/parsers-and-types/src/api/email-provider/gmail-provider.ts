@@ -216,7 +216,7 @@ export const getGmailAccessTokenSchema = object({
   email: string([email()]),
 });
 
-export const trashMessageResponseSchema = object({
+export const modifyMessageLabelsResponseSchema = object({
   labelIds: string(),
   id: string(),
   threadId: string(),
