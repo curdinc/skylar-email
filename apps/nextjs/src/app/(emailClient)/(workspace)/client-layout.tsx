@@ -33,6 +33,7 @@ export const ClientLayout = () => {
   const { startEmailPartialSync } = useEmailPartialSync();
 
   useQuery({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       isLoadingEmailSyncInfo,
       emailSyncInfo?.last_sync_history_id,
