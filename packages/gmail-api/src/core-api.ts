@@ -67,7 +67,9 @@ export async function getAccessToken<
   if (!res.ok) {
     throw new Error(`Failed to get access token. cause: ${await res.text()}`);
   }
-  return await res.json();
+  return (await res.json()) as T extends "refresh_token"
+    ? Oauth2TokenFromRefreshTokenResponse
+    : Oauth2InitialTokenResponse;
 }
 
 export async function watchGmailInbox(emailId: string, accessToken: string) {
