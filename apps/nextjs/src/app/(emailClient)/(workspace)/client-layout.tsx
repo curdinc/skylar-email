@@ -39,24 +39,26 @@ export const ClientLayout = () => {
       activeEmailClient?.email,
     ],
     queryFn: async () => {
+      let updatedEmails = false;
       if (
         isLoadingEmailSyncInfo ||
         !activeEmailClient?.email ||
         !activeClientDb
       ) {
-        return false;
+        return updatedEmails;
       }
       if (!emailSyncInfo?.last_sync_history_id) {
         router.push("/onboarding/sync");
-        return false;
+        return updatedEmails;
       }
       const emailData = await startEmailPartialSync(
         activeEmailClient?.email,
         emailSyncInfo?.last_sync_history_id,
       );
       if (!emailData) {
-        return false;
+        return updatedEmails;
       }
+
       console.log("emailData", emailData);
       if (emailData.newMessages.length) {
         const emailToSave = convertGmailEmailToClientDbEmail(
@@ -66,15 +68,18 @@ export const ClientLayout = () => {
           db: activeClientDb,
           emails: emailToSave,
         });
+        updatedEmails = true;
       }
       if (emailData.messagesDeleted?.length) {
         await bulkDeleteEmail({
           db: activeClientDb,
           emailIds: emailData.messagesDeleted,
         });
+        updatedEmails = true;
       }
       if (emailData.newMessages?.length) {
         // todo
+        updatedEmails = true;
       }
       await updateEmailSyncInfo({
         db: activeClientDb,
@@ -83,7 +88,7 @@ export const ClientLayout = () => {
           last_sync_history_id_updated_at: new Date().getTime(),
         },
       });
-      return true;
+      return updatedEmails;
     },
     refetchInterval: 50_000, // 50 seconds in milliseconds
     refetchIntervalInBackground: true,
