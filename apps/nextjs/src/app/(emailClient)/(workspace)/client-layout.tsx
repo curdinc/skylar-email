@@ -4,7 +4,12 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
-import { useEmailSyncInfo } from "@skylar/client-db";
+import {
+  bulkDeleteEmail,
+  bulkPutEmails,
+  updateEmailSyncInfo,
+  useEmailSyncInfo,
+} from "@skylar/client-db";
 import {
   state$,
   useActiveEmailClientDb,
@@ -12,6 +17,7 @@ import {
 } from "@skylar/logic";
 
 import { api } from "~/lib/api";
+import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useEmailPartialSync } from "./use-email-partial-sync";
 
 export const ClientLayout = () => {
@@ -33,7 +39,11 @@ export const ClientLayout = () => {
       activeEmailClient?.email,
     ],
     queryFn: async () => {
-      if (isLoadingEmailSyncInfo || !activeEmailClient?.email) {
+      if (
+        isLoadingEmailSyncInfo ||
+        !activeEmailClient?.email ||
+        !activeClientDb
+      ) {
         return false;
       }
       if (!emailSyncInfo?.last_sync_history_id) {
@@ -44,7 +54,35 @@ export const ClientLayout = () => {
         activeEmailClient?.email,
         emailSyncInfo?.last_sync_history_id,
       );
+      if (!emailData) {
+        return false;
+      }
       console.log("emailData", emailData);
+      if (emailData.newMessages.length) {
+        const emailToSave = convertGmailEmailToClientDbEmail(
+          emailData.newMessages,
+        );
+        await bulkPutEmails({
+          db: activeClientDb,
+          emails: emailToSave,
+        });
+      }
+      if (emailData.messagesDeleted?.length) {
+        await bulkDeleteEmail({
+          db: activeClientDb,
+          emailIds: emailData.messagesDeleted,
+        });
+      }
+      if (emailData.newMessages?.length) {
+        // todo
+      }
+      await updateEmailSyncInfo({
+        db: activeClientDb,
+        emailSyncInfo: {
+          last_sync_history_id: emailData.lastCheckedHistoryId,
+          last_sync_history_id_updated_at: new Date().getTime(),
+        },
+      });
       return true;
     },
     refetchInterval: 50_000, // 50 seconds in milliseconds

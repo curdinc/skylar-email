@@ -11,6 +11,7 @@ import {
   optional,
   recursive,
   string,
+  withDefault,
 } from "valibot";
 
 // identity token schema - decoded JWT from gmail
@@ -106,7 +107,7 @@ const historyItemSchema = object({
 });
 
 export const historyObjectSchema = object({
-  history: array(historyItemSchema),
+  history: withDefault(array(historyItemSchema), []),
   historyId: string(),
   nextPageToken: optional(string()),
 });
@@ -136,7 +137,7 @@ const emailSenderSchema = object({
   email: string(),
 });
 const modifiedLabelSchema = object({
-  mid: string(),
+  emailProviderMessageId: string(),
   newLabels: array(string()),
 });
 
