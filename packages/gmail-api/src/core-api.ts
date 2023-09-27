@@ -9,6 +9,7 @@ import {
   historyObjectSchema,
   messageListResponseSchema,
   messageResponseSchema,
+  modifyMessageLabelsResponseSchema,
   parse,
 } from "@skylar/parsers-and-types";
 
@@ -334,4 +335,108 @@ export async function batchGetMessage({
   });
 
   return messageData;
+}
+
+export async function trashMessage({
+  messageId,
+  accessToken,
+  emailId,
+}: {
+  messageId: string;
+  accessToken: string;
+  emailId: string;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages/${messageId}/trash`,
+  );
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to get history for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const response = parse(modifyMessageLabelsResponseSchema, await res.json());
+  return response;
+}
+
+export async function untrashMessage({
+  messageId,
+  accessToken,
+  emailId,
+}: {
+  messageId: string;
+  accessToken: string;
+  emailId: string;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages/${messageId}/untrash`,
+  );
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to get history for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const response = parse(modifyMessageLabelsResponseSchema, await res.json());
+  return response;
+}
+
+export async function modifyLabels({
+  messageId,
+  accessToken,
+  emailId,
+  addLabels,
+  deleteLabels,
+}: {
+  messageId: string;
+  accessToken: string;
+  emailId: string;
+  addLabels: string[];
+  deleteLabels: string[];
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages/${messageId}/modify`,
+  );
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      addLabelIds: addLabels,
+      removeLabelIds: deleteLabels,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to get history for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const response = parse(modifyMessageLabelsResponseSchema, await res.json());
+  return response;
 }

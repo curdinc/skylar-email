@@ -1,7 +1,7 @@
 import { getGmailRefreshToken } from "@skylar/db";
 import { getAccessToken } from "@skylar/gmail-api";
 import {
-  GetGmailAccessTokenSchema,
+  getGmailAccessTokenSchema,
   validatorTrpcWrapper,
 } from "@skylar/parsers-and-types";
 
@@ -10,7 +10,7 @@ import { protectedProcedure } from "../../trpc/procedures";
 
 export const gmailRouter = createTRPCRouter({
   getAccessToken: protectedProcedure
-    .input(validatorTrpcWrapper(GetGmailAccessTokenSchema))
+    .input(validatorTrpcWrapper(getGmailAccessTokenSchema))
     .mutation(async ({ ctx, input }) => {
       const refreshToken = await getGmailRefreshToken({
         db: ctx.db,
