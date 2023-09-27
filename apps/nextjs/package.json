@@ -72,7 +72,8 @@
     "extends": [
       "@skylar/eslint-config/base",
       "@skylar/eslint-config/nextjs",
-      "@skylar/eslint-config/react"
+      "@skylar/eslint-config/react",
+      "@skylar/eslint-config/react-bonus"
     ]
   },
   "prettier": "@skylar/prettier-config"
