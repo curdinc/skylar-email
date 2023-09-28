@@ -17,7 +17,9 @@ export default function ImportantInbox() {
         className="grid grid-cols-1 gap-1"
       >
         <div className="flex w-full flex-col md:flex-row md:items-baseline md:gap-2">
-          <div className="min-w-0 truncate font-semibold">{thread.subject}</div>
+          <div className="min-w-0 truncate font-semibold md:text-lg">
+            {thread.subject}
+          </div>
           <div className="min-w-fit text-xs text-muted-foreground md:text-sm">
             {thread.from.slice(-1)[0]}
           </div>
