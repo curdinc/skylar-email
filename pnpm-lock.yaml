@@ -276,6 +276,9 @@ importers:
       clsx:
         specifier: ^2.0.0
         version: 2.0.0
+      dompurify:
+        specifier: ^3.0.5
+        version: 3.0.5
       lucide-react:
         specifier: ^0.274.0
         version: 0.274.0(react@18.2.0)
@@ -313,6 +316,9 @@ importers:
       '@skylar/tsconfig':
         specifier: ^0.1.0
         version: link:../../tooling/typescript
+      '@types/dompurify':
+        specifier: ^3.0.3
+        version: 3.0.3
       '@types/node':
         specifier: ^18.17.13
         version: 18.17.13
@@ -4899,6 +4905,12 @@ packages:
       '@babel/types': 7.22.11
     dev: true
 
+  /@types/dompurify@3.0.3:
+    resolution: {integrity: sha512-odiGr/9/qMqjcBOe5UhcNLOFHSYmKFOyr+bJ/Xu3Qp4k1pNPAlNLUVNNLcLfjQI7+W7ObX58EdD3H+3p3voOvA==}
+    dependencies:
+      '@types/trusted-types': 2.0.4
+    dev: true
+
   /@types/eslint@8.44.2:
     resolution: {integrity: sha512-sdPRb9K6iL5XZOmBubg8yiFp5yS/JdUDQsq5e6h95km91MCYMuvp7mh1fjPEYUhvHepKpZOjnEaMBR4PxjWDzg==}
     dependencies:
@@ -5018,6 +5030,10 @@ packages:
   /@types/tinycolor2@1.4.3:
     resolution: {integrity: sha512-Kf1w9NE5HEgGxCRyIcRXR/ZYtDv0V8FVPtYHwLxl0O+maGX0erE77pQlD0gpP+/KByMZ87mOA79SjifhSB3PjQ==}
     dev: false
+
+  /@types/trusted-types@2.0.4:
+    resolution: {integrity: sha512-IDaobHimLQhjwsQ/NMwRVfa/yL7L/wriQPMhw1ZJall0KX6E1oxk29XMDeilW5qTIg5aoiqf5Udy8U/51aNoQQ==}
+    dev: true
 
   /@types/websocket@1.0.6:
     resolution: {integrity: sha512-JXkliwz93B2cMWOI1ukElQBPN88vMg3CruvW4KVSKpflt3NyNCJImnhIuB/f97rG7kakqRJGFiwkA895Kn02Dg==}
@@ -6682,6 +6698,10 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       esutils: 2.0.3
+
+  /dompurify@3.0.5:
+    resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
+    dev: false
 
   /dot-case@2.1.1:
     resolution: {integrity: sha512-HnM6ZlFqcajLsyudHq7LeeLDr2rFAVYtDv/hV5qchQEidSck8j9OPUsXY9KwJv/lHMtYlX4DjRQqwFYa+0r8Ug==}
