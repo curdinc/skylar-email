@@ -2,7 +2,20 @@ import type { EmailType } from "../../schema/email";
 import type { ThreadType } from "../../schema/thread";
 import type { ClientDb } from "../db";
 
-const USELESS_WORDS = ["", " ", "-", "&", "!", "!!"];
+const USELESS_WORDS = [
+  "",
+  " ",
+  "-",
+  "–",
+  "&",
+  "!",
+  "!!",
+  "*",
+  ":",
+  ">",
+  "<",
+  ",",
+];
 
 function buildSearchableString(text: string) {
   const allWordsIncludingDuplicates = text.split(" ");
@@ -35,7 +48,7 @@ function buildThreadList(emails: EmailType[]) {
       cc: [],
       reply_to: [],
       delivered_to: [],
-      latest_snippet: "",
+      latest_snippet_html: "",
       content: [],
       content_search: [],
       email_provider_labels: [],
@@ -71,9 +84,9 @@ function buildThreadList(emails: EmailType[]) {
       delivered_to: email.delivered_to
         .map((deliveredTo) => deliveredTo.email)
         .concat(thread.delivered_to ?? []),
-      latest_snippet: thread.latest_snippet
-        ? thread.latest_snippet
-        : email.snippet,
+      latest_snippet_html: thread.latest_snippet_html
+        ? thread.latest_snippet_html
+        : email.snippet_html,
       content: thread.content.concat([emailTextContent]),
       content_search: thread.content_search.concat(
         buildSearchableString(emailTextContent),
