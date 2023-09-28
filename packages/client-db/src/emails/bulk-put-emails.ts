@@ -2,10 +2,19 @@ import type { EmailType } from "../../schema/email";
 import type { ThreadType } from "../../schema/thread";
 import type { ClientDb } from "../db";
 
+const USELESS_WORDS = ["", " ", "-", "&", "!", "!!"];
+
 function buildSearchableString(text: string) {
   const allWordsIncludingDuplicates = text.split(" ");
   const wordSet = allWordsIncludingDuplicates.reduce(function (prev, current) {
-    prev.add(current);
+    if (USELESS_WORDS.includes(current)) {
+      return prev;
+    }
+    const firstAlphaIndex = current.search(/[a-z]/i);
+    // converts "\"This\"" to "this" so that we can search for "this" and find "\"This\"""
+    const firstAlpha = current.substring(firstAlphaIndex).toLowerCase();
+
+    prev.add(firstAlpha);
     return prev;
   }, new Set<string>());
   return Array.from(wordSet);
@@ -36,6 +45,10 @@ function buildThreadList(emails: EmailType[]) {
       updated_at: 0,
     };
 
+    const emailTextContent = Buffer.from(email.content_text, "base64").toString(
+      "utf-8",
+    );
+
     threads.set(email_provider_thread_id, {
       email_provider_thread_id: email.email_provider_thread_id,
       email_provider_message_id: thread.email_provider_message_id.concat([
@@ -61,9 +74,9 @@ function buildThreadList(emails: EmailType[]) {
       latest_snippet: thread.latest_snippet
         ? thread.latest_snippet
         : email.snippet,
-      content: thread.content.concat([email.content_text]),
+      content: thread.content.concat([emailTextContent]),
       content_search: thread.content_search.concat(
-        buildSearchableString(email.content_text),
+        buildSearchableString(emailTextContent),
       ),
       email_provider_labels: email.email_provider_labels.concat(
         thread.email_provider_labels,
@@ -78,8 +91,6 @@ function buildThreadList(emails: EmailType[]) {
     });
     return threads;
   }, new Map<string, ThreadType>());
-  // TODO: remove this console.log
-  console.log("threads", threads);
   return Array.from(threads.values());
 }
 

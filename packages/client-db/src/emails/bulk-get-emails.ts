@@ -1,11 +1,11 @@
 import type { ClientDb } from "../db";
 
-export async function bulkDeleteEmail({
+export async function bulkGetEmails({
   db,
   emailIds,
 }: {
   db: ClientDb;
   emailIds: string[];
 }) {
-  await db.email.bulkDelete(emailIds);
+  return await db.email.bulkGet(emailIds);
 }

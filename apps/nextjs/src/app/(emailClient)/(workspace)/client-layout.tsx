@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  bulkDeleteEmail,
+  bulkDeleteEmails,
   bulkPutEmails,
   updateEmailSyncInfo,
   useEmailSyncInfo,
@@ -72,13 +72,13 @@ export const ClientLayout = () => {
         updatedEmails = true;
       }
       if (emailData.messagesDeleted?.length) {
-        await bulkDeleteEmail({
+        await bulkDeleteEmails({
           db: activeClientDb,
           emailIds: emailData.messagesDeleted,
         });
         updatedEmails = true;
       }
-      if (emailData.newMessages?.length) {
+      if (emailData.labelsModified?.length) {
         // todo
         updatedEmails = true;
       }
