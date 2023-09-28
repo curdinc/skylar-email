@@ -18,7 +18,7 @@ export type EmailType = EmailIndexType & {
   content_text: string;
   skylar_labels: string[];
   email_provider_labels: string[];
-  snippet_html: string;
+  snippet: string;
   attachment_names: string[];
   attachments: Record<
     string,

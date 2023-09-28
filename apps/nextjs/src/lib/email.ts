@@ -1,8 +1,6 @@
 import type { EmailType } from "@skylar/client-db/schema/email";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 
-import { sanitize } from "./htmlSanitizer";
-
 export function convertGmailEmailToClientDbEmail(
   emails: SyncResponseType["newMessages"],
 ): EmailType[] {
@@ -32,9 +30,9 @@ export function convertGmailEmailToClientDbEmail(
       email_provider_labels: email.providerLabels,
       skylar_labels: [],
       subject: email.emailMetadata.subject,
-      snippet_html: sanitize(email.snippet).__html,
+      snippet: email.snippet,
       content_text: email.emailData.plain.join(" "),
-      content_html: sanitize(email.emailData.html.join(" ")).__html,
+      content_html: email.emailData.html.join(" "),
     };
   });
 }
