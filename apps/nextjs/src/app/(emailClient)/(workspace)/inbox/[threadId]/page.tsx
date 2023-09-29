@@ -83,7 +83,7 @@ export function EmailDisplay({
         <RawHtmlDisplay
           className={cn(
             !email.content_html && "whitespace-pre-wrap",
-            "min-w-0 ",
+            "w-full min-w-0",
           )}
           html={email.content_html ? email.content_html : email.content_text}
         />
