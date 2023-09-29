@@ -34,9 +34,6 @@ export function useSyncPage() {
   }, []);
 
   useEffect(() => {
-    console.log("isLoadingEmailSyncInfo", isLoadingEmailSyncInfo);
-    console.log("activeEmailProvider?.email", activeEmailProvider?.email);
-    console.log("emailSyncInfo", emailSyncInfo);
     if (
       isLoadingEmailSyncInfo ||
       !activeEmailProvider?.email ||
@@ -56,23 +53,21 @@ export function useSyncPage() {
       )
         .then(async (emailData) => {
           console.log("emailData", emailData);
-          const emailToSave = convertGmailEmailToClientDbEmail(emailData);
-          try {
-            await bulkPutEmails({
-              db: activeClientDb,
-              emails: emailToSave,
-            });
-            await upsertEmailSyncInfo({
-              db: activeClientDb,
-              emailSyncInfo: {
-                full_sync_completed_on: new Date().getTime(),
-                last_sync_history_id: emailData.lastCheckedHistoryId,
-                last_sync_history_id_updated_at: new Date().getTime(),
-              },
-            });
-          } catch (e) {
-            console.error("something went wrong", e);
-          }
+          const emailToSave = convertGmailEmailToClientDbEmail(
+            emailData.newMessages,
+          );
+          await bulkPutEmails({
+            db: activeClientDb,
+            emails: emailToSave,
+          });
+          await upsertEmailSyncInfo({
+            db: activeClientDb,
+            emailSyncInfo: {
+              full_sync_completed_on: new Date().getTime(),
+              last_sync_history_id: emailData.lastCheckedHistoryId,
+              last_sync_history_id_updated_at: new Date().getTime(),
+            },
+          });
         })
         .catch((e) => {
           logger.error("Error performing full sync for user gmail inbox", {
@@ -87,16 +82,15 @@ export function useSyncPage() {
         });
     }
   }, [
+    activeClientDb,
     activeEmailProvider?.email,
     activeEmailProvider?.emailProvider,
     emailSyncInfo?.full_sync_completed_on,
     isLoadingEmailSyncInfo,
-    router,
     logger,
-    toast,
+    router,
     startEmailFullSync,
-    activeClientDb,
-    emailSyncInfo,
+    toast,
   ]);
 
   return { activeEmailProvider, syncProgress, syncStep, startEmailFullSync };

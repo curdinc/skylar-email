@@ -1,6 +1,6 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 
 import { SupabaseAuthClientProvider } from "../client/next-provider";
 import {
@@ -48,7 +48,7 @@ export async function NextAuthProvider({
   supabaseUrl: string;
   authSettings?: AuthSettingServerType;
 }) {
-  const supabase = createRouteHandlerClient(
+  const supabase = createServerComponentClient(
     { cookies },
     {
       supabaseKey,

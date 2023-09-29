@@ -2,7 +2,7 @@ import type { messageDetailsType } from "@skylar/parsers-and-types";
 
 import { getAttachmentUnbouned } from "../unbounded-core-api";
 
-export async function resolveAttachements({
+export async function resolveAttachments({
   messageDetailList,
   accessToken,
   emailId,

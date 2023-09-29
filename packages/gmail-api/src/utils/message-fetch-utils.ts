@@ -29,13 +29,13 @@ function parseMessageChangesFromHistoryObject(
     );
     labelsModified = labelsModified.concat(
       historyObj.labelsAdded?.map((m) => ({
-        mid: m.message.id,
+        emailProviderMessageId: m.message.id,
         newLabels: m.message.labelIds,
       })) ?? [],
     );
     labelsModified = labelsModified.concat(
       historyObj.labelsRemoved?.map((m) => ({
-        mid: m.message.id,
+        emailProviderMessageId: m.message.id,
         newLabels: m.message.labelIds,
       })) ?? [],
     );
@@ -66,14 +66,8 @@ export async function getMessageChangesFromHistoryId({
     pageToken,
   });
 
-  const lastCheckedHistoryId = batchHistoryObject
-    .slice(-1)[0]
-    ?.history.slice(-1)[0]?.id;
-  if (!lastCheckedHistoryId) {
-    throw new Error("Unknown error in getting history id.", {
-      cause: "getMessageChangesFromHistoryId",
-    });
-  }
+  const lastCheckedHistoryId =
+    batchHistoryObject.slice(-1)[0]?.history.slice(-1)[0]?.id ?? startHistoryId;
 
   let messagesAdded: string[] = [];
   let messagesDeleted: string[] = [];
@@ -90,9 +84,9 @@ export async function getMessageChangesFromHistoryId({
   const dedupedLabelsModified = labelsModified
     .reverse()
     .reduce((result, labelObj) => {
-      if (!uniqueItems[labelObj.mid]) {
+      if (!uniqueItems[labelObj.emailProviderMessageId]) {
         result.push(labelObj);
-        uniqueItems[labelObj.mid] = true;
+        uniqueItems[labelObj.emailProviderMessageId] = true;
       }
       return result;
     }, Array<ModifiedLabelType>());

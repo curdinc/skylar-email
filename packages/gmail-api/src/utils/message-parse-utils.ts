@@ -101,12 +101,12 @@ export function getEmailMetadata(
 // Found at https://stackoverflow.com/questions/37445865/where-to-find-body-of-email-depending-of-mimetype
 export function getEmailBody({
   messageResponse,
-  mid,
+  emailProviderMessageId,
   logger,
   emailId,
 }: {
   messageResponse: MessageResponseType;
-  mid: string;
+  emailProviderMessageId: string;
   logger: Logger;
   emailId: string;
 }) {
@@ -143,14 +143,14 @@ export function getEmailBody({
         logger.debug("Weird state reached: attachment without id", {
           mimeType: part.mimeType,
           emailId,
-          mid,
+          emailProviderMessageId,
         });
       }
     } else {
       logger.debug("unhandled mimeType", {
         mimeType: part.mimeType,
         emailId,
-        mid,
+        emailProviderMessageId,
       });
     }
   }

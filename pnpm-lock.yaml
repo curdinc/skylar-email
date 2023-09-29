@@ -460,9 +460,6 @@ importers:
       '@skylar/tsconfig':
         specifier: ^0.1.0
         version: link:../../tooling/typescript
-      '@tanstack/eslint-plugin-query':
-        specifier: ^4.34.1
-        version: 4.34.1(eslint@8.48.0)
       '@tanstack/react-query':
         specifier: ^4.33.0
         version: 4.33.0(react-dom@18.2.0)(react-native@0.72.4)(react@18.2.0)
@@ -645,6 +642,9 @@ importers:
       '@next/eslint-plugin-next':
         specifier: ^13.4.19
         version: 13.4.19
+      '@tanstack/eslint-plugin-query':
+        specifier: ^4.34.1
+        version: 4.34.1(eslint@8.48.0)
       '@types/eslint':
         specifier: ^8.44.2
         version: 8.44.2
@@ -4699,7 +4699,7 @@ packages:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
       eslint: 8.48.0
-    dev: true
+    dev: false
 
   /@tanstack/match-sorter-utils@8.8.4:
     resolution: {integrity: sha512-rKH8LjZiszWEvmi01NR72QWZ8m4xmXre0OOwlRGnjU01Eqz/QnN+cqpty2PJ0efHblq09+KilvyR7lsbzmXVEw==}

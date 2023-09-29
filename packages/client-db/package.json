@@ -27,7 +27,6 @@
     "@skylar/eslint-config": "0.2.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
-    "@tanstack/eslint-plugin-query": "^4.34.1",
     "@tanstack/react-query": "^4.33.0",
     "eslint": "^8.48.0",
     "react": "18.2.0",
@@ -41,7 +40,7 @@
     "extends": [
       "@skylar/eslint-config/base",
       "@skylar/eslint-config/react",
-      "plugin:@tanstack/eslint-plugin-query/recommended"
+      "@skylar/eslint-config/react-bonus"
     ]
   },
   "prettier": "@skylar/prettier-config"
