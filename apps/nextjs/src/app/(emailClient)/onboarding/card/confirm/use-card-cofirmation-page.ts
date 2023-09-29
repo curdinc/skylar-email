@@ -16,7 +16,7 @@ export function useCheckSuccessfulSetupIntent() {
   const utils = api.useContext();
 
   useQuery({
-    queryKey: ["stripe", "checkPaymentIntent", setupIntentClientSecret],
+    queryKey: ["stripe", "checkPaymentIntent", setupIntentClientSecret, stripe],
     enabled: !!stripe && !!setupIntentClientSecret,
     queryFn: async () => {
       if (!stripe || !setupIntentClientSecret) {
