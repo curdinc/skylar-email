@@ -21,7 +21,7 @@ export function ThreadRow({ thread }: { thread: ThreadType }) {
         buttonVariants({
           variant: "ghost",
         }),
-        "grid h-fit grid-cols-1 gap-1 px-1 py-1 sm:px-2",
+        "grid h-fit grid-cols-1 gap-1 border-b px-1 pb-3 pt-1  sm:px-2",
       )}
     >
       <div className="flex w-full items-baseline justify-between">

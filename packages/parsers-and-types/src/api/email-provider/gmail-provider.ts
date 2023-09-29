@@ -218,7 +218,7 @@ export const getGmailAccessTokenSchema = object({
 });
 
 export const modifyMessageLabelsResponseSchema = object({
-  labelIds: string(),
+  labelIds: array(string()),
   id: string(),
   threadId: string(),
 });

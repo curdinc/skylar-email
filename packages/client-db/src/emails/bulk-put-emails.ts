@@ -58,10 +58,6 @@ function buildThreadList(emails: EmailType[]) {
       updated_at: 0,
     };
 
-    const emailTextContent = Buffer.from(email.content_text, "base64").toString(
-      "utf-8",
-    );
-
     threads.set(email_provider_thread_id, {
       email_provider_thread_id: email.email_provider_thread_id,
       email_provider_message_id: thread.email_provider_message_id.concat([
@@ -87,9 +83,9 @@ function buildThreadList(emails: EmailType[]) {
       latest_snippet_html: thread.latest_snippet_html
         ? thread.latest_snippet_html
         : email.snippet_html,
-      content: thread.content.concat([emailTextContent]),
+      content: thread.content.concat([email.content_text]),
       content_search: thread.content_search.concat(
-        buildSearchableString(emailTextContent),
+        buildSearchableString(email.content_text),
       ),
       email_provider_labels: email.email_provider_labels.concat(
         thread.email_provider_labels,
