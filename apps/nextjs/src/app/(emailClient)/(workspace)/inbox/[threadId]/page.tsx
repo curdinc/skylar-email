@@ -53,11 +53,11 @@ export function EmailDisplay({
       <Button
         variant={"ghost"}
         className={cn(
-          "grid  h-fit w-full grid-cols-1 gap-3 px-1 py-1 text-start md:px-5 md:py-2",
+          "grid h-fit w-full grid-cols-1 gap-3 px-1 py-1 text-start md:px-5 md:py-2",
         )}
         onClick={onClickEmailHeader}
       >
-        <div className="flex min-w-full items-baseline justify-between">
+        <div className="flex min-w-full flex-col items-baseline justify-between md:flex-row">
           <div className="min-w-fit text-base font-semibold">
             {email.from.name ?? email.from.email}
           </div>
@@ -74,14 +74,17 @@ export function EmailDisplay({
         )}
         {!isOpen && (
           <RawHtmlDisplay
-            className={"truncate  text-sm text-muted-foreground"}
+            className={"truncate text-sm text-muted-foreground"}
             html={email.snippet_html}
           />
         )}
       </Button>
       {isOpen && (
         <RawHtmlDisplay
-          className={cn(!email.content_html && "whitespace-pre-wrap")}
+          className={cn(
+            !email.content_html && "whitespace-pre-wrap",
+            "min-w-0 ",
+          )}
           html={email.content_html ? email.content_html : email.content_text}
         />
       )}
