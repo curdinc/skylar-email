@@ -50,3 +50,19 @@ export function convertGmailEmailToClientDbEmail(
     };
   });
 }
+
+export function formatTimeToMMMDD(time: number) {
+  return new Date(time).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+export function formatTimeToMMMDDYYYYHHmm(time: number) {
+  return new Date(time).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  });
+}

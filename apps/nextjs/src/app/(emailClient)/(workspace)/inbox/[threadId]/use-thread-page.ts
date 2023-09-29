@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 
 import { useEmailThread } from "@skylar/client-db";
@@ -10,9 +10,22 @@ import { useActiveEmailClientDb, useActiveEmailProvider } from "@skylar/logic";
 import { api } from "~/lib/api";
 
 export function useThreadPage() {
+  const router = useRouter();
+  useEffect(() => {
+    const escFunction = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        router.back();
+        document.removeEventListener("keydown", escFunction, false);
+      }
+    };
+    document.addEventListener("keydown", escFunction, false);
+    return () => {
+      document.removeEventListener("keydown", escFunction, false);
+    };
+  }, [router]);
+
   const { threadId } = useParams();
   if (typeof threadId !== "string") throw new Error("Invalid threadId");
-
   const activeDb = useActiveEmailClientDb();
   const emailProviderInfo = useActiveEmailProvider();
   const { emailThread, isLoading: isLoadingThread } = useEmailThread({

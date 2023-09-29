@@ -5,13 +5,11 @@ import type { ThreadType } from "@skylar/client-db/schema/thread";
 import { buttonVariants } from "~/components/ui/button";
 import { RawHtmlDisplay } from "~/components/ui/raw-html-display";
 import { Skeleton } from "~/components/ui/skeleton";
+import { formatTimeToMMMDD } from "~/lib/email";
 import { cn } from "~/lib/ui";
 
 export function ThreadRow({ thread }: { thread: ThreadType }) {
-  const dateUpdated = new Date(thread.updated_at).toLocaleDateString("en-US", {
-    month: "short",
-    day: "2-digit",
-  });
+  const dateUpdated = formatTimeToMMMDD(thread.updated_at);
 
   return (
     <Link
