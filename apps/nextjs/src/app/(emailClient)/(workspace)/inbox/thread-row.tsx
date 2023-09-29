@@ -4,6 +4,7 @@ import type { ThreadType } from "@skylar/client-db/schema/thread";
 
 import { buttonVariants } from "~/components/ui/button";
 import { RawHtmlDisplay } from "~/components/ui/raw-html-display";
+import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/ui";
 
 export function ThreadRow({ thread }: { thread: ThreadType }) {
@@ -25,7 +26,7 @@ export function ThreadRow({ thread }: { thread: ThreadType }) {
     >
       <div className="flex w-full items-baseline justify-between">
         <div className="flex w-full min-w-0 flex-col pr-3 md:flex-row md:items-baseline md:gap-2">
-          <div className="min-w-0 truncate text-base font-semibold md:text-lg">
+          <div className="min-w-0 truncate text-base font-semibold sm:text-lg">
             {thread.subject}
           </div>
           <div className="min-w-fit text-xs text-muted-foreground md:text-sm">
@@ -45,26 +46,5 @@ export function ThreadRow({ thread }: { thread: ThreadType }) {
 }
 
 export function ThreadRowLoading() {
-  return (
-    <div
-      className={cn(
-        buttonVariants({
-          variant: "ghost",
-        }),
-        "grid h-16 grid-cols-1 gap-1 px-1 py-1 md:px-2",
-      )}
-    >
-      <div className="flex w-full flex-col md:flex-row md:items-baseline md:gap-2">
-        <div className="min-w-0 truncate text-base font-semibold md:text-lg">
-          <div className="h-5 w-1/2 animate-pulse rounded-md bg-gray-200"></div>
-        </div>
-        <div className="min-w-fit text-xs text-muted-foreground md:text-sm">
-          <div className="h-5 w-1/4 animate-pulse rounded-md bg-gray-200"></div>
-        </div>
-      </div>
-      <div className="truncate text-sm text-muted-foreground">
-        <div className="h-5 w-3/4 animate-pulse rounded-md bg-gray-200"></div>
-      </div>
-    </div>
-  );
+  return <Skeleton className="h-[72px] sm:h-[76px] md:h-[60px]" />;
 }

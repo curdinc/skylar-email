@@ -10,7 +10,7 @@ export function useInboxPage() {
     prevPage,
   } = useLatestUnreadThreadSnippets({
     db,
-    limit: 15,
+    limit: 10,
   });
   return { threads, isLoadingThreads, nextPage, prevPage };
 }
