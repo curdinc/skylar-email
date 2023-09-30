@@ -1,10 +1,24 @@
 import type { EmailType } from "@skylar/client-db/schema/email";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 
+import { sanitize } from "./htmlSanitizer";
+
 export function convertGmailEmailToClientDbEmail(
   emails: SyncResponseType["newMessages"],
 ): EmailType[] {
   return emails.map((email) => {
+    const emailTextContent = email.emailData.plain
+      .map((content) => {
+        return Buffer.from(content, "base64").toString("utf-8");
+      })
+      .join(" ");
+
+    const emailHtmlContent = email.emailData.html
+      .map((contentHtml) => {
+        return Buffer.from(contentHtml, "base64").toString("utf-8");
+      })
+      .join(" ");
+
     return {
       attachment_names: email.emailData.attachments.map(
         (attachment) => attachment.filename,
@@ -30,9 +44,25 @@ export function convertGmailEmailToClientDbEmail(
       email_provider_labels: email.providerLabels,
       skylar_labels: [],
       subject: email.emailMetadata.subject,
-      snippet: email.snippet,
-      content_text: email.emailData.plain.join(" "),
-      content_html: email.emailData.html.join(" "),
+      snippet_html: sanitize(email.snippet).__html,
+      content_text: sanitize(emailTextContent).__html,
+      content_html: sanitize(emailHtmlContent).__html,
     };
+  });
+}
+
+export function formatTimeToMMMDD(time: number) {
+  return new Date(time).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+export function formatTimeToMMMDDYYYYHHmm(time: number) {
+  return new Date(time).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
   });
 }

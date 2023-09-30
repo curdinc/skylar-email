@@ -1,11 +1,38 @@
-import { useLatestThreadSnippets } from "@skylar/client-db";
+import {
+  useLatestReadThreadSnippets,
+  useLatestUnreadThreadSnippets,
+} from "@skylar/client-db";
 import { useActiveEmailClientDb } from "@skylar/logic";
 
 export function useInboxPage() {
   const db = useActiveEmailClientDb();
-  const { threads, isLoading: isLoadingThreads } = useLatestThreadSnippets({
+  const {
+    threads: unreadThreads,
+    isLoading: isLoadingUnreadThreads,
+    nextPage: nextUnreadPage,
+    prevPage: prevUnreadPage,
+  } = useLatestUnreadThreadSnippets({
     db,
-    limit: 25,
+    limit: 10,
   });
-  return { threads, isLoadingThreads };
+  const {
+    threads: readThreads,
+    isLoading: isLoadingReadThreads,
+    nextPage: nextReadPage,
+    prevPage: prevReadPage,
+  } = useLatestReadThreadSnippets({
+    db,
+    limit: 10,
+  });
+
+  return {
+    unreadThreads,
+    isLoadingUnreadThreads,
+    nextUnreadPage,
+    prevUnreadPage,
+    readThreads,
+    isLoadingReadThreads,
+    nextReadPage,
+    prevReadPage,
+  };
 }

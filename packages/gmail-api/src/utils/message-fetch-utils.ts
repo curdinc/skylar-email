@@ -44,7 +44,7 @@ function parseMessageChangesFromHistoryObject(
   return {
     messagesAdded,
     messagesDeleted,
-    labelsModified: labelsModified.reverse(), // reverse since history list is ascending so dedupe takes last
+    labelsModified: labelsModified,
   };
 }
 
@@ -82,7 +82,7 @@ export async function getMessageChangesFromHistoryId({
 
   const uniqueItems: Record<string, boolean> = {};
   const dedupedLabelsModified = labelsModified
-    .reverse()
+    .reverse() // reverse since history list is ascending so dedupe takes last
     .reduce((result, labelObj) => {
       if (!uniqueItems[labelObj.emailProviderMessageId]) {
         result.push(labelObj);
