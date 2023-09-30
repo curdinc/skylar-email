@@ -10,7 +10,6 @@ export type ThreadIndexType = {
   delivered_to: string[];
   content_search: string[];
   email_provider_labels: string[];
-  skylar_labels: string[];
   attachment_names: string[];
   created_at: number;
   updated_at: number;
@@ -34,7 +33,6 @@ export const THREAD_INDEX = `&email_provider_thread_id,
 *delivered_to,
 *content_search,
 *email_provider_labels,
-*skylar_labels,
 *attachment_names,
 created_at,
 updated_at` as const;

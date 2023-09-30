@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 
-import { useEmailThread } from "@skylar/client-db";
+import { bulkUpdateEmails, useEmailThread } from "@skylar/client-db";
 import type { EmailType } from "@skylar/client-db/schema/email";
 import { modifyLabels } from "@skylar/gmail-api";
 import { useActiveEmailClientDb, useActiveEmailProvider } from "@skylar/logic";
@@ -63,8 +63,20 @@ export function useThreadPage() {
         return labelData;
       }
     },
-    onSuccess: (labelData) => {
-      console.log("labelData", labelData);
+    onSuccess: async (labelData) => {
+      if (!labelData || !activeDb) {
+        return;
+      }
+      await bulkUpdateEmails({
+        db: activeDb,
+        emails: [
+          {
+            email_provider_message_id: labelData.id,
+            email_provider_labels: labelData.labelIds,
+            email_provider_thread_id: labelData.threadId,
+          },
+        ],
+      });
     },
     onError: (error) => {
       console.log("error", error);

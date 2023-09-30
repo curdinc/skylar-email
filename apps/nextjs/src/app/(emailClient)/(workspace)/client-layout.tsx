@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import {
   bulkDeleteEmails,
   bulkPutEmails,
+  bulkUpdateEmails,
   updateEmailSyncInfo,
   useEmailSyncInfo,
 } from "@skylar/client-db";
@@ -33,6 +34,7 @@ export const ClientLayout = () => {
   const { startEmailPartialSync } = useEmailPartialSync();
 
   useQuery({
+    // Missing activeClientDb which has recursive dependency, causing errors
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       isLoadingEmailSyncInfo,
@@ -79,7 +81,15 @@ export const ClientLayout = () => {
         updatedEmails = true;
       }
       if (emailData.labelsModified?.length) {
-        // todo
+        await bulkUpdateEmails({
+          db: activeClientDb,
+          emails: emailData.labelsModified.map((email) => {
+            return {
+              email_provider_message_id: email.emailProviderMessageId,
+              email_provider_labels: email.newLabels,
+            };
+          }),
+        });
         updatedEmails = true;
       }
       await updateEmailSyncInfo({
