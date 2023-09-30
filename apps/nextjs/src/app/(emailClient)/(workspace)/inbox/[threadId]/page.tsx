@@ -4,7 +4,12 @@ import { useState } from "react";
 
 import type { EmailType } from "@skylar/client-db/schema/email";
 
-import { Button } from "~/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { RawHtmlDisplay } from "~/components/ui/raw-html-display";
 import { TypographyH1 } from "~/components/ui/typography";
 import { formatTimeToMMMDDYYYYHHmm } from "~/lib/email";
@@ -42,52 +47,56 @@ export function EmailDisplay({
   isOpenInitially: boolean;
 }) {
   const dateUpdated = formatTimeToMMMDDYYYYHHmm(email.created_at);
-  const [isOpen, setIsOpen] = useState(isOpenInitially);
+  const [isOpen, setIsOpen] = useState(isOpenInitially ? email.subject : "");
 
-  const onClickEmailHeader = () => {
-    setIsOpen(!isOpen);
+  const onClickEmailHeader = (isEmailOpen: string) => {
+    setIsOpen(isEmailOpen);
   };
 
   return (
-    <>
-      <Button
-        variant={"ghost"}
-        className={cn(
-          "grid h-fit w-full grid-cols-1 gap-3 px-1 py-1 text-start md:px-5 md:py-2",
-        )}
-        onClick={onClickEmailHeader}
-      >
-        <div className="flex min-w-full flex-col items-baseline justify-between md:flex-row">
-          <div className="min-w-fit text-base font-semibold">
-            {email.from.name ?? email.from.email}
-          </div>
+    <Accordion
+      type="single"
+      collapsible
+      value={isOpen}
+      onValueChange={onClickEmailHeader}
+      className="w-full"
+    >
+      <AccordionItem value={email.subject} className="w-full">
+        <AccordionTrigger
+          className="grid w-full grid-cols-1 text-start"
+          showArrow={false}
+        >
+          <div className="flex w-full min-w-full flex-col items-baseline justify-between md:flex-row">
+            <div className="min-w-fit text-base font-semibold">
+              {email.from.name ?? email.from.email}
+            </div>
 
-          <div className="min-w-fit text-sm text-muted-foreground">
-            {dateUpdated}
+            <div className="min-w-fit text-sm text-muted-foreground">
+              {dateUpdated}
+            </div>
           </div>
-        </div>
-        {isOpen && (
-          <div className="min-w-fit text-sm text-muted-foreground">
-            To: {email.to[0]?.name ?? email.to[0]?.email}
-            {email.to.length > 1 ? `& ${email.to.length - 1} others` : null}
-          </div>
-        )}
-        {!isOpen && (
-          <RawHtmlDisplay
-            className={"truncate text-sm text-muted-foreground"}
-            html={email.snippet_html}
-          />
-        )}
-      </Button>
-      {isOpen && (
-        <RawHtmlDisplay
-          className={cn(
-            !email.content_html && "whitespace-pre-wrap",
-            "w-full min-w-0",
+          {isOpen ? (
+            <div className="min-w-fit text-sm text-muted-foreground">
+              To: {email.to[0]?.name ? email.to[0]?.name : email.to[0]?.email}
+              {email.to.length > 1 ? `& ${email.to.length - 1} others` : null}
+            </div>
+          ) : (
+            <RawHtmlDisplay
+              className={"truncate text-sm text-muted-foreground"}
+              html={email.snippet_html}
+            />
           )}
-          html={email.content_html ? email.content_html : email.content_text}
-        />
-      )}
-    </>
+        </AccordionTrigger>
+        <AccordionContent>
+          <RawHtmlDisplay
+            className={cn(
+              // !email.content_html && "whitespace-pre-wrap",
+              "w-full min-w-0",
+            )}
+            html={email.content_html ? email.content_html : email.content_text}
+          />
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }
