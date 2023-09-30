@@ -1,7 +1,10 @@
 import { useCallback, useState } from "react";
 
 import type { ThreadType } from "../../schema/thread";
-import { getLatestUnreadThreadSnippets } from "../emails/get-latest-thread-snippets";
+import {
+  getLatestReadThreadSnippets,
+  getLatestUnreadThreadSnippets,
+} from "../emails/get-latest-thread-snippets";
 import type { MakeDbOptional } from "../types/use-client-db-helper-type";
 import { useClientDb } from "./use-client-db";
 
@@ -17,6 +20,42 @@ export function useLatestUnreadThreadSnippets(
     db: args.db,
     query: async (db) => {
       const threadSnippets = await getLatestUnreadThreadSnippets({
+        ...args,
+        lastEntry: lastThreads.slice(-1)[0],
+        db,
+      });
+      return threadSnippets;
+    },
+    deps: [lastThreads, args.limit],
+  });
+
+  const nextPage = useCallback(() => {
+    if (threads) {
+      setLastThreads((prev) => {
+        return prev.concat(threads.slice(-1));
+      });
+    }
+  }, [threads]);
+  const prevPage = useCallback(() => {
+    lastThreads.pop();
+    setLastThreads([...lastThreads]);
+  }, [lastThreads]);
+
+  return { threads, isLoading, nextPage, prevPage };
+}
+
+export function useLatestReadThreadSnippets(
+  args: Omit<
+    MakeDbOptional<Parameters<typeof getLatestReadThreadSnippets>[0]>,
+    "lastEntry"
+  >,
+) {
+  const [lastThreads, setLastThreads] = useState<ThreadType[]>([]);
+
+  const { result: threads, isLoading } = useClientDb({
+    db: args.db,
+    query: async (db) => {
+      const threadSnippets = await getLatestReadThreadSnippets({
         ...args,
         lastEntry: lastThreads.slice(-1)[0],
         db,

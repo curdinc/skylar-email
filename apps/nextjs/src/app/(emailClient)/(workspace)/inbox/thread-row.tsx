@@ -8,7 +8,13 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { formatTimeToMMMDD } from "~/lib/email";
 import { cn } from "~/lib/ui";
 
-export function ThreadRow({ thread }: { thread: ThreadType }) {
+export function ThreadRow({
+  thread,
+  isRead,
+}: {
+  thread: ThreadType;
+  isRead: boolean;
+}) {
   const dateUpdated = formatTimeToMMMDD(thread.updated_at);
 
   return (
@@ -24,7 +30,12 @@ export function ThreadRow({ thread }: { thread: ThreadType }) {
     >
       <div className="flex w-full items-baseline justify-between">
         <div className="flex w-full min-w-0 flex-col pr-3 md:flex-row md:items-baseline md:gap-2">
-          <div className="min-w-0 truncate text-base font-semibold sm:text-lg">
+          <div
+            className={cn(
+              "min-w-0 truncate text-base sm:text-lg",
+              isRead ? "font-normal" : "font-semibold",
+            )}
+          >
             {thread.subject}
           </div>
           <div className="min-w-fit text-xs text-muted-foreground md:text-sm">

@@ -50,6 +50,12 @@ export async function getLatestReadThreadSnippets({
       .where("updated_at")
       .below(lastEntry.updated_at)
       .reverse()
+      .and((thread) => {
+        return (
+          thread.email_provider_labels.includes("INBOX") &&
+          !thread.email_provider_labels.includes("UNREAD")
+        );
+      })
       .limit(limit)
       .toArray();
   }
