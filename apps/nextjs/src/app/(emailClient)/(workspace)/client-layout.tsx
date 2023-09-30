@@ -1,8 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 
 import {
   bulkDeleteEmails,

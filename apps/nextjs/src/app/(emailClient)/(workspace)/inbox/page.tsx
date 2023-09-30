@@ -17,7 +17,6 @@ export default function ImportantInbox() {
     prevUnreadPage,
   } = useInboxPage();
 
-  console.log("unreadThreads", unreadThreads);
   let UnreadThreadList = unreadThreads?.map((thread) => {
     return (
       <ThreadRow
@@ -32,7 +31,6 @@ export default function ImportantInbox() {
       return <ThreadRowLoading key={idx} />;
     });
   }
-  console.log("readThreads", readThreads);
   let ReadThreadList = readThreads?.map((thread) => {
     return (
       <ThreadRow key={thread.email_provider_thread_id} thread={thread} isRead />
