@@ -189,6 +189,9 @@ importers:
 
   apps/nextjs:
     dependencies:
+      '@formkit/auto-animate':
+        specifier: ^0.8.0
+        version: 0.8.0
       '@icons-pack/react-simple-icons':
         specifier: ^9.0.0
         version: 9.0.0(react@18.2.0)
@@ -3128,6 +3131,10 @@ packages:
 
   /@floating-ui/utils@0.1.1:
     resolution: {integrity: sha512-m0G6wlnhm/AX0H12IOWtK8gASEMffnX08RtKkCgTdHb9JpHKGloI7icFfLg9ZmQeavcvR0PKmzxClyuFPSjKWw==}
+    dev: false
+
+  /@formkit/auto-animate@0.8.0:
+    resolution: {integrity: sha512-G8f7489ka0mWyi+1IEZT+xgIwcpWtRMmE2x+IrVoQ+KM1cP6VDj/TbujZjwxdb0P8w8b16/qBfViRmydbYHwMw==}
     dev: false
 
   /@gar/promisify@1.1.3:

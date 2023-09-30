@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { ThreadRow, ThreadRowLoading } from "./thread-row";
@@ -16,6 +19,32 @@ export default function ImportantInbox() {
     nextUnreadPage,
     prevUnreadPage,
   } = useInboxPage();
+  const [unreadParent, setAnimateUnreadParent] = useAutoAnimate();
+  const [readParent, setAnimateReadParent] = useAutoAnimate();
+
+  useEffect(() => {
+    // This is used to prevent the animation from triggering on the first load
+    const ARTIFICIAL_DELAY = 50;
+    if (isLoadingReadThreads) {
+      setAnimateReadParent(false);
+    } else {
+      setTimeout(() => {
+        setAnimateReadParent(true);
+      }, ARTIFICIAL_DELAY);
+    }
+    if (isLoadingUnreadThreads) {
+      setAnimateUnreadParent(false);
+    } else {
+      setTimeout(() => {
+        setAnimateUnreadParent(true);
+      }, ARTIFICIAL_DELAY);
+    }
+  }, [
+    isLoadingReadThreads,
+    isLoadingUnreadThreads,
+    setAnimateReadParent,
+    setAnimateUnreadParent,
+  ]);
 
   let UnreadThreadList = unreadThreads?.map((thread) => {
     return (
@@ -51,7 +80,9 @@ export default function ImportantInbox() {
         </p>
       </div>
       <Separator className="mt-1" />
-      {UnreadThreadList}
+      <div className="grid gap-5" ref={unreadParent}>
+        {UnreadThreadList}
+      </div>
       <div className="flex justify-between">
         <Button
           variant={"secondary"}
@@ -73,7 +104,10 @@ export default function ImportantInbox() {
         <p className="text-muted-foreground">All your completed emails</p>
       </div>
       <Separator className="mt-1" />
-      {ReadThreadList}
+      <div className="grid gap-5" ref={readParent}>
+        {" "}
+        {ReadThreadList}
+      </div>
       <div className="flex justify-between">
         <Button
           variant={"secondary"}
