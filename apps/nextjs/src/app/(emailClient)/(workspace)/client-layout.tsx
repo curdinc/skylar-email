@@ -43,6 +43,7 @@ export const ClientLayout = () => {
     ],
     queryFn: async () => {
       let updatedEmails = false;
+      console.log("running email sync");
       if (
         isLoadingEmailSyncInfo ||
         !activeEmailClient?.email ||
@@ -103,6 +104,9 @@ export const ClientLayout = () => {
     },
     refetchInterval: 50_000, // 50 seconds in milliseconds
     refetchIntervalInBackground: true,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
     enabled: !isLoadingEmailSyncInfo && !!activeEmailClient?.email,
   });
 
