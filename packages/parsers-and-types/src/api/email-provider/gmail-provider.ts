@@ -11,6 +11,7 @@ import {
   optional,
   recursive,
   string,
+  withDefault,
 } from "valibot";
 
 import { emailSenderSchema } from "../email";
@@ -108,7 +109,7 @@ const historyItemSchema = object({
 });
 
 export const historyObjectSchema = object({
-  history: array(historyItemSchema),
+  history: withDefault(array(historyItemSchema), []),
   historyId: string(),
   nextPageToken: optional(string()),
 });
@@ -134,7 +135,7 @@ export const messageListResponseSchema = object({
 });
 
 const modifiedLabelSchema = object({
-  mid: string(),
+  emailProviderMessageId: string(),
   newLabels: array(string()),
 });
 

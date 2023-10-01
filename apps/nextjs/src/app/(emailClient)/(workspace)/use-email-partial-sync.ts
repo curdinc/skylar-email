@@ -6,13 +6,13 @@ import { formatValidatorError } from "@skylar/parsers-and-types";
 import { api } from "~/lib/api";
 import { useLogger } from "~/lib/logger";
 
-export const usePartialSync = (startHistoryId: string) => {
+export const useEmailPartialSync = () => {
   const logger = useLogger();
   const { mutateAsync: fetchAccessToken, isLoading } =
     api.gmail.getAccessToken.useMutation();
 
   const fetchData = useCallback(
-    async (emailToSync: string) => {
+    async (emailToSync: string, startHistoryId: string) => {
       const accessToken = await fetchAccessToken({
         email: emailToSync,
       });
@@ -25,7 +25,7 @@ export const usePartialSync = (startHistoryId: string) => {
             logger,
             startHistoryId,
           });
-          console.log("emailData", emailData);
+          return emailData;
         } catch (e) {
           console.log("client side: operation failed");
           console.log(JSON.stringify(formatValidatorError(e), null, 2));
@@ -33,11 +33,11 @@ export const usePartialSync = (startHistoryId: string) => {
         }
       }
     },
-    [fetchAccessToken, logger, startHistoryId],
+    [fetchAccessToken, logger],
   );
 
   return {
-    fetch: fetchData,
-    isFetching: isLoading,
+    startEmailPartialSync: fetchData,
+    isSyncing: isLoading,
   };
 };

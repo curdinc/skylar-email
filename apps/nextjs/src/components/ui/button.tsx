@@ -65,9 +65,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         disabled={isDisabled}
       >
-        <>
-          {leftIcon} {props.children}
-        </>
+        {leftIcon} {props.children}
       </Comp>
     );
   },
