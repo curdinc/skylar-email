@@ -55,5 +55,5 @@ export function ThreadRow({
 }
 
 export function ThreadRowLoading() {
-  return <Skeleton className="h-[72px] sm:h-[76px] md:h-[60px]" />;
+  return <Skeleton className="h-[80.67px] sm:h-[68.67px]" />;
 }
