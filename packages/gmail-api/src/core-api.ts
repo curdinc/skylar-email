@@ -444,31 +444,26 @@ export async function modifyLabels({
 export async function sendMail({
   accessToken,
   emailId,
-  rfc822MessageData,
-  uploadType = "media",
+  rfc822Base64EncodedMessageData,
 }: {
   accessToken: string;
   emailId: string;
-  rfc822MessageData: string;
-  uploadType?: "media" | "multipart" | "resumable";
+  rfc822Base64EncodedMessageData: string;
 }) {
   const url = new URL(
-    `https://gmail.googleapis.com/upload/gmail/v1/users/${emailId}/messages/send`,
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages/send`,
   );
 
-  url.search = new URLSearchParams({
-    uploadType,
-  }).toString();
-
   const headers = new Headers({
-    "Content-Type": "message/rfc822",
     Authorization: `Bearer ${accessToken}`,
   });
 
   const res = await fetch(url, {
     method: "POST",
     headers: headers,
-    body: rfc822MessageData,
+    body: JSON.stringify({
+      raw: rfc822Base64EncodedMessageData,
+    }),
   });
 
   if (!res.ok) {

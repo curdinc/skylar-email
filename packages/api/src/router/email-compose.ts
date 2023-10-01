@@ -67,7 +67,6 @@ export const emailComposeRouter = createTRPCRouter({
           ...a,
         });
       });
-
-      return msg.asRaw();
+      return msg.asEncoded();
     }),
 });
