@@ -9,7 +9,7 @@ import {
   historyObjectSchema,
   messageListResponseSchema,
   messageResponseSchema,
-  modifyMessageLabelsResponseSchema,
+  modifyMessageResponseSchema,
   parse,
 } from "@skylar/parsers-and-types";
 
@@ -365,7 +365,7 @@ export async function trashMessage({
     );
   }
 
-  const response = parse(modifyMessageLabelsResponseSchema, await res.json());
+  const response = parse(modifyMessageResponseSchema, await res.json());
   return response;
 }
 
@@ -397,7 +397,7 @@ export async function untrashMessage({
     );
   }
 
-  const response = parse(modifyMessageLabelsResponseSchema, await res.json());
+  const response = parse(modifyMessageResponseSchema, await res.json());
   return response;
 }
 
@@ -437,6 +437,41 @@ export async function modifyLabels({
     );
   }
 
-  const response = parse(modifyMessageLabelsResponseSchema, await res.json());
+  const response = parse(modifyMessageResponseSchema, await res.json());
+  return response;
+}
+
+export async function sendMail({
+  accessToken,
+  emailId,
+  rfc822Base64EncodedMessageData,
+}: {
+  accessToken: string;
+  emailId: string;
+  rfc822Base64EncodedMessageData: string;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages/send`,
+  );
+
+  const headers = new Headers({
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      raw: rfc822Base64EncodedMessageData,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to send message for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const response = parse(modifyMessageResponseSchema, await res.json());
   return response;
 }
