@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { state$ } from "@skylar/logic";
 import { tinyKeys } from "@skylar/tinykeys";
 
 // ! Note that shortcuts should not overlap
@@ -11,14 +12,14 @@ export function useEmailThreadPageKeymaps() {
   const router = useRouter();
   useEffect(() => {
     const unsubscribe = tinyKeys(window, {
-      Escape: (e) => {
+      [state$.SHORTCUT.goBack.get()]: (e) => {
         e.preventDefault();
         router.back();
       },
-      ArrowRight: (e) => {
+      [state$.SHORTCUT.goNextThread.get()]: (e) => {
         console.log("arrow right key called", e.key, e.code);
       },
-      ArrowLeft: (e) => {
+      [state$.SHORTCUT.goPreviousThread.get()]: (e) => {
         console.log("arrow left key called", e.key, e.code);
       },
     });
@@ -29,7 +30,7 @@ export function useEmailThreadPageKeymaps() {
 export function useInboxKeymaps() {
   useEffect(() => {
     const unsubscribe = tinyKeys(window, {
-      "$mod+p": (e) => {
+      [state$.SHORTCUT.openSpotlightSearch.get()]: (e) => {
         e.preventDefault();
         console.log("launch spotlight search", e.key, e.code);
       },

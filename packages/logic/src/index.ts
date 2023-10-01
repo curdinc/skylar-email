@@ -25,6 +25,12 @@ export const state$ = observable({
       state$.EMAIL_CLIENT.clientDbs.set(clientDbs);
     },
   },
+  SHORTCUT: {
+    goBack: "Escape",
+    openSpotlightSearch: "$mod+p",
+    goNextThread: "ArrowRight",
+    goPreviousThread: "ArrowLeft",
+  },
   // Not used right now. Needed to make the api stuff work
   env: {
     NEXT_PUBLIC_BACKEND_URL: "",
