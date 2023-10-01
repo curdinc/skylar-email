@@ -2,29 +2,20 @@
 
 import { Button } from "~/components/ui/button";
 import { usePartialSync } from "~/lib/email-provider/gmail/use-partial-sync";
-import { useInboxPage } from "./use-inbox-page";
+import { useSendEmail } from "~/lib/email-provider/gmail/use-send-mail";
 
 export default function ImportantInbox() {
   const startHistoryId = "1626097";
   const { fetch: partialSync, isFetching: isFetchingPartialSync } =
     usePartialSync(startHistoryId);
-  const { isLoadingThreads, threads } = useInboxPage();
-  console.log("isLoadingThreads,threads", isLoadingThreads, threads);
+  const { sendEmail, isSendingEmail } = useSendEmail();
 
-  if (isLoadingThreads) {
-    return <div>Loading...</div>;
-  }
-  const ThreadList = threads?.map((thread) => {
-    return (
-      <div key={thread.email_provider_thread_id}>{thread.latest_snippet}</div>
-    );
-  });
   return (
     <div className="grid gap-3">
       <Button
         className="ml-10"
         onClick={() => {
-          partialSync("name@example.com").catch((err) =>
+          partialSync("hansbhatia0342@gmail.com").catch((err) =>
             console.log("err", err),
           );
         }}
@@ -32,7 +23,26 @@ export default function ImportantInbox() {
       >
         Partial-sync
       </Button>
-      {ThreadList}
+      <Button
+        className="ml-10"
+        onClick={async () => {
+          await sendEmail({
+            emailAddress: "hansbhatia0342@gmail.com",
+            emailConfig: {
+              from: { email: "hansbhatia0342@gmail.com", name: "Your boy HB" },
+              to: ["bboygraffity2002@gmail.com"],
+              subject: "hi",
+              text: "lemon",
+              html: "<div>Hi Matey </div>",
+              attachments: [],
+            },
+          });
+        }}
+        disabled={isSendingEmail}
+      >
+        Compose email
+      </Button>
+      {/* {ThreadList} */}
     </div>
   );
 }
