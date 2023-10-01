@@ -1,5 +1,7 @@
 export {
+  batchCreateLabel,
   getAccessToken,
+  listLabels,
   modifyLabels,
   sendMail,
   trashMessage,

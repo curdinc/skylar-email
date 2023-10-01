@@ -1,4 +1,5 @@
 import type {
+  LabelConfigType,
   Oauth2InitialTokenResponse,
   Oauth2TokenFromRefreshTokenResponse,
 } from "@skylar/parsers-and-types";
@@ -7,6 +8,8 @@ import {
   getAttachmentResponseSchema,
   gmailWatchResponseSchema,
   historyObjectSchema,
+  labelInfoSchema,
+  labelListSchema,
   messageListResponseSchema,
   messageResponseSchema,
   modifyMessageResponseSchema,
@@ -474,4 +477,131 @@ export async function sendMail({
 
   const response = parse(modifyMessageResponseSchema, await res.json());
   return response;
+}
+
+export async function listLabels({
+  accessToken,
+  emailId,
+}: {
+  accessToken: string;
+  emailId: string;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/labels`,
+  );
+
+  const headers = new Headers({
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: headers,
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to send message for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const response = parse(labelListSchema, await res.json());
+  return response;
+}
+
+export async function createLabel({
+  accessToken,
+  emailId,
+  labelConfig,
+}: {
+  accessToken: string;
+  emailId: string;
+  labelConfig: LabelConfigType;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/labels`,
+  );
+
+  const headers = new Headers({
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      ...labelConfig,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to send message for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const response = parse(labelInfoSchema, await res.json());
+  return response;
+}
+
+export async function batchCreateLabel({
+  accessToken,
+  emailId,
+  labelConfigs,
+}: {
+  accessToken: string;
+  emailId: string;
+  labelConfigs: LabelConfigType[];
+}) {
+  if (labelConfigs.length > GMAIL_MAX_BATCH_REQUEST_SIZE) {
+    throw new Error(
+      `Cannot batch more than ${GMAIL_MAX_BATCH_REQUEST_SIZE} requests.`,
+    );
+  }
+
+  const url = new URL("https://gmail.googleapis.com/batch/gmail/v1");
+  const boundary = GMAIL_BATCH_SEPARATOR_PREFIX + Date.now();
+  const headers = new Headers({
+    "Content-Type": `multipart/form-data; boundary=${boundary}`,
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const batchRequestBody =
+    labelConfigs
+      .map((body, index) => {
+        const individualRequest =
+          `--${boundary}\r\n` +
+          `Content-Type: application/http\r\n` +
+          `Content-ID: <${index + 1}>\r\n\r\n` +
+          `POST /gmail/v1/users/${emailId}/labels\r\n` +
+          `Content-Type: application/json\r\n\r\n` +
+          `${JSON.stringify(body, null, 2)}\r\n`;
+        return individualRequest;
+      })
+      .join("") + `--${boundary}--`;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: batchRequestBody,
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to get messages. cause: ${await res.text()}`);
+  }
+  console.log("res", res.body);
+
+  const contentData = await MultipartMixedService.parseAsync(res);
+  const messageData = contentData.map((data) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const formattedData = data.json();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (formattedData.error) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      throw formattedData.error;
+    }
+    return parse(labelInfoSchema, formattedData);
+  });
+
+  return messageData;
 }
