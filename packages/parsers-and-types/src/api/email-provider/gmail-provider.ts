@@ -4,6 +4,7 @@ import {
   boolean,
   date,
   email,
+  enumType,
   integer,
   merge,
   number,
@@ -219,3 +220,22 @@ export const modifyMessageResponseSchema = object({
   id: string(),
   threadId: string(),
 });
+
+export const labelInfoSchema = object({
+  id: string(),
+  name: string(),
+});
+
+export const labelListSchema = object({ labels: array(labelInfoSchema) });
+
+const labelConfigSchema = object({
+  labelListVisibility: enumType([
+    "labelShow",
+    "labelShowIfUnread",
+    "labelHide",
+  ]),
+  messageListVisibility: enumType(["show", "hide"]),
+  name: string(),
+});
+
+export type LabelConfigType = Output<typeof labelConfigSchema>;
