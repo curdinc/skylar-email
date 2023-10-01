@@ -1,3 +1,4 @@
+import { emailComposeRouter } from "./router/email-compose";
 import { emailProviderRouter } from "./router/email-providers";
 import { gmailRouter } from "./router/email-providers/gmail";
 import { inviteCodeRouter } from "./router/invite-code";
@@ -13,6 +14,7 @@ export const appRouter = createTRPCRouter({
   inviteCode: inviteCodeRouter,
   emailProvider: emailProviderRouter,
   gmail: gmailRouter,
+  emailCompose: emailComposeRouter,
 });
 
 // export type definition of API
