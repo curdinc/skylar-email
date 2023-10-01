@@ -42,7 +42,7 @@
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
     "eslint": "^8.48.0",
-    "hono": "^3.5.6",
+    "hono": "^3.7.3",
     "next": "^13.5.2",
     "react": "18.2.0",
     "typescript": "^5.2.2"

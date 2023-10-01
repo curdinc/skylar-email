@@ -34,7 +34,7 @@ importers:
     dependencies:
       '@hono/trpc-server':
         specifier: ^0.1.0
-        version: 0.1.0(@trpc/server@10.38.5)(hono@3.7.2)
+        version: 0.1.0(@trpc/server@10.38.5)(hono@3.7.3)
       '@skylar/api':
         specifier: ^0.1.0
         version: link:../../packages/api
@@ -51,8 +51,8 @@ importers:
         specifier: ^0.1.0
         version: link:../../packages/parsers-and-types
       hono:
-        specifier: ^3.5.6
-        version: 3.7.2
+        specifier: ^3.7.3
+        version: 3.7.3
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20230821.0
@@ -289,9 +289,6 @@ importers:
       dompurify:
         specifier: ^3.0.5
         version: 3.0.6
-      hono:
-        specifier: ^3.7.2
-        version: 3.7.2
       lucide-react:
         specifier: ^0.274.0
         version: 0.274.0(react@18.2.0)
@@ -452,8 +449,8 @@ importers:
         specifier: ^8.48.0
         version: 8.50.0
       hono:
-        specifier: ^3.5.6
-        version: 3.7.2
+        specifier: ^3.7.3
+        version: 3.7.3
       next:
         specifier: ^13.5.2
         version: 13.5.3(react-dom@18.2.0)(react@18.2.0)
@@ -3079,7 +3076,7 @@ packages:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  /@hono/trpc-server@0.1.0(@trpc/server@10.38.5)(hono@3.7.2):
+  /@hono/trpc-server@0.1.0(@trpc/server@10.38.5)(hono@3.7.3):
     resolution: {integrity: sha512-tgXG/ndgHxLqC09o1bwq8SzLLgzwoCr6KBRDdz9l0k7p0yuW5h67oVSUxCbmFp94hP+ahdIyqnRL84Aw8GvZxQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -3087,7 +3084,7 @@ packages:
       hono: 3.*
     dependencies:
       '@trpc/server': 10.38.5
-      hono: 3.7.2
+      hono: 3.7.3
     dev: false
 
   /@humanwhocodes/config-array@0.11.11:
@@ -8375,8 +8372,8 @@ packages:
       react-is: 16.13.1
     dev: false
 
-  /hono@3.7.2:
-    resolution: {integrity: sha512-5SWYrAQJlfjHggcDTnmKZd5zlUEXmoUiBjnmL6C1W8MX39/bUw6ZIvfEJZgpo7d7Z/vCJ5FRfkjIQPRH5yV/dQ==}
+  /hono@3.7.3:
+    resolution: {integrity: sha512-BQHdLPXb30hQ9k+04byeSi4QMHk20U1GUq0nT5kGUCGZtxeYhAS7mUJ1wgjn4SCvgiw1rcc6oBOAlwJQ7jQymA==}
     engines: {node: '>=16.0.0'}
 
   /hosted-git-info@3.0.8:
