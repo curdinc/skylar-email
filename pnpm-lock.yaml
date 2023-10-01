@@ -253,6 +253,9 @@ importers:
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../../packages/parsers-and-types
+      '@skylar/tinykeys':
+        specifier: ^0.1.0
+        version: link:../../packages/tinykeys
       '@stripe/react-stripe-js':
         specifier: ^2.3.0
         version: 2.3.0(@stripe/stripe-js@2.1.5)(react-dom@18.2.0)(react@18.2.0)
@@ -639,6 +642,24 @@ importers:
       valibot:
         specifier: ^0.13.1
         version: 0.13.1
+    devDependencies:
+      '@skylar/eslint-config':
+        specifier: 0.2.0
+        version: link:../../tooling/eslint
+      '@skylar/prettier-config':
+        specifier: ^0.1.0
+        version: link:../../tooling/prettier
+      '@skylar/tsconfig':
+        specifier: ^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.48.0
+        version: 8.48.0
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
+  packages/tinykeys:
     devDependencies:
       '@skylar/eslint-config':
         specifier: 0.2.0
