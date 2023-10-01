@@ -13,6 +13,8 @@ import {
   string,
 } from "valibot";
 
+import { emailSenderSchema } from "../email";
+
 // identity token schema - decoded JWT from gmail
 export const gmailProviderIDTokenSchema = object({
   iss: string(),
@@ -131,10 +133,6 @@ export const messageListResponseSchema = object({
   resultSizeEstimate: number(),
 });
 
-const emailSenderSchema = object({
-  name: optional(string()),
-  email: string(),
-});
 const modifiedLabelSchema = object({
   mid: string(),
   newLabels: array(string()),
@@ -210,14 +208,13 @@ export type emailBodyParseResultType = Output<
 export type messageDetailsType = Output<typeof messageDetailsSchema>;
 export type ModifiedLabelType = Output<typeof modifiedLabelSchema>;
 export type SyncResponseType = Output<typeof syncResponseSchema>;
-export type emailSenderType = Output<typeof emailSenderSchema>;
 
 export const getGmailAccessTokenSchema = object({
   email: string([email()]),
 });
 
-export const modifyMessageLabelsResponseSchema = object({
-  labelIds: string(),
+export const modifyMessageResponseSchema = object({
+  labelIds: array(string()),
   id: string(),
   threadId: string(),
 });

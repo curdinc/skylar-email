@@ -16,7 +16,12 @@ export type {
   UserType,
 } from "./src/auth";
 
-export { SUPPORTED_EMAIL_CATEGORIES } from "./src/api/email";
+export {
+  SUPPORTED_EMAIL_CATEGORIES,
+  emailConfigSchema,
+  type EmailConfigType,
+  type emailSenderType,
+} from "./src/api/email";
 export * from "./src/api/email-provider/gmail-provider";
 export {
   GmailPushNotificationDataObjectSchema,
@@ -27,7 +32,7 @@ export {
   historyObjectSchema,
   messageListResponseSchema,
   messageResponseSchema,
-  modifyMessageLabelsResponseSchema,
+  modifyMessageResponseSchema,
   type GmailPushNotificationType,
   type HistoryObjectType,
   type MessagePartType,
@@ -36,7 +41,6 @@ export {
   type SyncResponseType,
   type emailBodyParseResultType,
   type emailMetadataParseResultType,
-  type emailSenderType,
   type messageDetailsType,
 } from "./src/api/email-provider/gmail-provider";
 export {
