@@ -1,12 +1,8 @@
-"use client";
-
 import Link from "next/link";
 
 import { Icons } from "~/components/icons";
-import { BrandIcons } from "~/components/icons/brand-icons";
-import { buttonVariants } from "~/components/ui/button";
 import { siteConfig } from "~/lib/config";
-import { cn } from "~/lib/ui";
+import { MailingListForm } from "./mailing-list-form";
 
 const whySkylarList = [
   {
@@ -50,7 +46,7 @@ export default function IndexPage() {
   return (
     <>
       <section className=" space-y-6 pb-8 pt-6 md:pb-12 md:pt-5 lg:py-16">
-        <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
+        <div className="container flex max-w-[64rem] flex-col items-center gap-6 text-center">
           <Link
             href={siteConfig.links.twitter}
             className="rounded-2xl bg-muted px-4 py-1.5 text-sm font-medium"
@@ -69,27 +65,16 @@ export default function IndexPage() {
             Skylar is your extensible and customizable email manager. Do real
             work, not email.
           </p>
-          <div className="space-x-4">
-            <Link
-              href={siteConfig.links.github}
-              target="_blank"
-              rel="noreferrer"
-              className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
-            >
-              GitHub
-            </Link>
-            <Link href="/login" className={cn(buttonVariants({ size: "lg" }))}>
-              Get Started
-            </Link>
-          </div>
+          <MailingListForm />
         </div>
       </section>
+
       <section
         id="why-skylar"
         className="container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-12 lg:py-24"
       >
         <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
-          <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
+          <h2 className="font-heading text-3xl font-bold  sm:text-4xl md:text-5xl">
             Why Skylar
           </h2>
           <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
@@ -116,35 +101,18 @@ export default function IndexPage() {
           })}
         </div>
         <div className="mx-auto text-center md:max-w-[58rem]">
-          <p className="leading-normal text-muted-foreground sm:text-lg sm:leading-7">
+          <p className="leading-normal text-muted-foreground sm:text-lg">
             Skylar is built to empower you to take control and save time.
           </p>
         </div>
       </section>
+
       <section id="open-source" className="container py-8 md:py-12 lg:py-24">
-        <div className="w-full/* */  flex flex-col items-center justify-center gap-4 text-center">
-          <h2 className="font-heading text-3xl sm:text-3xl md:text-5xl">
-            Proudly Open Source
+        <div className="flex w-full flex-col items-center justify-center gap-6">
+          <h2 className="font-heading text-2xl font-semibold sm:text-3xl md:text-4xl">
+            Stop feeling overwhelmed by your inbox.
           </h2>
-          <p className="max-w-[85%] text-muted-foreground sm:text-lg sm:leading-7">
-            Skylar is open source and powered by open source software.
-          </p>
-          <Link
-            href={siteConfig.links.github}
-            target="_blank"
-            rel="noreferrer"
-            className="flex"
-          >
-            <div className="flex h-10 w-10 items-center justify-center space-x-2 rounded-md border border-muted bg-muted">
-              <BrandIcons.gitHub className="h-5 w-5 text-foreground" />
-            </div>
-            <div className="flex items-center">
-              <div className="h-4 w-4 border-y-8 border-l-0 border-r-8 border-solid border-muted border-y-transparent"></div>
-              <div className="flex h-10 items-center rounded-md border border-muted bg-muted px-4 font-medium">
-                Stars us on GitHub
-              </div>
-            </div>
-          </Link>
+          <MailingListForm />
         </div>
       </section>
     </>
