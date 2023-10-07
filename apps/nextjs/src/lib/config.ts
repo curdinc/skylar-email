@@ -19,8 +19,8 @@ export const marketingConfig: {
 } = {
   mainNav: [
     {
-      title: "Features",
-      href: "/#features",
+      title: "Why Skylar?",
+      href: "/#why-skylar",
     },
   ],
 };
