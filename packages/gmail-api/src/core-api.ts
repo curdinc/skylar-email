@@ -401,6 +401,70 @@ export async function untrashMessage({
   return response;
 }
 
+export async function trashThread({
+  threadId,
+  accessToken,
+  emailId,
+}: {
+  threadId: string;
+  accessToken: string;
+  emailId: string;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/threads/${threadId}/trash`,
+  );
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to get history for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const response = parse(modifyMessageResponseSchema, await res.json());
+  return response;
+}
+
+export async function untrashThread({
+  threadId,
+  accessToken,
+  emailId,
+}: {
+  threadId: string;
+  accessToken: string;
+  emailId: string;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/threads/${threadId}/untrash`,
+  );
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Failed to get history for ${emailId}. cause: ${await res.text()}`,
+    );
+  }
+
+  const response = parse(modifyMessageResponseSchema, await res.json());
+  return response;
+}
+
 export async function modifyLabels({
   messageId,
   accessToken,
