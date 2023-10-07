@@ -23,7 +23,10 @@ function EmailHoverOptions({ hoverOptions }: { hoverOptions: hoverOption[] }) {
                   className="rounded-full p-1 hover:bg-slate-200"
                   variant={"ghost"}
                   size={"icon-md"}
-                  onClick={item.onClick}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await item.fn();
+                  }}
                 >
                   {item.icon}
                 </Button>
