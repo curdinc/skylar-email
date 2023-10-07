@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 
+import EmailHoverOptions from "~/components/gmail-inbox/email-hover-options";
+import { hoverOptionsConfig } from "~/components/gmail-inbox/hover-option-config";
 import { buttonVariants } from "~/components/ui/button";
 import { RawHtmlDisplay } from "~/components/ui/raw-html-display";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -16,7 +18,6 @@ export function ThreadRow({
   isRead: boolean;
 }) {
   const dateUpdated = formatTimeToMMMDD(thread.updated_at);
-
   return (
     <Link
       href={`/inbox/${thread.email_provider_thread_id}`}
@@ -25,7 +26,7 @@ export function ThreadRow({
         buttonVariants({
           variant: "ghost",
         }),
-        "grid h-fit grid-cols-1 gap-1 border-b px-1 pb-3 pt-1  sm:px-2",
+        "group grid h-fit grid-cols-1 gap-1 border-b px-1 pb-3 pt-1 sm:px-2",
       )}
     >
       <div className="flex w-full items-baseline justify-between">
@@ -42,7 +43,14 @@ export function ThreadRow({
             {thread.from.slice(-1)[0]}
           </div>
         </div>
-        <div className="min-w-fit text-xs text-muted-foreground">
+        <div className="flex min-w-fit items-center gap-2 text-xs text-muted-foreground">
+          <EmailHoverOptions
+            hoverOptions={[
+              hoverOptionsConfig.trashThread(thread.email_provider_thread_id),
+              hoverOptionsConfig.snoozeThread(thread.email_provider_thread_id),
+              hoverOptionsConfig.archiveThread(thread.email_provider_thread_id),
+            ]}
+          />
           {dateUpdated}
         </div>
       </div>
