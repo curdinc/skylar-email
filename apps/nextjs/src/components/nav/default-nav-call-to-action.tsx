@@ -1,13 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { useLogOut, useUser } from "@skylar/auth/client";
 
-import { cn } from "~/lib/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button, buttonVariants } from "../ui/button";
+import { Button } from "../ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,11 +25,12 @@ export const DefaultNavCallToAction = () => {
     router.push("/settings");
   };
 
-  let navItem = (
-    <Link href="/login" className={cn(buttonVariants())}>
-      Login
-    </Link>
-  );
+  // let navItem = (
+  //   <Link href="/login" className={cn(buttonVariants())}>
+  //     Login
+  //   </Link>
+  // );
+  let navItem = <></>;
   if (user) {
     navItem = (
       <DropdownMenu>

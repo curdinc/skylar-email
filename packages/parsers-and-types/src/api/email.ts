@@ -10,6 +10,8 @@ import {
   withDefault,
 } from "valibot";
 
+import { emailSchema } from "../core-parsers";
+
 export const SUPPORTED_EMAIL_CATEGORIES = [
   "feed",
   "receipts",
@@ -19,7 +21,7 @@ export const SUPPORTED_EMAIL_CATEGORIES = [
 
 export const emailSenderSchema = object({
   name: optional(string()),
-  email: string([email()]),
+  email: emailSchema,
 });
 
 export const attachmentSchema = object({
