@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ToastAction } from "@radix-ui/react-toast";
 import {
   Tooltip,
@@ -24,6 +25,7 @@ function EmailHoverOptions({
   const { toast, dismiss } = useToast();
   const { mutateAsync: fetchGmailAccessToken } =
     api.gmail.getAccessToken.useMutation();
+  const [menuDisable, setmenuDisable] = useState(false);
 
   if (activeClientDb) {
     const showUndoSuccessToast = () => {
@@ -72,8 +74,10 @@ function EmailHoverOptions({
                     className="rounded-full p-1 hover:bg-slate-200"
                     variant={"ghost"}
                     size={"icon-md"}
+                    disabled={menuDisable}
                     onClick={async (e) => {
                       e.preventDefault();
+                      setmenuDisable(true);
                       const accessToken = await fetchGmailAccessToken({
                         email: activeEmail,
                       });
