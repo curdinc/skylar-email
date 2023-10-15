@@ -1,5 +1,6 @@
 import {
   AlertTriangle,
+  ArchiveX,
   ArrowRight,
   Check,
   ChevronLeft,
@@ -52,4 +53,5 @@ export const Icons = {
   check: Check,
   copy: Copy,
   copyChecked: CopyCheck,
+  archive: ArchiveX,
 };

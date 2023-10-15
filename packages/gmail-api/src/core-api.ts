@@ -429,8 +429,7 @@ export async function trashThread({
     );
   }
 
-  const response = parse(modifyMessageResponseSchema, await res.json());
-  return response;
+  return (await res.json()) as { id: string; messages: string[] };
 }
 
 export async function untrashThread({
@@ -460,9 +459,7 @@ export async function untrashThread({
       `Failed to get history for ${emailId}. cause: ${await res.text()}`,
     );
   }
-
-  const response = parse(modifyMessageResponseSchema, await res.json());
-  return response;
+  return (await res.json()) as { id: string; messages: string[] };
 }
 
 export async function modifyLabels({

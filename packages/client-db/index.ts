@@ -6,6 +6,8 @@ export * from "./src/emails/bulk-update-emails";
 export * from "./src/emails/update-email-sync-info";
 export * from "./src/emails/upsert-email-sync-info";
 
+export * from "./src/threads/bulk-put-threads";
+
 export * from "./src/hooks/use-email-sync-info";
 export * from "./src/hooks/use-email-thread";
 export * from "./src/hooks/use-latest-thread-snippets";

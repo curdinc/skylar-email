@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
+import { useActiveEmailProvider } from "@skylar/logic";
+
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { ThreadRow, ThreadRowLoading } from "./thread-row";
@@ -21,6 +23,7 @@ export default function ImportantInbox() {
   } = useInboxPage();
   const [unreadParent, setAnimateUnreadParent] = useAutoAnimate();
   const [readParent, setAnimateReadParent] = useAutoAnimate();
+  const activeEmailClient = useActiveEmailProvider();
 
   useEffect(() => {
     // This is used to prevent the animation from triggering on the first load
@@ -52,6 +55,7 @@ export default function ImportantInbox() {
         key={thread.email_provider_thread_id}
         thread={thread}
         isRead={false}
+        activeEmail={activeEmailClient?.email ?? ""}
       />
     );
   });
@@ -62,7 +66,12 @@ export default function ImportantInbox() {
   }
   let ReadThreadList = readThreads?.map((thread) => {
     return (
-      <ThreadRow key={thread.email_provider_thread_id} thread={thread} isRead />
+      <ThreadRow
+        key={thread.email_provider_thread_id}
+        thread={thread}
+        isRead
+        activeEmail={activeEmailClient?.email ?? ""}
+      />
     );
   });
   if (isLoadingReadThreads) {

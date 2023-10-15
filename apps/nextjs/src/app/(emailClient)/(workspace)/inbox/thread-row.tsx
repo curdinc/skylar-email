@@ -13,9 +13,11 @@ import { cn } from "~/lib/ui";
 export function ThreadRow({
   thread,
   isRead,
+  activeEmail,
 }: {
   thread: ThreadType;
   isRead: boolean;
+  activeEmail: string;
 }) {
   const dateUpdated = formatTimeToMMMDD(thread.updated_at);
   return (
@@ -45,10 +47,10 @@ export function ThreadRow({
         </div>
         <div className="flex min-w-fit items-center gap-2 text-xs text-muted-foreground">
           <EmailHoverOptions
+            activeEmail={activeEmail}
             hoverOptions={[
-              hoverOptionsConfig.trashThread(thread.email_provider_thread_id),
-              hoverOptionsConfig.snoozeThread(thread.email_provider_thread_id),
-              hoverOptionsConfig.archiveThread(thread.email_provider_thread_id),
+              hoverOptionsConfig.trashThread(thread, activeEmail),
+              hoverOptionsConfig.archiveThread(thread, activeEmail),
             ]}
           />
           {dateUpdated}
