@@ -13,8 +13,9 @@ type State = {
     };
   };
   EMAIL_CLIENT: {
-    activeEmailProviderIndex: 0;
+    activeEmailProviderIndexes: number[];
     emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
+    activeEmailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
   };
   SHORTCUT: {
     goBack: string;
@@ -40,8 +41,10 @@ type Actions = {
     };
   };
   EMAIL_CLIENT: {
-    setActiveEmailProviderIndex: (
-      index: State["EMAIL_CLIENT"]["activeEmailProviderIndex"],
+    setActiveEmailProviderIndexes: (
+      updateFn: (
+        prev: State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
+      ) => State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
     ) => void;
     setEmailProviders: (
       emailProviders: State["EMAIL_CLIENT"]["emailProviders"],
@@ -55,20 +58,31 @@ type Actions = {
 export const useGlobalStore = create(
   immer<State & Actions>((set, get) => ({
     EMAIL_CLIENT: {
-      activeEmailProviderIndex: 0,
+      activeEmailProviderIndexes: [],
       emailProviders: [],
-      activeEmailProvider:
-        get().EMAIL_CLIENT.emailProviders[
-          get().EMAIL_CLIENT.activeEmailProviderIndex
-        ],
-      setActiveEmailProviderIndex: (index) => {
-        set((state) => {
-          state.EMAIL_CLIENT.activeEmailProviderIndex = index;
-        });
+      activeEmailProviders: get()
+        .EMAIL_CLIENT.activeEmailProviderIndexes.map((index) => {
+          return get().EMAIL_CLIENT.emailProviders[index];
+        })
+        .filter(
+          (provider) => !!provider,
+        ) as (typeof schema.emailProviderDetail.$inferSelect)[],
+      setActiveEmailProviderIndexes: (updateFn) => {
+        set(
+          (state) =>
+            (state.EMAIL_CLIENT.activeEmailProviderIndexes = updateFn(
+              state.EMAIL_CLIENT.activeEmailProviderIndexes,
+            )),
+        );
       },
       setEmailProviders: (emailProviders) => {
         set((state) => {
           state.EMAIL_CLIENT.emailProviders = emailProviders;
+          if (state.EMAIL_CLIENT.activeEmailProviderIndexes.length === 0) {
+            state.EMAIL_CLIENT.activeEmailProviderIndexes = emailProviders.map(
+              (_, index) => index,
+            );
+          }
         });
       },
     },
