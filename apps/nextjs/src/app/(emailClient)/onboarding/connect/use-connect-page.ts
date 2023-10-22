@@ -21,7 +21,7 @@ export function useConnectEmailProviderPage() {
       setEmailProvider(provider);
     }
   };
-  const utils = api.useContext();
+  const utils = api.useUtils();
 
   const [isConnectingToEmailProvider, setIsConnectingToEmailProvider] =
     useState(false);

@@ -11,7 +11,7 @@ export function useSendEmail() {
   const { mutateAsync: fetchGmailAccessToken } =
     api.gmail.getAccessToken.useMutation();
 
-  const { mutateAsync: sendEmail, isLoading: isSendingEmail } = useMutation({
+  const { mutateAsync: sendEmail, isPending: isSendingEmail } = useMutation({
     mutationFn: async ({
       emailAddress,
       emailConfig,

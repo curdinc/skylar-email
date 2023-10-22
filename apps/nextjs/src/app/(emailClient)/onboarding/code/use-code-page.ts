@@ -11,8 +11,8 @@ export function useCodePage() {
   const { isLoading: isCheckingOnboardStep } = useUserOnboardingRouteGuard();
 
   const code = state$.ONBOARDING.alphaCode.use();
-  const utils = api.useContext();
-  const { mutate: applyCode, isLoading: isSubmittingCode } =
+  const utils = api.useUtils();
+  const { mutate: applyCode, isPending: isSubmittingCode } =
     api.onboarding.applyAlphaCode.useMutation({
       onSuccess() {
         utils.onboarding.getUserOnboardStep.invalidate().catch((e) => {

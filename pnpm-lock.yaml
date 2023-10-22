@@ -378,11 +378,11 @@ importers:
         specifier: ^0.1.0
         version: link:../parsers-and-types
       '@trpc/client':
-        specifier: ^10.38.1
-        version: 10.38.1(@trpc/server@10.38.1)
+        specifier: ^10.41.0
+        version: 10.41.0(@trpc/server@10.41.0)
       '@trpc/server':
-        specifier: ^10.38.1
-        version: 10.38.1
+        specifier: ^10.41.0
+        version: 10.41.0
       '@tsndr/cloudflare-worker-jwt':
         specifier: ^2.2.2
         version: 2.2.2
@@ -608,9 +608,15 @@ importers:
       '@trpc/client':
         specifier: ^10.38.1
         version: 10.38.1(@trpc/server@10.38.1)
+      immer:
+        specifier: ^10.0.3
+        version: 10.0.3
       superjson:
         specifier: 1.13.1
         version: 1.13.1
+      zustand:
+        specifier: ^4.4.4
+        version: 4.4.4(immer@10.0.3)(react@18.2.0)
     devDependencies:
       '@skylar/api':
         specifier: ^0.1.0
@@ -8709,6 +8715,10 @@ packages:
       queue: 6.0.2
     dev: false
 
+  /immer@10.0.3:
+    resolution: {integrity: sha512-pwupu3eWfouuaowscykeckFmVTpqbzW+rXFCX8rQLkZzM9ftBmU/++Ra+o+L27mz03zJTlyV4UUr+fdKNffo4A==}
+    dev: false
+
   /import-fresh@2.0.0:
     resolution: {integrity: sha512-eZ5H8rcgYazHbKC3PG4ClHNykCSxtAhxSSEM+2mb+7evD2CKF5V7c0dNum7AdpDh0ZdICwZY9sRSn8f+KH96sg==}
     engines: {node: '>=4'}
@@ -13818,3 +13828,23 @@ packages:
   /zod@3.22.2:
     resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
     dev: true
+
+  /zustand@4.4.4(immer@10.0.3)(react@18.2.0):
+    resolution: {integrity: sha512-5UTUIAiHMNf5+mFp7/AnzJXS7+XxktULFN0+D1sCiZWyX7ZG+AQpqs2qpYrynRij4QvoDdCD+U+bmg/cG3Ucxw==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      immer: '>=9.0'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      immer: 10.0.3
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false

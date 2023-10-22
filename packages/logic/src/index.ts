@@ -1,4 +1,5 @@
 import { observable, opaqueObject } from "@legendapp/state";
+import { create } from "zustand";
 
 import type { ClientDb } from "@skylar/client-db";
 import { initClientDb } from "@skylar/client-db";
@@ -31,13 +32,6 @@ export const state$ = observable({
     goNextThread: "ArrowRight",
     goPreviousThread: "ArrowLeft",
   },
-  // Not used right now. Needed to make the api stuff work
-  env: {
-    NEXT_PUBLIC_BACKEND_URL: "",
-    NODE_ENV: "",
-    getCookieValue: (_cookieName: string) => "",
-    getHeaders: () => ({}) as Record<string, string>,
-  },
 });
 
 export const useActiveEmailProvider = () => {
@@ -57,3 +51,19 @@ export const useActiveEmailClientDb = () => {
   const db = clientDbs[email];
   return db;
 };
+
+type State = {
+  firstName: string;
+  lastName: string;
+};
+
+type Action = {
+  updateFirstName: (firstName: State["firstName"]) => void;
+  updateLastName: (lastName: State["lastName"]) => void;
+};
+
+const useGlobalStore = create((set) => ({
+  bears: 0,
+  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+  removeAllBears: () => set({ bears: 0 }),
+}));

@@ -13,7 +13,7 @@ export function useCheckSuccessfulSetupIntent() {
   );
   const { mutateAsync: setDefaultPaymentMethod } =
     api.stripe.setDefaultPaymentMethod.useMutation();
-  const utils = api.useContext();
+  const utils = api.useUtils();
 
   useQuery({
     queryKey: ["stripe", "checkPaymentIntent", setupIntentClientSecret, stripe],

@@ -8,7 +8,7 @@ import { useLogger } from "~/lib/logger";
 
 export const useEmailPartialSync = () => {
   const logger = useLogger();
-  const { mutateAsync: fetchAccessToken, isLoading } =
+  const { mutateAsync: fetchAccessToken, isPending } =
     api.gmail.getAccessToken.useMutation();
 
   const fetchData = useCallback(
@@ -38,6 +38,6 @@ export const useEmailPartialSync = () => {
 
   return {
     startEmailPartialSync: fetchData,
-    isSyncing: isLoading,
+    isSyncing: isPending,
   };
 };

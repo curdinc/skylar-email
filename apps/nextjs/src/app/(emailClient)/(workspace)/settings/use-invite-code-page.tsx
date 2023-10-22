@@ -5,7 +5,7 @@ import { state$ } from "@skylar/logic";
 import { api } from "~/lib/api";
 
 export function useInviteCodePage() {
-  const util = api.useContext();
+  const util = api.useUtils();
   const {
     data: userCreatedInviteCodes,
     isLoading: isLoadingUserCreatedInviteCodes,
@@ -14,7 +14,7 @@ export function useInviteCodePage() {
 
   const inviteCodeIdBeingDeleted =
     state$.INVITE_CODE.inviteCodeIdBeingDeleted.use();
-  const { mutate: deleteInviteCodeBase, isLoading: isDeletingInviteCode } =
+  const { mutate: deleteInviteCodeBase, isPending: isDeletingInviteCode } =
     api.inviteCode.deleteInviteCode.useMutation({
       onSuccess: async () => {
         await util.inviteCode.getInviteCodes.invalidate();
@@ -28,7 +28,7 @@ export function useInviteCodePage() {
     [deleteInviteCodeBase],
   );
 
-  const { mutate: generateNewInviteCode, isLoading: isGeneratingNewCode } =
+  const { mutate: generateNewInviteCode, isPending: isGeneratingNewCode } =
     api.inviteCode.generateNewInviteCode.useMutation({
       onSuccess: async () => {
         await util.inviteCode.getInviteCodes.invalidate();
