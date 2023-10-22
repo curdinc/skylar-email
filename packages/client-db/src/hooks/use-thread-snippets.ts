@@ -13,7 +13,7 @@ export function usePaginatedThreadSnippets(
 ) {
   const [lastThreads, setLastThreads] = useState<ThreadType[]>([]);
 
-  const { data: threads, isFetching } = useQuery({
+  const { data: threads, isLoading } = useQuery({
     queryKey: [
       THREAD_SNIPPETS_QUERY_KEY,
       args.limit,
@@ -35,6 +35,7 @@ export function usePaginatedThreadSnippets(
       return threadSnippets;
     },
     placeholderData: keepPreviousData,
+    enabled: !!args.userEmails.length,
   });
 
   const nextPage = useCallback(() => {
@@ -49,5 +50,10 @@ export function usePaginatedThreadSnippets(
     lastThreads.pop();
     setLastThreads([...lastThreads]);
   }, [lastThreads]);
-  return { threads, isLoading: isFetching, nextPage, prevPage };
+  return {
+    threads,
+    isLoading: isLoading || !args.userEmails.length,
+    nextPage,
+    prevPage,
+  };
 }
