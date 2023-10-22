@@ -15,6 +15,8 @@ export async function bulkDeleteEmails({
   const threadIdsToDelete = emailsToDelete
     .map((email) => email?.email_provider_thread_id)
     .filter((id) => !!id) as string[];
-  await db.email.bulkDelete(emailIds);
-  await db.thread.bulkDelete(threadIdsToDelete);
+  await db.transaction("rw", db.email, db.thread, async () => {
+    await db.email.bulkDelete(emailIds);
+    await db.thread.bulkDelete(threadIdsToDelete);
+  });
 }

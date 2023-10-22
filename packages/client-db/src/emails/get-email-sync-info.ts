@@ -1,7 +1,12 @@
-import { DEFAULT_EMAIL_SYNC_INFO_ID } from "../../schema/sync";
 import type { ClientDb } from "../db";
 
-export async function getEmailSyncInfo({ db }: { db: ClientDb }) {
-  const syncInfo = await db.sync.get(DEFAULT_EMAIL_SYNC_INFO_ID);
+export async function getEmailSyncInfo({
+  db,
+  emailAddress,
+}: {
+  db: ClientDb;
+  emailAddress: string;
+}) {
+  const syncInfo = await db.sync.get(emailAddress);
   return syncInfo;
 }

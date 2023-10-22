@@ -1,6 +1,7 @@
 export type EmailIndexType = {
   email_provider_message_id: string;
   email_provider_thread_id: string;
+  user_email_address: string;
   rfc822_message_id: string;
   created_at: number;
 };
@@ -39,5 +40,22 @@ type EmailSenderType = { name?: string; email: string };
 
 export const EMAIL_INDEX = `&email_provider_message_id,
 email_provider_thread_id,
+user_email_address,
 &rfc822_message_id,
 created_at` as const;
+
+export const EMAIL_PROVIDER_LABELS = {
+  GMAIL: {
+    UNREAD: "UNREAD",
+    INBOX: "INBOX",
+    STARRED: "STARRED",
+    SENT: "SENT",
+    DRAFT: "DRAFT",
+    TRASH: "TRASH",
+    SPAM: "SPAM",
+    IMPORTANT: "IMPORTANT",
+    CATEGORY_PERSONAL: "CATEGORY_PERSONAL",
+    CATEGORY_SOCIAL: "CATEGORY_SOCIAL",
+    CATEGORY_PROMOTIONS: "CATEGORY_PROMOTIONS",
+  },
+} as const;
