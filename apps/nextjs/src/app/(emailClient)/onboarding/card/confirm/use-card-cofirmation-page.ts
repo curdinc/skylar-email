@@ -16,7 +16,8 @@ export function useCheckSuccessfulSetupIntent() {
   const utils = api.useUtils();
 
   useQuery({
-    queryKey: ["stripe", "checkPaymentIntent", setupIntentClientSecret, stripe],
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: ["stripe", "checkPaymentIntent", setupIntentClientSecret],
     enabled: !!stripe && !!setupIntentClientSecret,
     queryFn: async () => {
       if (!stripe || !setupIntentClientSecret) {

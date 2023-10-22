@@ -37,7 +37,7 @@ export const useEmailPartialSync = () => {
   );
 
   return {
-    startEmailPartialSync: fetchData,
+    emailPartialSync: fetchData,
     isSyncing: isPending,
   };
 };

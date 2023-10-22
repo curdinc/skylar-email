@@ -11,11 +11,7 @@ import {
   updateEmailSyncInfo,
   useEmailSyncInfo,
 } from "@skylar/client-db";
-import {
-  state$,
-  useActiveEmailClientDb,
-  useActiveEmailProvider,
-} from "@skylar/logic";
+import { setEmailProviders, useActiveEmailProviders } from "@skylar/logic";
 
 import { api } from "~/lib/api";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
@@ -24,100 +20,107 @@ import { useEmailPartialSync } from "./use-email-partial-sync";
 
 export const ClientLayout = () => {
   useInboxKeymaps();
-  const activeClientDb = useActiveEmailClientDb();
-  const activeEmailClient = useActiveEmailProvider();
+  const activeEmailProviders = useActiveEmailProviders();
+
   const router = useRouter();
   const { data: emailProviders, isLoading: isLoadingEmailProviders } =
     api.emailProvider.getAll.useQuery();
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
-    { db: activeClientDb },
+    {
+      emailAddresses: activeEmailProviders.map(
+        (emailProvider) => emailProvider.email,
+      ),
+    },
   );
-  const { startEmailPartialSync } = useEmailPartialSync();
+  const { emailPartialSync } = useEmailPartialSync();
 
   useQuery({
-    // Missing activeClientDb which has recursive dependency, causing errors
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: [
       isLoadingEmailSyncInfo,
-      emailSyncInfo?.last_sync_history_id,
-      activeEmailClient?.email,
+      activeEmailProviders.length,
+      emailSyncInfo?.length,
     ],
     queryFn: async () => {
       let updatedEmails = false;
-      console.log("running email sync");
-      if (
-        isLoadingEmailSyncInfo ||
-        !activeEmailClient?.email ||
-        !activeClientDb
-      ) {
-        return updatedEmails;
+      if (isLoadingEmailSyncInfo || !activeEmailProviders.length) {
+        throw new Error("Not ready to sync emails");
       }
-      if (!emailSyncInfo?.last_sync_history_id) {
+
+      if (emailSyncInfo?.length !== activeEmailProviders.length) {
         router.push("/onboarding/sync");
         return updatedEmails;
       }
-      const emailData = await startEmailPartialSync(
-        activeEmailClient?.email,
-        emailSyncInfo?.last_sync_history_id,
-      );
-      if (!emailData) {
+
+      for (const activeEmailProvider of activeEmailProviders) {
+        const syncInfo = emailSyncInfo.find(
+          (syncInfo) =>
+            syncInfo.email_sync_info_id.toLowerCase() ===
+            activeEmailProvider.email.toLowerCase(),
+        );
+        if (!syncInfo) {
+          router.push("/onboarding/sync");
+          return updatedEmails;
+        }
+        const emailData = await emailPartialSync(
+          activeEmailProvider?.email,
+          syncInfo?.last_sync_history_id,
+        );
+        if (!emailData) {
+          return updatedEmails;
+        }
+
+        console.log("emailData", emailData);
+        if (emailData.newMessages.length) {
+          const emailToSave = convertGmailEmailToClientDbEmail(
+            activeEmailProvider.email,
+            emailData.newMessages,
+          );
+          await bulkPutEmails({
+            emails: emailToSave,
+          });
+          updatedEmails = true;
+        }
+        if (emailData.messagesDeleted?.length) {
+          await bulkDeleteEmails({
+            emailIds: emailData.messagesDeleted,
+          });
+          updatedEmails = true;
+        }
+        if (emailData.labelsModified?.length) {
+          await bulkUpdateEmails({
+            emails: emailData.labelsModified.map((email) => {
+              return {
+                email_provider_message_id: email.emailProviderMessageId,
+                email_provider_labels: email.newLabels,
+              };
+            }),
+          });
+          updatedEmails = true;
+        }
+        await updateEmailSyncInfo({
+          syncEmailAddressToUpdate: activeEmailProvider.email,
+          emailSyncInfo: {
+            last_sync_history_id: emailData.lastCheckedHistoryId,
+            last_sync_history_id_updated_at: new Date().getTime(),
+          },
+        });
         return updatedEmails;
       }
-
-      console.log("emailData", emailData);
-      if (emailData.newMessages.length) {
-        const emailToSave = convertGmailEmailToClientDbEmail(
-          emailData.newMessages,
-        );
-        await bulkPutEmails({
-          db: activeClientDb,
-          emails: emailToSave,
-        });
-        updatedEmails = true;
-      }
-      if (emailData.messagesDeleted?.length) {
-        await bulkDeleteEmails({
-          db: activeClientDb,
-          emailIds: emailData.messagesDeleted,
-        });
-        updatedEmails = true;
-      }
-      if (emailData.labelsModified?.length) {
-        await bulkUpdateEmails({
-          db: activeClientDb,
-          emails: emailData.labelsModified.map((email) => {
-            return {
-              email_provider_message_id: email.emailProviderMessageId,
-              email_provider_labels: email.newLabels,
-            };
-          }),
-        });
-        updatedEmails = true;
-      }
-      await updateEmailSyncInfo({
-        db: activeClientDb,
-        emailSyncInfo: {
-          last_sync_history_id: emailData.lastCheckedHistoryId,
-          last_sync_history_id_updated_at: new Date().getTime(),
-        },
-      });
-      return updatedEmails;
     },
-    refetchInterval: 50_000, // 50 seconds in milliseconds
+    refetchInterval: 40_000, // 40 seconds in milliseconds
     refetchIntervalInBackground: true,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    enabled: !isLoadingEmailSyncInfo && !!activeEmailClient?.email,
+    enabled: !isLoadingEmailSyncInfo && !!activeEmailProviders.length,
   });
 
   useEffect(() => {
     if (isLoadingEmailProviders) {
       return;
     } else if (emailProviders) {
-      state$.EMAIL_CLIENT.emailProviders.set(emailProviders);
-      state$.EMAIL_CLIENT.initializeClientDbs();
+      setEmailProviders(emailProviders);
     }
   }, [emailProviders, isLoadingEmailProviders]);
 

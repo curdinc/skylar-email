@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { state$ } from "@skylar/logic";
+import { useOptimizedGlobalStore } from "@skylar/logic";
 import { tinyKeys } from "@skylar/tinykeys";
 
 // ! Note that shortcuts should not overlap
@@ -9,17 +9,22 @@ import { tinyKeys } from "@skylar/tinykeys";
 // ! This will result in both shortcuts being called when "Escape" is pressed. Probably not what you want.
 
 export function useEmailThreadPageKeymaps() {
+  const shortcut = useOptimizedGlobalStore((state) => ({
+    goBack: state.SHORTCUT.goBack,
+    goNextThread: state.SHORTCUT.goNextThread,
+    goPreviousThread: state.SHORTCUT.goPreviousThread,
+  }));
   const router = useRouter();
   useEffect(() => {
     const unsubscribe = tinyKeys(window, {
-      [state$.SHORTCUT.goBack.get()]: (e) => {
+      [shortcut.goBack]: (e) => {
         e.preventDefault();
         router.back();
       },
-      [state$.SHORTCUT.goNextThread.get()]: (e) => {
+      [shortcut.goNextThread]: (e) => {
         console.log("arrow right key called", e.key, e.code);
       },
-      [state$.SHORTCUT.goPreviousThread.get()]: (e) => {
+      [shortcut.goPreviousThread]: (e) => {
         console.log("arrow left key called", e.key, e.code);
       },
     });
@@ -28,9 +33,12 @@ export function useEmailThreadPageKeymaps() {
 }
 
 export function useInboxKeymaps() {
+  const shortcut = useOptimizedGlobalStore((state) => ({
+    spotlight: state.SHORTCUT.openSpotlightSearch,
+  }));
   useEffect(() => {
     const unsubscribe = tinyKeys(window, {
-      [state$.SHORTCUT.openSpotlightSearch.get()]: (e) => {
+      [shortcut.spotlight]: (e) => {
         e.preventDefault();
         console.log("launch spotlight search", e.key, e.code);
       },
