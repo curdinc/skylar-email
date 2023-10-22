@@ -1,22 +1,21 @@
-import type { ClientDb } from "../db";
+import { clientDb } from "../db";
 import { bulkGetEmails } from "./bulk-get-emails";
 
-export async function bulkDeleteEmails({
-  db,
-  emailIds,
-}: {
-  db: ClientDb;
-  emailIds: string[];
-}) {
+export async function bulkDeleteEmails({ emailIds }: { emailIds: string[] }) {
   const emailsToDelete = await bulkGetEmails({
-    db,
+    db: clientDb,
     emailIds,
   });
   const threadIdsToDelete = emailsToDelete
     .map((email) => email?.email_provider_thread_id)
     .filter((id) => !!id) as string[];
-  await db.transaction("rw", db.email, db.thread, async () => {
-    await db.email.bulkDelete(emailIds);
-    await db.thread.bulkDelete(threadIdsToDelete);
-  });
+  await clientDb.transaction(
+    "rw",
+    clientDb.email,
+    clientDb.thread,
+    async () => {
+      await clientDb.email.bulkDelete(emailIds);
+      await clientDb.thread.bulkDelete(threadIdsToDelete);
+    },
+  );
 }

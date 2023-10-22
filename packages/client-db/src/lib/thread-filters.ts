@@ -19,3 +19,19 @@ export function filterForUnread(args: { invert: boolean } = { invert: false }) {
     );
   };
 }
+
+export function filterForEmails({
+  emails,
+  invert = false,
+}: {
+  invert?: boolean;
+  emails: string[];
+}) {
+  return (thread: ThreadType) => {
+    return emails.every((email) =>
+      invert
+        ? !(thread.user_email_address !== email)
+        : thread.user_email_address === email,
+    );
+  };
+}

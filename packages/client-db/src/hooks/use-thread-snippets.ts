@@ -20,9 +20,11 @@ export function usePaginatedThreadSnippets(
       args.sort,
       args.orderBy,
       args.filters,
+      args.userEmails,
     ],
     queryFn: async () => {
       const threadSnippets = await getThreadSnippets({
+        userEmails: args.userEmails,
         filters: args.filters,
         limit: args.limit,
         lastEntry: lastThreads.at(-1),
