@@ -16,6 +16,7 @@ export function usePaginatedThreadSnippets(
   const { data: threads, isLoading } = useQuery({
     queryKey: [
       THREAD_SNIPPETS_QUERY_KEY,
+      lastThreads,
       args.limit,
       args.sort,
       args.orderBy,
