@@ -65,8 +65,6 @@ export function useThreadSnippetsPaginated(
 export function useThreadSnippetsInfinite(
   args: Omit<GetParameters<typeof getThreadSnippets>, "lastEntry">,
 ) {
-  const [lastThreads, setLastThreads] = useState<ThreadType[]>([]);
-
   const {
     data: threads,
     isLoading,
@@ -77,7 +75,6 @@ export function useThreadSnippetsInfinite(
   } = useInfiniteQuery({
     queryKey: [
       THREAD_SNIPPETS_QUERY_KEY,
-      lastThreads,
       args.limit,
       args.sort,
       args.orderBy,
