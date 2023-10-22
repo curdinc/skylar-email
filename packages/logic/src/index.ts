@@ -1,5 +1,7 @@
+import { useMemo } from "react";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { useShallow } from "zustand/react/shallow";
 
 import type { schema } from "@skylar/db";
 import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
@@ -68,9 +70,13 @@ export const useGlobalStore = create(
   })),
 );
 
+export const useOptimizedGlobalStore = <T>(arg: (state: State) => T) => {
+  return useGlobalStore(useShallow(arg));
+};
+
 // Computed states
 export const useActiveEmailProviders = () =>
-  useGlobalStore(
+  useOptimizedGlobalStore(
     (state) =>
       state.EMAIL_CLIENT.activeEmailProviderIndexes
         .map((index) => {
@@ -80,12 +86,17 @@ export const useActiveEmailProviders = () =>
           (provider) => !!provider,
         ) as (typeof schema.emailProviderDetail.$inferSelect)[],
   );
+
 export const useActiveEmails = () => {
   const activeEmailProviders = useActiveEmailProviders();
-  return activeEmailProviders.map((provider) => provider.email);
+  return useMemo(
+    () => activeEmailProviders.map((provider) => provider.email),
+    [activeEmailProviders],
+  );
 };
+
 export const useAllShortcutNames = () =>
-  useGlobalStore((state) =>
+  useOptimizedGlobalStore((state) =>
     Object.keys(state.SHORTCUT).filter((key) => key !== "setShortcuts"),
   );
 
