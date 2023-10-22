@@ -15,119 +15,122 @@ type State = {
   EMAIL_CLIENT: {
     activeEmailProviderIndexes: number[];
     emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
-    activeEmailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
   };
   SHORTCUT: {
     goBack: string;
     openSpotlightSearch: string;
     goNextThread: string;
     goPreviousThread: string;
-    allShortcuts: string[];
   };
 };
 
 type Actions = {
-  ONBOARDING: {
-    setAlphaCode: (alphaCode: State["ONBOARDING"]["alphaCode"]) => void;
-  };
-  LOGIN: {
-    setLoggingInto: (loggingInto: State["LOGIN"]["loggingInto"]) => void;
-  };
-  SETTINGS: {
-    INVITE_CODE: {
-      setInviteCodeIdBeingDeleted: (
-        inviteCodeId: State["SETTINGS"]["INVITE_CODE"]["inviteCodeIdBeingDeleted"],
-      ) => void;
-    };
-  };
-  EMAIL_CLIENT: {
-    setActiveEmailProviderIndexes: (
-      updateFn: (
-        prev: State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
-      ) => State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
-    ) => void;
-    setEmailProviders: (
-      emailProviders: State["EMAIL_CLIENT"]["emailProviders"],
-    ) => void;
-  };
-  SHORTCUT: {
-    setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
-  };
+  setAlphaCode: (alphaCode: State["ONBOARDING"]["alphaCode"]) => void;
+  setLoggingInto: (loggingInto: State["LOGIN"]["loggingInto"]) => void;
+  setInviteCodeIdBeingDeleted: (
+    inviteCodeId: State["SETTINGS"]["INVITE_CODE"]["inviteCodeIdBeingDeleted"],
+  ) => void;
+  setActiveEmailProviderIndexes: (
+    updateFn: (
+      prev: State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
+    ) => State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
+  ) => void;
+  setEmailProviders: (
+    emailProviders: State["EMAIL_CLIENT"]["emailProviders"],
+  ) => void;
+  setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
 };
 
+// Core states
 export const useGlobalStore = create(
-  immer<State & Actions>((set, get) => ({
+  immer<State>(() => ({
     EMAIL_CLIENT: {
       activeEmailProviderIndexes: [],
       emailProviders: [],
-      activeEmailProviders: get()
-        .EMAIL_CLIENT.activeEmailProviderIndexes.map((index) => {
-          return get().EMAIL_CLIENT.emailProviders[index];
-        })
-        .filter(
-          (provider) => !!provider,
-        ) as (typeof schema.emailProviderDetail.$inferSelect)[],
-      setActiveEmailProviderIndexes: (updateFn) => {
-        set(
-          (state) =>
-            (state.EMAIL_CLIENT.activeEmailProviderIndexes = updateFn(
-              state.EMAIL_CLIENT.activeEmailProviderIndexes,
-            )),
-        );
-      },
-      setEmailProviders: (emailProviders) => {
-        set((state) => {
-          state.EMAIL_CLIENT.emailProviders = emailProviders;
-          if (state.EMAIL_CLIENT.activeEmailProviderIndexes.length === 0) {
-            state.EMAIL_CLIENT.activeEmailProviderIndexes = emailProviders.map(
-              (_, index) => index,
-            );
-          }
-        });
-      },
     },
     SETTINGS: {
       INVITE_CODE: {
         inviteCodeIdBeingDeleted: undefined,
-        setInviteCodeIdBeingDeleted: (inviteCodeId) => {
-          set((state) => {
-            state.SETTINGS.INVITE_CODE.inviteCodeIdBeingDeleted = inviteCodeId;
-          });
-        },
       },
     },
     LOGIN: {
       loggingInto: undefined,
-      setLoggingInto: (loggingInto) => {
-        set((state) => {
-          state.LOGIN.loggingInto = loggingInto;
-        });
-      },
     },
     ONBOARDING: {
       alphaCode: "",
-      setAlphaCode: (alphaCode) => {
-        set((state) => {
-          state.ONBOARDING.alphaCode = alphaCode;
-        });
-      },
     },
     SHORTCUT: {
       goBack: "Escape",
       openSpotlightSearch: "$mod+p",
       goNextThread: "ArrowRight",
       goPreviousThread: "ArrowLeft",
-      allShortcuts: Object.keys(get().SHORTCUT).filter(
-        (key) => key !== "allShortcuts" && key !== "setShortcuts",
-      ),
-      setShortcuts: (shortcuts) => {
-        set((state) => {
-          state.SHORTCUT = {
-            ...state.SHORTCUT,
-            ...shortcuts,
-          };
-        });
-      },
     },
   })),
 );
+
+// Computed states
+export const useActiveEmailProviders = () =>
+  useGlobalStore(
+    (state) =>
+      state.EMAIL_CLIENT.activeEmailProviderIndexes
+        .map((index) => {
+          return state.EMAIL_CLIENT.emailProviders[index];
+        })
+        .filter(
+          (provider) => !!provider,
+        ) as (typeof schema.emailProviderDetail.$inferSelect)[],
+  );
+export const useActiveEmails = () => {
+  const activeEmailProviders = useActiveEmailProviders();
+  return activeEmailProviders.map((provider) => provider.email);
+};
+export const useAllShortcutNames = () =>
+  useGlobalStore((state) =>
+    Object.keys(state.SHORTCUT).filter((key) => key !== "setShortcuts"),
+  );
+
+// Actions
+export const setAlphaCode: Actions["setAlphaCode"] = (code) =>
+  useGlobalStore.setState((state) => {
+    state.ONBOARDING.alphaCode = code;
+  });
+
+export const setShortcuts: Actions["setShortcuts"] = (shortcuts) =>
+  useGlobalStore.setState((state) => {
+    state.SHORTCUT = {
+      ...state.SHORTCUT,
+      ...shortcuts,
+    };
+  });
+
+export const setLoggingInto: Actions["setLoggingInto"] = (loggingInto) =>
+  useGlobalStore.setState((state) => {
+    state.LOGIN.loggingInto = loggingInto;
+  });
+
+export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"] =
+  (inviteCodeId) =>
+    useGlobalStore.setState((state) => {
+      state.SETTINGS.INVITE_CODE.inviteCodeIdBeingDeleted = inviteCodeId;
+    });
+
+export const setActiveEmailProviderIndexes: Actions["setActiveEmailProviderIndexes"] =
+  (updateFn) =>
+    useGlobalStore.setState((state) => {
+      state.EMAIL_CLIENT.activeEmailProviderIndexes = updateFn(
+        state.EMAIL_CLIENT.activeEmailProviderIndexes,
+      );
+    });
+
+export const setEmailProviders: Actions["setEmailProviders"] = (
+  emailProviders,
+) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.emailProviders = emailProviders;
+    if (state.EMAIL_CLIENT.activeEmailProviderIndexes.length === 0) {
+      state.EMAIL_CLIENT.activeEmailProviderIndexes = emailProviders.map(
+        (_, index) => index,
+      );
+    }
+  });
+};
