@@ -18,7 +18,7 @@ export async function getThreadSnippets({
   filters?: ((thread: ThreadType) => boolean)[];
   limit?: number;
   lastEntry?: ThreadType;
-}) {
+}): Promise<ThreadType[]> {
   const actualFilters = [
     ...filters,
     filterForEmails({

@@ -1,4 +1,4 @@
-import { usePaginatedThreadSnippets } from "@skylar/client-db";
+import { useThreadSnippetsPaginated } from "@skylar/client-db";
 import { useActiveEmails } from "@skylar/logic";
 
 export function useInboxPage() {
@@ -9,7 +9,7 @@ export function useInboxPage() {
     isLoading: isLoadingThreads,
     nextPage,
     prevPage,
-  } = usePaginatedThreadSnippets({
+  } = useThreadSnippetsPaginated({
     userEmails,
     limit: 10,
   });
