@@ -7,6 +7,7 @@ import { EMAIL_PROVIDER_LABELS } from "@skylar/client-db";
 
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
+import { FileExplorer } from "./file-explorer";
 import { ThreadRow, ThreadRowLoading } from "./thread-row";
 import { useInboxPage } from "./use-inbox-page";
 
@@ -46,31 +47,34 @@ export default function ImportantInbox() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-5 p-1 ">
-      <div className="space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">Inbox</h2>
-        <p className="text-muted-foreground">All your emails in one place</p>
+    <>
+      <FileExplorer />
+      <div className="grid grid-cols-1 gap-5 p-1 ">
+        <div className="space-y-0.5">
+          <h2 className="text-2xl font-bold tracking-tight">Inbox</h2>
+          <p className="text-muted-foreground">All your emails in one place</p>
+        </div>
+        <Separator className="mt-1" />
+        <div className="grid gap-5" ref={threadParent}>
+          {ThreadList}
+        </div>
+        <div className="flex justify-between">
+          <Button
+            variant={"secondary"}
+            disabled={isLoadingThreads}
+            onClick={prevPage}
+          >
+            Prev
+          </Button>
+          <Button
+            variant={"secondary"}
+            disabled={isLoadingThreads}
+            onClick={nextPage}
+          >
+            Next
+          </Button>
+        </div>
       </div>
-      <Separator className="mt-1" />
-      <div className="grid gap-5" ref={threadParent}>
-        {ThreadList}
-      </div>
-      <div className="flex justify-between">
-        <Button
-          variant={"secondary"}
-          disabled={isLoadingThreads}
-          onClick={prevPage}
-        >
-          Prev
-        </Button>
-        <Button
-          variant={"secondary"}
-          disabled={isLoadingThreads}
-          onClick={nextPage}
-        >
-          Next
-        </Button>
-      </div>
-    </div>
+    </>
   );
 }

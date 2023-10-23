@@ -35,3 +35,11 @@ export function filterForEmails({
     );
   };
 }
+
+export function filterForLabels(labels: string[]) {
+  return (thread: ThreadType) => {
+    return labels.every((label) =>
+      thread.email_provider_labels.includes(label),
+    );
+  };
+}

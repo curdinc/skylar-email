@@ -3,7 +3,6 @@ import { bulkGetEmails } from "./bulk-get-emails";
 
 export async function bulkDeleteEmails({ emailIds }: { emailIds: string[] }) {
   const emailsToDelete = await bulkGetEmails({
-    db: clientDb,
     emailIds,
   });
   const threadIdsToDelete = emailsToDelete

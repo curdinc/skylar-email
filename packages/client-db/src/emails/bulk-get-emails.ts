@@ -1,11 +1,5 @@
-import type { ClientDb } from "../db";
+import { clientDb } from "../db";
 
-export async function bulkGetEmails({
-  db,
-  emailIds,
-}: {
-  db: ClientDb;
-  emailIds: string[];
-}) {
-  return await db.email.bulkGet(emailIds);
+export async function bulkGetEmails({ emailIds }: { emailIds: string[] }) {
+  return await clientDb.email.bulkGet(emailIds);
 }

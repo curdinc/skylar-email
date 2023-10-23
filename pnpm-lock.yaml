@@ -195,6 +195,9 @@ importers:
       react:
         specifier: 18.2.0
         version: 18.2.0
+      react-complex-tree:
+        specifier: ^2.2.2
+        version: 2.2.2(react@18.2.0)
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
@@ -6664,6 +6667,14 @@ packages:
       ini: 1.3.8
       minimist: 1.2.8
       strip-json-comments: 2.0.1
+
+  /react-complex-tree@2.2.2(react@18.2.0):
+    resolution: {integrity: sha512-KZb4KStosqAH5MEdgsVZvQSr8DS85W19OhZMeuYkNwJOYgNhKXrIf+b7FELN85iXdCNYZhLCORfLe1wxNx057Q==}
+    peerDependencies:
+      react: '>=16.0.0'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /react-dom@18.2.0(react@18.2.0):
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}

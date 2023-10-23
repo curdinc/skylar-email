@@ -1,12 +1,10 @@
-import type { ClientDb } from "../db";
+import { clientDb } from "../db";
 
 export async function getEmailSyncInfo({
-  db,
   emailAddress,
 }: {
-  db: ClientDb;
   emailAddress: string;
 }) {
-  const syncInfo = await db.sync.get(emailAddress);
+  const syncInfo = await clientDb.sync.get(emailAddress);
   return syncInfo;
 }

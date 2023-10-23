@@ -22,7 +22,6 @@ export async function bulkUpdateEmails({
 
       const fullEmails = (
         await bulkGetEmails({
-          db: clientDb,
           emailIds: emailIds,
         })
       ).filter((email) => !!email) as EmailType[];

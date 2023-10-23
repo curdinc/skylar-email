@@ -6,7 +6,6 @@ import {
 } from "@tanstack/react-query";
 
 import type { ThreadType } from "../../schema/thread";
-import { clientDb } from "../db";
 import { getThreadSnippets } from "../emails/get-thread-snippets";
 import type { GetParameters } from "../types/extract-params";
 
@@ -35,7 +34,6 @@ export function useThreadSnippetsPaginated(
         lastEntry: lastThreads.at(-1),
         sort: args.sort,
         orderBy: args.orderBy,
-        db: clientDb,
       });
       return threadSnippets;
     },
@@ -89,7 +87,6 @@ export function useThreadSnippetsInfinite(
         lastEntry: pageParam.lastThread,
         sort: args.sort,
         orderBy: args.orderBy,
-        db: clientDb,
       });
       return threadSnippets;
     },

@@ -11,15 +11,21 @@ import {
   updateEmailSyncInfo,
   useEmailSyncInfo,
 } from "@skylar/client-db";
-import { setEmailProviders, useActiveEmailProviders } from "@skylar/logic";
+import {
+  setEmailProviders,
+  useActiveEmailProviders,
+  useActiveEmails,
+} from "@skylar/logic";
 
 import { api } from "~/lib/api";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
 import { useEmailPartialSync } from "./use-email-partial-sync";
+import { useListLabels } from "./use-list-labels";
 
 export const ClientLayout = () => {
   useInboxKeymaps();
+  const activeEmails = useActiveEmails();
   const activeEmailProviders = useActiveEmailProviders();
 
   const router = useRouter();
@@ -28,12 +34,11 @@ export const ClientLayout = () => {
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
     {
-      emailAddresses: activeEmailProviders.map(
-        (emailProvider) => emailProvider.email,
-      ),
+      emailAddresses: activeEmails,
     },
   );
   const { emailPartialSync } = useEmailPartialSync();
+  const { data: labels } = useListLabels();
 
   useQuery({
     queryKey: [

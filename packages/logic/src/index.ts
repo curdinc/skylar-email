@@ -75,17 +75,18 @@ export const useOptimizedGlobalStore = <T>(arg: (state: State) => T) => {
 };
 
 // Computed states
+export const COMPUTED_STATE_SELECTOR = {
+  activeEmailProviders: (state: State) =>
+    state.EMAIL_CLIENT.activeEmailProviderIndexes
+      .map((index) => {
+        return state.EMAIL_CLIENT.emailProviders[index];
+      })
+      .filter(
+        (provider) => !!provider,
+      ) as (typeof schema.emailProviderDetail.$inferSelect)[],
+};
 export const useActiveEmailProviders = () =>
-  useOptimizedGlobalStore(
-    (state) =>
-      state.EMAIL_CLIENT.activeEmailProviderIndexes
-        .map((index) => {
-          return state.EMAIL_CLIENT.emailProviders[index];
-        })
-        .filter(
-          (provider) => !!provider,
-        ) as (typeof schema.emailProviderDetail.$inferSelect)[],
-  );
+  useOptimizedGlobalStore(COMPUTED_STATE_SELECTOR.activeEmailProviders);
 
 export const useActiveEmails = () => {
   const activeEmailProviders = useActiveEmailProviders();
