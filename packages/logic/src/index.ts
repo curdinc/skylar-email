@@ -3,8 +3,21 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
 
+import type { ThreadType } from "@skylar/client-db/schema/thread";
 import type { schema } from "@skylar/db";
 import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
+
+export type ExtendedTreeData = {
+  id: string;
+  name: string;
+  meta: {
+    canMove: boolean;
+    canRename: boolean;
+    isFolder: boolean;
+  };
+  data: Partial<ThreadType> & { name: string };
+  children?: ExtendedTreeData[];
+};
 
 type State = {
   ONBOARDING: { alphaCode: string };
@@ -17,6 +30,7 @@ type State = {
   EMAIL_CLIENT: {
     activeEmailProviderIndexes: number[];
     emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
+    treeViewData: ExtendedTreeData[];
   };
   SHORTCUT: {
     goBack: string;
@@ -40,6 +54,9 @@ type Actions = {
   setEmailProviders: (
     emailProviders: State["EMAIL_CLIENT"]["emailProviders"],
   ) => void;
+  setTreeViewData: (
+    treeViewData: State["EMAIL_CLIENT"]["treeViewData"],
+  ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
 };
 
@@ -49,6 +66,7 @@ export const useGlobalStore = create(
     EMAIL_CLIENT: {
       activeEmailProviderIndexes: [],
       emailProviders: [],
+      treeViewData: [],
     },
     SETTINGS: {
       INVITE_CODE: {
@@ -143,6 +161,26 @@ export const setEmailProviders: Actions["setEmailProviders"] = (
       state.EMAIL_CLIENT.activeEmailProviderIndexes = emailProviders.map(
         (_, index) => index,
       );
+      state.EMAIL_CLIENT.treeViewData = emailProviders.map((provider) => {
+        const email = provider.email;
+        return {
+          id: email,
+          name: email,
+          meta: {
+            canMove: false,
+            canRename: true,
+            isFolder: true,
+          },
+          data: { name: email },
+          children: [],
+        };
+      });
     }
+  });
+};
+
+export const setTreeViewData: Actions["setTreeViewData"] = (treeViewData) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.treeViewData = treeViewData;
   });
 };

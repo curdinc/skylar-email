@@ -50,7 +50,7 @@
     "next": "^13.5.4",
     "next-axiom": "1.0.0-rc.1",
     "react": "18.2.0",
-    "react-complex-tree": "^2.2.2",
+    "react-arborist": "^3.2.0",
     "react-dom": "18.2.0",
     "superjson": "1.13.1",
     "tailwind-merge": "^1.14.0"
