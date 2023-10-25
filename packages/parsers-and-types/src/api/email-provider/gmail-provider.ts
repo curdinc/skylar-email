@@ -219,3 +219,8 @@ export const modifyMessageResponseSchema = object({
   id: string(),
   threadId: string(),
 });
+
+export const trashMessageResponseSchema = object({
+  id: string(),
+  messages: array(modifyMessageResponseSchema),
+});

@@ -33,6 +33,7 @@ export {
   messageListResponseSchema,
   messageResponseSchema,
   modifyMessageResponseSchema,
+  trashMessageResponseSchema,
   type GmailPushNotificationType,
   type HistoryObjectType,
   type MessagePartType,
