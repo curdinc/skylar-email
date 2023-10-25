@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 
-import EmailHoverOptions from "~/components/gmail-inbox/email-hover-options";
 import { hoverOptionsConfig } from "~/components/gmail-inbox/hover-option-config";
+import InboxTools from "~/components/gmail-inbox/inbox-tools";
 import { buttonVariants } from "~/components/ui/button";
 import { RawHtmlDisplay } from "~/components/ui/raw-html-display";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -46,7 +46,7 @@ export function ThreadRow({
           </div>
         </div>
         <div className="flex min-w-fit items-center gap-2 text-xs text-muted-foreground">
-          <EmailHoverOptions
+          <InboxTools
             activeEmail={activeEmail}
             hoverOptions={[
               hoverOptionsConfig.trashThread(thread, activeEmail),

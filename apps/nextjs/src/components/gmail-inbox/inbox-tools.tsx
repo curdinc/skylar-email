@@ -14,7 +14,7 @@ import { Button } from "../ui/button";
 import { useToast } from "../ui/use-toast";
 import type { hoverOption } from "./hover-option-config";
 
-function EmailHoverOptions({
+function InboxTools({
   activeEmail,
   hoverOptions,
 }: {
@@ -106,4 +106,4 @@ function EmailHoverOptions({
   }
 }
 
-export default EmailHoverOptions;
+export default InboxTools;
