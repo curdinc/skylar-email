@@ -1,4 +1,5 @@
 import type { EmailIndexType } from "../../schema/email";
+import type { ThreadIndexType } from "../../schema/thread";
 import type { ClientDb } from "../db";
 
 export async function getEmailThreadsFrom({
@@ -8,8 +9,8 @@ export async function getEmailThreadsFrom({
   db: ClientDb;
   senderEmail: string;
 }) {
-  //FIXME: doesn't work
-  return db.email
-    .where({ from: senderEmail })
+  return db.thread
+    .where("from" satisfies keyof ThreadIndexType)
+    .anyOfIgnoreCase(senderEmail)
     .sortBy("created_at" satisfies keyof EmailIndexType);
 }
