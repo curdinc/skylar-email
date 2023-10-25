@@ -11,6 +11,7 @@ import {
   messageResponseSchema,
   modifyMessageResponseSchema,
   parse,
+  trashMessageResponseSchema,
 } from "@skylar/parsers-and-types";
 
 import {
@@ -20,6 +21,7 @@ import {
   GMAIL_MAX_MESSAGE_LIST_REQUEST_SIZE,
 } from "./constants";
 import { MultipartMixedService } from "./utils/multipart-parser";
+import { sendBatchRequest } from "./utils/send-batch-request";
 
 export async function getAccessToken<
   T extends "refresh_token" | "authorization_code",
@@ -279,64 +281,6 @@ export async function getAttachment({
   return parsedData;
 }
 
-export async function batchGetMessage({
-  messageIds,
-  accessToken,
-  emailId,
-}: {
-  messageIds: string[];
-  accessToken: string;
-  emailId: string;
-}) {
-  if (messageIds.length > GMAIL_MAX_BATCH_REQUEST_SIZE) {
-    throw new Error(
-      `Cannot batch more than ${GMAIL_MAX_BATCH_REQUEST_SIZE} requests.`,
-    );
-  }
-
-  const url = new URL("https://gmail.googleapis.com/batch/gmail/v1");
-  const boundary = GMAIL_BATCH_SEPARATOR_PREFIX + Date.now();
-  const headers = new Headers({
-    "Content-Type": `multipart/form-data; boundary=${boundary}`,
-    Authorization: `Bearer ${accessToken}`,
-  });
-
-  const batchRequestBody =
-    messageIds
-      .map((messageId, index) => {
-        const individualRequest =
-          `--${boundary}\r\n` +
-          `Content-Type: application/http\r\n` +
-          `Content-ID: <${index + 1}>\r\n\r\n` +
-          `GET /gmail/v1/users/${emailId}/messages/${messageId}?format=FULL\r\n`;
-        return individualRequest;
-      })
-      .join("") + `--${boundary}--`;
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: headers,
-    body: batchRequestBody,
-  });
-
-  if (!res.ok) {
-    throw new Error(`Failed to get messages. cause: ${await res.text()}`);
-  }
-
-  const contentData = await MultipartMixedService.parseAsync(res);
-  const messageData = contentData.map((data) => {
-    try {
-      return parse(messageResponseSchema, data.json());
-    } catch (e) {
-      console.log("data", data.json());
-      console.log(JSON.stringify(formatValidatorError(e), null, 2));
-      throw e;
-    }
-  });
-
-  return messageData;
-}
-
 export async function trashMessage({
   messageId,
   accessToken,
@@ -535,4 +479,152 @@ export async function sendMail({
 
   const response = parse(modifyMessageResponseSchema, await res.json());
   return response;
+}
+
+export async function batchGetMessages({
+  messageIds,
+  accessToken,
+  emailId,
+}: {
+  messageIds: string[];
+  accessToken: string;
+  emailId: string;
+}) {
+  if (messageIds.length > GMAIL_MAX_BATCH_REQUEST_SIZE) {
+    throw new Error(
+      `Cannot batch more than ${GMAIL_MAX_BATCH_REQUEST_SIZE} requests.`,
+    );
+  }
+
+  const url = new URL("https://gmail.googleapis.com/batch/gmail/v1");
+  const boundary = GMAIL_BATCH_SEPARATOR_PREFIX + Date.now();
+  const headers = new Headers({
+    "Content-Type": `multipart/form-data; boundary=${boundary}`,
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const batchRequestBody =
+    messageIds
+      .map((messageId, index) => {
+        const individualRequest =
+          `--${boundary}\r\n` +
+          `Content-Type: application/http\r\n` +
+          `Content-ID: <${index + 1}>\r\n\r\n` +
+          `GET /gmail/v1/users/${emailId}/messages/${messageId}?format=FULL\r\n`;
+        return individualRequest;
+      })
+      .join("") + `--${boundary}--`;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: batchRequestBody,
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to get messages. cause: ${await res.text()}`);
+  }
+
+  const contentData = await MultipartMixedService.parseAsync(res);
+  const messageData = contentData.map((data) => {
+    try {
+      return parse(messageResponseSchema, data.json());
+    } catch (e) {
+      console.log("data", data.json());
+      console.log(JSON.stringify(formatValidatorError(e), null, 2));
+      throw e;
+    }
+  });
+
+  return messageData;
+}
+
+export async function batchTrashThreads({
+  threadIds,
+  accessToken,
+  emailId,
+}: {
+  threadIds: string[];
+  accessToken: string;
+  emailId: string;
+}) {
+  const reqs = threadIds.map((threadId) => {
+    return {
+      contentType: "application/http",
+      type: "POST" as const,
+      url: `/gmail/v1/users/${emailId}/threads/${threadId}/trash`,
+    };
+  });
+
+  const res = await sendBatchRequest({
+    accessToken,
+    emailId,
+    reqs,
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to get messages. cause: ${await res.text()}`);
+  }
+
+  const contentData = await MultipartMixedService.parseAsync(res);
+  const messageData = contentData.map((data) => {
+    try {
+      return parse(trashMessageResponseSchema, data.json());
+    } catch (e) {
+      console.log("data", data.json());
+      console.log(JSON.stringify(formatValidatorError(e), null, 2));
+      throw e;
+    }
+  });
+
+  return messageData;
+}
+
+export async function batchModifyLabels({
+  accessToken,
+  emailId,
+  threadIds,
+  addLabels,
+  deleteLabels,
+}: {
+  threadIds: string[];
+  accessToken: string;
+  emailId: string;
+  addLabels: string[];
+  deleteLabels: string[];
+}) {
+  const reqs = threadIds.map((threadId) => {
+    return {
+      contentType: "application/json",
+      type: "POST" as const,
+      url: `/gmail/v1/users/${emailId}/threads/${threadId}/modify`,
+      body: {
+        addLabelIds: addLabels,
+        removeLabelIds: deleteLabels,
+      },
+    };
+  });
+
+  const res = await sendBatchRequest({
+    accessToken,
+    emailId,
+    reqs,
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to get messages. cause: ${await res.text()}`);
+  }
+
+  const contentData = await MultipartMixedService.parseAsync(res);
+  const messageData = contentData.map((data) => {
+    try {
+      return parse(trashMessageResponseSchema, data.json());
+    } catch (e) {
+      console.log("data", data.json());
+      console.log(JSON.stringify(formatValidatorError(e), null, 2));
+      throw e;
+    }
+  });
+
+  return messageData;
 }

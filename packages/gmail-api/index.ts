@@ -1,3 +1,5 @@
+export { batchModifyLabels, batchTrashThreads } from "./src/core-api";
+
 export {
   getAccessToken,
   modifyLabels,
