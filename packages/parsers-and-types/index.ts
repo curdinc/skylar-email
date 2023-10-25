@@ -8,13 +8,9 @@ export {
 
 // FEATURE SPECIFIC
 export * from "./src/api/invite-code";
+export * from "./src/api/mailing-list";
 export * from "./src/api/onboarding";
 export * from "./src/auth";
-export type {
-  SupabaseUserType,
-  SupportedAuthProvidersType,
-  UserType,
-} from "./src/auth";
 
 export {
   SUPPORTED_EMAIL_CATEGORIES,
@@ -30,12 +26,15 @@ export {
   gmailProviderIDTokenSchema,
   gmailWatchResponseSchema,
   historyObjectSchema,
+  labelInfoSchema,
+  labelListSchema,
   messageListResponseSchema,
   messageResponseSchema,
   modifyMessageResponseSchema,
   trashMessageResponseSchema,
   type GmailPushNotificationType,
   type HistoryObjectType,
+  type LabelConfigType,
   type MessagePartType,
   type MessageResponseType,
   type ModifiedLabelType,

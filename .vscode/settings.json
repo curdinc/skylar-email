@@ -18,5 +18,15 @@
   "[handlebars]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["Authed", "Hono", "Skylar", "SUPABASE", "vali", "valibot"]
+  "cSpell.words": [
+    "Authed",
+    "Hono",
+    "keymapper",
+    "Keymaps",
+    "Skylar",
+    "SUPABASE",
+    "tinykeys",
+    "vali",
+    "valibot"
+  ]
 }

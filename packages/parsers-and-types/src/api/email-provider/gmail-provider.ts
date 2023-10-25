@@ -3,7 +3,7 @@ import {
   array,
   boolean,
   date,
-  email,
+  enumType,
   integer,
   merge,
   number,
@@ -14,6 +14,7 @@ import {
   withDefault,
 } from "valibot";
 
+import { emailSchema } from "../../core-parsers";
 import { emailSenderSchema } from "../email";
 
 // identity token schema - decoded JWT from gmail
@@ -22,7 +23,7 @@ export const gmailProviderIDTokenSchema = object({
   azp: string(),
   aud: string(),
   sub: string(),
-  email: string(),
+  email: emailSchema,
   email_verified: boolean(),
   at_hash: string(),
   name: string(),
@@ -211,7 +212,7 @@ export type ModifiedLabelType = Output<typeof modifiedLabelSchema>;
 export type SyncResponseType = Output<typeof syncResponseSchema>;
 
 export const getGmailAccessTokenSchema = object({
-  email: string([email()]),
+  email: emailSchema,
 });
 
 export const modifyMessageResponseSchema = object({
@@ -224,3 +225,21 @@ export const trashMessageResponseSchema = object({
   id: string(),
   messages: array(modifyMessageResponseSchema),
 });
+export const labelInfoSchema = object({
+  id: string(),
+  name: string(),
+});
+
+export const labelListSchema = object({ labels: array(labelInfoSchema) });
+
+const labelConfigSchema = object({
+  labelListVisibility: enumType([
+    "labelShow",
+    "labelShowIfUnread",
+    "labelHide",
+  ]),
+  messageListVisibility: enumType(["show", "hide"]),
+  name: string(),
+});
+
+export type LabelConfigType = Output<typeof labelConfigSchema>;

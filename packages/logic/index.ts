@@ -17,5 +17,8 @@ persistObservable(state$.EMAIL_CLIENT.emailProviders, {
 persistObservable(state$.EMAIL_CLIENT.activeEmailProviderIndex, {
   local: "skylar_active_active_email_provider_index",
 });
+persistObservable(state$.SHORTCUT, {
+  local: "skylar_active_shortcuts",
+});
 
 export * from "./src";

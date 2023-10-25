@@ -1,5 +1,5 @@
 {
-  "name": "@skylar/logger",
+  "name": "@skylar/tinykeys",
   "private": true,
   "version": "0.1.0",
   "exports": {
@@ -19,19 +19,16 @@
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "@axiomhq/js": "^0.1.3",
-    "next-axiom": "1.0.0-rc.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@skylar/eslint-config": "0.2.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
     "eslint": "^8.48.0",
-    "next": "^13.5.4",
     "typescript": "^5.2.2"
   },
   "eslintConfig": {
+    "root": true,
     "extends": [
       "@skylar/eslint-config/base"
     ]

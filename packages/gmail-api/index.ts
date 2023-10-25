@@ -1,7 +1,9 @@
 export { batchModifyLabels, batchTrashThreads } from "./src/core-api";
 
 export {
+  batchCreateLabel,
   getAccessToken,
+  listLabels,
   modifyLabels,
   sendMail,
   trashMessage,

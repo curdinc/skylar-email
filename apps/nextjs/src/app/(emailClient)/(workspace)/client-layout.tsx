@@ -19,9 +19,11 @@ import {
 
 import { api } from "~/lib/api";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
+import { useInboxKeymaps } from "~/lib/keymap-hooks";
 import { useEmailPartialSync } from "./use-email-partial-sync";
 
 export const ClientLayout = () => {
+  useInboxKeymaps();
   const activeClientDb = useActiveEmailClientDb();
   const activeEmailClient = useActiveEmailProvider();
   const router = useRouter();
