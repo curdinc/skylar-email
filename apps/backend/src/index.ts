@@ -1,4 +1,3 @@
-import { trpcServer } from "@hono/trpc-server";
 import type { Context } from "hono";
 import { Hono } from "hono";
 import { env } from "hono/adapter";
@@ -12,6 +11,8 @@ import {
   formatValidatorError,
   parse,
 } from "@skylar/parsers-and-types";
+
+import { trpcServer } from "./trpc-middleware";
 
 type Bindings = {
   JWT_SECRET: string;
@@ -38,14 +39,14 @@ function getEnvVars(
 }
 
 // TRPC routes
-app.options("/trpc/*", (c) => {
-  const response = c.newResponse(null, { status: 204 });
-  response.headers.set("Access-Control-Allow-Origin", "*");
-  response.headers.set("Access-Control-Request-Method", "*");
-  response.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
-  response.headers.set("Access-Control-Allow-Headers", "*");
-  return response;
-});
+// app.options("/trpc/*", (c) => {
+//   const response = c.newResponse(null, { status: 204 });
+//   response.headers.set("Access-Control-Allow-Origin", "*");
+//   response.headers.set("Access-Control-Request-Method", "*");
+//   response.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
+//   response.headers.set("Access-Control-Allow-Headers", "*");
+//   return response;
+// });
 
 app.use("/trpc/*", async (c, next) => {
   const envVars = getEnvVars(c);

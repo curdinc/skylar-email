@@ -1,59 +1,147 @@
-import { observable, opaqueObject } from "@legendapp/state";
+import { useMemo } from "react";
+import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
+import { useShallow } from "zustand/react/shallow";
 
-import type { ClientDb } from "@skylar/client-db";
-import { initClientDb } from "@skylar/client-db";
 import type { schema } from "@skylar/db";
 import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
 
-export const state$ = observable({
-  ONBOARDING: { alphaCode: "" },
-  LOGIN: { loggingInto: undefined as SupportedAuthProvidersType | undefined },
-  INVITE_CODE: {
-    inviteCodeIdBeingDeleted: undefined as number | undefined,
-  },
+type State = {
+  ONBOARDING: { alphaCode: string };
+  LOGIN: { loggingInto: SupportedAuthProvidersType | undefined };
+  SETTINGS: {
+    INVITE_CODE: {
+      inviteCodeIdBeingDeleted: number | undefined;
+    };
+  };
   EMAIL_CLIENT: {
-    activeEmailProviderIndex: 0,
-    emailProviders: [] as (typeof schema.emailProviderDetail.$inferSelect)[],
-    clientDbs: {} as Record<string, ClientDb>,
-    initializeClientDbs: () => {
-      const emailProviders = state$.EMAIL_CLIENT.emailProviders.get();
-      const clientDbs: Record<string, ClientDb> = {};
-      for (const emailProvider of emailProviders) {
-        const clientDb = initClientDb(emailProvider.email);
-        clientDbs[emailProvider.email] = opaqueObject(clientDb);
-      }
-      state$.EMAIL_CLIENT.clientDbs.set(clientDbs);
-    },
-  },
+    activeEmailProviderIndexes: number[];
+    emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
+  };
   SHORTCUT: {
-    goBack: "Escape",
-    openSpotlightSearch: "$mod+p",
-    goNextThread: "ArrowRight",
-    goPreviousThread: "ArrowLeft",
-  },
-  // Not used right now. Needed to make the api stuff work
-  env: {
-    NEXT_PUBLIC_BACKEND_URL: "",
-    NODE_ENV: "",
-    getCookieValue: (_cookieName: string) => "",
-    getHeaders: () => ({}) as Record<string, string>,
-  },
-});
-
-export const useActiveEmailProvider = () => {
-  const activeIndex = state$.EMAIL_CLIENT.activeEmailProviderIndex.use();
-  const emailProviders = state$.EMAIL_CLIENT.emailProviders.use();
-  const activeEmailProvider = emailProviders[activeIndex];
-  return activeEmailProvider;
+    goBack: string;
+    openSpotlightSearch: string;
+    goNextThread: string;
+    goPreviousThread: string;
+  };
 };
-export const useActiveEmailClientDb = () => {
-  const activeIndex = state$.EMAIL_CLIENT.activeEmailProviderIndex.use();
-  const emailProviders = state$.EMAIL_CLIENT.emailProviders.use();
-  const clientDbs = state$.EMAIL_CLIENT.clientDbs.use();
-  const email = emailProviders[activeIndex]?.email;
-  if (!email) {
-    return undefined;
-  }
-  const db = clientDbs[email];
-  return db;
+
+type Actions = {
+  setAlphaCode: (alphaCode: State["ONBOARDING"]["alphaCode"]) => void;
+  setLoggingInto: (loggingInto: State["LOGIN"]["loggingInto"]) => void;
+  setInviteCodeIdBeingDeleted: (
+    inviteCodeId: State["SETTINGS"]["INVITE_CODE"]["inviteCodeIdBeingDeleted"],
+  ) => void;
+  setActiveEmailProviderIndexes: (
+    updateFn: (
+      prev: State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
+    ) => State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
+  ) => void;
+  setEmailProviders: (
+    emailProviders: State["EMAIL_CLIENT"]["emailProviders"],
+  ) => void;
+  setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
+};
+
+// Core states
+export const useGlobalStore = create(
+  immer<State>(() => ({
+    EMAIL_CLIENT: {
+      activeEmailProviderIndexes: [],
+      emailProviders: [],
+    },
+    SETTINGS: {
+      INVITE_CODE: {
+        inviteCodeIdBeingDeleted: undefined,
+      },
+    },
+    LOGIN: {
+      loggingInto: undefined,
+    },
+    ONBOARDING: {
+      alphaCode: "",
+    },
+    SHORTCUT: {
+      goBack: "Escape",
+      openSpotlightSearch: "$mod+p",
+      goNextThread: "ArrowRight",
+      goPreviousThread: "ArrowLeft",
+    },
+  })),
+);
+
+export const useOptimizedGlobalStore = <T>(arg: (state: State) => T) => {
+  return useGlobalStore(useShallow(arg));
+};
+
+// Computed states
+export const useActiveEmailProviders = () =>
+  useOptimizedGlobalStore(
+    (state) =>
+      state.EMAIL_CLIENT.activeEmailProviderIndexes
+        .map((index) => {
+          return state.EMAIL_CLIENT.emailProviders[index];
+        })
+        .filter(
+          (provider) => !!provider,
+        ) as (typeof schema.emailProviderDetail.$inferSelect)[],
+  );
+
+export const useActiveEmails = () => {
+  const activeEmailProviders = useActiveEmailProviders();
+  return useMemo(
+    () => activeEmailProviders.map((provider) => provider.email),
+    [activeEmailProviders],
+  );
+};
+
+export const useAllShortcutNames = () =>
+  useOptimizedGlobalStore((state) =>
+    Object.keys(state.SHORTCUT).filter((key) => key !== "setShortcuts"),
+  );
+
+// Actions
+export const setAlphaCode: Actions["setAlphaCode"] = (code) =>
+  useGlobalStore.setState((state) => {
+    state.ONBOARDING.alphaCode = code;
+  });
+
+export const setShortcuts: Actions["setShortcuts"] = (shortcuts) =>
+  useGlobalStore.setState((state) => {
+    state.SHORTCUT = {
+      ...state.SHORTCUT,
+      ...shortcuts,
+    };
+  });
+
+export const setLoggingInto: Actions["setLoggingInto"] = (loggingInto) =>
+  useGlobalStore.setState((state) => {
+    state.LOGIN.loggingInto = loggingInto;
+  });
+
+export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"] =
+  (inviteCodeId) =>
+    useGlobalStore.setState((state) => {
+      state.SETTINGS.INVITE_CODE.inviteCodeIdBeingDeleted = inviteCodeId;
+    });
+
+export const setActiveEmailProviderIndexes: Actions["setActiveEmailProviderIndexes"] =
+  (updateFn) =>
+    useGlobalStore.setState((state) => {
+      state.EMAIL_CLIENT.activeEmailProviderIndexes = updateFn(
+        state.EMAIL_CLIENT.activeEmailProviderIndexes,
+      );
+    });
+
+export const setEmailProviders: Actions["setEmailProviders"] = (
+  emailProviders,
+) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.emailProviders = emailProviders;
+    if (state.EMAIL_CLIENT.activeEmailProviderIndexes.length === 0) {
+      state.EMAIL_CLIENT.activeEmailProviderIndexes = emailProviders.map(
+        (_, index) => index,
+      );
+    }
+  });
 };

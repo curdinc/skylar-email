@@ -36,6 +36,7 @@ export function buildThreadList(emails: EmailType[]) {
   const threads = emails.reduce((threads, email) => {
     const { email_provider_thread_id } = email;
     const thread: ThreadType = threads.get(email_provider_thread_id) ?? {
+      user_email_address: "",
       email_provider_thread_id: "",
       email_provider_message_id: [],
       rfc822_message_id: [],
@@ -57,6 +58,7 @@ export function buildThreadList(emails: EmailType[]) {
     };
 
     threads.set(email_provider_thread_id, {
+      user_email_address: email.user_email_address,
       email_provider_thread_id: email.email_provider_thread_id,
       email_provider_message_id: thread.email_provider_message_id.concat([
         email.email_provider_message_id,
@@ -83,12 +85,8 @@ export function buildThreadList(emails: EmailType[]) {
       content_search: thread.content_search.concat(
         buildSearchableString(email.content_text),
       ),
-      email_provider_labels: Array.from(
-        new Set([
-          ...email.email_provider_labels,
-          ...thread.email_provider_labels,
-        ]),
-      ),
+      // we use the latest email labels as teh source of truth
+      email_provider_labels: email.email_provider_labels,
       attachment_names: thread.attachment_names.concat(email.attachment_names),
       created_at:
         thread.created_at === 0 ? email.created_at : thread.created_at,

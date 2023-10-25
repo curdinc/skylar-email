@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
 
-import { state$ } from "@skylar/logic";
+import { setEmailProviders } from "@skylar/logic";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types";
 
 import { api } from "~/lib/api";
@@ -21,7 +21,7 @@ export function useConnectEmailProviderPage() {
       setEmailProvider(provider);
     }
   };
-  const utils = api.useContext();
+  const utils = api.useUtils();
 
   const [isConnectingToEmailProvider, setIsConnectingToEmailProvider] =
     useState(false);
@@ -30,10 +30,7 @@ export function useConnectEmailProviderPage() {
       utils.onboarding.getUserOnboardStep.invalidate().catch((e) => {
         logger.error("Error invalidating user onboarding step", { error: e });
       });
-      state$.EMAIL_CLIENT.emailProviders.set([
-        emailProviderInfo.emailProviderDetail,
-      ]);
-      state$.EMAIL_CLIENT.activeEmailProviderIndex.set(0);
+      setEmailProviders([emailProviderInfo.emailProviderDetail]);
       setIsConnectingToEmailProvider(false);
     },
   });

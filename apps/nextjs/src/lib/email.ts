@@ -4,6 +4,7 @@ import type { SyncResponseType } from "@skylar/parsers-and-types";
 import { sanitize } from "./htmlSanitizer";
 
 export function convertGmailEmailToClientDbEmail(
+  emailAddress: string,
   emails: SyncResponseType["newMessages"],
 ): EmailType[] {
   return emails.map((email) => {
@@ -20,6 +21,7 @@ export function convertGmailEmailToClientDbEmail(
       .join(" ");
 
     return {
+      user_email_address: emailAddress,
       attachment_names: email.emailData.attachments.map(
         (attachment) => attachment.filename,
       ),

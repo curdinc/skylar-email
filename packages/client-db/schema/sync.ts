@@ -1,6 +1,5 @@
-export const DEFAULT_EMAIL_SYNC_INFO_ID = "email_sync_info";
-
 export type EmailSyncInfoIndexType = {
+  // This is the email address of the user
   email_sync_info_id: string;
   last_sync_history_id: string;
   last_sync_history_id_updated_at: number;

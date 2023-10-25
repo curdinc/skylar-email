@@ -26,7 +26,10 @@ const SYNC_STEPS = {
 } as const;
 
 export const useEmailFullSync = () => {
-  const [isSyncing, setIsSyncing] = useState(false);
+  const [isSyncingMap, setIsSyncingMap] = useState<Record<string, boolean>>({});
+  const emailsToSync = Object.keys(isSyncingMap).filter((email) => {
+    return isSyncingMap[email];
+  });
   const [syncProgress, setSyncProgress] = useState(0);
   const [syncStep, setSyncStep] = useState<
     (typeof SYNC_STEPS)[keyof typeof SYNC_STEPS]
@@ -36,23 +39,26 @@ export const useEmailFullSync = () => {
   const logger = useLogger();
 
   useEffect(() => {
-    if (isSyncing) {
+    if (Object.values(isSyncingMap).some((arg) => arg)) {
       const interval = setInterval(
         () => {
           setSyncProgress((prev) => {
-            if (prev >= 100) {
+            if (prev >= 90) {
               return prev;
             }
             return prev + 1;
           });
         },
-        genRand(200, 400, 0),
+        genRand(400, 600, 0),
       );
       return () => clearInterval(interval);
-    } else if (!isSyncing && syncProgress > 0) {
+    } else if (
+      Object.values(isSyncingMap).every((arg) => !arg) &&
+      syncProgress > 0
+    ) {
       setSyncProgress(100);
     }
-  }, [isSyncing, syncProgress]);
+  }, [isSyncingMap, syncProgress]);
 
   useEffect(() => {
     if (syncProgress < 11) {
@@ -86,7 +92,7 @@ export const useEmailFullSync = () => {
 
   const startEmailFullSync = useCallback(
     async (emailToSync: string, emailProvider: SupportedEmailProviderType) => {
-      setIsSyncing(true);
+      setIsSyncingMap((prev) => ({ ...prev, [emailToSync]: true }));
       let emailData: SyncResponseType;
       try {
         switch (emailProvider) {
@@ -97,10 +103,10 @@ export const useEmailFullSync = () => {
           default:
             throw new Error(`unsupported email provider ${emailProvider}`);
         }
-        setIsSyncing(false);
+        setIsSyncingMap((prev) => ({ ...prev, [emailToSync]: false }));
         return emailData;
       } catch (e) {
-        setIsSyncing(false);
+        setIsSyncingMap((prev) => ({ ...prev, [emailToSync]: false }));
         throw e;
       }
     },
@@ -108,6 +114,7 @@ export const useEmailFullSync = () => {
   );
 
   return {
+    emailsToSync,
     startEmailFullSync,
     syncProgress,
     syncStep,

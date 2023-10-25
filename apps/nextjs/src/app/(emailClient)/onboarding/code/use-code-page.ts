@@ -1,4 +1,4 @@
-import { state$ } from "@skylar/logic";
+import { setAlphaCode, useGlobalStore } from "@skylar/logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/lib/api";
@@ -10,9 +10,10 @@ export function useCodePage() {
   const { toast } = useToast();
   const { isLoading: isCheckingOnboardStep } = useUserOnboardingRouteGuard();
 
-  const code = state$.ONBOARDING.alphaCode.use();
-  const utils = api.useContext();
-  const { mutate: applyCode, isLoading: isSubmittingCode } =
+  const code = useGlobalStore((state) => state.ONBOARDING.alphaCode);
+
+  const utils = api.useUtils();
+  const { mutate: applyCode, isPending: isSubmittingCode } =
     api.onboarding.applyAlphaCode.useMutation({
       onSuccess() {
         utils.onboarding.getUserOnboardStep.invalidate().catch((e) => {
@@ -34,7 +35,7 @@ export function useCodePage() {
   };
 
   const onCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    state$.ONBOARDING.alphaCode.set(e.target.value);
+    setAlphaCode(e.target.value);
   };
 
   return {

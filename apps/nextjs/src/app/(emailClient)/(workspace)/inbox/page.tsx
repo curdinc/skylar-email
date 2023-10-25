@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
-import { useActiveEmailProvider } from "@skylar/logic";
+import { EMAIL_PROVIDER_LABELS } from "@skylar/client-db";
 
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
@@ -11,71 +11,36 @@ import { ThreadRow, ThreadRowLoading } from "./thread-row";
 import { useInboxPage } from "./use-inbox-page";
 
 export default function ImportantInbox() {
-  const {
-    readThreads,
-    isLoadingReadThreads,
-    nextReadPage,
-    prevReadPage,
-    unreadThreads,
-    isLoadingUnreadThreads,
-    nextUnreadPage,
-    prevUnreadPage,
-  } = useInboxPage();
-  const [unreadParent, setAnimateUnreadParent] = useAutoAnimate();
-  const [readParent, setAnimateReadParent] = useAutoAnimate();
-  const activeEmailClient = useActiveEmailProvider();
+  const { threads, isLoadingThreads, nextPage, prevPage } = useInboxPage();
+  const [threadParent, setAnimateThreadParent] = useAutoAnimate();
 
   useEffect(() => {
     // This is used to prevent the animation from triggering on the first load
     const ARTIFICIAL_DELAY = 50;
-    if (isLoadingReadThreads) {
-      setAnimateReadParent(false);
+    if (isLoadingThreads) {
+      setAnimateThreadParent(false);
     } else {
       setTimeout(() => {
-        setAnimateReadParent(true);
+        setAnimateThreadParent(true);
       }, ARTIFICIAL_DELAY);
     }
-    if (isLoadingUnreadThreads) {
-      setAnimateUnreadParent(false);
-    } else {
-      setTimeout(() => {
-        setAnimateUnreadParent(true);
-      }, ARTIFICIAL_DELAY);
-    }
-  }, [
-    isLoadingReadThreads,
-    isLoadingUnreadThreads,
-    setAnimateReadParent,
-    setAnimateUnreadParent,
-  ]);
+  }, [isLoadingThreads, setAnimateThreadParent]);
 
-  let UnreadThreadList = unreadThreads?.map((thread) => {
+  let ThreadList = threads?.map((thread) => {
     return (
       <ThreadRow
         key={thread.email_provider_thread_id}
         thread={thread}
-        isRead={false}
-        activeEmail={activeEmailClient?.email ?? ""}
+        isRead={
+          !thread.email_provider_labels.includes(
+            EMAIL_PROVIDER_LABELS.GMAIL.UNREAD,
+          )
+        }
       />
     );
   });
-  if (isLoadingUnreadThreads) {
-    UnreadThreadList = Array.from(Array(10)).map((_, idx) => {
-      return <ThreadRowLoading key={idx} />;
-    });
-  }
-  let ReadThreadList = readThreads?.map((thread) => {
-    return (
-      <ThreadRow
-        key={thread.email_provider_thread_id}
-        thread={thread}
-        isRead
-        activeEmail={activeEmailClient?.email ?? ""}
-      />
-    );
-  });
-  if (isLoadingReadThreads) {
-    ReadThreadList = Array.from(Array(10)).map((_, idx) => {
+  if (isLoadingThreads) {
+    ThreadList = Array.from(Array(10)).map((_, idx) => {
       return <ThreadRowLoading key={idx} />;
     });
   }
@@ -83,52 +48,25 @@ export default function ImportantInbox() {
   return (
     <div className="grid grid-cols-1 gap-5 p-1 ">
       <div className="space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">Unread</h2>
-        <p className="text-muted-foreground">
-          All your unread emails in one place
-        </p>
+        <h2 className="text-2xl font-bold tracking-tight">Inbox</h2>
+        <p className="text-muted-foreground">All your emails in one place</p>
       </div>
       <Separator className="mt-1" />
-      <div className="grid gap-5" ref={unreadParent}>
-        {UnreadThreadList}
+      <div className="grid gap-5" ref={threadParent}>
+        {ThreadList}
       </div>
       <div className="flex justify-between">
         <Button
           variant={"secondary"}
-          disabled={isLoadingUnreadThreads}
-          onClick={prevUnreadPage}
+          disabled={isLoadingThreads}
+          onClick={prevPage}
         >
           Prev
         </Button>
         <Button
           variant={"secondary"}
-          disabled={isLoadingUnreadThreads}
-          onClick={nextUnreadPage}
-        >
-          Next
-        </Button>
-      </div>
-      <div className="mt-5 space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">Read</h2>
-        <p className="text-muted-foreground">All your completed emails</p>
-      </div>
-      <Separator className="mt-1" />
-      <div className="grid gap-5" ref={readParent}>
-        {" "}
-        {ReadThreadList}
-      </div>
-      <div className="flex justify-between">
-        <Button
-          variant={"secondary"}
-          disabled={isLoadingReadThreads}
-          onClick={prevReadPage}
-        >
-          Prev
-        </Button>
-        <Button
-          variant={"secondary"}
-          disabled={isLoadingReadThreads}
-          onClick={nextReadPage}
+          disabled={isLoadingThreads}
+          onClick={nextPage}
         >
           Next
         </Button>

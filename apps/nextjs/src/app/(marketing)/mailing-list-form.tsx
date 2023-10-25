@@ -10,7 +10,7 @@ import { api } from "~/lib/api";
 
 export function MailingListForm() {
   const { toast } = useToast();
-  const { mutate: joinMailingList, isLoading } =
+  const { mutate: joinMailingList, isPending } =
     api.mailingList.joinMailingList.useMutation({
       onSuccess: () => {
         toast({
@@ -49,7 +49,7 @@ export function MailingListForm() {
       />
       <Button
         type="submit"
-        isLoading={isLoading}
+        isLoading={isPending}
         className="min-w-fit"
         size="lg"
       >
