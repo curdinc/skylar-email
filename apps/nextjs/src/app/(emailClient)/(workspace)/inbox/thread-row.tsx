@@ -13,13 +13,12 @@ import { cn } from "~/lib/ui";
 export function ThreadRow({
   thread,
   isRead,
-  activeEmail,
 }: {
   thread: ThreadType;
   isRead: boolean;
-  activeEmail: string;
 }) {
   const dateUpdated = formatTimeToMMMDD(thread.updated_at);
+
   return (
     <Link
       href={`/inbox/${thread.email_provider_thread_id}`}
@@ -47,10 +46,13 @@ export function ThreadRow({
         </div>
         <div className="flex min-w-fit items-center gap-2 text-xs text-muted-foreground">
           <InboxTools
-            activeEmail={activeEmail}
+            activeEmail={thread.user_email_address}
             hoverOptions={[
-              hoverOptionsConfig.trashThread(thread, activeEmail),
-              hoverOptionsConfig.archiveThread(thread, activeEmail),
+              hoverOptionsConfig.trashThread(thread, thread.user_email_address),
+              hoverOptionsConfig.archiveThread(
+                thread,
+                thread.user_email_address,
+              ),
             ]}
           />
           {dateUpdated}
