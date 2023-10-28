@@ -17,7 +17,11 @@ export function useThreadSnippetsPaginated(
 ) {
   const [lastThreads, setLastThreads] = useState<ThreadType[]>([]);
 
-  const { data: threads, isLoading } = useQuery({
+  const {
+    data: threads,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: [
       THREAD_SNIPPETS_QUERY_KEY,
       lastThreads,
@@ -56,6 +60,7 @@ export function useThreadSnippetsPaginated(
   }, [lastThreads]);
   return {
     threads,
+    refetch,
     isLoading: isLoading || !args.userEmails.length,
     nextPage,
     prevPage,
