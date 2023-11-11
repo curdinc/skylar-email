@@ -23,7 +23,7 @@ export default function EmailClientLayout({
         ]}
         className="p-5"
       />
-      <main className="h-100vh w-full">{children}</main>
+      <main className=" w-full">{children}</main>
     </div>
   );
 }
