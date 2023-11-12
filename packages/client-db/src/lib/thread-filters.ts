@@ -1,4 +1,5 @@
-import { EMAIL_PROVIDER_LABELS } from "../../schema/email";
+import { EMAIL_PROVIDER_LABELS } from "@skylar/logic";
+
 import type { ThreadType } from "../../schema/thread";
 
 export function filterForInbox(args: { invert: boolean } = { invert: false }) {

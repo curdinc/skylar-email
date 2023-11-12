@@ -369,6 +369,9 @@ importers:
 
   packages/client-db:
     dependencies:
+      '@skylar/logic':
+        specifier: ^0.1.0
+        version: link:../logic
       dexie:
         specifier: ^3.2.4
         version: 3.2.4
@@ -493,9 +496,6 @@ importers:
 
   packages/logic:
     dependencies:
-      '@skylar/client-db':
-        specifier: ^0.1.0
-        version: link:../client-db
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../parsers-and-types

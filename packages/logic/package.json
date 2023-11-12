@@ -20,7 +20,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@skylar/client-db": "^0.1.0",
     "@skylar/parsers-and-types": "^0.1.0",
     "immer": "^10.0.3",
     "zustand": "^4.4.4"
