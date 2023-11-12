@@ -1,4 +1,7 @@
-export { EMAIL_PROVIDER_LABELS } from "./schema/email";
+export {
+  EMAIL_PROVIDER_LABELS,
+  EMAIL_PROVIDER_LABELS_ARRAY,
+} from "./schema/email";
 export * from "./src/db";
 
 export * from "./src/emails/bulk-delete-emails";

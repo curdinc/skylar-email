@@ -59,3 +59,6 @@ export const EMAIL_PROVIDER_LABELS = {
     CATEGORY_PROMOTIONS: "CATEGORY_PROMOTIONS",
   },
 } as const;
+export const EMAIL_PROVIDER_LABELS_ARRAY = Object.values(
+  EMAIL_PROVIDER_LABELS,
+).flatMap((labels) => Object.values(labels));

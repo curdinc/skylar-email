@@ -7,17 +7,27 @@ import type { ThreadType } from "@skylar/client-db/schema/thread";
 import type { schema } from "@skylar/db";
 import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
 
-export type ExtendedTreeData = {
-  id: string;
-  name: string;
-  meta: {
-    canMove: boolean;
-    canRename: boolean;
-    isFolder: boolean;
-  };
-  data: Partial<ThreadType> & { name: string };
-  children?: ExtendedTreeData[];
-};
+export type EmailListData =
+  | {
+      meta: {
+        canMove: boolean;
+        canRename: boolean;
+        isFolder: boolean;
+        isVisible: boolean;
+      };
+      isLabel: true;
+      label: { name: string; id: string };
+    }
+  | {
+      meta: {
+        isVisible: boolean;
+        canMove: boolean;
+        canRename: boolean;
+        isFolder: boolean;
+      };
+      isLabel: false;
+      thread: ThreadType;
+    };
 
 type State = {
   ONBOARDING: { alphaCode: string };
@@ -30,7 +40,8 @@ type State = {
   EMAIL_CLIENT: {
     activeEmailProviderIndexes: number[];
     emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
-    treeViewData: ExtendedTreeData[];
+    emailList: EmailListData[];
+    activeThreadId: string | undefined;
   };
   SHORTCUT: {
     goBack: string;
@@ -54,8 +65,9 @@ type Actions = {
   setEmailProviders: (
     emailProviders: State["EMAIL_CLIENT"]["emailProviders"],
   ) => void;
-  setTreeViewData: (
-    treeViewData: State["EMAIL_CLIENT"]["treeViewData"],
+  setEmailListData: (treeViewData: State["EMAIL_CLIENT"]["emailList"]) => void;
+  setActiveThreadId: (
+    threadId: State["EMAIL_CLIENT"]["activeThreadId"],
   ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
 };
@@ -66,7 +78,8 @@ export const useGlobalStore = create(
     EMAIL_CLIENT: {
       activeEmailProviderIndexes: [],
       emailProviders: [],
-      treeViewData: [],
+      emailList: [],
+      activeThreadId: undefined,
     },
     SETTINGS: {
       INVITE_CODE: {
@@ -158,29 +171,19 @@ export const setEmailProviders: Actions["setEmailProviders"] = (
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.emailProviders = emailProviders;
     if (state.EMAIL_CLIENT.activeEmailProviderIndexes.length === 0) {
-      state.EMAIL_CLIENT.activeEmailProviderIndexes = emailProviders.map(
-        (_, index) => index,
-      );
-      state.EMAIL_CLIENT.treeViewData = emailProviders.map((provider) => {
-        const email = provider.email;
-        return {
-          id: email,
-          name: email,
-          meta: {
-            canMove: false,
-            canRename: true,
-            isFolder: true,
-          },
-          data: { name: email },
-          children: [],
-        };
-      });
+      state.EMAIL_CLIENT.activeEmailProviderIndexes = [0];
     }
   });
 };
 
-export const setTreeViewData: Actions["setTreeViewData"] = (treeViewData) => {
+export const setEmailList: Actions["setEmailListData"] = (emailList) => {
   useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.treeViewData = treeViewData;
+    state.EMAIL_CLIENT.emailList = emailList;
+  });
+};
+
+export const setActiveThreadId: Actions["setActiveThreadId"] = (threadId) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.activeThreadId = threadId;
   });
 };

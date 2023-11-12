@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useInView } from "react-intersection-observer";
 
 import { useThreadSnippetsInfinite } from "@skylar/client-db";
+import { setActiveThreadId } from "@skylar/logic";
 
 export function EmailList({
   filters,
@@ -9,57 +11,44 @@ export function EmailList({
 }: Pick<Parameters<typeof useThreadSnippetsInfinite>[0], "filters"> & {
   uniqueListId: string;
 }) {
-  const {
-    status,
-    data,
-    error,
-    isFetching,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasNextPage,
-  } = useThreadSnippetsInfinite({
-    userEmails: ["curdcorp@gmail.com"],
-    filters,
-    limit: 10,
-    uid: uniqueListId,
-  });
-
+  const { status, data, error, fetchNextPage, hasNextPage } =
+    useThreadSnippetsInfinite({
+      userEmails: ["curdcorp@gmail.com"],
+      filters,
+      limit: 15,
+      uid: uniqueListId,
+    });
   const allRows = data ? data.pages.flat() : [];
+
+  const onClickThread = (threadId: string) => {
+    return () => {
+      setActiveThreadId(threadId);
+    };
+  };
 
   const parentRef = useRef(null);
 
   const rowVirtualizer = useVirtualizer({
-    count: hasNextPage ? allRows.length + 1 : allRows.length,
+    count: allRows.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 100,
-    overscan: 5,
+    estimateSize: () => 40,
+    overscan: 3,
+    paddingEnd: hasNextPage ? 50 : undefined,
   });
 
-  const visibleItems = rowVirtualizer.getVirtualItems();
-
+  const { ref: hasNextPageInViewRef, inView: hasNextPageInView } = useInView();
+  const onClickLoadMore = () => {
+    fetchNextPage().catch((e) => {
+      console.error("Something went wrong fetching emails", e);
+    });
+  };
   useEffect(() => {
-    const [lastItem] = [...visibleItems].reverse();
-
-    if (!lastItem) {
-      return;
-    }
-    if (
-      lastItem.index >= allRows.length - 1 &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      console.log("end of list detected");
+    if (hasNextPageInView) {
       fetchNextPage().catch((e) => {
         console.error("Something went wrong fetching emails", e);
       });
     }
-  }, [
-    hasNextPage,
-    fetchNextPage,
-    allRows.length,
-    isFetchingNextPage,
-    visibleItems,
-  ]);
+  }, [fetchNextPage, hasNextPageInView]);
 
   return (
     <div>
@@ -68,55 +57,45 @@ export function EmailList({
       ) : status === "error" ? (
         <span>Error: {error.message}</span>
       ) : (
-        <div
-          ref={parentRef}
-          className="List"
-          style={{
-            height: `100%`,
-            width: `100%`,
-            overflow: "auto",
-          }}
-        >
+        <div ref={parentRef} className="h-full w-full">
           <div
             style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
-              width: "100%",
-              position: "relative",
+              height: rowVirtualizer.getTotalSize(),
             }}
+            className="relative w-full"
           >
             {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-              const isLoaderRow = virtualRow.index > allRows.length - 1;
-              const post = allRows[virtualRow.index];
+              const thread = allRows[virtualRow.index];
+              if (!thread) {
+                return null;
+              }
 
               return (
-                <div
+                <button
                   key={virtualRow.index}
-                  className={
-                    virtualRow.index % 2 ? "ListItemOdd" : "ListItemEven"
-                  }
+                  onClick={onClickThread(thread.email_provider_thread_id)}
+                  className="absolute left-0 top-0 flex w-full justify-start"
                   style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
                     height: `${virtualRow.size}px`,
                     transform: `translateY(${virtualRow.start}px)`,
                   }}
                 >
-                  {isLoaderRow
-                    ? hasNextPage
-                      ? "Loading more..."
-                      : "Nothing more to load"
-                    : post?.subject}
-                </div>
+                  {thread?.subject}
+                </button>
               );
             })}
+            {hasNextPage && (
+              <button
+                ref={hasNextPageInViewRef}
+                onClick={onClickLoadMore}
+                className="absolute bottom-0 left-0 h-[50px]"
+              >
+                Load more
+              </button>
+            )}
           </div>
         </div>
       )}
-      <div>
-        {isFetching && !isFetchingNextPage ? "Background Updating..." : null}
-      </div>
     </div>
   );
 }
