@@ -93,6 +93,6 @@ export function useThreadSnippetsInfinite(
       return { lastThread: lastPage.at(-1) };
     },
     initialPageParam: { lastThread: undefined as undefined | ThreadType },
-    refetchInterval: 10_000, // 10 seconds
+    refetchInterval: 2_000, // 2 seconds
   });
 }

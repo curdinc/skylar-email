@@ -53,7 +53,7 @@ export const EmailListViewer = () => {
   }
 
   return (
-    <div className="h-full w-full overflow-auto">
+    <div className="relative h-full w-full overflow-auto">
       {activeLabels.map((label) => {
         let ButtonIcon = <Icons.chevronRight className="w-4" />;
         if (visibleLabels[label.id]) {
@@ -62,7 +62,7 @@ export const EmailListViewer = () => {
         return (
           <Fragment key={label.id}>
             <button
-              className="flex w-full items-center gap-1 bg-secondary px-2 py-1 text-sm"
+              className="sticky top-0 z-10 flex w-full items-center gap-1 bg-secondary px-2 py-1 text-sm"
               onClick={onClickLabel(label.id)}
             >
               {ButtonIcon} {label.name}
