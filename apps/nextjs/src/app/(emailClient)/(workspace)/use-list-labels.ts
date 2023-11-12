@@ -14,6 +14,70 @@ export function useListLabels() {
   return useQuery({
     queryKey: [LIST_LABEL_QUERY_KEY, activeEmails],
     queryFn: async () => {
+      return {
+        "curdcorp@gmail.com": [
+          {
+            id: "CHAT",
+            name: "CHAT",
+          },
+          {
+            id: "SENT",
+            name: "SENT",
+          },
+          {
+            id: "INBOX",
+            name: "INBOX",
+          },
+          {
+            id: "IMPORTANT",
+            name: "IMPORTANT",
+          },
+          {
+            id: "TRASH",
+            name: "TRASH",
+          },
+          {
+            id: "DRAFT",
+            name: "DRAFT",
+          },
+          {
+            id: "SPAM",
+            name: "SPAM",
+          },
+          {
+            id: "CATEGORY_FORUMS",
+            name: "CATEGORY_FORUMS",
+          },
+          {
+            id: "CATEGORY_UPDATES",
+            name: "CATEGORY_UPDATES",
+          },
+          {
+            id: "CATEGORY_PERSONAL",
+            name: "CATEGORY_PERSONAL",
+          },
+          {
+            id: "CATEGORY_PROMOTIONS",
+            name: "CATEGORY_PROMOTIONS",
+          },
+          {
+            id: "CATEGORY_SOCIAL",
+            name: "CATEGORY_SOCIAL",
+          },
+          {
+            id: "STARRED",
+            name: "STARRED",
+          },
+          {
+            id: "UNREAD",
+            name: "UNREAD",
+          },
+          {
+            id: "Label_2487063905667858627",
+            name: "Test",
+          },
+        ],
+      };
       const labelPromise = activeEmails.map(async (email) => {
         const accessToken = await fetchAccessToken({
           email: email,

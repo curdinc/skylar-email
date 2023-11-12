@@ -61,16 +61,11 @@ export function useThreadSnippetsPaginated(
 }
 
 export function useThreadSnippetsInfinite(
-  args: Omit<GetParameters<typeof getThreadSnippets>, "lastEntry">,
+  args: Omit<GetParameters<typeof getThreadSnippets>, "lastEntry"> & {
+    uid?: string;
+  },
 ) {
-  const {
-    data: threads,
-    isLoading,
-    isFetching,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  } = useInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: [
       THREAD_SNIPPETS_QUERY_KEY,
       args.limit,
@@ -78,6 +73,7 @@ export function useThreadSnippetsInfinite(
       args.orderBy,
       args.filters,
       args.userEmails,
+      args.uid,
     ],
     queryFn: async ({ pageParam }) => {
       const threadSnippets = await getThreadSnippets({
@@ -98,13 +94,4 @@ export function useThreadSnippetsInfinite(
     },
     initialPageParam: { lastThread: undefined as undefined | ThreadType },
   });
-
-  return {
-    threads,
-    isLoading: isLoading || !args.userEmails.length,
-    isFetching,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  };
 }

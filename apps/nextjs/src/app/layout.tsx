@@ -5,11 +5,8 @@ import "~/styles/globals.css";
 import { cookies, headers } from "next/headers";
 import { AxiomWebVitals } from "next-axiom";
 
-import { NextAuthProvider } from "@skylar/auth";
-
 import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
-import { onUnauthenticatedRedirectTo } from "~/lib/auth/server";
 import { siteConfig } from "~/lib/config";
 import { cn } from "~/lib/ui";
 import { ClientProvider } from "./providers";
@@ -81,25 +78,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       >
         <AxiomWebVitals />
-        <NextAuthProvider
+        {/* <NextAuthProvider
           supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
           supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
           authSettings={{
             guardByDefault: true,
             onUnauthenticatedRedirectTo,
           }}
+        > */}
+        <ClientProvider
+          cookies={cookies().getAll()}
+          headers={headers()}
+          googleProviderClientId={env.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID}
+          supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
+          supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
         >
-          <ClientProvider
-            cookies={cookies().getAll()}
-            headers={headers()}
-            googleProviderClientId={env.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID}
-            supabaseKey={env.NEXT_PUBLIC_SUPABASE_ANON_KEY}
-            supabaseUrl={env.NEXT_PUBLIC_SUPABASE_URL}
-          >
-            {children}
-            <Toaster />
-          </ClientProvider>
-        </NextAuthProvider>
+          {children}
+          <Toaster />
+        </ClientProvider>
+        {/* </NextAuthProvider> */}
       </body>
     </html>
   );

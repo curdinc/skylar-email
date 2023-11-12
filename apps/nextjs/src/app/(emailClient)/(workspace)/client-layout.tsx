@@ -21,7 +21,6 @@ import { api } from "~/lib/api";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
 import { useEmailPartialSync } from "./use-email-partial-sync";
-import { useListLabels } from "./use-list-labels";
 
 export const ClientLayout = () => {
   useInboxKeymaps();
@@ -38,7 +37,6 @@ export const ClientLayout = () => {
     },
   );
   const { emailPartialSync } = useEmailPartialSync();
-  const { data: labels } = useListLabels();
 
   useQuery({
     queryKey: [
