@@ -2,8 +2,8 @@ import { useEffect, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useInView } from "react-intersection-observer";
 
-import { useThreadSnippetsInfinite } from "@skylar/client-db";
-import { isThreadUnread, setActiveThreadId } from "@skylar/logic";
+import { isThreadUnread, useThreadSnippetsInfinite } from "@skylar/client-db";
+import { setActiveThreadId } from "@skylar/logic";
 
 import { cn } from "~/lib/ui";
 

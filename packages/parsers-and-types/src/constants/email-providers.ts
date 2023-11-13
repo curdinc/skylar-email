@@ -1,5 +1,3 @@
-import type { ThreadType } from "@skylar/client-db/schema/thread";
-
 export const EMAIL_PROVIDER_LABELS = {
   GMAIL: {
     UNREAD: "UNREAD",
@@ -15,12 +13,7 @@ export const EMAIL_PROVIDER_LABELS = {
     CATEGORY_PROMOTIONS: "CATEGORY_PROMOTIONS",
   },
 } as const;
+
 export const EMAIL_PROVIDER_LABELS_ARRAY = Object.values(
   EMAIL_PROVIDER_LABELS,
 ).flatMap((labels) => Object.values(labels));
-
-export const isThreadUnread = (thread: ThreadType) => {
-  return thread.email_provider_labels.includes(
-    EMAIL_PROVIDER_LABELS.GMAIL.UNREAD,
-  );
-};

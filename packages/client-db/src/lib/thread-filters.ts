@@ -1,4 +1,4 @@
-import { EMAIL_PROVIDER_LABELS } from "@skylar/logic";
+import { EMAIL_PROVIDER_LABELS } from "@skylar/parsers-and-types";
 
 import type { ThreadType } from "../../schema/thread";
 
@@ -44,3 +44,9 @@ export function filterForLabels(labels: string[]) {
     );
   };
 }
+
+export const isThreadUnread = (thread: ThreadType) => {
+  return thread.email_provider_labels.includes(
+    EMAIL_PROVIDER_LABELS.GMAIL.UNREAD,
+  );
+};
