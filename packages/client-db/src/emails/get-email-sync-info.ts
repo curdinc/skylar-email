@@ -6,5 +6,6 @@ export async function getEmailSyncInfo({
   emailAddress: string;
 }) {
   const syncInfo = await clientDb.sync.get(emailAddress);
+
   return syncInfo;
 }

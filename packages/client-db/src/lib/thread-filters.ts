@@ -39,8 +39,6 @@ export function filterForEmails({
 
 export function filterForLabels(labels: string[]) {
   return (thread: ThreadType) => {
-    // console.log("labels", labels);
-    // console.log("thread.email_provider_labels", thread.email_provider_labels);
     return labels.every((label) =>
       thread.email_provider_labels.includes(label),
     );
