@@ -13,12 +13,14 @@ import { THREAD_INDEX } from "../schema/thread";
  */
 type DbTablesType = "thread" | "email" | "sync";
 
+export const CLIENT_DB_NAME = "skylar_inbox";
+
 export class ClientDb extends Dexie {
   thread!: Table<ThreadType, string>;
   email!: Table<EmailType, string>;
   sync!: Table<EmailSyncInfoType, string>;
-  constructor(userEmail: string) {
-    super(userEmail, {});
+  constructor() {
+    super(CLIENT_DB_NAME, {});
     this.version(1).stores({
       thread: THREAD_INDEX,
       email: EMAIL_INDEX,
@@ -27,4 +29,4 @@ export class ClientDb extends Dexie {
   }
 }
 
-export const initClientDb = (userEmail: string) => new ClientDb(userEmail);
+export const clientDb = new ClientDb();

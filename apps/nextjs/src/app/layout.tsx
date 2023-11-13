@@ -14,6 +14,8 @@ import { siteConfig } from "~/lib/config";
 import { cn } from "~/lib/ui";
 import { ClientProvider } from "./providers";
 
+export const dynamic = "force-dynamic";
+
 const fontSans = Inter({
   subsets: ["latin"],
   variable: "--font-sans",

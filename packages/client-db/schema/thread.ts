@@ -1,5 +1,6 @@
 export type ThreadIndexType = {
   email_provider_thread_id: string;
+  user_email_address: string;
   email_provider_message_id: string[];
   subject_search: string[];
   from: string[];
@@ -23,6 +24,7 @@ export type ThreadType = ThreadIndexType & {
 };
 
 export const THREAD_INDEX = `&email_provider_thread_id,
+user_email_address,
 *email_provider_message_id,
 *subject_search,
 *from,

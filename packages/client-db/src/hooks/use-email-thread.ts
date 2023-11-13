@@ -1,15 +1,19 @@
-import { getEmailThread } from "../emails/get-email-thread";
-import type { MakeDbOptional } from "../types/use-client-db-helper-type";
-import { useClientDb } from "./use-client-db";
+import { useQuery } from "@tanstack/react-query";
 
-export function useEmailThread(
-  args: MakeDbOptional<Parameters<typeof getEmailThread>[0]>,
-) {
-  const { result: emailThread, isLoading } = useClientDb({
-    db: args.db,
-    deps: [],
-    query: async (db) => {
-      const emailThread = await getEmailThread({ ...args, db });
+import { clientDb } from "../db";
+import { getEmailThread } from "../emails/get-email-thread";
+import type { GetParameters } from "../types/extract-params";
+
+export const EMAIL_THREAD_QUERY_KEY = "emailThread";
+
+export function useEmailThread(args: GetParameters<typeof getEmailThread>) {
+  const { data: emailThread, isLoading } = useQuery({
+    queryKey: [EMAIL_THREAD_QUERY_KEY, args.emailProviderThreadId],
+    queryFn: async () => {
+      const emailThread = await getEmailThread({
+        emailProviderThreadId: args.emailProviderThreadId,
+        db: clientDb,
+      });
       return emailThread;
     },
   });

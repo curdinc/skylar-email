@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { bulkUpdateEmails, useEmailThread } from "@skylar/client-db";
 import type { EmailType } from "@skylar/client-db/schema/email";
 import { modifyLabels } from "@skylar/gmail-api";
-import { useActiveEmailClientDb, useActiveEmailProvider } from "@skylar/logic";
+import { useActiveEmailProviders } from "@skylar/logic";
 
 import { api } from "~/lib/api";
 import { useEmailThreadPageKeymaps } from "~/lib/keymap-hooks";
@@ -15,11 +15,9 @@ export function useThreadPage() {
 
   const { threadId } = useParams();
   if (typeof threadId !== "string") throw new Error("Invalid threadId");
-  const activeDb = useActiveEmailClientDb();
-  const emailProviderInfo = useActiveEmailProvider();
+  const emailProviderInfos = useActiveEmailProviders();
   const { emailThread, isLoading: isLoadingThread } = useEmailThread({
     emailProviderThreadId: threadId,
-    db: activeDb,
   });
 
   const { mutateAsync: fetchGmailAccessToken } =
@@ -53,11 +51,10 @@ export function useThreadPage() {
       }
     },
     onSuccess: async (labelData) => {
-      if (!labelData || !activeDb) {
+      if (!labelData) {
         return;
       }
       await bulkUpdateEmails({
-        db: activeDb,
         emails: [
           {
             email_provider_message_id: labelData.id,
@@ -73,17 +70,17 @@ export function useThreadPage() {
   });
 
   useEffect(() => {
-    if (!isLoadingThread && emailThread?.length && emailProviderInfo?.email) {
+    if (!isLoadingThread && emailThread?.length && emailProviderInfos?.length) {
       emailThread.map((email) => {
         markAsRead({
           email,
-          emailAddress: emailProviderInfo.email,
+          emailAddress: email.user_email_address,
           addLabels: [],
           deleteLabels: ["UNREAD"],
         });
       });
     }
-  }, [emailProviderInfo?.email, emailThread, isLoadingThread, markAsRead]);
+  }, [emailProviderInfos?.length, emailThread, isLoadingThread, markAsRead]);
 
   return { isLoadingThread, emailThread };
 }
