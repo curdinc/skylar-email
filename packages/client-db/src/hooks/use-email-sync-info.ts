@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
 import type { EmailSyncInfoType } from "../../schema/sync";
-import { clientDb } from "../db";
 import { getEmailSyncInfo } from "../emails/get-email-sync-info";
 
 export const EMAIL_SYNC_INFO_QUERY_KEY = "emailSyncInfo";
@@ -19,7 +18,6 @@ export function useEmailSyncInfo({
         emailAddresses.map((emailAddress) => {
           return getEmailSyncInfo({
             emailAddress,
-            db: clientDb,
           });
         }),
       );

@@ -1,9 +1,8 @@
 import type { ThreadIndexType, ThreadType } from "../../schema/thread";
-import type { ClientDb } from "../db";
+import { clientDb } from "../db";
 import { filterForEmails } from "../lib/thread-filters";
 
 export async function getThreadSnippets({
-  db,
   userEmails,
   sort = "DESC",
   orderBy = "updated_at",
@@ -11,7 +10,6 @@ export async function getThreadSnippets({
   limit = 25,
   lastEntry,
 }: {
-  db: ClientDb;
   userEmails: string[];
   sort?: "ASC" | "DESC";
   orderBy?: keyof ThreadIndexType;
@@ -27,14 +25,14 @@ export async function getThreadSnippets({
   ];
   if (lastEntry) {
     return sort === "DESC"
-      ? db.thread
+      ? clientDb.thread
           .where(orderBy)
           .below(lastEntry.updated_at)
           .reverse()
           .and((thread) => actualFilters.every((f) => f(thread)))
           .limit(limit)
           .toArray()
-      : db.thread
+      : clientDb.thread
           .where(orderBy)
           .below(lastEntry.updated_at)
           .and((thread) => actualFilters.every((f) => f(thread)))
@@ -43,13 +41,13 @@ export async function getThreadSnippets({
   }
 
   return sort === "DESC"
-    ? db.thread
+    ? clientDb.thread
         .orderBy(orderBy)
         .reverse()
         .and((thread) => actualFilters.every((f) => f(thread)))
         .limit(limit)
         .toArray()
-    : db.thread
+    : clientDb.thread
         .orderBy(orderBy)
         .and((thread) => actualFilters.every((f) => f(thread)))
         .limit(limit)

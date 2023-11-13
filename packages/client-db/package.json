@@ -20,6 +20,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@skylar/parsers-and-types": "^0.1.0",
     "dexie": "^3.2.4"
   },
   "devDependencies": {

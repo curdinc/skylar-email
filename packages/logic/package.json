@@ -20,15 +20,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@skylar/client-db": "^0.1.0",
-    "@skylar/parsers-and-types": "^0.1.0",
     "immer": "^10.0.3",
     "zustand": "^4.4.4"
   },
   "devDependencies": {
     "@skylar/api": "^0.1.0",
+    "@skylar/client-db": "^0.1.0",
     "@skylar/db": "^0.1.0",
     "@skylar/eslint-config": "0.2.0",
+    "@skylar/parsers-and-types": "^0.1.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
     "eslint": "^8.48.0",

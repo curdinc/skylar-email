@@ -16,7 +16,7 @@ import { formatTimeToMMMDDYYYYHHmm } from "~/lib/email";
 import { cn } from "~/lib/ui";
 import { useThreadPage } from "./use-thread-page";
 
-export default function EmailThreadPage() {
+export function EmailThreadPage() {
   const { emailThread, isLoadingThread } = useThreadPage();
 
   if (isLoadingThread) {

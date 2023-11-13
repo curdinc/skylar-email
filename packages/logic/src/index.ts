@@ -3,8 +3,31 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
 
+import type { ThreadType } from "@skylar/client-db/schema/thread";
 import type { schema } from "@skylar/db";
 import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
+
+export type EmailListData =
+  | {
+      meta: {
+        canMove: boolean;
+        canRename: boolean;
+        isFolder: boolean;
+        isVisible: boolean;
+      };
+      isLabel: true;
+      label: { name: string; id: string };
+    }
+  | {
+      meta: {
+        isVisible: boolean;
+        canMove: boolean;
+        canRename: boolean;
+        isFolder: boolean;
+      };
+      isLabel: false;
+      thread: ThreadType;
+    };
 
 type State = {
   ONBOARDING: { alphaCode: string };
@@ -17,6 +40,8 @@ type State = {
   EMAIL_CLIENT: {
     activeEmailProviderIndexes: number[];
     emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
+    emailList: EmailListData[];
+    activeThreadId: string | undefined;
   };
   SHORTCUT: {
     goBack: string;
@@ -40,6 +65,10 @@ type Actions = {
   setEmailProviders: (
     emailProviders: State["EMAIL_CLIENT"]["emailProviders"],
   ) => void;
+  setEmailListData: (treeViewData: State["EMAIL_CLIENT"]["emailList"]) => void;
+  setActiveThreadId: (
+    threadId: State["EMAIL_CLIENT"]["activeThreadId"],
+  ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
 };
 
@@ -49,6 +78,8 @@ export const useGlobalStore = create(
     EMAIL_CLIENT: {
       activeEmailProviderIndexes: [],
       emailProviders: [],
+      emailList: [],
+      activeThreadId: undefined,
     },
     SETTINGS: {
       INVITE_CODE: {
@@ -75,17 +106,18 @@ export const useOptimizedGlobalStore = <T>(arg: (state: State) => T) => {
 };
 
 // Computed states
+export const COMPUTED_STATE_SELECTOR = {
+  activeEmailProviders: (state: State) =>
+    state.EMAIL_CLIENT.activeEmailProviderIndexes
+      .map((index) => {
+        return state.EMAIL_CLIENT.emailProviders[index];
+      })
+      .filter(
+        (provider) => !!provider,
+      ) as (typeof schema.emailProviderDetail.$inferSelect)[],
+};
 export const useActiveEmailProviders = () =>
-  useOptimizedGlobalStore(
-    (state) =>
-      state.EMAIL_CLIENT.activeEmailProviderIndexes
-        .map((index) => {
-          return state.EMAIL_CLIENT.emailProviders[index];
-        })
-        .filter(
-          (provider) => !!provider,
-        ) as (typeof schema.emailProviderDetail.$inferSelect)[],
-  );
+  useOptimizedGlobalStore(COMPUTED_STATE_SELECTOR.activeEmailProviders);
 
 export const useActiveEmails = () => {
   const activeEmailProviders = useActiveEmailProviders();
@@ -139,9 +171,19 @@ export const setEmailProviders: Actions["setEmailProviders"] = (
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.emailProviders = emailProviders;
     if (state.EMAIL_CLIENT.activeEmailProviderIndexes.length === 0) {
-      state.EMAIL_CLIENT.activeEmailProviderIndexes = emailProviders.map(
-        (_, index) => index,
-      );
+      state.EMAIL_CLIENT.activeEmailProviderIndexes = [0];
     }
+  });
+};
+
+export const setEmailList: Actions["setEmailListData"] = (emailList) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.emailList = emailList;
+  });
+};
+
+export const setActiveThreadId: Actions["setActiveThreadId"] = (threadId) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.activeThreadId = threadId;
   });
 };

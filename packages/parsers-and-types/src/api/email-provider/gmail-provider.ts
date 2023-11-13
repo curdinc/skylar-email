@@ -92,7 +92,7 @@ const messagePartSchema: BaseSchema<InputMessagePartType> = merge([
 const messageMetadataSchema = object({
   id: string(),
   threadId: string(),
-  labelIds: array(string()),
+  labelIds: withDefault(array(string()), []),
 });
 
 const historyItemSchema = object({

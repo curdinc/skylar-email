@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { clientDb } from "../db";
 import { getEmailThread } from "../emails/get-email-thread";
 import type { GetParameters } from "../types/extract-params";
 
@@ -12,7 +11,6 @@ export function useEmailThread(args: GetParameters<typeof getEmailThread>) {
     queryFn: async () => {
       const emailThread = await getEmailThread({
         emailProviderThreadId: args.emailProviderThreadId,
-        db: clientDb,
       });
       return emailThread;
     },
