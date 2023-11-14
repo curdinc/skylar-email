@@ -42,9 +42,10 @@ type State = {
     emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
     emailList: EmailListData[];
     activeThreadId: string | undefined;
+    threadToReplyTo: string | undefined;
   };
   SHORTCUT: {
-    goBack: string;
+    reply: string;
     openSpotlightSearch: string;
     goNextThread: string;
     goPreviousThread: string;
@@ -69,6 +70,9 @@ type Actions = {
   setActiveThreadId: (
     threadId: State["EMAIL_CLIENT"]["activeThreadId"],
   ) => void;
+  setThreadToReplyTo: (
+    threadId: State["EMAIL_CLIENT"]["threadToReplyTo"],
+  ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
 };
 
@@ -80,6 +84,7 @@ export const useGlobalStore = create(
       emailProviders: [],
       emailList: [],
       activeThreadId: undefined,
+      threadToReplyTo: undefined,
     },
     SETTINGS: {
       INVITE_CODE: {
@@ -93,7 +98,7 @@ export const useGlobalStore = create(
       alphaCode: "",
     },
     SHORTCUT: {
-      goBack: "Escape",
+      reply: "r",
       openSpotlightSearch: "$mod+p",
       goNextThread: "ArrowRight",
       goPreviousThread: "ArrowLeft",
@@ -185,5 +190,11 @@ export const setEmailList: Actions["setEmailListData"] = (emailList) => {
 export const setActiveThreadId: Actions["setActiveThreadId"] = (threadId) => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.activeThreadId = threadId;
+  });
+};
+
+export const setThreadToReplyTo: Actions["setThreadToReplyTo"] = (threadId) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.threadToReplyTo = threadId;
   });
 };
