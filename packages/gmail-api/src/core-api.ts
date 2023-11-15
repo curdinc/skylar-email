@@ -481,6 +481,77 @@ export async function sendMail({
   return response;
 }
 
+export async function listLabels({
+  accessToken,
+  emailId,
+}: {
+  accessToken: string;
+  emailId: string;
+}) {
+  const url = new URL(
+    `https://gmail.googleapis.com/gmail/v1/users/${emailId}/labels`,
+  );
+
+  const headers = new Headers({
+    Authorization: `Bearer ${accessToken}`,
+  });
+
+  const res = await fetch(url, {
+    headers,
+    method: "GET",
+  });
+
+  const data = (await res.json()) as { labels: unknown };
+
+  return data.labels as {
+    id: string;
+    name: string;
+    type: "system" | "user";
+    messageListVisibility?: "hide" | "show";
+  }[];
+}
+
+export async function batchCreateLabels({
+  accessToken,
+  emailId,
+  labels,
+}: {
+  accessToken: string;
+  emailId: string;
+  labels: { name: string }[];
+}) {
+  if (labels.length > GMAIL_MAX_BATCH_REQUEST_SIZE) {
+    throw new Error(
+      `Cannot batch more than ${GMAIL_MAX_BATCH_REQUEST_SIZE} requests.`,
+    );
+  }
+  const reqs = labels.map((label) => {
+    return {
+      contentType: "application/json",
+      type: "POST" as const,
+      url: `/gmail/v1/users/${emailId}/labels`,
+      body: label,
+    };
+  });
+
+  const res = await sendBatchRequest({
+    accessToken,
+    emailId,
+    reqs,
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to get messages. cause: ${await res.text()}`);
+  }
+
+  const contentData = await MultipartMixedService.parseAsync(res);
+  const messageData = contentData.map((data): { id: string; name: string } => {
+    return data.json();
+  });
+
+  return messageData;
+}
+
 export async function batchGetMessages({
   messageIds,
   accessToken,
@@ -553,6 +624,47 @@ export async function batchTrashThreads({
       contentType: "application/http",
       type: "POST" as const,
       url: `/gmail/v1/users/${emailId}/threads/${threadId}/trash`,
+    };
+  });
+
+  const res = await sendBatchRequest({
+    accessToken,
+    emailId,
+    reqs,
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to get messages. cause: ${await res.text()}`);
+  }
+
+  const contentData = await MultipartMixedService.parseAsync(res);
+  const messageData = contentData.map((data) => {
+    try {
+      return parse(trashMessageResponseSchema, data.json());
+    } catch (e) {
+      console.log("data", data.json());
+      console.log(JSON.stringify(formatValidatorError(e), null, 2));
+      throw e;
+    }
+  });
+
+  return messageData;
+}
+
+export async function batchUntrashThreads({
+  threadIds,
+  accessToken,
+  emailId,
+}: {
+  threadIds: string[];
+  accessToken: string;
+  emailId: string;
+}) {
+  const reqs = threadIds.map((threadId) => {
+    return {
+      contentType: "application/http",
+      type: "POST" as const,
+      url: `/gmail/v1/users/${emailId}/threads/${threadId}/untrash`,
     };
   });
 
