@@ -6,7 +6,6 @@ import {
 } from "@tanstack/react-query";
 
 import type { ThreadType } from "../../schema/thread";
-import { clientDb } from "../db";
 import { getThreadSnippets } from "../emails/get-thread-snippets";
 import type { GetParameters } from "../types/extract-params";
 
@@ -17,11 +16,7 @@ export function useThreadSnippetsPaginated(
 ) {
   const [lastThreads, setLastThreads] = useState<ThreadType[]>([]);
 
-  const {
-    data: threads,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data: threads, isLoading } = useQuery({
     queryKey: [
       THREAD_SNIPPETS_QUERY_KEY,
       lastThreads,
@@ -39,7 +34,6 @@ export function useThreadSnippetsPaginated(
         lastEntry: lastThreads.at(-1),
         sort: args.sort,
         orderBy: args.orderBy,
-        db: clientDb,
       });
       return threadSnippets;
     },
@@ -60,7 +54,6 @@ export function useThreadSnippetsPaginated(
   }, [lastThreads]);
   return {
     threads,
-    refetch,
     isLoading: isLoading || !args.userEmails.length,
     nextPage,
     prevPage,
@@ -68,16 +61,11 @@ export function useThreadSnippetsPaginated(
 }
 
 export function useThreadSnippetsInfinite(
-  args: Omit<GetParameters<typeof getThreadSnippets>, "lastEntry">,
+  args: Omit<GetParameters<typeof getThreadSnippets>, "lastEntry"> & {
+    uid?: string;
+  },
 ) {
-  const {
-    data: threads,
-    isLoading,
-    isFetching,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  } = useInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: [
       THREAD_SNIPPETS_QUERY_KEY,
       args.limit,
@@ -85,6 +73,7 @@ export function useThreadSnippetsInfinite(
       args.orderBy,
       args.filters,
       args.userEmails,
+      args.uid,
     ],
     queryFn: async ({ pageParam }) => {
       const threadSnippets = await getThreadSnippets({
@@ -94,7 +83,6 @@ export function useThreadSnippetsInfinite(
         lastEntry: pageParam.lastThread,
         sort: args.sort,
         orderBy: args.orderBy,
-        db: clientDb,
       });
       return threadSnippets;
     },
@@ -105,14 +93,6 @@ export function useThreadSnippetsInfinite(
       return { lastThread: lastPage.at(-1) };
     },
     initialPageParam: { lastThread: undefined as undefined | ThreadType },
+    refetchInterval: 2_000, // 2 seconds
   });
-
-  return {
-    threads,
-    isLoading: isLoading || !args.userEmails.length,
-    isFetching,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-  };
 }

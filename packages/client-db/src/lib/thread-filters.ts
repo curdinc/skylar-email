@@ -1,4 +1,5 @@
-import { EMAIL_PROVIDER_LABELS } from "../../schema/email";
+import { EMAIL_PROVIDER_LABELS } from "@skylar/parsers-and-types";
+
 import type { ThreadType } from "../../schema/thread";
 
 export function filterForInbox(args: { invert: boolean } = { invert: false }) {
@@ -35,3 +36,17 @@ export function filterForEmails({
     );
   };
 }
+
+export function filterForLabels(labels: string[]) {
+  return (thread: ThreadType) => {
+    return labels.every((label) =>
+      thread.email_provider_labels.includes(label),
+    );
+  };
+}
+
+export const isThreadUnread = (thread: ThreadType) => {
+  return thread.email_provider_labels.includes(
+    EMAIL_PROVIDER_LABELS.GMAIL.UNREAD,
+  );
+};

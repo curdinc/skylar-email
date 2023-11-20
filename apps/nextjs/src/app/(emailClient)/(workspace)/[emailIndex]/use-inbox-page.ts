@@ -9,16 +9,13 @@ export function useInboxPage() {
     isLoading: isLoadingThreads,
     nextPage,
     prevPage,
-    refetch,
   } = useThreadSnippetsPaginated({
     userEmails,
-    filters: [(thread) => thread.email_provider_labels.indexOf("INBOX") !== -1],
     limit: 10,
   });
 
   return {
     threads,
-    refetch,
     isLoadingThreads,
     nextPage,
     prevPage,

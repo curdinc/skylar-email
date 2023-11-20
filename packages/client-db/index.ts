@@ -14,3 +14,5 @@ export * from "./src/threads/bulk-put-threads";
 export * from "./src/hooks/use-email-sync-info";
 export * from "./src/hooks/use-email-thread";
 export * from "./src/hooks/use-thread-snippets";
+
+export * from "./src/lib/thread-filters";

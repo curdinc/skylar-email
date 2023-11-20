@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { useParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 
 import { bulkUpdateEmails, useEmailThread } from "@skylar/client-db";
 import type { EmailType } from "@skylar/client-db/schema/email";
 import { modifyLabels } from "@skylar/gmail-api";
-import { useActiveEmailProviders } from "@skylar/logic";
+import { useActiveEmailProviders, useGlobalStore } from "@skylar/logic";
 
 import { api } from "~/lib/api";
 import { useEmailThreadPageKeymaps } from "~/lib/keymap-hooks";
@@ -13,12 +12,14 @@ import { useEmailThreadPageKeymaps } from "~/lib/keymap-hooks";
 export function useThreadPage() {
   useEmailThreadPageKeymaps();
 
-  const { threadId } = useParams();
-  if (typeof threadId !== "string") throw new Error("Invalid threadId");
+  const threadId = useGlobalStore((state) => state.EMAIL_CLIENT.activeThreadId);
   const emailProviderInfos = useActiveEmailProviders();
+
   const { emailThread, isLoading: isLoadingThread } = useEmailThread({
-    emailProviderThreadId: threadId,
+    emailProviderThreadId: threadId ?? "",
   });
+
+  console.log("emailThread", emailThread);
 
   const { mutateAsync: fetchGmailAccessToken } =
     api.gmail.getAccessToken.useMutation();
