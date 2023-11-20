@@ -14,7 +14,7 @@ export async function trashThreads({
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
   const activeClientDb = clientDb;
-  console.log("Archive Threads");
+  console.log("Trash Threads");
 
   const updatedThreads = threads.map((thread) => {
     const inboxIndex = thread.email_provider_labels.indexOf("INBOX");
