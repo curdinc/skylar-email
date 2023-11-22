@@ -40,10 +40,8 @@ const useReplyEmail = () => {
         text: replyString,
         replyConfig: {
           inReplyToRfcMessageId: replyThread.rfc822_message_id[0] ?? "",
-          references: [
-            "<CAG0CwZ9aVq0GkYWwNZ9xkVtwbX4Qw_1nBFKVFwv7ic4kCJtbgQ@mail.gmail.com> <CAG0CwZ9AN=qp+tSagEra8B4h5wLMiLrcEpROG20Kuf_JGVMiSg@mail.gmail.com> <CAG0CwZ8P3N7YNjyXGRc1KnGheztJDEDE7MpO=fSxFsOTwLxvEw@mail.gmail.com> <CAG0CwZ9jR-CK2Pm0FXWR1rPXigkuBzSUa1FwSbWLQ7keTfR5pw@mail.gmail.com> <CAG0CwZ_E=JWnYd8CZUOHKGtXOJpHy73qHij1OD5QsVBaRbj=QA@mail.gmail.com>",
-            replyThread.rfc822_message_id[0] ?? "",
-          ],
+          references: replyThread.rfc822_message_id,
+          providerThreadId: replyThread.email_provider_thread_id,
           rootSubject: replyThread.subject,
         },
       },
