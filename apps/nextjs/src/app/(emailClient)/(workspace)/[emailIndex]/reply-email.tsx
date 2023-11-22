@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import SimpleMdeReact from "react-simplemde-editor";
 
-import { useGlobalStore } from "@skylar/logic";
+import { setComposedEmail, useGlobalStore } from "@skylar/logic";
 
 import "easymde/dist/easymde.min.css";
 
@@ -13,13 +13,15 @@ import { useSendEmail } from "./use-send-mail";
 
 const useReplyEmail = () => {
   const replyThread = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.threadToReplyTo,
+    (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
-  const { sendEmail } = useSendEmail();
+  const replyString = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.COMPOSING.composedEmail,
+  );
+  const { sendEmail, isSendingEmail } = useSendEmail();
 
-  const [replyString, setReplyString] = useState("");
   const onReplyStringChange = useCallback((value: string) => {
-    setReplyString(value);
+    setComposedEmail(value);
   }, []);
   const { toast } = useToast();
 
@@ -27,7 +29,6 @@ const useReplyEmail = () => {
     if (!replyThread) {
       return;
     }
-    console.log("replyThread.rfc822_message_id", replyThread.rfc822_message_id);
     await sendEmail({
       emailAddress: replyThread.to.slice(-1)[0] ?? "",
       emailConfig: {
@@ -37,7 +38,7 @@ const useReplyEmail = () => {
         subject: replyThread.subject,
         to: replyThread.from.slice(-1),
         attachments: [],
-        text: replyString,
+        html: replyString,
         replyConfig: {
           inReplyToRfcMessageId: replyThread.rfc822_message_id[0] ?? "",
           references: replyThread.rfc822_message_id,
@@ -47,8 +48,7 @@ const useReplyEmail = () => {
       },
     });
     toast({
-      title: "Email sent",
-      description: "Email sent",
+      title: "Email sent!",
     });
   }, [replyString, replyThread, sendEmail, toast]);
 
@@ -57,11 +57,13 @@ const useReplyEmail = () => {
     onReplyStringChange,
     replyThread,
     onClickSend,
+    isSendingEmail,
   };
 };
 
 export const ReplyEmail = () => {
-  const { onReplyStringChange, replyString, onClickSend } = useReplyEmail();
+  const { onReplyStringChange, replyString, onClickSend, isSendingEmail } =
+    useReplyEmail();
 
   return (
     <div className="p-5">
@@ -71,7 +73,9 @@ export const ReplyEmail = () => {
         className="z-50"
       />
       <div className="flex justify-end">
-        <Button onClick={onClickSend}>Send</Button>
+        <Button onClick={onClickSend} isLoading={isSendingEmail}>
+          Send
+        </Button>
       </div>
     </div>
   );

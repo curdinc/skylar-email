@@ -42,7 +42,10 @@ type State = {
     emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
     emailList: EmailListData[];
     activeThread: ThreadType | undefined;
-    threadToReplyTo: ThreadType | undefined;
+    COMPOSING: {
+      respondingThread: ThreadType | undefined;
+      composedEmail: string;
+    };
   };
   SHORTCUT: {
     close: string;
@@ -70,7 +73,10 @@ type Actions = {
   setEmailListData: (treeViewData: State["EMAIL_CLIENT"]["emailList"]) => void;
   setActiveThread: (thread: State["EMAIL_CLIENT"]["activeThread"]) => void;
   setThreadToReplyTo: (
-    thread: State["EMAIL_CLIENT"]["threadToReplyTo"],
+    thread: State["EMAIL_CLIENT"]["COMPOSING"]["respondingThread"],
+  ) => void;
+  setComposedEmail: (
+    composeString: State["EMAIL_CLIENT"]["COMPOSING"]["composedEmail"],
   ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
 };
@@ -83,7 +89,10 @@ export const useGlobalStore = create(
       emailProviders: [],
       emailList: [],
       activeThread: undefined,
-      threadToReplyTo: undefined,
+      COMPOSING: {
+        composedEmail: "",
+        respondingThread: undefined,
+      },
     },
     SETTINGS: {
       INVITE_CODE: {
@@ -195,6 +204,14 @@ export const setActiveThread: Actions["setActiveThread"] = (thread) => {
 
 export const setThreadToReplyTo: Actions["setThreadToReplyTo"] = (thread) => {
   useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.threadToReplyTo = thread;
+    state.EMAIL_CLIENT.COMPOSING.respondingThread = thread;
+  });
+};
+
+export const setComposedEmail: Actions["setComposedEmail"] = (
+  composeString,
+) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.COMPOSING.composedEmail = composeString;
   });
 };

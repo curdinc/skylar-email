@@ -23,7 +23,7 @@ export function useEmailThreadPageKeymaps() {
     const unsubscribe = tinyKeys(window, {
       [shortcut.close]: () => {
         const replyThread =
-          useGlobalStore.getState().EMAIL_CLIENT.threadToReplyTo;
+          useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.respondingThread;
         if (replyThread) {
           setThreadToReplyTo(undefined);
         } else {

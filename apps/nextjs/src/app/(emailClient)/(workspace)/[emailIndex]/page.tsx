@@ -11,8 +11,8 @@ import { ReplyEmail } from "./reply-email";
 const MIN_PANE_SIZE = 250;
 
 export default function Inbox() {
-  const threadToReplyTo = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.threadToReplyTo,
+  const respondingThread = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
 
   return (
@@ -25,7 +25,7 @@ export default function Inbox() {
           <div className="h-full overflow-auto">
             <EmailThreadPage />
           </div>
-          {threadToReplyTo && <ReplyEmail />}
+          {respondingThread && <ReplyEmail />}
         </Allotment>
       </Allotment.Pane>
     </Allotment>
