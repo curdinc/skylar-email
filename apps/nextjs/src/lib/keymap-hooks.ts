@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import {
+  setActiveThread,
   setThreadToReplyTo,
   useGlobalStore,
   useOptimizedGlobalStore,
@@ -16,13 +17,25 @@ export function useEmailThreadPageKeymaps() {
     reply: state.SHORTCUT.reply,
     goNextThread: state.SHORTCUT.goNextThread,
     goPreviousThread: state.SHORTCUT.goPreviousThread,
+    close: state.SHORTCUT.close,
   }));
   useEffect(() => {
     const unsubscribe = tinyKeys(window, {
+      [shortcut.close]: () => {
+        const replyThread =
+          useGlobalStore.getState().EMAIL_CLIENT.threadToReplyTo;
+        if (replyThread) {
+          setThreadToReplyTo(undefined);
+        } else {
+          const activeThread =
+            useGlobalStore.getState().EMAIL_CLIENT.activeThread;
+          if (activeThread) {
+            setActiveThread(undefined);
+          }
+        }
+      },
       [shortcut.reply]: () => {
-        setThreadToReplyTo(
-          useGlobalStore.getState().EMAIL_CLIENT.activeThreadId,
-        );
+        setThreadToReplyTo(useGlobalStore.getState().EMAIL_CLIENT.activeThread);
       },
       [shortcut.goNextThread]: (e) => {
         console.log("arrow right key called", e.key, e.code);

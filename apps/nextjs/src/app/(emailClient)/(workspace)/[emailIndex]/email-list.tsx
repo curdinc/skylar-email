@@ -3,7 +3,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useInView } from "react-intersection-observer";
 
 import { isThreadUnread, useThreadSnippetsInfinite } from "@skylar/client-db";
-import { setActiveThreadId } from "@skylar/logic";
+import type { ThreadType } from "@skylar/client-db/schema/thread";
+import { setActiveThread } from "@skylar/logic";
 
 import { cn } from "~/lib/ui";
 
@@ -22,9 +23,9 @@ export function EmailList({
     });
   const allRows = data ? data.pages.flat() : [];
 
-  const onClickThread = (threadId: string) => {
+  const onClickThread = (thread: ThreadType) => {
     return () => {
-      setActiveThreadId(threadId);
+      setActiveThread(thread);
     };
   };
 
@@ -75,7 +76,7 @@ export function EmailList({
               return (
                 <button
                   key={virtualRow.index}
-                  onClick={onClickThread(thread.email_provider_thread_id)}
+                  onClick={onClickThread(thread)}
                   className={cn(
                     "absolute left-0 top-0 flex w-full items-center justify-start px-2",
                     "min-w-0 truncate hover:bg-secondary",

@@ -45,6 +45,7 @@ type State = {
     threadToReplyTo: ThreadType | undefined;
   };
   SHORTCUT: {
+    close: string;
     reply: string;
     openSpotlightSearch: string;
     goNextThread: string;
@@ -96,6 +97,7 @@ export const useGlobalStore = create(
       alphaCode: "",
     },
     SHORTCUT: {
+      close: "Escape",
       reply: "r",
       openSpotlightSearch: "$mod+p",
       goNextThread: "ArrowRight",
@@ -185,7 +187,7 @@ export const setEmailList: Actions["setEmailListData"] = (emailList) => {
   });
 };
 
-export const setActiveThreadId: Actions["setActiveThread"] = (thread) => {
+export const setActiveThread: Actions["setActiveThread"] = (thread) => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.activeThread = thread;
   });

@@ -12,7 +12,9 @@ import { useEmailThreadPageKeymaps } from "~/lib/keymap-hooks";
 export function useThreadPage() {
   useEmailThreadPageKeymaps();
 
-  const threadId = useGlobalStore((state) => state.EMAIL_CLIENT.activeThreadId);
+  const threadId = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.activeThread?.email_provider_thread_id,
+  );
   const emailProviderInfos = useActiveEmailProviders();
 
   const { emailThread, isLoading: isLoadingThread } = useEmailThread({
