@@ -448,10 +448,12 @@ export async function sendMail({
   accessToken,
   emailId,
   rfc822Base64EncodedMessageData,
+  replyToGmailThreadId,
 }: {
   accessToken: string;
   emailId: string;
   rfc822Base64EncodedMessageData: string;
+  replyToGmailThreadId?: string;
 }) {
   const url = new URL(
     `https://gmail.googleapis.com/gmail/v1/users/${emailId}/messages/send`,
@@ -466,6 +468,11 @@ export async function sendMail({
     headers: headers,
     body: JSON.stringify({
       raw: rfc822Base64EncodedMessageData,
+      ...(replyToGmailThreadId
+        ? {
+            threadId: replyToGmailThreadId,
+          }
+        : {}),
     }),
   });
 
