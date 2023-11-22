@@ -47,6 +47,7 @@ export const emailConfigSchema = object({
       inReplyToRfcMessageId: string(),
       references: array(string()),
       rootSubject: string(),
+      providerThreadId: string(),
     }),
   ),
   attachments: array(attachmentSchema),

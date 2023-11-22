@@ -29,6 +29,7 @@ export function useSendEmail() {
         accessToken,
         emailId: emailAddress,
         rfc822Base64EncodedMessageData: composedEmail,
+        replyToGmailThreadId: emailConfig.replyConfig?.providerThreadId,
       });
 
       console.log("sendMessageResponse", sendMessageResponse);
