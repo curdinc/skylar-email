@@ -1,7 +1,9 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+import type { Editor } from "codemirror";
 import SimpleMdeReact from "react-simplemde-editor";
+import showdown from "showdown";
 
 import { setComposedEmail, useGlobalStore } from "@skylar/logic";
 
@@ -29,6 +31,7 @@ const useReplyEmail = () => {
     if (!replyThread) {
       return;
     }
+    const markdownToHtmlConverter = new showdown.Converter();
     await sendEmail({
       emailAddress: replyThread.to.slice(-1)[0] ?? "",
       emailConfig: {
@@ -38,7 +41,7 @@ const useReplyEmail = () => {
         subject: replyThread.subject,
         to: replyThread.from.slice(-1),
         attachments: [],
-        html: replyString,
+        html: markdownToHtmlConverter.makeHtml(replyString),
         replyConfig: {
           inReplyToRfcMessageId: replyThread.rfc822_message_id[0] ?? "",
           references: replyThread.rfc822_message_id,
@@ -65,12 +68,24 @@ export const ReplyEmail = () => {
   const { onReplyStringChange, replyString, onClickSend, isSendingEmail } =
     useReplyEmail();
 
+  const [codeMirrorInstance, setCodeMirrorInstance] = useState<Editor | null>(
+    null,
+  );
+  const getCmInstanceCallback = useCallback((editor: Editor) => {
+    setCodeMirrorInstance(editor);
+  }, []);
+
+  useEffect(() => {
+    codeMirrorInstance?.focus();
+  }, [codeMirrorInstance]);
+
   return (
     <div className="p-5">
       <SimpleMdeReact
         value={replyString}
         onChange={onReplyStringChange}
-        className="z-50"
+        getCodemirrorInstance={getCmInstanceCallback}
+        className="prose min-w-full"
       />
       <div className="flex justify-end">
         <Button onClick={onClickSend} isLoading={isSendingEmail}>

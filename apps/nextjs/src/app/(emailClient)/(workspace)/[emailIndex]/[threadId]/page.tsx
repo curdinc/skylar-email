@@ -93,6 +93,7 @@ export function EmailDisplay({
             className={cn(
               !email.content_html && "whitespace-pre-wrap",
               "w-full min-w-0",
+              "prose",
             )}
             html={email.content_html ? email.content_html : email.content_text}
           />

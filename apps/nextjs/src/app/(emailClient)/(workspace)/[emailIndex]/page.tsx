@@ -25,7 +25,11 @@ export default function Inbox() {
           <div className="h-full overflow-auto">
             <EmailThreadPage />
           </div>
-          {respondingThread && <ReplyEmail />}
+          {respondingThread && (
+            <div className="h-full overflow-auto">
+              <ReplyEmail />
+            </div>
+          )}
         </Allotment>
       </Allotment.Pane>
     </Allotment>
