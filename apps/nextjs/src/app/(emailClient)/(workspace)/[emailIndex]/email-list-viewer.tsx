@@ -11,7 +11,7 @@ import { EmailList } from "./email-list";
 export const EmailListViewer = () => {
   const logger = useLogger();
   const { data: labels, isLoading } = useListLabels();
-  const activeEmails = useActiveEmails();
+  const activeEmails: string[] = useActiveEmails();
 
   const [activeLabels, setActiveLabels] = useState<
     { name: string; id: string }[]

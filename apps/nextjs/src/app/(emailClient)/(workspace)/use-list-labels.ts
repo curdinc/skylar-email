@@ -13,7 +13,9 @@ export function useListLabels() {
 
   return useQuery({
     queryKey: [LIST_LABEL_QUERY_KEY, activeEmails],
-    queryFn: async () => {
+    queryFn: async (): Promise<
+      Record<string, { id: string; name: string }[]>
+    > => {
       return {
         "curdcorp@gmail.com": [
           {
