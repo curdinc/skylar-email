@@ -1,5 +1,6 @@
 import {
   AppWindow,
+  ArchiveRestore,
   ArchiveX,
   CalendarClock,
   Check,
@@ -9,8 +10,11 @@ import {
   CopyCheck,
   CreditCard,
   Inbox,
+  Layers3,
   Loader2,
   LockKeyhole,
+  Mail,
+  MailOpen,
   Menu,
   Palette,
   Plus,
@@ -38,4 +42,8 @@ export const Icons = {
   search: Search,
   spinner: Loader2,
   trash: Trash,
+  unarchive: ArchiveRestore,
+  markRead: MailOpen,
+  markUnread: Mail,
+  senderActions: Layers3,
 };

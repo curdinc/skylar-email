@@ -94,5 +94,6 @@ export function useThreadSnippetsInfinite(
     },
     initialPageParam: { lastThread: undefined as undefined | ThreadType },
     refetchInterval: 2_000, // 2 seconds
+    structuralSharing: false, // TODO: rewrite to use more granular filtering
   });
 }

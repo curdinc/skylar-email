@@ -46,4 +46,6 @@ export async function unarchiveThreads({
     threadIds: threads.map((t) => t.email_provider_thread_id),
   });
   console.log("res", res);
+
+  return updatedThreads;
 }

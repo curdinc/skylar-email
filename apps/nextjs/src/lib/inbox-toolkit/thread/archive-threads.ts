@@ -11,7 +11,7 @@ export async function archiveThreads({
   threads: ThreadType[];
   email: string;
   accessToken: string;
-  afterClientDbUpdate: (() => Promise<unknown>)[];
+  afterClientDbUpdate: (() => Promise<void>)[];
 }) {
   const activeClientDb = clientDb;
   console.log("Archive Threads");
@@ -45,4 +45,5 @@ export async function archiveThreads({
     threadIds: threads.map((t) => t.email_provider_thread_id),
   });
   console.log("res", res);
+  return updatedThreads;
 }
