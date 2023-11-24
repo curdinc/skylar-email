@@ -6,6 +6,7 @@ import { isThreadUnread, useThreadSnippetsInfinite } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 import { setActiveThread } from "@skylar/logic";
 
+import { ThreadContextMenu } from "~/components/tooklit/thread/context-menu";
 import { cn } from "~/lib/ui";
 
 export function EmailList({
@@ -14,7 +15,7 @@ export function EmailList({
 }: Pick<Parameters<typeof useThreadSnippetsInfinite>[0], "filters"> & {
   uniqueListId: string;
 }) {
-  const { status, data, error, fetchNextPage, hasNextPage } =
+  const { status, data, error, fetchNextPage, hasNextPage, refetch } =
     useThreadSnippetsInfinite({
       userEmails: ["curdcorp@gmail.com"],
       filters,
@@ -52,7 +53,6 @@ export function EmailList({
       });
     }
   }, [fetchNextPage, hasNextPageInView]);
-
   return (
     <div>
       {status === "pending" ? (
@@ -72,23 +72,30 @@ export function EmailList({
               if (!thread) {
                 return null;
               }
-
               return (
-                <button
-                  key={virtualRow.index}
-                  onClick={onClickThread(thread)}
-                  className={cn(
-                    "absolute left-0 top-0 flex w-full items-center justify-start px-2",
-                    "min-w-0 truncate hover:bg-secondary",
-                    isThreadUnread(thread) && "font-bold",
-                  )}
-                  style={{
-                    height: `${virtualRow.size}px`,
-                    transform: `translateY(${virtualRow.start}px)`,
+                <ThreadContextMenu
+                  key={JSON.stringify(thread)}
+                  thread={thread}
+                  refetch={async () => {
+                    await refetch();
                   }}
                 >
-                  {thread?.subject}
-                </button>
+                  <button
+                    key={virtualRow.index}
+                    onClick={onClickThread(thread)}
+                    className={cn(
+                      "absolute left-0 top-0 flex w-full items-center justify-start px-2",
+                      "min-w-0 truncate hover:bg-secondary",
+                      isThreadUnread(thread) && "font-bold",
+                    )}
+                    style={{
+                      height: `${virtualRow.size}px`,
+                      transform: `translateY(${virtualRow.start}px)`,
+                    }}
+                  >
+                    {thread?.subject}
+                  </button>
+                </ThreadContextMenu>
               );
             })}
             {hasNextPage && (

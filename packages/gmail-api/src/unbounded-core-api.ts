@@ -4,7 +4,7 @@ import type { HistoryObjectType } from "@skylar/parsers-and-types";
 
 import { GMAIL_MAX_BATCH_REQUEST_SIZE } from "./constants";
 import {
-  batchGetMessage,
+  batchGetMessages,
   getAttachment,
   getHistoryList,
   getMessageList,
@@ -37,7 +37,7 @@ export async function getMessageUnbounded({
   const messageIdBatchPromises = messageIdChunks.map((chunk, ind) =>
     backOff(
       () =>
-        batchGetMessage({
+        batchGetMessages({
           accessToken,
           emailId,
           messageIds: chunk,
@@ -159,3 +159,9 @@ export async function getAttachmentUnbouned({
 
   return parsedAttachments.flat();
 }
+
+// export async function trashUnbounded() {}
+
+// export async function untrashUnbounded() {}
+
+// export async function modifyLabelsUnbounded() {}
