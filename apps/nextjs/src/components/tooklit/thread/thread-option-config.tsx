@@ -32,60 +32,44 @@ export const getThreadActions = (
       name: "Trash",
       tooltipDescription: "Trash thread",
       applyFn: async (accessToken: string) => {
-        const [updatedThread] = await trashThreads({
+        await trashThreads({
           accessToken,
           email: activeEmail,
           threads: [thread],
           afterClientDbUpdate,
         });
-        if (!updatedThread) {
-          throw new Error("Something went wrong");
-        }
-        return updatedThread;
       },
       undoFn: async (accessToken: string) => {
-        const [updatedThread] = await untrashThreads({
+        await untrashThreads({
           accessToken,
           email: activeEmail,
           threads: [thread],
           afterClientDbUpdate,
         });
-        if (!updatedThread) {
-          throw new Error("Something went wrong");
-        }
-        return updatedThread;
       },
       undoToastConfig: {
         title: "Thread deleted.",
       },
-    } as const,
+    },
     archiveThread: {
       icon: Icons.archive,
       name: "Archive",
       tooltipDescription: "Archive thread",
       applyFn: async (accessToken: string) => {
-        const [updatedThread] = await archiveThreads({
+        await archiveThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
           threads: [thread],
         });
-        if (!updatedThread) {
-          throw new Error("Something went wrong");
-        }
-        return updatedThread;
       },
       undoFn: async (accessToken: string) => {
-        const [updatedThread] = await unarchiveThreads({
+        await unarchiveThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
           threads: [thread],
         });
-        if (!updatedThread) {
-          throw new Error("Something went wrong");
-        }
-        return updatedThread;
       },
       undoToastConfig: {
         title: "Thread archived.",
@@ -96,28 +80,20 @@ export const getThreadActions = (
       name: "Unarchive",
       tooltipDescription: "Unarchive thread",
       applyFn: async (accessToken: string) => {
-        const [updatedThread] = await unarchiveThreads({
+        await unarchiveThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
           threads: [thread],
         });
-        if (!updatedThread) {
-          throw new Error("Something went wrong");
-        }
-        return updatedThread;
       },
       undoFn: async (accessToken: string) => {
-        const [updatedThread] = await archiveThreads({
+        await archiveThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
           threads: [thread],
         });
-        if (!updatedThread) {
-          throw new Error("Something went wrong");
-        }
-        return updatedThread;
       },
       undoToastConfig: {
         title: "Thread unarchived.",
@@ -128,28 +104,20 @@ export const getThreadActions = (
       name: "Mark as read",
       tooltipDescription: "Archive thread",
       applyFn: async (accessToken: string) => {
-        const [updatedThread] = await markReadThreads({
+        await markReadThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
           threads: [thread],
         });
-        if (!updatedThread) {
-          throw new Error("Something went wrong");
-        }
-        return updatedThread;
       },
       undoFn: async (accessToken: string) => {
-        const [updatedThread] = await markUnreadThreads({
+        await markUnreadThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
           threads: [thread],
         });
-        if (!updatedThread) {
-          throw new Error("Something went wrong");
-        }
-        return updatedThread;
       },
       undoToastConfig: {
         title: "Thread archived.",
@@ -160,28 +128,20 @@ export const getThreadActions = (
       name: "Mark as unread",
       tooltipDescription: "Unarchive thread",
       applyFn: async (accessToken: string) => {
-        const [updatedThread] = await markUnreadThreads({
+        await markUnreadThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
           threads: [thread],
         });
-        if (!updatedThread) {
-          throw new Error("Something went wrong");
-        }
-        return updatedThread;
       },
       undoFn: async (accessToken: string) => {
-        const [updatedThread] = await markReadThreads({
+        await markReadThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
           threads: [thread],
         });
-        if (!updatedThread) {
-          throw new Error("Something went wrong");
-        }
-        return updatedThread;
       },
       undoToastConfig: {
         title: "Thread unarchived.",

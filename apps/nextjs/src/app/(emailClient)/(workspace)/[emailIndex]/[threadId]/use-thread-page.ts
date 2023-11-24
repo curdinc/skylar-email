@@ -15,11 +15,7 @@ export function useThreadPage() {
   const threadId = useGlobalStore((state) => state.EMAIL_CLIENT.activeThreadId);
   const emailProviderInfos = useActiveEmailProviders();
 
-  const {
-    emailThread,
-    isLoading: isLoadingThread,
-    refetch: refetchThreadDisplay,
-  } = useEmailThread({
+  const { emailThread, isLoading: isLoadingThread } = useEmailThread({
     emailProviderThreadId: threadId ?? "",
   });
 
@@ -87,5 +83,5 @@ export function useThreadPage() {
     }
   }, [emailProviderInfos?.length, emailThread, isLoadingThread, markAsRead]);
 
-  return { isLoadingThread, emailThread, refetchThreadDisplay };
+  return { isLoadingThread, emailThread };
 }

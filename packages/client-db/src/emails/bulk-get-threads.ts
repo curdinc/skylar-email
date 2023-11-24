@@ -7,5 +7,5 @@ export async function bulkGetThreads({
   db: ClientDb;
   emailProviderThreadIds: string[];
 }) {
-  return await db.thread.bulkGet(emailProviderThreadIds);
+  return db.thread.bulkGet(emailProviderThreadIds);
 }
