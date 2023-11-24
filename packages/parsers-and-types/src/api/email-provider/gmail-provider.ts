@@ -221,6 +221,10 @@ export const modifyMessageResponseSchema = object({
   threadId: string(),
 });
 
+export const trashMessageResponseSchema = object({
+  id: string(),
+  messages: array(modifyMessageResponseSchema),
+});
 export const labelInfoSchema = object({
   id: string(),
   name: string(),
