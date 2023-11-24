@@ -79,7 +79,7 @@ export function ThreadContextMenu({
       const accessToken = await fetchGmailAccessToken();
       action
         .applyFn(accessToken)
-        .then((_) => {
+        .then(() => {
           showUndoToast(action);
         })
         .catch((e) => console.error(e));
