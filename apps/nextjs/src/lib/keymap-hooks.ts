@@ -1,7 +1,11 @@
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
-import { useOptimizedGlobalStore } from "@skylar/logic";
+import {
+  setActiveThread,
+  setThreadToReplyTo,
+  useGlobalStore,
+  useOptimizedGlobalStore,
+} from "@skylar/logic";
 import { tinyKeys } from "@skylar/tinykeys";
 
 // ! Note that shortcuts should not overlap
@@ -10,16 +14,28 @@ import { tinyKeys } from "@skylar/tinykeys";
 
 export function useEmailThreadPageKeymaps() {
   const shortcut = useOptimizedGlobalStore((state) => ({
-    goBack: state.SHORTCUT.goBack,
+    reply: state.SHORTCUT.reply,
     goNextThread: state.SHORTCUT.goNextThread,
     goPreviousThread: state.SHORTCUT.goPreviousThread,
+    close: state.SHORTCUT.close,
   }));
-  const router = useRouter();
   useEffect(() => {
     const unsubscribe = tinyKeys(window, {
-      [shortcut.goBack]: (e) => {
-        e.preventDefault();
-        router.back();
+      [shortcut.close]: () => {
+        const replyThread =
+          useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.respondingThread;
+        if (replyThread) {
+          setThreadToReplyTo(undefined);
+        } else {
+          const activeThread =
+            useGlobalStore.getState().EMAIL_CLIENT.activeThread;
+          if (activeThread) {
+            setActiveThread(undefined);
+          }
+        }
+      },
+      [shortcut.reply]: () => {
+        setThreadToReplyTo(useGlobalStore.getState().EMAIL_CLIENT.activeThread);
       },
       [shortcut.goNextThread]: (e) => {
         console.log("arrow right key called", e.key, e.code);

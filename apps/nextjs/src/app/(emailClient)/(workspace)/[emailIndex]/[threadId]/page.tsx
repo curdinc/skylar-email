@@ -31,6 +31,7 @@ export function EmailThreadPage() {
       />
     );
   });
+
   return (
     <div className="grid justify-items-center gap-5 p-1 sm:p-2 md:gap-6 md:p-5">
       <TypographyH1>{emailThread?.[0]?.subject}</TypographyH1>
@@ -92,6 +93,7 @@ export function EmailDisplay({
             className={cn(
               !email.content_html && "whitespace-pre-wrap",
               "w-full min-w-0",
+              "prose",
             )}
             html={email.content_html ? email.content_html : email.content_text}
           />
