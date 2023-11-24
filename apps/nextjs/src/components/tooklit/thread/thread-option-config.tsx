@@ -14,8 +14,8 @@ export type ThreadOptionConfig = {
   icon: LucideIcon;
   name: string;
   tooltipDescription: string;
-  applyFn: (accessToken: string) => Promise<ThreadType>;
-  undoFn: (accessToken: string) => Promise<ThreadType>;
+  applyFn: (accessToken: string) => Promise<void>;
+  undoFn: (accessToken: string) => Promise<void>;
   undoToastConfig: {
     title: string;
   };
