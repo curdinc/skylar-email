@@ -4,9 +4,9 @@ import { Allotment } from "allotment";
 
 import { useGlobalStore } from "@skylar/logic";
 
+import { ReplyEmail } from "~/components/compose-email/reply-email";
 import { EmailThreadPage } from "./[threadId]/page";
 import { EmailListViewer } from "./email-list-viewer";
-import { ReplyEmail } from "./reply-email";
 
 const MIN_PANE_SIZE = 250;
 
