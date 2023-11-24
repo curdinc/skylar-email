@@ -1,5 +1,3 @@
-import type { LucideIcon } from "lucide-react";
-
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 
 import { Icons } from "~/components/icons";
@@ -9,17 +7,7 @@ import { markUnreadThreads } from "~/lib/inbox-toolkit/thread/mark-unread-thread
 import { trashThreads } from "~/lib/inbox-toolkit/thread/trash-threads";
 import { unarchiveThreads } from "~/lib/inbox-toolkit/thread/unarchive-threads";
 import { untrashThreads } from "~/lib/inbox-toolkit/thread/untrash-threads";
-
-export type ThreadOptionConfig = {
-  icon: LucideIcon;
-  name: string;
-  tooltipDescription: string;
-  applyFn: (accessToken: string) => Promise<void>;
-  undoFn: (accessToken: string) => Promise<void>;
-  undoToastConfig: {
-    title: string;
-  };
-};
+import type { ConfigOption } from "../config-option-type";
 
 export const getThreadActions = (
   thread: ThreadType,
@@ -147,5 +135,5 @@ export const getThreadActions = (
         title: "Thread unarchived.",
       },
     },
-  } as const;
+  } satisfies Record<string, ConfigOption>;
 };

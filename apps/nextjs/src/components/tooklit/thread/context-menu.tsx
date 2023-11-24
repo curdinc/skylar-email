@@ -15,7 +15,7 @@ import {
 } from "~/components/ui/context-menu";
 import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/lib/api";
-import type { ThreadOptionConfig } from "./thread-option-config";
+import type { ConfigOption } from "../config-option-type";
 import { getThreadActions } from "./thread-option-config";
 
 export function ThreadContextMenu({
@@ -53,7 +53,7 @@ export function ThreadContextMenu({
     });
   };
 
-  const showUndoToast = (item: ThreadOptionConfig) => {
+  const showUndoToast = (item: ConfigOption) => {
     toast({
       title: item.undoToastConfig.title,
       duration: 10000,
@@ -74,7 +74,7 @@ export function ThreadContextMenu({
     });
   };
 
-  const runAction = (action: ThreadOptionConfig) => {
+  const runAction = (action: ConfigOption) => {
     return async () => {
       const accessToken = await fetchGmailAccessToken();
       action
@@ -86,7 +86,7 @@ export function ThreadContextMenu({
     };
   };
 
-  const displayContextOption = (option: ThreadOptionConfig) => {
+  const displayContextOption = (option: ConfigOption) => {
     return (
       <ContextMenuItem inset onClick={runAction(option)}>
         <div className="flex items-center gap-2">
@@ -133,7 +133,7 @@ export function ThreadContextMenu({
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Sender actions</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48">
-            <ContextMenuItem disabled>Block all from sender</ContextMenuItem>
+            <ContextMenuItem disabled>Trash all from sender</ContextMenuItem>
           </ContextMenuSubContent>
         </ContextMenuSub>
         <ContextMenuSub>
