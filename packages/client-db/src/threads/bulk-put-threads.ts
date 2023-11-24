@@ -8,5 +8,6 @@ export async function bulkPutThreads({
   db: ClientDb;
   threads: ThreadType[];
 }) {
+  // TOOD: keep this in sync with email client DB in the future
   await db.thread.bulkPut(threads);
 }
