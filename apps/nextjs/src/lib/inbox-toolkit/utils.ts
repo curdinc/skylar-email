@@ -13,13 +13,13 @@ const updateLabels = ({
   const labels = thread.email_provider_labels;
   const updatedLabels = labels
     .map((label) => {
-      const removeIndex = remove.indexOf(label);
-      if (removeIndex !== -1) {
+      const isRemoveLabel = remove.find((l) => l === label);
+      if (isRemoveLabel) {
         return;
       }
 
-      const addIndex = add.indexOf(label);
-      if (addIndex !== -1) {
+      const isAddLabel = remove.find((l) => l === label);
+      if (isAddLabel) {
         return;
       }
 
