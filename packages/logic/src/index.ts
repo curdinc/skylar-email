@@ -45,6 +45,7 @@ type State = {
     COMPOSING: {
       respondingThread: ThreadType | undefined;
       composedEmail: string;
+      attachments: { file: File; data: string }[];
     };
   };
   SHORTCUT: {
@@ -79,6 +80,11 @@ type Actions = {
     composeString: State["EMAIL_CLIENT"]["COMPOSING"]["composedEmail"],
   ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
+  setAttachments: (
+    updateFn: (
+      prev: State["EMAIL_CLIENT"]["COMPOSING"]["attachments"],
+    ) => State["EMAIL_CLIENT"]["COMPOSING"]["attachments"],
+  ) => void;
 };
 
 // Core states
@@ -92,6 +98,7 @@ export const useGlobalStore = create(
       COMPOSING: {
         composedEmail: "",
         respondingThread: undefined,
+        attachments: [],
       },
     },
     SETTINGS: {
@@ -215,3 +222,10 @@ export const setComposedEmail: Actions["setComposedEmail"] = (
     state.EMAIL_CLIENT.COMPOSING.composedEmail = composeString;
   });
 };
+
+export const setAttachments: Actions["setAttachments"] = (updateFn) =>
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.COMPOSING.attachments = updateFn(
+      state.EMAIL_CLIENT.COMPOSING.attachments,
+    );
+  });

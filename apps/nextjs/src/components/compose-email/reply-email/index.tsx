@@ -7,6 +7,7 @@ import SimpleMdeReact from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 
 import { Button } from "~/components/ui/button";
+import { AttachmentList, AttachmentZone } from "../attachment";
 import { useReplyEmail } from "./use-reply-email";
 
 export const ReplyEmail = () => {
@@ -26,18 +27,21 @@ export const ReplyEmail = () => {
 
   return (
     // TODO: Handle attachments + make inline image better
-    <div className="p-5">
-      <SimpleMdeReact
-        value={replyString}
-        onChange={onReplyStringChange}
-        getCodemirrorInstance={getCmInstanceCallback}
-        className="prose min-w-full"
-      />
-      <div className="flex justify-end">
-        <Button onClick={onClickSend} isLoading={isSendingEmail}>
-          Send
-        </Button>
+    <AttachmentZone>
+      <div className="p-5">
+        <SimpleMdeReact
+          value={replyString}
+          onChange={onReplyStringChange}
+          getCodemirrorInstance={getCmInstanceCallback}
+          className="prose min-w-full"
+        />
+        <div className="flex justify-end">
+          <Button onClick={onClickSend} isLoading={isSendingEmail}>
+            Send
+          </Button>
+        </div>
       </div>
-    </div>
+      <AttachmentList />
+    </AttachmentZone>
   );
 };
