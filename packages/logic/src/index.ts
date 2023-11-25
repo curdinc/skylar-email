@@ -42,6 +42,9 @@ type State = {
     emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
     emailList: EmailListData[];
     activeThreadId: string | undefined;
+    CONTEXT_MENU: {
+      mostRecentlyAffectedThreads: ThreadType[];
+    };
   };
   SHORTCUT: {
     goBack: string;
@@ -70,6 +73,7 @@ type Actions = {
     threadId: State["EMAIL_CLIENT"]["activeThreadId"],
   ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
+  setMostRecentlyAffectedThreads: (affectedThreads: ThreadType[]) => void;
 };
 
 // Core states
@@ -80,6 +84,9 @@ export const useGlobalStore = create(
       emailProviders: [],
       emailList: [],
       activeThreadId: undefined,
+      CONTEXT_MENU: {
+        mostRecentlyAffectedThreads: [],
+      },
     },
     SETTINGS: {
       INVITE_CODE: {
@@ -187,3 +194,12 @@ export const setActiveThreadId: Actions["setActiveThreadId"] = (threadId) => {
     state.EMAIL_CLIENT.activeThreadId = threadId;
   });
 };
+
+export const setMostRecentlyAffectedThreads: Actions["setMostRecentlyAffectedThreads"] =
+  (affectedThreads) => {
+    useGlobalStore.setState((state) => {
+      state.EMAIL_CLIENT.CONTEXT_MENU.mostRecentlyAffectedThreads = JSON.parse(
+        JSON.stringify(affectedThreads),
+      ) as ThreadType[];
+    });
+  };
