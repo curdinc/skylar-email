@@ -1,4 +1,4 @@
-import { bulkPutThreads, clientDb } from "@skylar/client-db";
+import { bulkPutThreads } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 
 const updateLabels = ({
@@ -19,7 +19,7 @@ const updateLabels = ({
       }
 
       const addIndex = add.indexOf(label);
-      if (addIndex === -1) {
+      if (addIndex !== -1) {
         return;
       }
 
@@ -27,8 +27,10 @@ const updateLabels = ({
     })
     .filter((label) => !!label);
 
-  thread.email_provider_labels = [...updatedLabels, ...add] as string[];
-  return thread;
+  return {
+    ...thread,
+    email_provider_labels: [...updatedLabels, ...add] as string[],
+  };
 };
 
 export const updateAndSaveLabels = async ({
@@ -50,9 +52,9 @@ export const updateAndSaveLabels = async ({
     })
     .filter((thread) => !!thread);
 
-  const activeClientDb = clientDb;
   await bulkPutThreads({
-    db: activeClientDb,
     threads: updatedThreads,
   });
+
+  return updatedThreads;
 };

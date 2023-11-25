@@ -1,5 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 
+import type { ThreadType } from "@skylar/client-db/schema/thread";
+
 export type ConfigOption = {
   icon: LucideIcon;
   name: string;
@@ -10,3 +12,5 @@ export type ConfigOption = {
     title: string;
   };
 };
+
+export type GetThreads = () => Promise<ThreadType[]>;

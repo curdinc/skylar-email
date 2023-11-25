@@ -1,5 +1,5 @@
 import type { ThreadType } from "@skylar/client-db/schema/thread";
-import { batchUntrashThreads } from "@skylar/gmail-api";
+import { batchModifyLabels } from "@skylar/gmail-api";
 
 import { updateAndSaveLabels } from "../utils";
 
@@ -14,18 +14,22 @@ export async function untrashThreads({
   accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
-  await updateAndSaveLabels({
+  const updatedThreads = await updateAndSaveLabels({
     threads,
     labelsToAdd: ["INBOX"],
     labelsToRemove: ["TRASH"],
   });
 
+  console.log("UNTRASH updatedThreads", updatedThreads);
   for (const func of afterClientDbUpdate) {
     await func();
   }
-  await batchUntrashThreads({
+
+  await batchModifyLabels({
     accessToken,
+    addLabels: ["INBOX"],
+    deleteLabels: ["TRASH"],
     emailId: email,
-    threadIds: threads.map((t) => t.email_provider_thread_id),
+    threadIds: updatedThreads.map((t) => t.email_provider_thread_id),
   });
 }

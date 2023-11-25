@@ -14,7 +14,7 @@ export async function markReadThreads({
   accessToken: string;
   afterClientDbUpdate: (() => Promise<void>)[];
 }) {
-  await updateAndSaveLabels({
+  const updatedThreads = await updateAndSaveLabels({
     threads,
     labelsToAdd: [],
     labelsToRemove: ["UNREAD"],
@@ -29,6 +29,6 @@ export async function markReadThreads({
     addLabels: [],
     deleteLabels: ["UNREAD"],
     emailId: email,
-    threadIds: threads.map((t) => t.email_provider_thread_id),
+    threadIds: updatedThreads.map((t) => t.email_provider_thread_id),
   });
 }

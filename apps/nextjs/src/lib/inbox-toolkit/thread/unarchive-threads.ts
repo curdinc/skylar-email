@@ -14,7 +14,7 @@ export async function unarchiveThreads({
   accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
-  await updateAndSaveLabels({
+  const updatedThreads = await updateAndSaveLabels({
     threads,
     labelsToAdd: ["INBOX"],
     labelsToRemove: [],
@@ -29,6 +29,6 @@ export async function unarchiveThreads({
     addLabels: ["INBOX"],
     deleteLabels: [],
     emailId: email,
-    threadIds: threads.map((t) => t.email_provider_thread_id),
+    threadIds: updatedThreads.map((t) => t.email_provider_thread_id),
   });
 }

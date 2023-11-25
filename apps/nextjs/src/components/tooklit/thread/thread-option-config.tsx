@@ -1,4 +1,4 @@
-import type { ThreadType } from "@skylar/client-db/schema/thread";
+import { setMostRecentlyAffectedThreads, useGlobalStore } from "@skylar/logic";
 
 import { Icons } from "~/components/icons";
 import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
@@ -7,10 +7,10 @@ import { markUnreadThreads } from "~/lib/inbox-toolkit/thread/mark-unread-thread
 import { trashThreads } from "~/lib/inbox-toolkit/thread/trash-threads";
 import { unarchiveThreads } from "~/lib/inbox-toolkit/thread/unarchive-threads";
 import { untrashThreads } from "~/lib/inbox-toolkit/thread/untrash-threads";
-import type { ConfigOption } from "../config-option-type";
+import type { ConfigOption, GetThreads } from "../config-option-type";
 
 export const getThreadActions = (
-  thread: ThreadType,
+  getThreads: GetThreads,
   activeEmail: string,
   afterClientDbUpdate: (() => Promise<void>)[],
 ) => {
@@ -20,18 +20,23 @@ export const getThreadActions = (
       name: "Trash",
       tooltipDescription: "Trash thread",
       applyFn: async (accessToken: string) => {
+        const threads = await getThreads();
+        setMostRecentlyAffectedThreads(threads); // TODO: fix this ugly flow
         await trashThreads({
           accessToken,
           email: activeEmail,
-          threads: [thread],
+          threads: threads,
           afterClientDbUpdate,
         });
       },
       undoFn: async (accessToken: string) => {
+        const threads =
+          useGlobalStore.getState().EMAIL_CLIENT.CONTEXT_MENU
+            .mostRecentlyAffectedThreads;
         await untrashThreads({
           accessToken,
           email: activeEmail,
-          threads: [thread],
+          threads: threads,
           afterClientDbUpdate,
         });
       },
@@ -44,19 +49,24 @@ export const getThreadActions = (
       name: "Archive",
       tooltipDescription: "Archive thread",
       applyFn: async (accessToken: string) => {
+        const threads = await getThreads();
+        setMostRecentlyAffectedThreads(threads);
         await archiveThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
-          threads: [thread],
+          threads: threads,
         });
       },
       undoFn: async (accessToken: string) => {
+        const threads =
+          useGlobalStore.getState().EMAIL_CLIENT.CONTEXT_MENU
+            .mostRecentlyAffectedThreads;
         await unarchiveThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
-          threads: [thread],
+          threads: threads,
         });
       },
       undoToastConfig: {
@@ -68,19 +78,24 @@ export const getThreadActions = (
       name: "Unarchive",
       tooltipDescription: "Unarchive thread",
       applyFn: async (accessToken: string) => {
+        const threads = await getThreads();
+        setMostRecentlyAffectedThreads(threads);
         await unarchiveThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
-          threads: [thread],
+          threads: threads,
         });
       },
       undoFn: async (accessToken: string) => {
+        const threads =
+          useGlobalStore.getState().EMAIL_CLIENT.CONTEXT_MENU
+            .mostRecentlyAffectedThreads;
         await archiveThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
-          threads: [thread],
+          threads: threads,
         });
       },
       undoToastConfig: {
@@ -92,19 +107,24 @@ export const getThreadActions = (
       name: "Mark as read",
       tooltipDescription: "Archive thread",
       applyFn: async (accessToken: string) => {
+        const threads = await getThreads();
+        setMostRecentlyAffectedThreads(threads);
         await markReadThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
-          threads: [thread],
+          threads: threads,
         });
       },
       undoFn: async (accessToken: string) => {
+        const threads =
+          useGlobalStore.getState().EMAIL_CLIENT.CONTEXT_MENU
+            .mostRecentlyAffectedThreads;
         await markUnreadThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
-          threads: [thread],
+          threads: threads,
         });
       },
       undoToastConfig: {
@@ -116,19 +136,24 @@ export const getThreadActions = (
       name: "Mark as unread",
       tooltipDescription: "Unarchive thread",
       applyFn: async (accessToken: string) => {
+        const threads = await getThreads();
+        setMostRecentlyAffectedThreads(threads);
         await markUnreadThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
-          threads: [thread],
+          threads: threads,
         });
       },
       undoFn: async (accessToken: string) => {
+        const threads =
+          useGlobalStore.getState().EMAIL_CLIENT.CONTEXT_MENU
+            .mostRecentlyAffectedThreads;
         await markReadThreads({
           accessToken,
           afterClientDbUpdate,
           email: activeEmail,
-          threads: [thread],
+          threads: threads,
         });
       },
       undoToastConfig: {

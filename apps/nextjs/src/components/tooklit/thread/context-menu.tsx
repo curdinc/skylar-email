@@ -1,5 +1,6 @@
 import { ToastAction } from "@radix-ui/react-toast";
 
+import { getEmailThreadsFrom } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 
 import {
@@ -16,6 +17,7 @@ import {
 import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/lib/api";
 import type { ConfigOption } from "../config-option-type";
+import { getSenderActions } from "../sender/sender-option-config";
 import { getThreadActions } from "./thread-option-config";
 
 export function ThreadContextMenu({
@@ -28,9 +30,23 @@ export function ThreadContextMenu({
   refetch: () => Promise<void>;
 }) {
   const email = "curdcorp@gmail.com"; // TODO: change this to the active email
-  const INBOX_TOOLKIT_THREAD_ACTIONS = getThreadActions(thread, email, [
-    refetch,
-  ]);
+  const INBOX_TOOLKIT_THREAD_ACTIONS = getThreadActions(
+    async () => {
+      return Promise.resolve([thread]);
+    },
+    email,
+    [refetch],
+  );
+  const INBOX_TOOLKIT_SENDER_ACTIONS = getSenderActions({
+    activeEmail: email,
+    afterClientDbUpdate: [refetch],
+    getThreads: () => {
+      return getEmailThreadsFrom({
+        senderEmail: thread.from[0]!,
+        clientEmail: email,
+      });
+    },
+  });
 
   const { toast, dismiss } = useToast();
 
@@ -133,7 +149,10 @@ export function ThreadContextMenu({
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Sender actions</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48">
-            <ContextMenuItem disabled>Trash all from sender</ContextMenuItem>
+            {displayContextOption(INBOX_TOOLKIT_SENDER_ACTIONS.trashFromSender)}
+            {displayContextOption(
+              INBOX_TOOLKIT_SENDER_ACTIONS.archiveFromSender,
+            )}
           </ContextMenuSubContent>
         </ContextMenuSub>
         <ContextMenuSub>

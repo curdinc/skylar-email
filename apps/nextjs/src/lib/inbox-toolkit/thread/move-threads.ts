@@ -18,7 +18,7 @@ export async function moveThreads({
   accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
-  await updateAndSaveLabels({
+  const updatedThreads = await updateAndSaveLabels({
     threads,
     labelsToAdd: [labelToAdd],
     labelsToRemove: [labelToRemove],
@@ -33,6 +33,6 @@ export async function moveThreads({
     addLabels: [labelToAdd],
     deleteLabels: [labelToRemove],
     emailId: email,
-    threadIds: threads.map((t) => t.email_provider_thread_id),
+    threadIds: updatedThreads.map((t) => t.email_provider_thread_id),
   });
 }
