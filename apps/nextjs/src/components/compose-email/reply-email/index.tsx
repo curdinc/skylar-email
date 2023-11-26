@@ -7,7 +7,7 @@ import SimpleMdeReact from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 
 import { Button } from "~/components/ui/button";
-import { AttachmentButton, AttachmentZone } from "../attachment";
+import { AttachmentButton } from "../attachment";
 import { AttachmentList } from "../attachment/attachment-list";
 import { useReplyEmail } from "./use-reply-email";
 
