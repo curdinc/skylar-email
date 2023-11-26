@@ -1,13 +1,22 @@
 import { useCallback } from "react";
 import showdown from "showdown";
 
-import { setComposedEmail, useGlobalStore } from "@skylar/logic";
+import {
+  setAttachments,
+  setComposedEmail,
+  setThreadToReplyTo,
+  useGlobalStore,
+} from "@skylar/logic";
 
 import { useSendEmail } from "~/app/(emailClient)/(workspace)/[emailIndex]/use-send-mail";
 import { useToast } from "~/components/ui/use-toast";
 import { isAttachmentSizeValid } from "~/lib/email";
 
-export const useReplyEmail = () => {
+export const useReplyEmail = ({
+  onSentEmail,
+}: {
+  onSentEmail?: () => void;
+}) => {
   const replyThread = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
@@ -72,7 +81,10 @@ export const useReplyEmail = () => {
     toast({
       title: "Email sent!",
     });
-  }, [attachments, replyString, replyThread, sendEmail, toast]);
+    setThreadToReplyTo(undefined);
+    setAttachments(() => []);
+    onSentEmail?.();
+  }, [attachments, onSentEmail, replyString, replyThread, sendEmail, toast]);
 
   return {
     replyString,
