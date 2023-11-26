@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 import { setAttachments, useGlobalStore } from "@skylar/logic";
@@ -5,6 +7,11 @@ import { setAttachments, useGlobalStore } from "@skylar/logic";
 import { CopyToClipboard } from "~/components/buttons/copy-to-clipboard";
 import { Icons } from "~/components/icons";
 import { Button } from "~/components/ui/button";
+import {
+  ATTACHMENT_SIZE_LIMIT_IN_BYTES,
+  isAttachmentSizeValid,
+} from "~/lib/email";
+import { formatBytes } from "~/lib/format";
 
 export const AttachmentList = () => {
   const attachments = useGlobalStore(
@@ -12,10 +19,29 @@ export const AttachmentList = () => {
   );
   const removeAttachment = (index: number) => {
     return () =>
-      setAttachments((prevAttachments) =>
-        prevAttachments.filter((_, i) => i !== index),
-      );
+      setAttachments((prevAttachments) => {
+        if (prevAttachments[index]?.preview) {
+          URL.revokeObjectURL(prevAttachments[index]?.preview ?? "");
+        }
+        return prevAttachments.filter((_, i) => i !== index);
+      });
   };
+
+  const totalAttachmentSize = attachments.reduce(
+    (acc, attachment) => acc + attachment.file.size,
+    0,
+  );
+  let AttachmentSizeWarning = (
+    <div>Total Attachment size: {formatBytes(totalAttachmentSize)}</div>
+  );
+  if (!isAttachmentSizeValid(attachments)) {
+    AttachmentSizeWarning = (
+      <div className="text-red-500">
+        Total Attachment size: {formatBytes(totalAttachmentSize)} (Max:{" "}
+        {formatBytes(ATTACHMENT_SIZE_LIMIT_IN_BYTES)})
+      </div>
+    );
+  }
 
   const files = attachments.map((attachment, index) => {
     let PreviewImage = <Icons.FileDefault className="h-10 w-10 p-1.5" />;
@@ -30,45 +56,43 @@ export const AttachmentList = () => {
           className="aspect-square rounded-md object-cover"
           height={40}
           width={40}
-          onLoad={() => {
-            if (attachment.preview) {
-              URL.revokeObjectURL(attachment.preview);
-            }
-          }}
         />
       );
     }
 
     return (
       <li
-        key={attachment.file.name}
-        className="flex items-center rounded-md px-3 py-2 transition-colors hover:bg-muted"
+        key={attachment.file.name + index}
+        className="flex w-full items-center gap-2 rounded-md px-3 py-2 transition-colors hover:bg-muted"
       >
-        <div className="flex w-full items-center gap-2">
-          {PreviewImage}
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2 text-lg">
-              {attachment.file.name}{" "}
-              <CopyToClipboard
-                valueToCopy={attachment.file.name}
-                className="h-4 w-4"
-              />
-            </div>
-            <div className="text-muted-foreground">
-              {attachment.file.size} bytes
-            </div>
+        {PreviewImage}
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2 text-lg">
+            {attachment.file.name}{" "}
+            <CopyToClipboard
+              valueToCopy={attachment.file.name}
+              className="h-4 w-4"
+            />
+            <Button
+              size={"icon-sm"}
+              variant={"ghost"}
+              className="p-0.5 hover:text-destructive"
+              onClick={removeAttachment(index)}
+            >
+              <Icons.trash />
+            </Button>
+          </div>
+          <div className="text-muted-foreground">
+            {formatBytes(attachment.file.size)}
           </div>
         </div>
-        <Button
-          size={"icon-sm"}
-          variant={"ghost"}
-          className="p-0.5"
-          onClick={removeAttachment(index)}
-        >
-          <Icons.close />
-        </Button>
       </li>
     );
   });
-  return <div className="grid gap-1">{files}</div>;
+  return (
+    <div className="grid gap-1">
+      {files}
+      {AttachmentSizeWarning}
+    </div>
+  );
 };

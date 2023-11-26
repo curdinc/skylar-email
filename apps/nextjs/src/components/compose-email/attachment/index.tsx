@@ -1,12 +1,10 @@
+"use client";
+
 import React, { useCallback, useEffect } from "react";
-import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 
 import { setAttachments, useGlobalStore } from "@skylar/logic";
 
-import { CopyToClipboard } from "~/components/buttons/copy-to-clipboard";
-import { Icons } from "~/components/icons";
-import { Button } from "~/components/ui/button";
 import { useToast } from "~/components/ui/use-toast";
 
 export const AttachmentZone = ({ children }: { children: React.ReactNode }) => {
@@ -54,17 +52,32 @@ export const AttachmentZone = ({ children }: { children: React.ReactNode }) => {
     [toast],
   );
 
-  const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
-    onDrop,
-    noClick: true,
-  });
+  const replyingTo = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
+  );
+  const { getRootProps, getInputProps, acceptedFiles, isDragActive } =
+    useDropzone({
+      onDrop,
+      noClick: true,
+    });
   console.log("acceptedFiles", acceptedFiles);
 
   return (
-    <div {...getRootProps()} className="h-full">
-      <input {...getInputProps()} />
-      {children}
-    </div>
+    <>
+      {isDragActive && replyingTo && (
+        <div
+          className={
+            "pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-background/70 font-heading text-4xl font-medium text-foreground backdrop-blur-sm"
+          }
+        >
+          Drop files here...
+        </div>
+      )}
+      <div {...getRootProps()} className="flex grow">
+        <input {...getInputProps()} />
+        {children}
+      </div>
+    </>
   );
 };
 
@@ -109,13 +122,11 @@ export const AttachmentButton = () => {
   }, [acceptedFiles, toast]);
 
   return (
-    <div>
-      <div {...getRootProps({ className: "dropzone" })}>
-        <input {...getInputProps()} />
-        <button type="button" onClick={open}>
-          Open File Dialog
-        </button>
-      </div>
+    <div {...getRootProps({ className: "dropzone" })}>
+      <input {...getInputProps()} />
+      <button type="button" onClick={open}>
+        Open File Dialog
+      </button>
     </div>
   );
 };

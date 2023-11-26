@@ -5,6 +5,7 @@ import { setComposedEmail, useGlobalStore } from "@skylar/logic";
 
 import { useSendEmail } from "~/app/(emailClient)/(workspace)/[emailIndex]/use-send-mail";
 import { useToast } from "~/components/ui/use-toast";
+import { isAttachmentSizeValid } from "~/lib/email";
 
 export const useReplyEmail = () => {
   const replyThread = useGlobalStore(
@@ -27,16 +28,28 @@ export const useReplyEmail = () => {
     if (!replyThread) {
       return;
     }
-    const formattedAttachments = attachments.map(
-      (attachment) =>
-        ({
-          filename: attachment.file.name,
-          data: attachment.data,
-          contentType: attachment.file.type,
-          encoding: "binary",
-          inline: false,
-        }) as const,
-    );
+    const isValidAttachmentSize = isAttachmentSizeValid(attachments);
+    if (!isValidAttachmentSize) {
+      toast({
+        title: "Attachment size is too large",
+        description:
+          "Please make sure your total attachment size less than 25MB",
+        variant: "destructive",
+      });
+      return;
+    }
+    const formattedAttachments = attachments.map((attachment) => {
+      if (attachment.preview) {
+        URL.revokeObjectURL(attachment.preview);
+      }
+      return {
+        filename: attachment.file.name,
+        data: attachment.data,
+        contentType: attachment.file.type,
+        encoding: "binary",
+        inline: false,
+      } as const;
+    });
     const markdownToHtmlConverter = new showdown.Converter();
     await sendEmail({
       emailAddress: replyThread.to.slice(-1)[0] ?? "",

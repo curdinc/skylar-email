@@ -29,7 +29,7 @@ export type EmailListData =
       thread: ThreadType;
     };
 
-type State = {
+export type State = {
   ONBOARDING: { alphaCode: string };
   LOGIN: { loggingInto: SupportedAuthProvidersType | undefined };
   SETTINGS: {
