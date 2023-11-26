@@ -17,7 +17,8 @@ import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/lib/api";
 import type { ConfigOption } from "../config-option-type";
 import { getSenderActions } from "../sender/sender-option-config";
-import { getThreadActions } from "./thread-option-config";
+import { getThreadActions } from "../thread/thread-option-config";
+import { EditLabels } from "./edit-labels";
 
 export function ThreadContextMenu({
   children,
@@ -156,9 +157,8 @@ export function ThreadContextMenu({
         </ContextMenuSub>
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-48">
-            <div className="pl-2 text-sm">Label as:</div>
-            <ContextMenuItem>Not supported yet</ContextMenuItem>
+          <ContextMenuSubContent>
+            <EditLabels />
           </ContextMenuSubContent>
         </ContextMenuSub>
       </ContextMenuContent>

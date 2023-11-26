@@ -5,7 +5,7 @@ import { useInView } from "react-intersection-observer";
 import { isThreadUnread, useThreadSnippetsInfinite } from "@skylar/client-db";
 import { setActiveThreadId } from "@skylar/logic";
 
-import { ThreadContextMenu } from "~/components/tooklit/thread/context-menu";
+import { ThreadContextMenu } from "~/components/tooklit/components/context-menu";
 import { cn } from "~/lib/ui";
 
 export function EmailList({
