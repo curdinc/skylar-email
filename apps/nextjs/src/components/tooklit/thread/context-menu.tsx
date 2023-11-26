@@ -8,7 +8,6 @@ import {
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
-  ContextMenuShortcut,
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,
@@ -69,7 +68,7 @@ export function ThreadContextMenu({
     });
   };
 
-  const showUndoToast = (item: ConfigOption) => {
+  const showUndoToast = <T,>(item: ConfigOption<T>) => {
     toast({
       title: item.undoToastConfig.title,
       duration: 10000,
@@ -90,11 +89,11 @@ export function ThreadContextMenu({
     });
   };
 
-  const runAction = (action: ConfigOption) => {
+  const runAction = <T,>(action: ConfigOption<T>, ...args: T[]) => {
     return async () => {
       const accessToken = await fetchGmailAccessToken();
       action
-        .applyFn(accessToken)
+        .applyFn(accessToken, ...args)
         .then(() => {
           showUndoToast(action);
         })
@@ -102,9 +101,9 @@ export function ThreadContextMenu({
     };
   };
 
-  const displayContextOption = (option: ConfigOption) => {
+  const displayContextOption = <T,>(option: ConfigOption<T>, ...args: T[]) => {
     return (
-      <ContextMenuItem inset onClick={runAction(option)}>
+      <ContextMenuItem inset onClick={runAction(option, ...args)}>
         <div className="flex items-center gap-2">
           <option.icon className="h-4 w-4" />
           <div>{option.name}</div>
@@ -140,10 +139,10 @@ export function ThreadContextMenu({
           <ContextMenuSubTrigger inset>Move to</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48">
             <div className="pl-2 text-sm">Move to:</div>
-            <ContextMenuItem>
-              Not supported yet
-              <ContextMenuShortcut>⇧⌘S</ContextMenuShortcut>
-            </ContextMenuItem>
+            {displayContextOption(
+              INBOX_TOOLKIT_THREAD_ACTIONS.addLabelsToThread,
+              ["CATEGORY_PERSONAL"],
+            )}
           </ContextMenuSubContent>
         </ContextMenuSub>
         <ContextMenuSub>

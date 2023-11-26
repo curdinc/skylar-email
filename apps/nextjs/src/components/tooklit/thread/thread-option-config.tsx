@@ -4,10 +4,15 @@ import { Icons } from "~/components/icons";
 import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
 import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
 import { markUnreadThreads } from "~/lib/inbox-toolkit/thread/mark-unread-threads";
+import { moveThreads } from "~/lib/inbox-toolkit/thread/move-threads";
 import { trashThreads } from "~/lib/inbox-toolkit/thread/trash-threads";
 import { unarchiveThreads } from "~/lib/inbox-toolkit/thread/unarchive-threads";
 import { untrashThreads } from "~/lib/inbox-toolkit/thread/untrash-threads";
-import type { ConfigOption, GetThreads } from "../config-option-type";
+import type {
+  ConfigOption,
+  GetThreads,
+  MoveThreadArgs,
+} from "../config-option-type";
 
 export const getThreadActions = (
   getThreads: GetThreads,
@@ -160,5 +165,38 @@ export const getThreadActions = (
         title: "Thread unarchived.",
       },
     },
-  } satisfies Record<string, ConfigOption>;
+    addLabelsToThread: {
+      icon: Icons.addLabel,
+      name: "Add Labels",
+      tooltipDescription: "Add Labels to thread",
+      applyFn: async (accessToken: string, addLabels: string[]) => {
+        const threads = await getThreads();
+        setMostRecentlyAffectedThreads(threads);
+        await moveThreads({
+          accessToken,
+          afterClientDbUpdate,
+          email: activeEmail,
+          threads: threads,
+          labelsToAdd: addLabels,
+          labelsToRemove: [],
+        });
+      },
+      undoFn: async (accessToken: string) => {
+        console.log("accessToken", accessToken);
+        // const threads =
+        //   useGlobalStore.getState().EMAIL_CLIENT.CONTEXT_MENU
+        //     .mostRecentlyAffectedThreads;
+        // await unarchiveThreads({
+        //   accessToken,
+        //   afterClientDbUpdate,
+        //   email: activeEmail,
+        //   threads: threads,
+        // });
+        await Promise.resolve([]);
+      },
+      undoToastConfig: {
+        title: "Labels added to thread.",
+      },
+    },
+  } as const satisfies Record<string, ConfigOption<MoveThreadArgs | []>>;
 };

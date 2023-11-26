@@ -9,6 +9,7 @@ import {
   Copy,
   CopyCheck,
   CreditCard,
+  FolderPlus,
   Inbox,
   Layers3,
   Loader2,
@@ -46,4 +47,5 @@ export const Icons = {
   markRead: MailOpen,
   markUnread: Mail,
   senderActions: Layers3,
+  addLabel: FolderPlus,
 };

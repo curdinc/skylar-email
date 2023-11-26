@@ -5,23 +5,23 @@ import { updateAndSaveLabels } from "../utils";
 
 export async function moveThreads({
   threads,
-  labelToRemove,
-  labelToAdd,
+  labelsToRemove,
+  labelsToAdd,
   email,
   accessToken,
   afterClientDbUpdate,
 }: {
   threads: ThreadType[];
-  labelToRemove: string;
-  labelToAdd: string;
+  labelsToRemove: string[];
+  labelsToAdd: string[];
   email: string;
   accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
   const updatedThreads = await updateAndSaveLabels({
     threads,
-    labelsToAdd: [labelToAdd],
-    labelsToRemove: [labelToRemove],
+    labelsToAdd,
+    labelsToRemove,
   });
 
   for (const func of afterClientDbUpdate) {
@@ -30,8 +30,8 @@ export async function moveThreads({
 
   await batchModifyLabels({
     accessToken,
-    addLabels: [labelToAdd],
-    deleteLabels: [labelToRemove],
+    addLabels: labelsToAdd,
+    deleteLabels: labelsToRemove,
     emailId: email,
     threadIds: updatedThreads.map((t) => t.email_provider_thread_id),
   });

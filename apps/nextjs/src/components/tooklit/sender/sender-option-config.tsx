@@ -1,4 +1,8 @@
-import type { ConfigOption, GetThreads } from "../config-option-type";
+import type {
+  ConfigOption,
+  GetThreads,
+  MoveThreadArgs,
+} from "../config-option-type";
 import { getThreadActions } from "../thread/thread-option-config";
 
 export const getSenderActions = ({
@@ -27,5 +31,5 @@ export const getSenderActions = ({
       name: "Archive all",
       tooltipDescription: "Trash threads from sender",
     },
-  } satisfies Record<string, ConfigOption>;
+  } as const satisfies Record<string, ConfigOption<MoveThreadArgs | []>>;
 };
