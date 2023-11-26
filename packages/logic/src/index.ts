@@ -45,7 +45,7 @@ type State = {
     COMPOSING: {
       respondingThread: ThreadType | undefined;
       composedEmail: string;
-      attachments: { file: File; data: string }[];
+      attachments: { file: File; data: string; preview?: string }[];
     };
   };
   SHORTCUT: {

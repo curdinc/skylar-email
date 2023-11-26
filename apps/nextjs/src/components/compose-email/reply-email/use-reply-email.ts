@@ -13,6 +13,9 @@ export const useReplyEmail = () => {
   const replyString = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.composedEmail,
   );
+  const attachments = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.COMPOSING.attachments,
+  );
   const { sendEmail, isSendingEmail } = useSendEmail();
 
   const onReplyStringChange = useCallback((value: string) => {
@@ -24,6 +27,16 @@ export const useReplyEmail = () => {
     if (!replyThread) {
       return;
     }
+    const formattedAttachments = attachments.map(
+      (attachment) =>
+        ({
+          filename: attachment.file.name,
+          data: attachment.data,
+          contentType: attachment.file.type,
+          encoding: "binary",
+          inline: false,
+        }) as const,
+    );
     const markdownToHtmlConverter = new showdown.Converter();
     await sendEmail({
       emailAddress: replyThread.to.slice(-1)[0] ?? "",
@@ -33,7 +46,7 @@ export const useReplyEmail = () => {
         },
         subject: replyThread.subject,
         to: replyThread.from.slice(-1),
-        attachments: [],
+        attachments: formattedAttachments,
         html: markdownToHtmlConverter.makeHtml(replyString),
         replyConfig: {
           inReplyToRfcMessageId: replyThread.rfc822_message_id[0] ?? "",
@@ -46,7 +59,7 @@ export const useReplyEmail = () => {
     toast({
       title: "Email sent!",
     });
-  }, [replyString, replyThread, sendEmail, toast]);
+  }, [attachments, replyString, replyThread, sendEmail, toast]);
 
   return {
     replyString,

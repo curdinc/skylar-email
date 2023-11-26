@@ -7,7 +7,8 @@ import SimpleMdeReact from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 
 import { Button } from "~/components/ui/button";
-import { AttachmentList, AttachmentZone } from "../attachment";
+import { AttachmentButton, AttachmentZone } from "../attachment";
+import { AttachmentList } from "../attachment/attachment-list";
 import { useReplyEmail } from "./use-reply-email";
 
 export const ReplyEmail = () => {
@@ -40,8 +41,9 @@ export const ReplyEmail = () => {
             Send
           </Button>
         </div>
+        <AttachmentButton />
+        <AttachmentList />
       </div>
-      <AttachmentList />
     </AttachmentZone>
   );
 };

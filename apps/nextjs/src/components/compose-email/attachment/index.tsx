@@ -1,8 +1,12 @@
 import React, { useCallback, useEffect } from "react";
+import Image from "next/image";
 import { useDropzone } from "react-dropzone";
 
 import { setAttachments, useGlobalStore } from "@skylar/logic";
 
+import { CopyToClipboard } from "~/components/buttons/copy-to-clipboard";
+import { Icons } from "~/components/icons";
+import { Button } from "~/components/ui/button";
 import { useToast } from "~/components/ui/use-toast";
 
 export const AttachmentZone = ({ children }: { children: React.ReactNode }) => {
@@ -32,11 +36,17 @@ export const AttachmentZone = ({ children }: { children: React.ReactNode }) => {
             });
             return;
           }
+          console.log("file.type", file.type);
           setAttachments((prevAttachments) => [
             ...prevAttachments,
-            { file, data: binaryStr },
+            {
+              file,
+              data: binaryStr,
+              preview: file.type.startsWith("image/")
+                ? URL.createObjectURL(file)
+                : undefined,
+            },
           ]);
-          console.log(binaryStr);
         };
         reader.readAsBinaryString(file);
       });
@@ -51,7 +61,7 @@ export const AttachmentZone = ({ children }: { children: React.ReactNode }) => {
   console.log("acceptedFiles", acceptedFiles);
 
   return (
-    <div {...getRootProps()}>
+    <div {...getRootProps()} className="h-full">
       <input {...getInputProps()} />
       {children}
     </div>
@@ -61,9 +71,9 @@ export const AttachmentZone = ({ children }: { children: React.ReactNode }) => {
 export const AttachmentButton = () => {
   const { toast } = useToast();
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
-    // Disable click and keydown behavior
     noClick: true,
     noKeyboard: true,
+    noDrag: true,
   });
   useEffect(() => {
     acceptedFiles.forEach((file) => {
@@ -93,34 +103,19 @@ export const AttachmentButton = () => {
           ...prevAttachments,
           { file, data: binaryStr },
         ]);
-        console.log(binaryStr);
       };
       reader.readAsBinaryString(file);
     });
   }, [acceptedFiles, toast]);
 
   return (
-    <div className="container">
+    <div>
       <div {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
-        <p>Drag and drop some files here</p>
         <button type="button" onClick={open}>
           Open File Dialog
         </button>
       </div>
     </div>
   );
-};
-
-export const AttachmentList = () => {
-  const attachments = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.COMPOSING.attachments,
-  );
-
-  const files = attachments.map((attachment) => (
-    <li key={attachment.file.name}>
-      {attachment.file.name} - {attachment.file.size} bytes
-    </li>
-  ));
-  return <div>{files}</div>;
 };
