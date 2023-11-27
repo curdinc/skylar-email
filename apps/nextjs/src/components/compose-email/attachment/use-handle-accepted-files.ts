@@ -31,7 +31,7 @@ export const useHandleAcceptedFiles = () => {
             });
             return;
           }
-s          setAttachments((prevAttachments) => [
+          setAttachments((prevAttachments) => [
             ...prevAttachments,
             {
               file,

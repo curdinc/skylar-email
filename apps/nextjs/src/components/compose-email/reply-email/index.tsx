@@ -1,7 +1,7 @@
 "use client";
 
-import type { Editor } from "codemirror";
 import { useCallback, useEffect, useState } from "react";
+import type { Editor } from "codemirror";
 import SimpleMdeReact from "react-simplemde-editor";
 
 import "easymde/dist/easymde.min.css";
