@@ -89,6 +89,7 @@ export function EmailDisplay({
           )}
         </AccordionTrigger>
         <AccordionContent>
+          {/* TODO: Display inline image */}
           <RawHtmlDisplay
             className={cn(
               !email.content_html && "whitespace-pre-wrap",

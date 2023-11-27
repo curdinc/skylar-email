@@ -1,4 +1,5 @@
 import type { EmailType } from "@skylar/client-db/schema/email";
+import { State } from "@skylar/logic";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 
 import { sanitize } from "./htmlSanitizer";
@@ -68,3 +69,13 @@ export function formatTimeToMMMDDYYYYHHmm(time: number) {
     minute: "numeric",
   });
 }
+
+export const ATTACHMENT_SIZE_LIMIT_IN_BYTES = 25_000_000;
+export const isAttachmentSizeValid = (
+  attachments: State["EMAIL_CLIENT"]["COMPOSING"]["attachments"],
+) => {
+  const totalSize = attachments.reduce((prev, current) => {
+    return prev + current.file.size;
+  }, 0);
+  return totalSize < ATTACHMENT_SIZE_LIMIT_IN_BYTES;
+};

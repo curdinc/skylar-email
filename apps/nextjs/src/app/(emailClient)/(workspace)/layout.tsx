@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { AttachmentZone } from "~/components/compose-email/attachment";
 import { SiteFooter } from "~/components/nav/site-footer";
 import { ClientLayout } from "./client-layout";
 
@@ -16,7 +17,9 @@ export default function EmailClientLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <ClientLayout />
-      <main className="flex grow">{children}</main>
+      <main className="flex grow">
+        <AttachmentZone>{children}</AttachmentZone>
+      </main>
       <SiteFooter />
     </div>
   );

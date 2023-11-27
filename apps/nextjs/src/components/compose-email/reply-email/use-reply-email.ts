@@ -1,17 +1,30 @@
 import { useCallback } from "react";
 import showdown from "showdown";
 
-import { setComposedEmail, useGlobalStore } from "@skylar/logic";
+import {
+  setAttachments,
+  setComposedEmail,
+  setThreadToReplyTo,
+  useGlobalStore,
+} from "@skylar/logic";
 
 import { useSendEmail } from "~/app/(emailClient)/(workspace)/[emailIndex]/use-send-mail";
 import { useToast } from "~/components/ui/use-toast";
+import { isAttachmentSizeValid } from "~/lib/email";
 
-export const useReplyEmail = () => {
+export const useReplyEmail = ({
+  onSentEmail,
+}: {
+  onSentEmail?: () => void;
+}) => {
   const replyThread = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
   const replyString = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.composedEmail,
+  );
+  const attachments = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.COMPOSING.attachments,
   );
   const { sendEmail, isSendingEmail } = useSendEmail();
 
@@ -24,6 +37,28 @@ export const useReplyEmail = () => {
     if (!replyThread) {
       return;
     }
+    const isValidAttachmentSize = isAttachmentSizeValid(attachments);
+    if (!isValidAttachmentSize) {
+      toast({
+        title: "Attachment size is too large",
+        description:
+          "Please make sure your total attachment size less than 25MB",
+        variant: "destructive",
+      });
+      return;
+    }
+    const formattedAttachments = attachments.map((attachment) => {
+      if (attachment.preview) {
+        URL.revokeObjectURL(attachment.preview);
+      }
+      return {
+        filename: attachment.file.name,
+        data: attachment.data,
+        contentType: attachment.file.type,
+        encoding: "binary",
+        inline: false,
+      } as const;
+    });
     const markdownToHtmlConverter = new showdown.Converter();
     await sendEmail({
       emailAddress: replyThread.to.slice(-1)[0] ?? "",
@@ -33,7 +68,7 @@ export const useReplyEmail = () => {
         },
         subject: replyThread.subject,
         to: replyThread.from.slice(-1),
-        attachments: [],
+        attachments: formattedAttachments,
         html: markdownToHtmlConverter.makeHtml(replyString),
         replyConfig: {
           inReplyToRfcMessageId: replyThread.rfc822_message_id[0] ?? "",
@@ -46,7 +81,10 @@ export const useReplyEmail = () => {
     toast({
       title: "Email sent!",
     });
-  }, [replyString, replyThread, sendEmail, toast]);
+    setThreadToReplyTo(undefined);
+    setAttachments(() => []);
+    onSentEmail?.();
+  }, [attachments, onSentEmail, replyString, replyThread, sendEmail, toast]);
 
   return {
     replyString,
