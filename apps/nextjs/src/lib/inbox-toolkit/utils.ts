@@ -1,6 +1,48 @@
 import { bulkPutThreads } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 
+export const getLabelModifications = ({
+  currentLabels,
+  newLabels,
+}: {
+  currentLabels: string[];
+  newLabels: string[];
+}) => {
+  const labelsToAdd = newLabels.filter(
+    (label) => !currentLabels.includes(label),
+  );
+  const labelsToRemove = currentLabels.filter(
+    (label) => !newLabels.includes(label),
+  );
+
+  return {
+    labelsToAdd,
+    labelsToRemove,
+  };
+};
+
+const getNewLabels = (
+  currentLabels: string[],
+  addLabels: string[],
+  deleteLabels: string[],
+) => {
+  return currentLabels
+    .map((label) => {
+      const isRemoveLabel = deleteLabels.find((l) => l === label);
+      if (isRemoveLabel) {
+        return;
+      }
+
+      const isAddLabel = addLabels.find((l) => l === label);
+      if (isAddLabel) {
+        return;
+      }
+
+      return label;
+    })
+    .filter((label) => !!label);
+};
+
 const updateLabels = ({
   thread,
   add,
@@ -11,21 +53,7 @@ const updateLabels = ({
   remove: string[];
 }) => {
   const labels = thread.email_provider_labels;
-  const updatedLabels = labels
-    .map((label) => {
-      const isRemoveLabel = remove.find((l) => l === label);
-      if (isRemoveLabel) {
-        return;
-      }
-
-      const isAddLabel = remove.find((l) => l === label);
-      if (isAddLabel) {
-        return;
-      }
-
-      return label;
-    })
-    .filter((label) => !!label);
+  const updatedLabels = getNewLabels(labels, add, remove);
 
   return {
     ...thread,

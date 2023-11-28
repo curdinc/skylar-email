@@ -165,11 +165,15 @@ export const getThreadActions = (
         title: "Thread unarchived.",
       },
     },
-    addLabelsToThread: {
+    modifyThreadLabels: {
       icon: Icons.addLabel,
       name: "Add Labels",
       tooltipDescription: "Add Labels to thread",
-      applyFn: async (accessToken: string, addLabels: string[]) => {
+      applyFn: async (
+        accessToken: string,
+        addLabels: string[],
+        removeLabels: string[],
+      ) => {
         const threads = await getThreads();
         setMostRecentlyAffectedThreads(threads);
         await moveThreads({
@@ -178,11 +182,11 @@ export const getThreadActions = (
           email: activeEmail,
           threads: threads,
           labelsToAdd: addLabels,
-          labelsToRemove: [],
+          labelsToRemove: removeLabels,
         });
       },
       undoFn: async (accessToken: string) => {
-        console.log("accessToken", accessToken);
+        console.log("boohoo doesnt work");
         // const threads =
         //   useGlobalStore.getState().EMAIL_CLIENT.CONTEXT_MENU
         //     .mostRecentlyAffectedThreads;

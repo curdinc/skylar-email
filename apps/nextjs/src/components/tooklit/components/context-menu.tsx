@@ -141,8 +141,9 @@ export function ThreadContextMenu({
           <ContextMenuSubContent className="w-48">
             <div className="pl-2 text-sm">Move to:</div>
             {displayContextOption(
-              INBOX_TOOLKIT_THREAD_ACTIONS.addLabelsToThread,
+              INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels,
               ["CATEGORY_PERSONAL"],
+              ["CATEGORY_SOCIAL"],
             )}
           </ContextMenuSubContent>
         </ContextMenuSub>
@@ -158,7 +159,10 @@ export function ThreadContextMenu({
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
           <ContextMenuSubContent>
-            <EditLabels />
+            <EditLabels
+              thread={thread}
+              editLabelAction={INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels}
+            />
           </ContextMenuSubContent>
         </ContextMenuSub>
       </ContextMenuContent>
