@@ -74,7 +74,11 @@ export const ReplyEmail = () => {
                     autoComplete="email"
                     getLabel={(email, index, removeEmail) => {
                       return (
-                        <Badge key={index} className="gap-1">
+                        <Badge
+                          key={index}
+                          className="gap-1"
+                          variant={"secondary"}
+                        >
                           <div>{email}</div>
                           <Button
                             variant={"ghost"}
