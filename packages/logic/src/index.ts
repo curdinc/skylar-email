@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import type { Editor } from "codemirror";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
@@ -43,6 +44,7 @@ export type State = {
     emailList: EmailListData[];
     activeThread: ThreadType | undefined;
     COMPOSING: {
+      codeMirrorInstance?: Editor;
       respondingThread: ThreadType | undefined;
       composedEmail: string;
       attachments: { file: File; data: string; preview?: string }[];
@@ -85,6 +87,9 @@ type Actions = {
       prev: State["EMAIL_CLIENT"]["COMPOSING"]["attachments"],
     ) => State["EMAIL_CLIENT"]["COMPOSING"]["attachments"],
   ) => void;
+  setCodeMirrorInstance: (
+    codeMirrorInstance: State["EMAIL_CLIENT"]["COMPOSING"]["codeMirrorInstance"],
+  ) => void;
 };
 
 // Core states
@@ -99,6 +104,7 @@ export const useGlobalStore = create(
         composedEmail: "",
         respondingThread: undefined,
         attachments: [],
+        codeMirrorInstance: undefined,
       },
     },
     SETTINGS: {
@@ -229,3 +235,11 @@ export const setAttachments: Actions["setAttachments"] = (updateFn) =>
       state.EMAIL_CLIENT.COMPOSING.attachments,
     );
   });
+
+export const setCodeMirrorInstance: Actions["setCodeMirrorInstance"] = (
+  codeMirrorInstance,
+) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.COMPOSING.codeMirrorInstance = codeMirrorInstance;
+  });
+};

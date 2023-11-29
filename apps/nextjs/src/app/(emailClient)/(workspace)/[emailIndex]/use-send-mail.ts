@@ -24,7 +24,6 @@ export function useSendEmail() {
       });
 
       const composedEmail = await composeEmail(emailConfig);
-      console.log("composedEmail", composedEmail);
       const sendMessageResponse = await sendMail({
         accessToken,
         emailId: emailAddress,
