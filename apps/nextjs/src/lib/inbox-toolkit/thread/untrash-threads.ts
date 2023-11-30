@@ -14,10 +14,13 @@ export async function untrashThreads({
   accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
+  const labelsToAdd = Array<string[]>(threads.length).fill(["INBOX"]);
+  const labelsToRemove = Array<string[]>(threads.length).fill(["TRASH"]);
+
   const updatedThreads = await updateAndSaveLabels({
     threads,
-    labelsToAdd: ["INBOX"],
-    labelsToRemove: ["TRASH"],
+    labelsToAdd,
+    labelsToRemove,
   });
 
   console.log("UNTRASH updatedThreads", updatedThreads);
@@ -27,8 +30,8 @@ export async function untrashThreads({
 
   await batchModifyLabels({
     accessToken,
-    addLabels: ["INBOX"],
-    deleteLabels: ["TRASH"],
+    addLabels: labelsToAdd,
+    deleteLabels: labelsToRemove,
     emailId: email,
     threadIds: updatedThreads.map((t) => t.email_provider_thread_id),
   });

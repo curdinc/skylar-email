@@ -14,10 +14,13 @@ export async function unarchiveThreads({
   accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
+  const labelsToAdd = Array<string[]>(threads.length).fill(["INBOX"]);
+  const labelsToRemove = Array<string[]>(threads.length).fill([]);
+
   const updatedThreads = await updateAndSaveLabels({
     threads,
-    labelsToAdd: ["INBOX"],
-    labelsToRemove: [],
+    labelsToAdd: labelsToAdd,
+    labelsToRemove: labelsToRemove,
   });
 
   for (const func of afterClientDbUpdate) {
@@ -26,8 +29,8 @@ export async function unarchiveThreads({
 
   await batchModifyLabels({
     accessToken,
-    addLabels: ["INBOX"],
-    deleteLabels: [],
+    addLabels: labelsToAdd,
+    deleteLabels: labelsToRemove,
     emailId: email,
     threadIds: updatedThreads.map((t) => t.email_provider_thread_id),
   });

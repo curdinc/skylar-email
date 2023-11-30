@@ -14,10 +14,13 @@ export async function trashThreads({
   accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
+  const labelsToAdd = Array<string[]>(threads.length).fill(["TRASH"]);
+  const labelsToRemove = Array<string[]>(threads.length).fill(["INBOX"]);
+
   const updatedThreads = await updateAndSaveLabels({
     threads,
-    labelsToAdd: ["TRASH"],
-    labelsToRemove: ["INBOX"],
+    labelsToAdd,
+    labelsToRemove,
   });
 
   for (const func of afterClientDbUpdate) {

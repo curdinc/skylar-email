@@ -14,10 +14,13 @@ export async function markUnreadThreads({
   accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
+  const labelsToAdd = Array<string[]>(threads.length).fill([]);
+  const labelsToRemove = Array<string[]>(threads.length).fill(["UNREAD"]);
+
   const updatedThreads = await updateAndSaveLabels({
     threads,
-    labelsToAdd: ["UNREAD"],
-    labelsToRemove: [],
+    labelsToAdd,
+    labelsToRemove,
   });
 
   for (const func of afterClientDbUpdate) {
@@ -26,8 +29,8 @@ export async function markUnreadThreads({
 
   await batchModifyLabels({
     accessToken,
-    addLabels: ["UNREAD"],
-    deleteLabels: [],
+    addLabels: labelsToAdd,
+    deleteLabels: labelsToRemove,
     emailId: email,
     threadIds: updatedThreads.map((t) => t.email_provider_thread_id),
   });
