@@ -154,6 +154,15 @@ export function ThreadContextMenu({
             {displayContextOption(
               INBOX_TOOLKIT_SENDER_ACTIONS.archiveFromSender,
             )}
+            <ContextMenuSub>
+              <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
+              <ContextMenuSubContent>
+                <EditLabels
+                  thread={thread}
+                  editLabelAction={INBOX_TOOLKIT_SENDER_ACTIONS.labelFromSender}
+                />
+              </ContextMenuSubContent>
+            </ContextMenuSub>
           </ContextMenuSubContent>
         </ContextMenuSub>
         <ContextMenuSub>

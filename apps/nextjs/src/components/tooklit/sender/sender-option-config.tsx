@@ -31,5 +31,10 @@ export const getSenderActions = ({
       name: "Archive all",
       tooltipDescription: "Trash threads from sender",
     },
+    labelFromSender: {
+      ...INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels,
+      name: "Move all",
+      tooltipDescription: "Move all threads from sender",
+    },
   } as const satisfies Record<string, ConfigOption<MoveThreadArgs | []>>;
 };

@@ -169,11 +169,7 @@ export const getThreadActions = (
       icon: Icons.addLabel,
       name: "Add Labels",
       tooltipDescription: "Add Labels to thread",
-      applyFn: async (
-        accessToken: string,
-        addLabels: string[],
-        removeLabels: string[],
-      ) => {
+      applyFn: async (accessToken: string, newLabels: string[]) => {
         const threads = await getThreads();
         setMostRecentlyAffectedThreads(threads);
         await moveThreads({
@@ -181,8 +177,7 @@ export const getThreadActions = (
           afterClientDbUpdate,
           email: activeEmail,
           threads: threads,
-          labelsToAdd: addLabels,
-          labelsToRemove: removeLabels,
+          newLabels,
         });
       },
       undoFn: async (accessToken: string) => {

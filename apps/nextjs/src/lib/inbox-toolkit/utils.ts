@@ -67,15 +67,15 @@ export const updateAndSaveLabels = async ({
   labelsToRemove,
 }: {
   threads: ThreadType[];
-  labelsToAdd: string[];
-  labelsToRemove: string[];
+  labelsToAdd: string[][];
+  labelsToRemove: string[][];
 }) => {
   const updatedThreads = threads
-    .map((thread) => {
+    .map((thread, index) => {
       return updateLabels({
         thread: thread,
-        add: labelsToAdd,
-        remove: labelsToRemove,
+        add: labelsToAdd[index]!,
+        remove: labelsToRemove[index]!,
       });
     })
     .filter((thread) => !!thread);

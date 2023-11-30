@@ -15,7 +15,6 @@ import {
   CommandItem,
 } from "~/components/ui/command";
 import { api } from "~/lib/api";
-import { getLabelModifications } from "~/lib/inbox-toolkit/utils";
 import { cn } from "~/lib/ui";
 import type { ConfigOption, MoveThreadArgs } from "../config-option-type";
 
@@ -98,21 +97,12 @@ export function EditLabels({
             className="w-full"
             onClick={async () => {
               if (!labelData) return;
-              console.log(labelData);
+              console.log("labelData", labelData);
               const selectedLabels = Object.keys(labels).filter(
                 (label) => labels[label],
               );
-              console.log(selectedLabels);
-              const { labelsToAdd, labelsToRemove } = getLabelModifications({
-                newLabels: selectedLabels,
-                currentLabels: thread.email_provider_labels,
-              });
               const accessToken = await fetchGmailAccessToken();
-              await editLabelAction.applyFn(
-                accessToken,
-                labelsToAdd,
-                labelsToRemove,
-              );
+              await editLabelAction.applyFn(accessToken, selectedLabels);
             }}
           >
             Apply
