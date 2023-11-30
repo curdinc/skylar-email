@@ -714,7 +714,7 @@ export async function batchModifyLabels({
 }) {
   const reqs = threadIds
     .map((threadId, ind) => {
-      if (!addLabels[ind] && !deleteLabels[ind]) {
+      if (!addLabels[ind]?.length && !deleteLabels[ind]?.length) {
         return;
       }
       return {
