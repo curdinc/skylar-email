@@ -1,1 +1,1 @@
-export const GMAIL_IMMUTABLE_LABELS = ["SENT", "DRAFT"];
+export const GMAIL_IMMUTABLE_LABELS = ["SENT", "DRAFT", "CHAT"];
