@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 
@@ -15,6 +15,7 @@ import {
   CommandItem,
 } from "~/components/ui/command";
 import { api } from "~/lib/api";
+import { GMAIL_IMMUTABLE_LABELS } from "~/lib/inbox-toolkit/constants";
 import { cn } from "~/lib/ui";
 import type { ConfigOption, MoveThreadArgs } from "../config-option-type";
 
@@ -67,28 +68,32 @@ export function EditLabels({
       <CommandGroup>
         <div className="max-h-60 overflow-auto">
           {labelData
-            ? labelData[email]?.map((label) => (
-                <CommandItem
-                  key={label.id}
-                  value={label.name}
-                  onSelect={(_) => {
-                    setLabels((prev) => {
-                      return {
-                        ...prev,
-                        [label.id]: !prev[label.id],
-                      };
-                    });
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      labels[label.id] ? "opacity-100" : "opacity-0",
-                    )}
-                  />
-                  {label.name}
-                </CommandItem>
-              ))
+            ? labelData[email]
+                ?.filter((label) => {
+                  return GMAIL_IMMUTABLE_LABELS.indexOf(label.id) === -1;
+                })
+                .map((label) => (
+                  <CommandItem
+                    key={label.id}
+                    value={label.name}
+                    onSelect={(_) => {
+                      setLabels((prev) => {
+                        return {
+                          ...prev,
+                          [label.id]: !prev[label.id],
+                        };
+                      });
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        labels[label.id] ? "opacity-100" : "opacity-0",
+                      )}
+                    />
+                    {label.name}
+                  </CommandItem>
+                ))
             : null}
         </div>
         <div className="flex w-full justify-center p-1">

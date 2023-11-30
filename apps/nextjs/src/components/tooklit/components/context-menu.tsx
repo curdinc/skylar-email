@@ -41,6 +41,7 @@ export function ThreadContextMenu({
     activeEmail: email,
     afterClientDbUpdate: [refetch],
     getThreads: () => {
+      console.log("getThreads");
       return getEmailThreadsFrom({
         senderEmail: thread.from[0]!,
         clientEmail: email,

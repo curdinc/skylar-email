@@ -172,6 +172,7 @@ export const getThreadActions = (
       applyFn: async (accessToken: string, newLabels: string[]) => {
         const threads = await getThreads();
         setMostRecentlyAffectedThreads(threads);
+        console.log("threads", threads);
         await moveThreads({
           accessToken,
           afterClientDbUpdate,

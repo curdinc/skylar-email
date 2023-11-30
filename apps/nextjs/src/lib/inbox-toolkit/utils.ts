@@ -1,5 +1,6 @@
 import { bulkPutThreads } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
+import { GMAIL_IMMUTABLE_LABELS } from "./constants";
 
 export const getLabelModifications = ({
   currentLabels,
@@ -12,7 +13,7 @@ export const getLabelModifications = ({
     (label) => !currentLabels.includes(label),
   );
   const labelsToRemove = currentLabels.filter(
-    (label) => !newLabels.includes(label),
+    (label) => !newLabels.includes(label) && GMAIL_IMMUTABLE_LABELS.indexOf(label) === -1,
   );
 
   return {
