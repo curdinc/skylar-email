@@ -9,6 +9,7 @@ import {
   Copy,
   CopyCheck,
   CreditCard,
+  File,
   FileVideo,
   FolderPlus,
   Inbox,
