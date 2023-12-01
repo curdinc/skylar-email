@@ -709,20 +709,33 @@ export async function batchModifyLabels({
   threadIds: string[];
   accessToken: string;
   emailId: string;
-  addLabels: string[];
-  deleteLabels: string[];
+  addLabels: string[][];
+  deleteLabels: string[][];
 }) {
-  const reqs = threadIds.map((threadId) => {
-    return {
-      contentType: "application/json",
-      type: "POST" as const,
-      url: `/gmail/v1/users/${emailId}/threads/${threadId}/modify`,
-      body: {
-        addLabelIds: addLabels,
-        removeLabelIds: deleteLabels,
-      },
+  const reqs = threadIds
+    .map((threadId, ind) => {
+      if (!addLabels[ind]?.length && !deleteLabels[ind]?.length) {
+        return;
+      }
+      return {
+        contentType: "application/json",
+        type: "POST" as const,
+        url: `/gmail/v1/users/${emailId}/threads/${threadId}/modify`,
+        body: {
+          addLabelIds: addLabels[ind]!,
+          removeLabelIds: deleteLabels[ind]!,
+        },
+      };
+    })
+    .filter((req) => req !== undefined) as {
+    contentType: string;
+    type: "POST";
+    url: string;
+    body: {
+      addLabelIds: string[];
+      removeLabelIds: string[];
     };
-  });
+  }[];
 
   const res = await sendBatchRequest({
     accessToken,

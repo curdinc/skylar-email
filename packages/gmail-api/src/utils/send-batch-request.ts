@@ -48,7 +48,6 @@ export async function sendBatchRequest({
       })
       .join("") + `--${boundary}--`;
 
-  console.log("batchRequestBody", batchRequestBody);
   const res = await fetch(url, {
     method: "POST",
     headers: headers,

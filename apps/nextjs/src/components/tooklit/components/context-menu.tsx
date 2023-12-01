@@ -1,5 +1,6 @@
 import { ToastAction } from "@radix-ui/react-toast";
 
+import { getEmailThreadsFrom } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 
 import {
@@ -7,7 +8,6 @@ import {
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuSeparator,
-  ContextMenuShortcut,
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,
@@ -15,8 +15,10 @@ import {
 } from "~/components/ui/context-menu";
 import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/lib/api";
-import type { ThreadOptionConfig } from "./thread-option-config";
-import { getThreadActions } from "./thread-option-config";
+import type { ConfigOption } from "../config-option-type";
+import { getSenderActions } from "../sender/sender-option-config";
+import { getThreadActions } from "../thread/thread-option-config";
+import { EditLabels } from "./edit-labels";
 
 export function ThreadContextMenu({
   children,
@@ -28,9 +30,24 @@ export function ThreadContextMenu({
   refetch: () => Promise<void>;
 }) {
   const email = "curdcorp@gmail.com"; // TODO: change this to the active email
-  const INBOX_TOOLKIT_THREAD_ACTIONS = getThreadActions(thread, email, [
-    refetch,
-  ]);
+  const INBOX_TOOLKIT_THREAD_ACTIONS = getThreadActions(
+    async () => {
+      return Promise.resolve([thread]);
+    },
+    email,
+    [refetch],
+  );
+  const INBOX_TOOLKIT_SENDER_ACTIONS = getSenderActions({
+    activeEmail: email,
+    afterClientDbUpdate: [refetch],
+    getThreads: () => {
+      console.log("getThreads");
+      return getEmailThreadsFrom({
+        senderEmail: thread.from[0]!,
+        clientEmail: email,
+      });
+    },
+  });
 
   const { toast, dismiss } = useToast();
 
@@ -53,7 +70,10 @@ export function ThreadContextMenu({
     });
   };
 
-  const showUndoToast = (item: ThreadOptionConfig) => {
+  const showUndoToast = <T,>(
+    item: ConfigOption<T>,
+    undoFn: () => Promise<void>,
+  ) => {
     toast({
       title: item.undoToastConfig.title,
       duration: 10000,
@@ -61,8 +81,7 @@ export function ThreadContextMenu({
       action: (
         <ToastAction
           onClick={async () => {
-            const accessToken = await fetchGmailAccessToken();
-            await item.undoFn(accessToken);
+            await undoFn();
             dismiss();
             showUndoSuccessToast();
           }}
@@ -74,21 +93,21 @@ export function ThreadContextMenu({
     });
   };
 
-  const runAction = (action: ThreadOptionConfig) => {
+  const runAction = <T,>(action: ConfigOption<T>, ...args: T[]) => {
     return async () => {
       const accessToken = await fetchGmailAccessToken();
       action
-        .applyFn(accessToken)
-        .then(() => {
-          showUndoToast(action);
+        .applyFn(accessToken, ...args)
+        .then((undoFn: () => Promise<void>) => {
+          showUndoToast(action, undoFn);
         })
         .catch((e) => console.error(e));
     };
   };
 
-  const displayContextOption = (option: ThreadOptionConfig) => {
+  const displayContextOption = <T,>(option: ConfigOption<T>, ...args: T[]) => {
     return (
-      <ContextMenuItem inset onClick={runAction(option)}>
+      <ContextMenuItem inset onClick={runAction(option, ...args)}>
         <div className="flex items-center gap-2">
           <option.icon className="h-4 w-4" />
           <div>{option.name}</div>
@@ -124,23 +143,38 @@ export function ThreadContextMenu({
           <ContextMenuSubTrigger inset>Move to</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48">
             <div className="pl-2 text-sm">Move to:</div>
-            <ContextMenuItem>
-              Not supported yet
-              <ContextMenuShortcut>⇧⌘S</ContextMenuShortcut>
-            </ContextMenuItem>
+            {displayContextOption(
+              INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels,
+              ["CATEGORY_PERSONAL"],
+              ["CATEGORY_SOCIAL"],
+            )}
           </ContextMenuSubContent>
         </ContextMenuSub>
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Sender actions</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-48">
-            <ContextMenuItem disabled>Block all from sender</ContextMenuItem>
+            {displayContextOption(INBOX_TOOLKIT_SENDER_ACTIONS.trashFromSender)}
+            {displayContextOption(
+              INBOX_TOOLKIT_SENDER_ACTIONS.archiveFromSender,
+            )}
+            <ContextMenuSub>
+              <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
+              <ContextMenuSubContent>
+                <EditLabels
+                  thread={thread}
+                  editLabelAction={INBOX_TOOLKIT_SENDER_ACTIONS.labelFromSender}
+                />
+              </ContextMenuSubContent>
+            </ContextMenuSub>
           </ContextMenuSubContent>
         </ContextMenuSub>
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-48">
-            <div className="pl-2 text-sm">Label as:</div>
-            <ContextMenuItem>Not supported yet</ContextMenuItem>
+          <ContextMenuSubContent>
+            <EditLabels
+              thread={thread}
+              editLabelAction={INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels}
+            />
           </ContextMenuSubContent>
         </ContextMenuSub>
       </ContextMenuContent>
