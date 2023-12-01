@@ -8,8 +8,8 @@ export type ConfigOption<T> = {
   icon: LucideIcon;
   name: string;
   tooltipDescription: string;
-  applyFn: (accessToken: string, ...args: T[]) => Promise<void>;
-  undoFn: (accessToken: string) => Promise<void>;
+  // return a function that will undo the action
+  applyFn: (accessToken: string, ...args: T[]) => Promise<() => Promise<void>>;
   undoToastConfig: {
     title: string;
   };

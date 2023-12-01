@@ -70,7 +70,10 @@ export function ThreadContextMenu({
     });
   };
 
-  const showUndoToast = <T,>(item: ConfigOption<T>) => {
+  const showUndoToast = <T,>(
+    item: ConfigOption<T>,
+    undoFn: () => Promise<void>,
+  ) => {
     toast({
       title: item.undoToastConfig.title,
       duration: 10000,
@@ -78,8 +81,7 @@ export function ThreadContextMenu({
       action: (
         <ToastAction
           onClick={async () => {
-            const accessToken = await fetchGmailAccessToken();
-            await item.undoFn(accessToken);
+            await undoFn();
             dismiss();
             showUndoSuccessToast();
           }}
@@ -96,8 +98,8 @@ export function ThreadContextMenu({
       const accessToken = await fetchGmailAccessToken();
       action
         .applyFn(accessToken, ...args)
-        .then(() => {
-          showUndoToast(action);
+        .then((undoFn: () => Promise<void>) => {
+          showUndoToast(action, undoFn);
         })
         .catch((e) => console.error(e));
     };

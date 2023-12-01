@@ -1,7 +1,8 @@
 "use client";
 
-import { Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { ToastAction } from "@radix-ui/react-toast";
+import { Check } from "lucide-react";
 
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 
@@ -14,6 +15,7 @@ import {
   CommandInput,
   CommandItem,
 } from "~/components/ui/command";
+import { useToast } from "~/components/ui/use-toast";
 import { api } from "~/lib/api";
 import { GMAIL_IMMUTABLE_LABELS } from "~/lib/inbox-toolkit/constants";
 import { cn } from "~/lib/ui";
@@ -29,6 +31,7 @@ export function EditLabels({
   // create a map of all labels with true/false values
   // when a label is selected, toggle the value
   const { data: labelData } = useListLabels();
+  const { toast, dismiss } = useToast();
   const email = "curdcorp@gmail.com";
   const [labels, setLabels] = useState<Record<string, boolean>>(
     thread.email_provider_labels.reduce(
@@ -39,6 +42,49 @@ export function EditLabels({
       {} as Record<string, boolean>,
     ),
   );
+
+  const showUndoSuccessToast = () => {
+    toast({
+      title: "Action Undone",
+      duration: 10000,
+      description: "Operation successfull!",
+    });
+  };
+
+  const showUndoToast = <T,>(
+    item: ConfigOption<T>,
+    undoFn: () => Promise<void>,
+  ) => {
+    toast({
+      title: item.undoToastConfig.title,
+      duration: 10000,
+      description: "Operation successfull!",
+      action: (
+        <ToastAction
+          onClick={async () => {
+            await undoFn();
+            dismiss();
+            showUndoSuccessToast();
+          }}
+          altText="Undo"
+        >
+          Undo
+        </ToastAction>
+      ),
+    });
+  };
+
+  const runAction = <T,>(action: ConfigOption<T>, ...args: T[]) => {
+    return async () => {
+      const accessToken = await fetchGmailAccessToken();
+      action
+        .applyFn(accessToken, ...args)
+        .then((undoFn: () => Promise<void>) => {
+          showUndoToast(action, undoFn);
+        })
+        .catch((e) => console.error(e));
+    };
+  };
 
   const { mutateAsync: fetchGmailAccessTokenMutation } =
     api.gmail.getAccessToken.useMutation();
@@ -106,8 +152,7 @@ export function EditLabels({
               const selectedLabels = Object.keys(labels).filter(
                 (label) => labels[label],
               );
-              const accessToken = await fetchGmailAccessToken();
-              await editLabelAction.applyFn(accessToken, selectedLabels);
+              await runAction(editLabelAction, selectedLabels)();
             }}
           >
             Apply

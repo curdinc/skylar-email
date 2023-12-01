@@ -1,34 +1,23 @@
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 import { batchModifyLabels } from "@skylar/gmail-api";
 
-import { getLabelModifications, updateAndSaveLabels } from "../utils";
+import { updateAndSaveLabels } from "../utils";
 
 export async function moveThreads({
   threads,
-  newLabels,
+  labelsToAdd,
+  labelsToRemove,
   email,
   accessToken,
   afterClientDbUpdate,
 }: {
   threads: ThreadType[];
-  newLabels: string[];
+  labelsToAdd: string[][];
+  labelsToRemove: string[][];
   email: string;
   accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
-  const labelsToAdd: string[][] = [];
-  const labelsToRemove: string[][] = [];
-  threads.map((thread) => {
-    const { labelsToAdd: addLabels, labelsToRemove: removeLabels } =
-      getLabelModifications({
-        currentLabels: thread.email_provider_labels,
-        newLabels,
-      });
-
-    labelsToAdd.push(addLabels);
-    labelsToRemove.push(removeLabels);
-  });
-
   const updatedThreads = await updateAndSaveLabels({
     threads,
     labelsToAdd,
