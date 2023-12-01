@@ -10,6 +10,7 @@ const config = {
     "@skylar/logic",
     "@skylar/logger",
     "@skylar/parsers-and-types",
+    "@skylar/tinykeys",
   ],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },
