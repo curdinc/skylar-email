@@ -5,12 +5,8 @@ import SimpleMdeReact from "react-simplemde-editor";
 
 import "easymde/dist/easymde.min.css";
 
-import { ReactMultiEmail } from "react-multi-email";
-
 import { setCodeMirrorInstance, useGlobalStore } from "@skylar/logic";
 
-import { Icons } from "~/components/icons";
-import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
   Form,
@@ -20,9 +16,9 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { Input, InputBaseStyle } from "~/components/ui/input";
-import { cn } from "~/lib/ui";
+import { Input } from "~/components/ui/input";
 import { AttachmentButton, AttachmentList } from "../attachment";
+import { EmailRecipientsField } from "./email-recipients-field";
 import { useReplyEmail } from "./use-reply-email";
 
 export const ReplyEmail = () => {
@@ -67,31 +63,41 @@ export const ReplyEmail = () => {
               <FormItem className="flex items-center gap-2">
                 <FormLabel className="w-14">To</FormLabel>
                 <FormControl>
-                  <ReactMultiEmail
-                    {...field}
-                    className={cn("flex items-center gap-2", InputBaseStyle)}
-                    emails={field.value}
-                    autoComplete="email"
-                    getLabel={(email, index, removeEmail) => {
-                      return (
-                        <Badge
-                          key={index}
-                          className="gap-1"
-                          variant={"secondary"}
-                        >
-                          <div>{email}</div>
-                          <Button
-                            variant={"ghost"}
-                            size={"icon-sm"}
-                            onClick={() => removeEmail(index)}
-                          >
-                            <Icons.close />
-                          </Button>
-                        </Badge>
-                      );
-                    }}
-                    inputClassName="focus-visible:outline-none"
-                  />
+                  <EmailRecipientsField {...field} emails={field.value} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+        <FormField
+          control={form.control}
+          name="cc"
+          render={({ field }) => {
+            // hack to prevent error when using reactMultiEmail
+            delete (field as unknown as { ref?: string }).ref;
+            return (
+              <FormItem className="flex items-center gap-2">
+                <FormLabel className="w-14">CC</FormLabel>
+                <FormControl>
+                  <EmailRecipientsField {...field} emails={field.value} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+        <FormField
+          control={form.control}
+          name="bcc"
+          render={({ field }) => {
+            // hack to prevent error when using reactMultiEmail
+            delete (field as unknown as { ref?: string }).ref;
+            return (
+              <FormItem className="flex items-center gap-2">
+                <FormLabel className="w-14">BCC</FormLabel>
+                <FormControl>
+                  <EmailRecipientsField {...field} emails={field.value} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
