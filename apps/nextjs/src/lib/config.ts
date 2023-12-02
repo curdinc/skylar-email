@@ -58,4 +58,4 @@ export const stripeConfig: StripeElementsOptions = {
 } as const;
 
 export const GMAIL_SCOPES =
-  "https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/contacts" as const;
+  "https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/contacts https://www.googleapis.com/auth/gmail.settings.basic" as const;
