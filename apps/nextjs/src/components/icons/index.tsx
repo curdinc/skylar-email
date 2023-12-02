@@ -11,6 +11,7 @@ import {
   CreditCard,
   File,
   FileVideo,
+  FolderPlus,
   Inbox,
   Layers3,
   Loader2,
@@ -28,6 +29,7 @@ import {
 
 export const Icons = {
   add: Plus,
+  addLabel: FolderPlus,
   app: AppWindow,
   archive: ArchiveX,
   attachment: Paperclip,

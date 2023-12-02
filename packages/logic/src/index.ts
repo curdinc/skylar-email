@@ -41,6 +41,9 @@ export type State = {
     activeEmailProviderIndexes: number[];
     emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
     emailList: EmailListData[];
+    CONTEXT_MENU: {
+      mostRecentlyAffectedThreads: ThreadType[];
+    };
     activeThread: ThreadType | undefined;
     COMPOSING: {
       respondingThread: ThreadType | undefined;
@@ -80,6 +83,7 @@ type Actions = {
     composeString: State["EMAIL_CLIENT"]["COMPOSING"]["composedEmail"],
   ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
+  setMostRecentlyAffectedThreads: (affectedThreads: ThreadType[]) => void;
   setAttachments: (
     updateFn: (
       prev: State["EMAIL_CLIENT"]["COMPOSING"]["attachments"],
@@ -94,6 +98,9 @@ export const useGlobalStore = create(
       activeEmailProviderIndexes: [],
       emailProviders: [],
       emailList: [],
+      CONTEXT_MENU: {
+        mostRecentlyAffectedThreads: [],
+      },
       activeThread: undefined,
       COMPOSING: {
         composedEmail: "",
@@ -209,6 +216,14 @@ export const setActiveThread: Actions["setActiveThread"] = (thread) => {
   });
 };
 
+export const setMostRecentlyAffectedThreads: Actions["setMostRecentlyAffectedThreads"] =
+  (affectedThreads) => {
+    useGlobalStore.setState((state) => {
+      state.EMAIL_CLIENT.CONTEXT_MENU.mostRecentlyAffectedThreads = JSON.parse(
+        JSON.stringify(affectedThreads),
+      ) as ThreadType[];
+    });
+  };
 export const setThreadToReplyTo: Actions["setThreadToReplyTo"] = (thread) => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.respondingThread = thread;
