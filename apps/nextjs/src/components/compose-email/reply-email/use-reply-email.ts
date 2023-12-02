@@ -34,10 +34,18 @@ export const useReplyEmail = () => {
   const form = useForm<EmailComposeType>({
     resolver: valibotResolver(EmailComposeSchema),
     defaultValues: {
-      from: replyThread?.from.slice(-1)[0] ?? "",
-      to: replyThread?.to.slice(-1) ?? [],
-      cc: replyThread?.cc.filter((cc) => !!cc) ?? [],
-      bcc: replyThread?.bcc.filter((bcc) => !!bcc) ?? [],
+      from: replyThread?.from.at(-1)?.[0]?.email ?? "",
+      to: replyThread?.to.at(-1)?.map((to) => to.email) ?? [],
+      cc:
+        replyThread?.cc
+          .at(-1)
+          ?.filter((cc) => !!cc)
+          .map((cc) => cc.email) ?? [],
+      bcc:
+        replyThread?.bcc
+          .at(-1)
+          ?.filter((bcc) => !!bcc)
+          .map((bcc) => bcc.email) ?? [],
       subject: replyThread?.subject ?? "",
       composeString: "",
     },
