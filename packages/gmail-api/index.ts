@@ -1,3 +1,5 @@
+export { createFilter, getFilters } from "./src/filters-api";
+
 export {
   batchCreateLabels,
   batchModifyLabels,
