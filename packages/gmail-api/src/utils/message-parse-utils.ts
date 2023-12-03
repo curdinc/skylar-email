@@ -2,7 +2,7 @@ import type { Logger } from "@skylar/logger";
 import type {
   emailBodyParseResultType,
   emailMetadataParseResultType,
-  emailSenderType,
+  EmailSenderType,
   MessageResponseType,
 } from "@skylar/parsers-and-types";
 
@@ -31,16 +31,16 @@ export function getEmailMetadata(
   messageHeaders: { name: string; value: string }[],
 ): emailMetadataParseResultType {
   const emailHeaders: {
-    from: emailSenderType;
+    from: EmailSenderType;
     subject: string;
-    inReplyTo: emailSenderType;
-    bcc: emailSenderType;
-    cc: emailSenderType[];
+    inReplyTo: EmailSenderType;
+    bcc: EmailSenderType;
+    cc: EmailSenderType[];
     createdAt: Date;
-    deliveredTo: emailSenderType[];
-    replyTo: emailSenderType[];
+    deliveredTo: EmailSenderType[];
+    replyTo: EmailSenderType[];
     rfc822MessageId: string;
-    to: emailSenderType[];
+    to: EmailSenderType[];
   } = {
     from: { email: "" },
     subject: "",

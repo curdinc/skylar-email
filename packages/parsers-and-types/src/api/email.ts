@@ -2,8 +2,8 @@ import type { Output } from "valibot";
 import {
   array,
   boolean,
-  email,
   enumType,
+  minLength,
   object,
   optional,
   string,
@@ -35,10 +35,10 @@ export const attachmentSchema = object({
   inline: boolean(),
 });
 export const emailConfigSchema = object({
-  to: array(string([email()])),
+  to: array(emailSchema),
   from: emailSenderSchema,
-  cc: optional(array(string([email()]))),
-  bcc: optional(array(string([email()]))),
+  cc: optional(array(emailSchema)),
+  bcc: optional(array(emailSchema)),
   subject: string(),
   text: optional(string()),
   html: optional(string()),
@@ -53,5 +53,15 @@ export const emailConfigSchema = object({
   attachments: array(attachmentSchema),
 });
 
-export type emailSenderType = Output<typeof emailSenderSchema>;
+export const EmailComposeSchema = object({
+  from: emailSchema,
+  to: array(emailSchema),
+  cc: optional(array(emailSchema)),
+  bcc: optional(array(emailSchema)),
+  subject: string(),
+  composeString: string([minLength(1, "You are about to send an empty email")]),
+});
+
+export type EmailSenderType = Output<typeof emailSenderSchema>;
 export type EmailConfigType = Output<typeof emailConfigSchema>;
+export type EmailComposeType = Output<typeof EmailComposeSchema>;
