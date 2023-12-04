@@ -1,14 +1,19 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import type { Editor } from "codemirror";
-import SimpleMdeReact from "react-simplemde-editor";
 
 import "easymde/dist/easymde.min.css";
 
 import { Button } from "~/components/ui/button";
 import { AttachmentButton, AttachmentList } from "../attachment";
 import { useReplyEmail } from "./use-reply-email";
+
+const SimpleMdeReact = dynamic(() => import("react-simplemde-editor"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
 
 export const ReplyEmail = () => {
   const [codeMirrorInstance, setCodeMirrorInstance] = useState<Editor | null>(
