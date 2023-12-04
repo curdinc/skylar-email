@@ -51,6 +51,7 @@ export const useReplyEmail = () => {
         break;
       }
       case "reply-sender": {
+        // TODO: check for reply to value before setting from
         const senderEmail = replyThread?.from.at(-1)?.[0]?.email;
         replyTo = senderEmail ? [senderEmail] : [];
         cc = [];

@@ -15,6 +15,8 @@ const USELESS_WORDS = [
   ">",
   "<",
   ",",
+  "(",
+  ")",
 ];
 
 function buildSearchableString(text: string) {
@@ -105,25 +107,20 @@ export async function buildThreadList(emails: EmailType[]) {
         .concat(email.to.map((to) => to.name ?? "").filter((x) => !!x));
       thread.cc_search = thread.cc_search
         .concat(email.cc.map((cc) => cc.email))
-        .concat(email.cc.map((cc) => cc.name ?? "").filter((x) => !!x));
+        .concat(email.cc.map((cc) => cc.name ?? ""))
+        .filter((x) => !!x);
       thread.bcc_search = thread.bcc_search
         .concat(email.bcc.email)
         .concat(email.bcc.name ?? "")
         .filter((x) => !!x);
       thread.reply_to_search = thread.reply_to_search
         .concat(email.reply_to.map((replyTo) => replyTo.email))
-        .concat(
-          email.reply_to
-            .map((replyTo) => replyTo.name ?? "")
-            .filter((x) => !!x),
-        );
+        .concat(email.reply_to.map((replyTo) => replyTo.name ?? ""))
+        .filter((x) => !!x);
       thread.delivered_to_search = thread.delivered_to_search
         .concat(email.delivered_to.map((deliveredTo) => deliveredTo.email))
-        .concat(
-          email.delivered_to
-            .map((deliveredTo) => deliveredTo.name ?? "")
-            .filter((x) => !!x),
-        );
+        .concat(email.delivered_to.map((deliveredTo) => deliveredTo.name ?? ""))
+        .filter((x) => !!x);
 
       resolvedThreads.set(email_provider_thread_id, {
         user_email_address: email.user_email_address,
