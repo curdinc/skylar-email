@@ -7,6 +7,7 @@ import {
   setAttachments,
   setComposedEmail,
   setThreadToReplyTo,
+  useActiveEmails,
   useGlobalStore,
 } from "@skylar/logic";
 import type { EmailComposeType } from "@skylar/parsers-and-types";
@@ -20,10 +21,14 @@ export const useReplyEmail = () => {
   const replyThread = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
+  const composeEmailType = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.COMPOSING.emailType,
+  );
   const codeMirrorInstance = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.codeMirrorInstance,
   );
-
+  const activeEmails = useActiveEmails();
+  const currentEmail = activeEmails[0];
   const attachments = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.attachments,
   );
@@ -31,24 +36,61 @@ export const useReplyEmail = () => {
 
   const { toast } = useToast();
 
-  const form = useForm<EmailComposeType>({
-    resolver: valibotResolver(EmailComposeSchema),
-    defaultValues: {
-      from: replyThread?.from.at(-1)?.[0]?.email ?? "",
-      to: replyThread?.to.at(-1)?.map((to) => to.email) ?? [],
-      cc:
-        replyThread?.cc
-          .at(-1)
-          ?.filter((cc) => !!cc)
-          .map((cc) => cc.email) ?? [],
-      bcc:
-        replyThread?.bcc
-          .at(-1)
-          ?.filter((bcc) => !!bcc)
-          .map((bcc) => bcc.email) ?? [],
+  const defaultFormValues = () => {
+    let replyTo: string[] = [];
+    let cc: string[] = [];
+    switch (composeEmailType) {
+      case "forward": {
+        replyTo = [];
+        cc = [];
+        break;
+      }
+      case "new-email": {
+        replyTo = [];
+        cc = [];
+        break;
+      }
+      case "reply-sender": {
+        // TODO: check for reply to value before setting from
+        const senderEmail = replyThread?.from.at(-1)?.[0]?.email;
+        replyTo = senderEmail ? [senderEmail] : [];
+        cc = [];
+        break;
+      }
+      case "reply-all": {
+        const senderEmail = replyThread?.from.at(-1)?.[0]?.email;
+
+        replyTo =
+          replyThread?.to
+            .at(-1)
+            ?.map((to) => to.email)
+            .filter((email) => email !== currentEmail) ?? [];
+        if (senderEmail) {
+          replyTo.push(senderEmail);
+        }
+        cc =
+          replyThread?.cc
+            .at(-1)
+            ?.map((cc) => cc.email)
+            .filter((email) => email !== currentEmail) ?? [];
+        break;
+      }
+      default:
+        break;
+    }
+
+    return {
+      from: currentEmail,
+      to: replyTo,
+      cc: cc,
+      bcc: [],
       subject: replyThread?.subject ?? "",
       composeString: "",
-    },
+    };
+  };
+  const form = useForm<EmailComposeType>({
+    resolver: valibotResolver(EmailComposeSchema),
+    defaultValues: defaultFormValues(),
   });
 
   const submitMutation = useMutation({

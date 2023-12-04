@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 import {
   setActiveThread,
+  setComposingEmailType,
   setThreadToReplyTo,
   useGlobalStore,
   useOptimizedGlobalStore,
@@ -36,6 +37,7 @@ export function useEmailThreadPageKeymaps() {
       },
       [shortcut.reply]: () => {
         setThreadToReplyTo(useGlobalStore.getState().EMAIL_CLIENT.activeThread);
+        setComposingEmailType("reply-sender");
       },
       [shortcut.goNextThread]: (e) => {
         console.log("arrow right key called", e.key, e.code);
