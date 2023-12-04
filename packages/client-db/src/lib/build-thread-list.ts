@@ -89,8 +89,6 @@ export async function buildThreadList(emails: EmailType[]) {
 
       // need to get existing thread from cache
 
-      console.log("thread orig", thread);
-
       thread.from.push([email.from]);
       thread.to.push(email.to);
       thread.cc.push(email.cc[0]?.email ? email.cc : []);
@@ -161,11 +159,6 @@ export async function buildThreadList(emails: EmailType[]) {
           thread.created_at === 0 ? email.created_at : thread.created_at,
         updated_at: email.created_at,
       });
-
-      console.log(
-        "thread after update",
-        resolvedThreads.get(email_provider_thread_id),
-      );
 
       return resolvedThreads;
     },
