@@ -10,7 +10,7 @@ export async function getEmailThreadsFrom({
   clientEmail: string;
 }) {
   return clientDb.thread
-    .where("from" satisfies keyof ThreadIndexType)
+    .where("from_search" satisfies keyof ThreadIndexType)
     .anyOfIgnoreCase(senderEmail)
     .and((thread) => thread.user_email_address === clientEmail)
     .sortBy("created_at" satisfies keyof EmailIndexType);

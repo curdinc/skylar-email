@@ -14,8 +14,8 @@ export async function markUnreadThreads({
   accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
-  const labelsToAdd = Array<string[]>(threads.length).fill([]);
-  const labelsToRemove = Array<string[]>(threads.length).fill(["UNREAD"]);
+  const labelsToRemove = Array<string[]>(threads.length).fill([]);
+  const labelsToAdd = Array<string[]>(threads.length).fill(["UNREAD"]);
 
   const updatedThreads = await updateAndSaveLabels({
     threads,

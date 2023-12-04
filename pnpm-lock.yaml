@@ -87,6 +87,9 @@ importers:
       '@formkit/auto-animate':
         specifier: ^0.8.0
         version: 0.8.0
+      '@hookform/resolvers':
+        specifier: ^3.3.2
+        version: 3.3.2(react-hook-form@7.48.2)
       '@icons-pack/react-simple-icons':
         specifier: ^9.1.0
         version: 9.1.0(react@18.2.0)
@@ -225,9 +228,15 @@ importers:
       react-dropzone:
         specifier: ^14.2.3
         version: 14.2.3(react@18.2.0)
+      react-hook-form:
+        specifier: ^7.48.2
+        version: 7.48.2(react@18.2.0)
       react-intersection-observer:
         specifier: ^9.5.3
         version: 9.5.3(react@18.2.0)
+      react-multi-email:
+        specifier: ^1.0.19
+        version: 1.0.19(react-dom@18.2.0)(react@18.2.0)
       react-simplemde-editor:
         specifier: ^5.2.0
         version: 5.2.0(easymde@2.18.0)(react-dom@18.2.0)(react@18.2.0)
@@ -551,6 +560,9 @@ importers:
       '@skylar/tsconfig':
         specifier: ^0.1.0
         version: link:../../tooling/typescript
+      '@types/codemirror':
+        specifier: ^5.60.15
+        version: 5.60.15
       eslint:
         specifier: ^8.48.0
         version: 8.48.0
@@ -1546,6 +1558,14 @@ packages:
 
   /@formkit/auto-animate@0.8.0:
     resolution: {integrity: sha512-G8f7489ka0mWyi+1IEZT+xgIwcpWtRMmE2x+IrVoQ+KM1cP6VDj/TbujZjwxdb0P8w8b16/qBfViRmydbYHwMw==}
+    dev: false
+
+  /@hookform/resolvers@3.3.2(react-hook-form@7.48.2):
+    resolution: {integrity: sha512-Tw+GGPnBp+5DOsSg4ek3LCPgkBOuOgS5DsDV7qsWNH9LZc433kgsWICjlsh2J9p04H2K66hsXPPb9qn9ILdUtA==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.48.2(react@18.2.0)
     dev: false
 
   /@humanwhocodes/config-array@0.11.10:
@@ -3352,6 +3372,12 @@ packages:
       '@types/tern': 0.23.7
     dev: false
 
+  /@types/codemirror@5.60.15:
+    resolution: {integrity: sha512-dTOvwEQ+ouKJ/rE9LT1Ue2hmP6H1mZv5+CCnNWu2qtiOe2LQa9lCprEY20HxiDmV/Bxh+dXjywmy5aKvoGjULA==}
+    dependencies:
+      '@types/tern': 0.23.7
+    dev: true
+
   /@types/dompurify@3.0.3:
     resolution: {integrity: sha512-odiGr/9/qMqjcBOe5UhcNLOFHSYmKFOyr+bJ/Xu3Qp4k1pNPAlNLUVNNLcLfjQI7+W7ObX58EdD3H+3p3voOvA==}
     dependencies:
@@ -3367,7 +3393,6 @@ packages:
 
   /@types/estree@1.0.1:
     resolution: {integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==}
-    dev: false
 
   /@types/glob@7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
@@ -3460,7 +3485,6 @@ packages:
     resolution: {integrity: sha512-0YS9XCZ0LAhlP11HV9SqncUYyz9Ggsgc7Om/AmchKvoeFyj0qPaJmX6rJ93mJVExizWDzUMb49gAtVpI1uHd8Q==}
     dependencies:
       '@types/estree': 1.0.1
-    dev: false
 
   /@types/through@0.0.30:
     resolution: {integrity: sha512-FvnCJljyxhPM3gkRgWmxmDZyAQSiBQQWLI0A0VFL0K7W1oRUrPJSqNO0NvTnLkBcotdlp3lKvaT0JrnyRDkzOg==}
@@ -7321,6 +7345,15 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-hook-form@7.48.2(react@18.2.0):
+    resolution: {integrity: sha512-H0T2InFQb1hX7qKtDIZmvpU1Xfn/bdahWBN1fH19gSe4bBEqTfmlr7H3XWTaVtiK4/tpPaI1F3355GPMZYge+A==}
+    engines: {node: '>=12.22.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /react-intersection-observer@9.5.3(react@18.2.0):
     resolution: {integrity: sha512-NJzagSdUPS5rPhaLsHXYeJbsvdpbJwL6yCHtMk91hc0ufQ2BnXis+0QQ9NBh6n9n+Q3OyjR6OQLShYbaNBkThQ==}
     peerDependencies:
@@ -7331,6 +7364,16 @@ packages:
 
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+    dev: false
+
+  /react-multi-email@1.0.19(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-JCj9ZBQBXuMOxAu+f3VNbqRKUfp8fainc2fBzMIbjMfwdVrLS8Vy72rvbZqqws8wu1F1bTyPTNEQQFg3QtrlJg==}
+    peerDependencies:
+      react: ^18.2.0
+      react-dom: ^18.2.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-remove-scroll-bar@2.3.4(@types/react@18.2.21)(react@18.2.0):

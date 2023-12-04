@@ -7,17 +7,12 @@ export {
 } from "./src/helper";
 
 // FEATURE SPECIFIC
+export * from "./src/api/email";
 export * from "./src/api/invite-code";
 export * from "./src/api/mailing-list";
 export * from "./src/api/onboarding";
 export * from "./src/auth";
 
-export {
-  SUPPORTED_EMAIL_CATEGORIES,
-  emailConfigSchema,
-  type EmailConfigType,
-  type emailSenderType,
-} from "./src/api/email";
 export * from "./src/api/email-provider/gmail-provider";
 export {
   GmailPushNotificationDataObjectSchema,
@@ -63,4 +58,5 @@ export {
   SharedEnvSchemaObject,
 } from "./src/nextjs/env";
 
+// CONSTANTS
 export * from "./src/constants/email-providers";

@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.0",
+    "@hookform/resolvers": "^3.3.2",
     "@icons-pack/react-simple-icons": "^9.1.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-avatar": "^1.0.3",
@@ -60,7 +61,9 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-hook-form": "^7.48.2",
     "react-intersection-observer": "^9.5.3",
+    "react-multi-email": "^1.0.19",
     "react-simplemde-editor": "^5.2.0",
     "showdown": "^2.1.0",
     "superjson": "1.13.1",

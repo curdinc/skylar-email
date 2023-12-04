@@ -1,5 +1,5 @@
 import type { EmailType } from "@skylar/client-db/schema/email";
-import { State } from "@skylar/logic";
+import type { State } from "@skylar/logic";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 
 import { sanitize } from "./htmlSanitizer";

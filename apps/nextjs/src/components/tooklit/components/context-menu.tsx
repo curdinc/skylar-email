@@ -43,7 +43,8 @@ export function ThreadContextMenu({
     getThreads: () => {
       console.log("getThreads");
       return getEmailThreadsFrom({
-        senderEmail: thread.from[0]!,
+        // todo: fix this accessor
+        senderEmail: thread.from[0]?.[0]?.email ?? "",
         clientEmail: email,
       });
     },

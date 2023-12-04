@@ -22,6 +22,7 @@ export const AttachmentZone = ({ children }: { children: React.ReactNode }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     noClick: true,
+    noKeyboard: true,
   });
 
   return (

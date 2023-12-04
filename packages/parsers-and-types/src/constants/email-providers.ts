@@ -17,3 +17,10 @@ export const EMAIL_PROVIDER_LABELS = {
 export const EMAIL_PROVIDER_LABELS_ARRAY = Object.values(
   EMAIL_PROVIDER_LABELS,
 ).flatMap((labels) => Object.values(labels));
+
+export const COMPOSE_EMAIL_OPTIONS = [
+  "reply-sender",
+  "reply-all",
+  "forward",
+  "new-email",
+] as const;

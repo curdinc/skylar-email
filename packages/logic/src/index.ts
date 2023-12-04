@@ -1,11 +1,15 @@
 import { useMemo } from "react";
+import type { Editor } from "codemirror";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
 
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 import type { schema } from "@skylar/db";
-import type { SupportedAuthProvidersType } from "@skylar/parsers-and-types";
+import type {
+  COMPOSE_EMAIL_OPTIONS,
+  SupportedAuthProvidersType,
+} from "@skylar/parsers-and-types";
 
 export type EmailListData =
   | {
@@ -46,6 +50,8 @@ export type State = {
     };
     activeThread: ThreadType | undefined;
     COMPOSING: {
+      emailType?: (typeof COMPOSE_EMAIL_OPTIONS)[number];
+      codeMirrorInstance?: Editor;
       respondingThread: ThreadType | undefined;
       composedEmail: string;
       attachments: { file: File; data: string; preview?: string }[];
@@ -89,6 +95,12 @@ type Actions = {
       prev: State["EMAIL_CLIENT"]["COMPOSING"]["attachments"],
     ) => State["EMAIL_CLIENT"]["COMPOSING"]["attachments"],
   ) => void;
+  setCodeMirrorInstance: (
+    codeMirrorInstance: State["EMAIL_CLIENT"]["COMPOSING"]["codeMirrorInstance"],
+  ) => void;
+  setComposingEmailType: (
+    emailType: State["EMAIL_CLIENT"]["COMPOSING"]["emailType"],
+  ) => void;
 };
 
 // Core states
@@ -103,9 +115,11 @@ export const useGlobalStore = create(
       },
       activeThread: undefined,
       COMPOSING: {
+        emailType: undefined,
         composedEmail: "",
         respondingThread: undefined,
         attachments: [],
+        codeMirrorInstance: undefined,
       },
     },
     SETTINGS: {
@@ -244,3 +258,19 @@ export const setAttachments: Actions["setAttachments"] = (updateFn) =>
       state.EMAIL_CLIENT.COMPOSING.attachments,
     );
   });
+
+export const setCodeMirrorInstance: Actions["setCodeMirrorInstance"] = (
+  codeMirrorInstance,
+) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.COMPOSING.codeMirrorInstance = codeMirrorInstance;
+  });
+};
+
+export const setComposingEmailType: Actions["setComposingEmailType"] = (
+  emailType,
+) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.COMPOSING.emailType = emailType;
+  });
+};
