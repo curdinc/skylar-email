@@ -1,6 +1,6 @@
 import type { EmailType } from "../../schema/email";
 import type { ThreadType } from "../../schema/thread";
-import { bulkGetThreads } from "../emails/bulk-get-threads";
+import { bulkGetThreads } from "../email/bulk-get-threads";
 
 const USELESS_WORDS = [
   "",

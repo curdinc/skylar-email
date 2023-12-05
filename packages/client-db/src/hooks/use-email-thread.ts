@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getEmailThread } from "../emails/get-email-thread";
+import { getEmailThread } from "../email/get-email-thread";
 import type { GetParameters } from "../types/extract-params";
 
 export const EMAIL_THREAD_QUERY_KEY = "emailThread";

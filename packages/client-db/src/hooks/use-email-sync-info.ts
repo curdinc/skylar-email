@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import type { EmailSyncInfoType } from "../../schema/sync";
-import { getEmailSyncInfo } from "../emails/get-email-sync-info";
+import { getEmailSyncInfo } from "../email/get-email-sync-info";
 
 export const EMAIL_SYNC_INFO_QUERY_KEY = "emailSyncInfo";
 
