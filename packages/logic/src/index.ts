@@ -144,7 +144,7 @@ export const useGlobalStore = create(
       compose: "c",
       forward: "f",
       replyAll: "r",
-      replySender: "Shift+r",
+      replySender: "Shift+R",
       openSpotlightSearch: "$mod+p",
       goNextThread: "ArrowRight",
       goPreviousThread: "ArrowLeft",
@@ -263,7 +263,7 @@ export const setReplyMessage: Actions["setReplyMessage"] = (
   });
 };
 
-export const resetReplyMessage: Actions["resetReplyMessage"] = () => {
+export const resetComposeMessage: Actions["resetReplyMessage"] = () => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.respondingThread = undefined;
     state.EMAIL_CLIENT.COMPOSING.messageType = "none";

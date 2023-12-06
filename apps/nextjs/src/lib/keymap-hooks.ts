@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import {
   resetActiveThread,
-  resetReplyMessage,
+  resetComposeMessage,
   setComposeMessage,
   setReplyMessage,
   useGlobalStore,
@@ -32,10 +32,10 @@ export function useInboxKeymaps() {
         console.log("launch spotlight search", e.key, e.code);
       },
       [shortcut.close]: () => {
-        const replyThread =
-          useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.respondingThread;
-        if (replyThread) {
-          resetReplyMessage();
+        const currentMessageType =
+          useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.messageType;
+        if (currentMessageType !== "none") {
+          resetComposeMessage();
         } else {
           const activeThread =
             useGlobalStore.getState().EMAIL_CLIENT.activeThread;
