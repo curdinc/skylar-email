@@ -7,8 +7,10 @@ import { useShallow } from "zustand/react/shallow";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 import type { schema } from "@skylar/db";
 import type {
-  COMPOSE_EMAIL_OPTIONS,
+  AllComposeMessageOptionsType,
   SupportedAuthProvidersType,
+  ValidComposeMessageOptionsType,
+  ValidReplyMessageOptionsType,
 } from "@skylar/parsers-and-types";
 
 export type EmailListData =
@@ -50,16 +52,19 @@ export type State = {
     };
     activeThread: ThreadType | undefined;
     COMPOSING: {
-      emailType?: (typeof COMPOSE_EMAIL_OPTIONS)[number];
+      messageType: AllComposeMessageOptionsType;
       codeMirrorInstance?: Editor;
       respondingThread: ThreadType | undefined;
-      composedEmail: string;
+      composedMessage: string;
       attachments: { file: File; data: string; preview?: string }[];
     };
   };
   SHORTCUT: {
     close: string;
-    reply: string;
+    compose: string;
+    replyAll: string;
+    replySender: string;
+    forward: string;
     openSpotlightSearch: string;
     goNextThread: string;
     goPreviousThread: string;
@@ -82,11 +87,14 @@ type Actions = {
   ) => void;
   setEmailListData: (treeViewData: State["EMAIL_CLIENT"]["emailList"]) => void;
   setActiveThread: (thread: State["EMAIL_CLIENT"]["activeThread"]) => void;
-  setThreadToReplyTo: (
+  resetActiveThread: () => void;
+  setReplyMessage: (
     thread: State["EMAIL_CLIENT"]["COMPOSING"]["respondingThread"],
+    replyType: ValidReplyMessageOptionsType,
   ) => void;
+  resetReplyMessage: () => void;
   setComposedEmail: (
-    composeString: State["EMAIL_CLIENT"]["COMPOSING"]["composedEmail"],
+    composeString: State["EMAIL_CLIENT"]["COMPOSING"]["composedMessage"],
   ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
   setMostRecentlyAffectedThreads: (affectedThreads: ThreadType[]) => void;
@@ -98,9 +106,7 @@ type Actions = {
   setCodeMirrorInstance: (
     codeMirrorInstance: State["EMAIL_CLIENT"]["COMPOSING"]["codeMirrorInstance"],
   ) => void;
-  setComposingEmailType: (
-    emailType: State["EMAIL_CLIENT"]["COMPOSING"]["emailType"],
-  ) => void;
+  setComposeMessage: (emailType: ValidComposeMessageOptionsType) => void;
 };
 
 // Core states
@@ -115,8 +121,8 @@ export const useGlobalStore = create(
       },
       activeThread: undefined,
       COMPOSING: {
-        emailType: undefined,
-        composedEmail: "",
+        messageType: "none",
+        composedMessage: "",
         respondingThread: undefined,
         attachments: [],
         codeMirrorInstance: undefined,
@@ -135,7 +141,10 @@ export const useGlobalStore = create(
     },
     SHORTCUT: {
       close: "Escape",
-      reply: "r",
+      compose: "c",
+      forward: "f",
+      replyAll: "r",
+      replySender: "Shift+r",
       openSpotlightSearch: "$mod+p",
       goNextThread: "ArrowRight",
       goPreviousThread: "ArrowLeft",
@@ -229,6 +238,11 @@ export const setActiveThread: Actions["setActiveThread"] = (thread) => {
     state.EMAIL_CLIENT.activeThread = thread;
   });
 };
+export const resetActiveThread: Actions["resetActiveThread"] = () => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.activeThread = undefined;
+  });
+};
 
 export const setMostRecentlyAffectedThreads: Actions["setMostRecentlyAffectedThreads"] =
   (affectedThreads) => {
@@ -238,9 +252,30 @@ export const setMostRecentlyAffectedThreads: Actions["setMostRecentlyAffectedThr
       ) as ThreadType[];
     });
   };
-export const setThreadToReplyTo: Actions["setThreadToReplyTo"] = (thread) => {
+
+export const setReplyMessage: Actions["setReplyMessage"] = (
+  thread,
+  replyType,
+) => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.respondingThread = thread;
+    state.EMAIL_CLIENT.COMPOSING.messageType = replyType;
+  });
+};
+
+export const resetReplyMessage: Actions["resetReplyMessage"] = () => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.COMPOSING.respondingThread = undefined;
+    state.EMAIL_CLIENT.COMPOSING.messageType = "none";
+    state.EMAIL_CLIENT.COMPOSING.composedMessage = "";
+    state.EMAIL_CLIENT.COMPOSING.attachments.forEach((attachment) => {
+      if (attachment.preview) {
+        URL.revokeObjectURL(attachment.preview);
+      }
+    });
+    state.EMAIL_CLIENT.COMPOSING.attachments = [];
+    state.EMAIL_CLIENT.COMPOSING.codeMirrorInstance?.setValue("");
+    state.EMAIL_CLIENT.COMPOSING.codeMirrorInstance = undefined;
   });
 };
 
@@ -248,7 +283,7 @@ export const setComposedEmail: Actions["setComposedEmail"] = (
   composeString,
 ) => {
   useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.COMPOSING.composedEmail = composeString;
+    state.EMAIL_CLIENT.COMPOSING.composedMessage = composeString;
   });
 };
 
@@ -267,10 +302,10 @@ export const setCodeMirrorInstance: Actions["setCodeMirrorInstance"] = (
   });
 };
 
-export const setComposingEmailType: Actions["setComposingEmailType"] = (
-  emailType,
+export const setComposeMessage: Actions["setComposeMessage"] = (
+  messageType,
 ) => {
   useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.COMPOSING.emailType = emailType;
+    state.EMAIL_CLIENT.COMPOSING.messageType = messageType;
   });
 };

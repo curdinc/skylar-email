@@ -4,15 +4,15 @@ import { Allotment } from "allotment";
 
 import { useGlobalStore } from "@skylar/logic";
 
-import { ReplyEmail } from "~/components/compose-email/reply-email";
+import { MessageComposer } from "~/components/compose-message/message-composer";
 import { EmailThreadPage } from "./[threadId]/page";
 import { EmailListViewer } from "./email-list-viewer";
 
 const MIN_PANE_SIZE = 250;
 
 export default function Inbox() {
-  const respondingThread = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
+  const messageType = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
   );
 
   return (
@@ -25,9 +25,9 @@ export default function Inbox() {
           <div className="h-full overflow-auto">
             <EmailThreadPage />
           </div>
-          {respondingThread && (
+          {messageType !== "none" && (
             <div className="h-full overflow-auto">
-              <ReplyEmail />
+              <MessageComposer />
             </div>
           )}
         </Allotment>

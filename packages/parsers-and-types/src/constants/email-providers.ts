@@ -18,9 +18,18 @@ export const EMAIL_PROVIDER_LABELS_ARRAY = Object.values(
   EMAIL_PROVIDER_LABELS,
 ).flatMap((labels) => Object.values(labels));
 
-export const COMPOSE_EMAIL_OPTIONS = [
+// ! The following few variables and types regarding composing and replying should be kept in sync
+export const COMPOSE_MESSAGE_OPTIONS = [
   "reply-sender",
   "reply-all",
   "forward",
   "new-email",
+  "none",
 ] as const;
+export type AllComposeMessageOptionsType =
+  (typeof COMPOSE_MESSAGE_OPTIONS)[number];
+export type ValidReplyMessageOptionsType =
+  | "reply-sender"
+  | "reply-all"
+  | "forward";
+export type ValidComposeMessageOptionsType = "new-email";

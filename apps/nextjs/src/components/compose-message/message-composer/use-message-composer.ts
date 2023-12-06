@@ -4,28 +4,23 @@ import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
 import {
-  setAttachments,
-  setComposedEmail,
-  setThreadToReplyTo,
+  resetReplyMessage,
   useActiveEmails,
   useGlobalStore,
 } from "@skylar/logic";
 import type { EmailComposeType } from "@skylar/parsers-and-types";
 import { EmailComposeSchema } from "@skylar/parsers-and-types";
 
-import { useSendEmail } from "~/app/(emailClient)/(workspace)/[emailIndex]/use-send-mail";
 import { useToast } from "~/components/ui/use-toast";
 import { isAttachmentSizeValid } from "~/lib/email";
+import { useSendEmail } from "./use-send-mail";
 
-export const useReplyEmail = () => {
+export const useMessageComposer = () => {
   const replyThread = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
   const composeEmailType = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.COMPOSING.emailType,
-  );
-  const codeMirrorInstance = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.COMPOSING.codeMirrorInstance,
+    (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
   );
   const activeEmails = useActiveEmails();
   const currentEmail = activeEmails[0];
@@ -143,15 +138,7 @@ export const useReplyEmail = () => {
       toast({
         title: "Email sent!",
       });
-      setThreadToReplyTo(undefined);
-      setComposedEmail("");
-      setAttachments(() => []);
-      attachments.forEach((attachment) => {
-        if (attachment.preview) {
-          URL.revokeObjectURL(attachment.preview);
-        }
-      });
-      codeMirrorInstance?.setValue("");
+      resetReplyMessage();
     },
   });
 

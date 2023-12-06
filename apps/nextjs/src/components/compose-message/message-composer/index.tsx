@@ -18,10 +18,10 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { AttachmentButton, AttachmentList } from "../attachment";
-import { EmailRecipientsField } from "./email-recipients-field";
-import { useReplyEmail } from "./use-reply-email";
+import { EmailAddressRecipientsField } from "./email-address-recipients-field";
+import { useMessageComposer } from "./use-message-composer";
 
-export const ReplyEmail = () => {
+export const MessageComposer = () => {
   const codeMirrorInstance = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.codeMirrorInstance,
   );
@@ -34,7 +34,7 @@ export const ReplyEmail = () => {
     form,
     onSubmit,
     submitMutation: { isPending: isSendingEmail },
-  } = useReplyEmail();
+  } = useMessageComposer();
 
   return (
     // TODO: make inline image better + make attachment image preview show in gmail
@@ -63,7 +63,10 @@ export const ReplyEmail = () => {
               <FormItem className="flex items-center gap-2">
                 <FormLabel className="w-14">To</FormLabel>
                 <FormControl>
-                  <EmailRecipientsField {...field} emails={field.value} />
+                  <EmailAddressRecipientsField
+                    {...field}
+                    emails={field.value}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -80,7 +83,10 @@ export const ReplyEmail = () => {
               <FormItem className="flex items-center gap-2">
                 <FormLabel className="w-14">CC</FormLabel>
                 <FormControl>
-                  <EmailRecipientsField {...field} emails={field.value} />
+                  <EmailAddressRecipientsField
+                    {...field}
+                    emails={field.value}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,7 +103,10 @@ export const ReplyEmail = () => {
               <FormItem className="flex items-center gap-2">
                 <FormLabel className="w-14">BCC</FormLabel>
                 <FormControl>
-                  <EmailRecipientsField {...field} emails={field.value} />
+                  <EmailAddressRecipientsField
+                    {...field}
+                    emails={field.value}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
