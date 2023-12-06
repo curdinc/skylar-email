@@ -11,6 +11,7 @@ export * from "./src/api/email";
 export * from "./src/api/invite-code";
 export * from "./src/api/mailing-list";
 export * from "./src/api/onboarding";
+export * from "./src/api/provider";
 export * from "./src/auth";
 
 export * from "./src/api/email-provider/gmail-provider";
@@ -48,7 +49,6 @@ export {
 } from "./src/api/email-provider/oauth";
 
 // ENV ITEMS
-export type { EmailProviderDetailType } from "./src/api/provider";
 export { BackendEnvSchema } from "./src/backend/env";
 export type { BackendEnvType } from "./src/backend/env";
 export { createEnv } from "./src/create-env";

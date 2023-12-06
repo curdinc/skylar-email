@@ -1,4 +1,3 @@
-import { getGmailRefreshToken } from "@skylar/db";
 import { getAccessToken } from "@skylar/gmail-api";
 import {
   getGmailAccessTokenSchema,
@@ -12,17 +11,12 @@ export const gmailRouter = createTRPCRouter({
   getAccessToken: protectedProcedure
     .input(validatorTrpcWrapper(getGmailAccessTokenSchema))
     .mutation(async ({ ctx, input }) => {
-      const refreshToken = await getGmailRefreshToken({
-        db: ctx.db,
-        userId: ctx.session.user.userId,
-        email: input.email,
-      });
-
+      console.log("Fetching access token for: ", input.email);
       const accessTokenResponse = await getAccessToken({
         clientId: ctx.env.GOOGLE_PROVIDER_CLIENT_ID,
         clientSecret: ctx.env.GOOGLE_PROVIDER_CLIENT_SECRET,
         grantType: "refresh_token",
-        refreshToken: refreshToken,
+        refreshToken: input.refreshToken,
       });
 
       return accessTokenResponse.access_token;

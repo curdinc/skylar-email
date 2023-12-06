@@ -3,13 +3,12 @@ import { useCallback } from "react";
 import { partialSync } from "@skylar/gmail-api";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
-import { api } from "~/lib/api";
 import { useLogger } from "~/lib/logger";
+import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export const useEmailPartialSync = () => {
   const logger = useLogger();
-  const { mutateAsync: fetchAccessToken, isPending } =
-    api.gmail.getAccessToken.useMutation();
+  const { mutateAsync: fetchAccessToken, isPending } = useAccessToken();
 
   const fetchData = useCallback(
     async (emailToSync: string, startHistoryId: string) => {

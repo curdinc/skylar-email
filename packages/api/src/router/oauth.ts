@@ -78,12 +78,26 @@ export const oauthRouter = createTRPCRouter({
           });
         }
 
+        if (!email) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to get email from id token.",
+          });
+        }
+
         return {
           emailProviderDetail,
           idToken: parsedResponse.id_token,
           accessToken: parsedResponse.access_token,
           tokenType: parsedResponse.token_type,
           scope: parsedResponse.scope,
+          providerType: input.provider,
+          providerInfo: {
+            email,
+            name,
+            imageUri: user.imageUri ?? "",
+            refreshToken: parsedResponse.refresh_token,
+          },
         };
       },
     ),

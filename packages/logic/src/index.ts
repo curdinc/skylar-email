@@ -5,9 +5,9 @@ import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
 
 import type { ThreadType } from "@skylar/client-db/schema/thread";
-import type { schema } from "@skylar/db";
 import type {
   COMPOSE_EMAIL_OPTIONS,
+  ProviderInfoType,
   SupportedAuthProvidersType,
 } from "@skylar/parsers-and-types";
 
@@ -42,8 +42,9 @@ export type State = {
     };
   };
   EMAIL_CLIENT: {
+    activeEmailAddress: string | undefined;
     activeEmailProviderIndexes: number[];
-    emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
+    emailProviders: ProviderInfoType[];
     emailList: EmailListData[];
     CONTEXT_MENU: {
       mostRecentlyAffectedThreads: ThreadType[];
@@ -101,12 +102,16 @@ type Actions = {
   setComposingEmailType: (
     emailType: State["EMAIL_CLIENT"]["COMPOSING"]["emailType"],
   ) => void;
+  setActiveEmailAddress: (
+    emailAddress: State["EMAIL_CLIENT"]["activeEmailAddress"],
+  ) => void;
 };
 
 // Core states
 export const useGlobalStore = create(
   immer<State>(() => ({
     EMAIL_CLIENT: {
+      activeEmailAddress: undefined,
       activeEmailProviderIndexes: [],
       emailProviders: [],
       emailList: [],
@@ -154,10 +159,9 @@ export const COMPUTED_STATE_SELECTOR = {
       .map((index) => {
         return state.EMAIL_CLIENT.emailProviders[index];
       })
-      .filter(
-        (provider) => !!provider,
-      ) as (typeof schema.emailProviderDetail.$inferSelect)[],
+      .filter((provider) => !!provider) as ProviderInfoType[],
 };
+
 export const useActiveEmailProviders = () =>
   useOptimizedGlobalStore(COMPUTED_STATE_SELECTOR.activeEmailProviders);
 
@@ -206,6 +210,13 @@ export const setActiveEmailProviderIndexes: Actions["setActiveEmailProviderIndex
         state.EMAIL_CLIENT.activeEmailProviderIndexes,
       );
     });
+
+export const setActiveEmailAddress: Actions["setActiveEmailAddress"] = (
+  emailAddress?: string,
+) =>
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.activeEmailAddress = emailAddress;
+  });
 
 export const setEmailProviders: Actions["setEmailProviders"] = (
   emailProviders,

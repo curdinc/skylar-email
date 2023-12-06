@@ -212,7 +212,8 @@ export type ModifiedLabelType = Output<typeof modifiedLabelSchema>;
 export type SyncResponseType = Output<typeof syncResponseSchema>;
 
 export const getGmailAccessTokenSchema = object({
-  email: emailSchema,
+  email: emailSchema, // not needed but here for logging
+  refreshToken: string(),
 });
 
 export const modifyMessageResponseSchema = object({

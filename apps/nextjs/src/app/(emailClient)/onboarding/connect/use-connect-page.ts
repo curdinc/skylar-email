@@ -1,8 +1,13 @@
 import { useCallback, useState } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useMutation } from "@tanstack/react-query";
 
+import { putProvider } from "@skylar/client-db";
 import { setEmailProviders } from "@skylar/logic";
-import type { SupportedEmailProviderType } from "@skylar/parsers-and-types";
+import type {
+  ProviderInsertType,
+  SupportedEmailProviderType,
+} from "@skylar/parsers-and-types";
 
 import { api } from "~/lib/api";
 import { GMAIL_SCOPES } from "~/lib/config";
@@ -21,6 +26,12 @@ export function useConnectEmailProviderPage() {
       setEmailProvider(provider);
     }
   };
+
+  const { mutate: addProvider } = useMutation({
+    onMutate: async (provider: ProviderInsertType) => {
+      await putProvider({ provider });
+    },
+  });
   const utils = api.useUtils();
 
   const [isConnectingToEmailProvider, setIsConnectingToEmailProvider] =
@@ -30,7 +41,21 @@ export function useConnectEmailProviderPage() {
       utils.onboarding.getUserOnboardStep.invalidate().catch((e) => {
         logger.error("Error invalidating user onboarding step", { error: e });
       });
-      setEmailProviders([emailProviderInfo.emailProviderDetail]);
+      addProvider({
+        email_provider: emailProviderInfo.providerType,
+        email: emailProviderInfo.providerInfo.email,
+        image_uri: emailProviderInfo.providerInfo.imageUri,
+        inbox_name: emailProviderInfo.providerInfo.name,
+        refresh_token: emailProviderInfo.providerInfo.refreshToken,
+      });
+      setEmailProviders([
+        {
+          email_provider: emailProviderInfo.providerType,
+          email: emailProviderInfo.providerInfo.email,
+          image_uri: emailProviderInfo.providerInfo.imageUri,
+          inbox_name: emailProviderInfo.providerInfo.name,
+        },
+      ]);
       setIsConnectingToEmailProvider(false);
     },
   });

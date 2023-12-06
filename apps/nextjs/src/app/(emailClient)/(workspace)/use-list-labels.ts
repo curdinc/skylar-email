@@ -3,13 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { listLabels } from "@skylar/gmail-api";
 import { useActiveEmails } from "@skylar/logic";
 
-import { api } from "~/lib/api";
+import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export const LIST_LABEL_QUERY_KEY = "listLabels";
 export function useListLabels() {
   const activeEmails = useActiveEmails();
-  const { mutateAsync: fetchAccessToken } =
-    api.gmail.getAccessToken.useMutation();
+  const { mutateAsync: fetchAccessToken } = useAccessToken();
 
   return useQuery({
     queryKey: [LIST_LABEL_QUERY_KEY, activeEmails],

@@ -14,7 +14,7 @@ import {
   ContextMenuTrigger,
 } from "~/components/ui/context-menu";
 import { useToast } from "~/components/ui/use-toast";
-import { api } from "~/lib/api";
+import { useAccessToken } from "~/lib/provider/use-access-token";
 import type { ConfigOption } from "../config-option-type";
 import { getSenderActions } from "../sender/sender-option-config";
 import { getThreadActions } from "../thread/thread-option-config";
@@ -52,8 +52,7 @@ export function ThreadContextMenu({
 
   const { toast, dismiss } = useToast();
 
-  const { mutateAsync: fetchGmailAccessTokenMutation } =
-    api.gmail.getAccessToken.useMutation();
+  const { mutateAsync: fetchGmailAccessTokenMutation } = useAccessToken();
 
   const fetchGmailAccessToken = async () => {
     const token = await fetchGmailAccessTokenMutation({

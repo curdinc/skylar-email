@@ -6,8 +6,8 @@ import type { EmailType } from "@skylar/client-db/schema/email";
 import { modifyLabels } from "@skylar/gmail-api";
 import { useActiveEmailProviders, useGlobalStore } from "@skylar/logic";
 
-import { api } from "~/lib/api";
 import { useEmailThreadPageKeymaps } from "~/lib/keymap-hooks";
+import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export function useThreadPage() {
   useEmailThreadPageKeymaps();
@@ -23,8 +23,7 @@ export function useThreadPage() {
 
   console.log("emailThread", emailThread);
 
-  const { mutateAsync: fetchGmailAccessToken } =
-    api.gmail.getAccessToken.useMutation();
+  const { mutateAsync: fetchGmailAccessToken } = useAccessToken();
 
   const { mutate: markAsRead } = useMutation({
     mutationFn: async ({

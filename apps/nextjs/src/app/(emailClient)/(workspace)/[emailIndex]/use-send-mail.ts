@@ -4,12 +4,12 @@ import { sendMail } from "@skylar/gmail-api";
 import type { EmailConfigType } from "@skylar/parsers-and-types";
 
 import { api } from "~/lib/api";
+import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export function useSendEmail() {
   const { mutateAsync: composeEmail } =
     api.emailCompose.composeRfc822Email.useMutation();
-  const { mutateAsync: fetchGmailAccessToken } =
-    api.gmail.getAccessToken.useMutation();
+  const { mutateAsync: fetchGmailAccessToken } = useAccessToken();
 
   const { mutateAsync: sendEmail, isPending: isSendingEmail } = useMutation({
     mutationFn: async ({

@@ -1,13 +1,20 @@
-import type { Output } from "valibot";
-import { enumType, integer, number, object } from "valibot";
+import type { SupportedEmailProviderType } from "../..";
 
-import { SUPPORTED_EMAIL_PROVIDER_LIST } from "../..";
-import { emailSchema } from "../core-parsers";
+type ProviderIndexType = {
+  email: string;
+  created_at?: number;
+  updated_at?: number;
+};
 
-const EmailProviderDetailSchema = object({
-  emailProvider: enumType(SUPPORTED_EMAIL_PROVIDER_LIST),
-  user_id: number([integer()]),
-  email: emailSchema,
-});
+export type ProviderType = ProviderIndexType & {
+  email_provider: SupportedEmailProviderType;
+  inbox_name: string;
+  image_uri: string;
+  refresh_token: string;
+};
 
-export type EmailProviderDetailType = Output<typeof EmailProviderDetailSchema>;
+export type ProviderInfoType = Omit<ProviderType, "refresh_token">;
+export type ProviderInsertType = Omit<
+  ProviderType,
+  "created_at" | "updated_at"
+>;

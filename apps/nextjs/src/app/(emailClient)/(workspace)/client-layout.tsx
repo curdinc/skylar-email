@@ -8,6 +8,7 @@ import {
   bulkDeleteEmails,
   bulkPutEmails,
   bulkUpdateEmails,
+  getAllProviders,
   updateEmailSyncInfo,
   useEmailSyncInfo,
 } from "@skylar/client-db";
@@ -17,7 +18,6 @@ import {
   useActiveEmails,
 } from "@skylar/logic";
 
-import { api } from "~/lib/api";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
 import { useEmailPartialSync } from "./use-email-partial-sync";
@@ -28,8 +28,16 @@ export const ClientLayout = () => {
   const activeEmailProviders = useActiveEmailProviders();
 
   const router = useRouter();
-  const { data: emailProviders, isLoading: isLoadingEmailProviders } =
-    api.emailProvider.getAll.useQuery();
+  const { data: emailProviders, isLoading: isLoadingEmailProviders } = useQuery(
+    {
+      queryKey: ["GET_EMAIL_PROVIDERS"], // FIXME: use a constant
+      queryFn: async () => {
+        const emailProviders = await getAllProviders();
+        console.log("emailProviders", emailProviders);
+        return emailProviders;
+      },
+    },
+  );
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
     {

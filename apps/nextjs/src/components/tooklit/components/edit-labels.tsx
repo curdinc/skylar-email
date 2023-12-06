@@ -16,8 +16,8 @@ import {
   CommandItem,
 } from "~/components/ui/command";
 import { useToast } from "~/components/ui/use-toast";
-import { api } from "~/lib/api";
 import { GMAIL_IMMUTABLE_LABELS } from "~/lib/inbox-toolkit/constants";
+import { useAccessToken } from "~/lib/provider/use-access-token";
 import { cn } from "~/lib/ui";
 import type { ConfigOption, MoveThreadArgs } from "../config-option-type";
 
@@ -86,8 +86,7 @@ export function EditLabels({
     };
   };
 
-  const { mutateAsync: fetchGmailAccessTokenMutation } =
-    api.gmail.getAccessToken.useMutation();
+  const { mutateAsync: fetchGmailAccessTokenMutation } = useAccessToken();
 
   const fetchGmailAccessToken = async () => {
     const token = await fetchGmailAccessTokenMutation({

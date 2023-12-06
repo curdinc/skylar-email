@@ -1,9 +1,10 @@
 import type { Table } from "dexie";
 import Dexie from "dexie";
 
+import type { ProviderType } from "@skylar/parsers-and-types";
+
 import type { EmailType } from "../schema/email";
 import { EMAIL_INDEX } from "../schema/email";
-import type { ProviderType } from "../schema/provider";
 import { PROVIDER_INDEX } from "../schema/provider";
 import type { EmailSyncInfoType } from "../schema/sync";
 import { EMAIL_SYNC_INFO_INDEX } from "../schema/sync";

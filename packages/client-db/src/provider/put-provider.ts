@@ -1,11 +1,16 @@
-import type { ProviderType } from "../../schema/provider";
+import type {
+  ProviderInsertType,
+  ProviderType,
+} from "@skylar/parsers-and-types";
+
 import { clientDb } from "../db";
 
 export async function putProvider({
   provider,
 }: {
-  provider: Omit<ProviderType, "created_at" | "updated_at">;
+  provider: ProviderInsertType;
 }) {
+  console.log("put provider", provider);
   const updatedProvider: ProviderType = {
     ...provider,
     updated_at: Date.now(),
