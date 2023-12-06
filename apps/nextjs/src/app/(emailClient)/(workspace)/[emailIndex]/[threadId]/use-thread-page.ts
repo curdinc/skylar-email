@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 import { bulkUpdateEmails, useEmailThread } from "@skylar/client-db";
 import type { EmailType } from "@skylar/client-db/schema/email";

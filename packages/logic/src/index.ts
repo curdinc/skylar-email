@@ -53,6 +53,7 @@ export type State = {
     activeThread: ThreadType | undefined;
     COMPOSING: {
       messageType: AllComposeMessageOptionsType;
+      isSelecting: boolean;
       codeMirrorInstance?: Editor;
       respondingThread: ThreadType | undefined;
       composedMessage: string;
@@ -106,6 +107,9 @@ type Actions = {
   setCodeMirrorInstance: (
     codeMirrorInstance: State["EMAIL_CLIENT"]["COMPOSING"]["codeMirrorInstance"],
   ) => void;
+  setIsSelecting: (
+    isSelecting: State["EMAIL_CLIENT"]["COMPOSING"]["isSelecting"],
+  ) => void;
   setComposeMessage: (emailType: ValidComposeMessageOptionsType) => void;
 };
 
@@ -126,6 +130,7 @@ export const useGlobalStore = create(
         respondingThread: undefined,
         attachments: [],
         codeMirrorInstance: undefined,
+        isSelecting: false,
       },
     },
     SETTINGS: {
@@ -299,6 +304,11 @@ export const setCodeMirrorInstance: Actions["setCodeMirrorInstance"] = (
 ) => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.codeMirrorInstance = codeMirrorInstance;
+  });
+};
+export const setIsSelecting: Actions["setIsSelecting"] = (isSelecting) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.COMPOSING.isSelecting = isSelecting;
   });
 };
 

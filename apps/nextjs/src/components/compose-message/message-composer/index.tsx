@@ -1,11 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
-import SimpleMdeReact from "react-simplemde-editor";
-
+import "codemirror/keymap/sublime";
 import "easymde/dist/easymde.min.css";
 
-import { setCodeMirrorInstance, useGlobalStore } from "@skylar/logic";
+import { useCallback, useEffect, useRef } from "react";
+import SimpleMdeReact from "react-simplemde-editor";
+
+import {
+  setCodeMirrorInstance,
+  setIsSelecting,
+  useGlobalStore,
+} from "@skylar/logic";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -25,10 +30,45 @@ export const MessageComposer = () => {
   const codeMirrorInstance = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.codeMirrorInstance,
   );
+  const beforeMessageComposeTextAreaRef = useRef<HTMLInputElement>(null);
+  const afterMessageComposeTextAreaRef = useRef<HTMLButtonElement>(null);
 
+  const handleKeyDown = useCallback(
+    (_: CodeMirror.Editor, event: KeyboardEvent) => {
+      if (event.key === "Tab") {
+        event.preventDefault();
+        if (event.getModifierState("Shift")) {
+          beforeMessageComposeTextAreaRef.current?.focus();
+        } else {
+          afterMessageComposeTextAreaRef.current?.focus();
+        }
+      }
+      if (event.key === "Escape") {
+        const selections = codeMirrorInstance?.getSelections();
+        const selectionLength = selections?.length ?? 0;
+        if (selectionLength === 1 && (selections?.[0]?.length ?? 0) > 0) {
+          setIsSelecting(true);
+          const cursor = codeMirrorInstance?.getCursor();
+          if (cursor) {
+            codeMirrorInstance?.setSelections([
+              {
+                anchor: cursor,
+                head: cursor,
+              },
+            ]);
+          }
+        } else if (selectionLength > 1) {
+          setIsSelecting(true);
+        }
+      }
+    },
+    [codeMirrorInstance],
+  );
   useEffect(() => {
     codeMirrorInstance?.focus();
-  }, [codeMirrorInstance]);
+    codeMirrorInstance?.addKeyMap("sublime", true);
+    codeMirrorInstance?.on("keydown", handleKeyDown);
+  }, [codeMirrorInstance, handleKeyDown]);
 
   const {
     form,
@@ -39,7 +79,7 @@ export const MessageComposer = () => {
   return (
     // TODO: make inline image better + make attachment image preview show in gmail
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-8 p-5">
+      <form onSubmit={onSubmit} className="space-y-4 p-5">
         <FormField
           control={form.control}
           name="from"
@@ -121,7 +161,11 @@ export const MessageComposer = () => {
               <FormItem className="flex items-center gap-2">
                 <FormLabel className="w-14">Subject</FormLabel>
                 <FormControl>
-                  <Input placeholder="Hello World" {...field} />
+                  <Input
+                    placeholder="Hello World"
+                    {...field}
+                    ref={beforeMessageComposeTextAreaRef}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -150,6 +194,7 @@ export const MessageComposer = () => {
 
         <div className="flex items-center justify-between py-1">
           <AttachmentButton
+            ref={afterMessageComposeTextAreaRef}
             variant={"ghost"}
             size={"icon-lg"}
             className="p-2"

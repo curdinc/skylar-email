@@ -4,6 +4,7 @@ import {
   resetActiveThread,
   resetComposeMessage,
   setComposeMessage,
+  setIsSelecting,
   setReplyMessage,
   useGlobalStore,
   useOptimizedGlobalStore,
@@ -35,7 +36,13 @@ export function useInboxKeymaps() {
         const currentMessageType =
           useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.messageType;
         if (currentMessageType !== "none") {
-          resetComposeMessage();
+          const isMultiSelecting =
+            useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.isSelecting;
+          if (isMultiSelecting) {
+            setIsSelecting(false);
+          } else {
+            resetComposeMessage();
+          }
         } else {
           const activeThread =
             useGlobalStore.getState().EMAIL_CLIENT.activeThread;
