@@ -7,11 +7,8 @@ import { modifyLabels } from "@skylar/gmail-api";
 import { useActiveEmailProviders, useGlobalStore } from "@skylar/logic";
 
 import { api } from "~/lib/api";
-import { useEmailThreadPageKeymaps } from "~/lib/keymap-hooks";
 
 export function useThreadPage() {
-  useEmailThreadPageKeymaps();
-
   const threadId = useGlobalStore(
     (state) => state.EMAIL_CLIENT.activeThread?.email_provider_thread_id,
   );
@@ -20,8 +17,6 @@ export function useThreadPage() {
   const { emailThread, isLoading: isLoadingThread } = useEmailThread({
     emailProviderThreadId: threadId ?? "",
   });
-
-  console.log("emailThread", emailThread);
 
   const { mutateAsync: fetchGmailAccessToken } =
     api.gmail.getAccessToken.useMutation();

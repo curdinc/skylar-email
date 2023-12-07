@@ -1,6 +1,9 @@
 import type { EmailType } from "@skylar/client-db/schema/email";
 import type { State } from "@skylar/logic";
-import type { SyncResponseType } from "@skylar/parsers-and-types";
+import type {
+  EmailSenderType,
+  SyncResponseType,
+} from "@skylar/parsers-and-types";
 
 import { sanitize } from "./htmlSanitizer";
 
@@ -54,13 +57,13 @@ export function convertGmailEmailToClientDbEmail(
   });
 }
 
-export function formatTimeToMMMDD(time: number) {
+export function formatTimeToMMMDD(time: number): string {
   return new Date(time).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
   });
 }
-export function formatTimeToMMMDDYYYYHHmm(time: number) {
+export function formatTimeToMMMDDYYYYHHmm(time: number): string {
   return new Date(time).toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
@@ -70,10 +73,38 @@ export function formatTimeToMMMDDYYYYHHmm(time: number) {
   });
 }
 
+export const getSenderReplyToEmailAddresses = (
+  fromAddresses?: EmailSenderType[],
+  replyToAddresses?: EmailSenderType[],
+): string[] => {
+  if (replyToAddresses?.length) {
+    return replyToAddresses.map((replyToAddress) => replyToAddress.email);
+  }
+  if (fromAddresses?.length) {
+    return fromAddresses.map((fromAddress) => {
+      return fromAddress.email;
+    });
+  }
+  return [];
+};
+
+export const formatEmailAddresses = (
+  userEmailAddress?: string,
+  emailAddresses?: EmailSenderType[],
+): string[] => {
+  return (
+    emailAddresses
+      ?.map((emailAddress) => emailAddress.email)
+      ?.filter((emailAddress) => {
+        return emailAddress !== userEmailAddress;
+      }) ?? []
+  );
+};
+
 export const ATTACHMENT_SIZE_LIMIT_IN_BYTES = 25_000_000;
 export const isAttachmentSizeValid = (
   attachments: State["EMAIL_CLIENT"]["COMPOSING"]["attachments"],
-) => {
+): boolean => {
   const totalSize = attachments.reduce((prev, current) => {
     return prev + current.file.size;
   }, 0);

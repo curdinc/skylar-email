@@ -1,10 +1,5 @@
 // GENERAL
-export {
-  formatValidatorError,
-  parse,
-  testSchema,
-  validatorTrpcWrapper,
-} from "./src/helper";
+export * from "./src/helper";
 
 // FEATURE SPECIFIC
 export * from "./src/api/email";
