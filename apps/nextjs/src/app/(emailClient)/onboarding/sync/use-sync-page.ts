@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -6,24 +6,23 @@ import {
   upsertEmailSyncInfo,
   useEmailSyncInfo,
 } from "@skylar/client-db";
-import {
-  setEmailProviders,
-  useActiveEmailProviders,
-  useActiveEmails,
-} from "@skylar/logic";
+import { setEmailProviders, useActiveEmailProviders } from "@skylar/logic";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
-import { api } from "~/lib/api";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useLogger } from "~/lib/logger";
+import { useGetProviders } from "~/lib/provider/use-get-providers";
 import { useEmailFullSync } from "./use-email-full-sync";
 
 export function useSyncPage() {
-  const activeEmails = useActiveEmails();
   const activeEmailProviders = useActiveEmailProviders();
+  const activeEmails = useMemo(
+    () => activeEmailProviders.map((provider) => provider.email),
+    [activeEmailProviders],
+  );
   const { data: emailProviders, isLoading: isLoadingAllEmailProviders } =
-    api.emailProvider.getAll.useQuery();
+    useGetProviders();
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
     { emailAddresses: activeEmails },
@@ -55,7 +54,7 @@ export function useSyncPage() {
       !isLoadingEmailSyncInfo &&
       emailSyncInfo?.length === activeEmails.length
     ) {
-      router.push("/inbox");
+      router.push("/0");
     } else {
       console.log("starting sync");
       for (const activeEmailProvider of activeEmailProviders) {
@@ -69,7 +68,7 @@ export function useSyncPage() {
         }
         startEmailFullSync(
           activeEmailProvider.email,
-          activeEmailProvider.emailProvider,
+          activeEmailProvider.email_provider,
         )
           .then(async (emailData) => {
             console.log("emailData", emailData);
@@ -103,7 +102,6 @@ export function useSyncPage() {
       }
     }
   }, [
-    activeEmails,
     activeEmailProviders,
     activeEmails.length,
     emailSyncInfo,

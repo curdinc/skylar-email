@@ -1,36 +1,19 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { api } from "~/lib/api";
+import { useActiveEmailProviders } from "@skylar/logic";
 
 export const useUserOnboardingRouteGuard = () => {
   const router = useRouter();
-
-  const { data: userOnboardStep, isLoading } =
-    api.onboarding.getUserOnboardStep.useQuery();
+  const activeEmailProviders = useActiveEmailProviders();
 
   useEffect(() => {
-    if (!isLoading) {
-      switch (userOnboardStep) {
-        case "invite-code": {
-          router.push("/onboarding/code");
-          break;
-        }
-        case "email-provider": {
-          router.push("/onboarding/connect");
-          break;
-        }
-        case "card": {
-          router.push("/onboarding/card");
-          break;
-        }
-        case "done": {
-          router.push("/onboarding/sync");
-          break;
-        }
-      }
+    if (!activeEmailProviders.length) {
+      router.push("/onboarding/connect");
+    } else {
+      router.push("/onboarding/sync");
     }
-  }, [isLoading, router, userOnboardStep]);
+  }, [activeEmailProviders, router]);
 
-  return { isLoading };
+  return { isLoading: false };
 };

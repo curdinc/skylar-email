@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -8,36 +8,27 @@ import {
   bulkDeleteEmails,
   bulkPutEmails,
   bulkUpdateEmails,
-  getAllProviders,
   updateEmailSyncInfo,
   useEmailSyncInfo,
 } from "@skylar/client-db";
-import {
-  setEmailProviders,
-  useActiveEmailProviders,
-  useActiveEmails,
-} from "@skylar/logic";
+import { setEmailProviders, useActiveEmailProviders } from "@skylar/logic";
 
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
+import { useGetProviders } from "~/lib/provider/use-get-providers";
 import { useEmailPartialSync } from "./use-email-partial-sync";
 
 export const ClientLayout = () => {
   useInboxKeymaps();
-  const activeEmails = useActiveEmails();
   const activeEmailProviders = useActiveEmailProviders();
+  const activeEmails = useMemo(
+    () => activeEmailProviders.map((provider) => provider.email),
+    [activeEmailProviders],
+  );
 
   const router = useRouter();
-  const { data: emailProviders, isLoading: isLoadingEmailProviders } = useQuery(
-    {
-      queryKey: ["GET_EMAIL_PROVIDERS"], // FIXME: use a constant
-      queryFn: async () => {
-        const emailProviders = await getAllProviders();
-        console.log("emailProviders", emailProviders);
-        return emailProviders;
-      },
-    },
-  );
+  const { data: emailProviders, isLoading: isLoadingEmailProviders } =
+    useGetProviders();
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
     {

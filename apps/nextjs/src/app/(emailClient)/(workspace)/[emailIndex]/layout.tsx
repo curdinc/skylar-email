@@ -14,7 +14,7 @@ export default function EmailClientLayout({
         items={[
           {
             href: "/0",
-            title: "curdcord@gmail.com",
+            title: "hansbhatia0342@gmail.com",
           },
         ]}
         className="p-5"
