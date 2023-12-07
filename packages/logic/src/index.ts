@@ -154,12 +154,7 @@ export const useOptimizedGlobalStore = <T>(arg: (state: State) => T) => {
 
 // Computed states
 export const COMPUTED_STATE_SELECTOR = {
-  activeEmailProviders: (state: State) =>
-    state.EMAIL_CLIENT.activeEmailProviderIndexes
-      .map((index) => {
-        return state.EMAIL_CLIENT.emailProviders[index];
-      })
-      .filter((provider) => !!provider) as ProviderInfoType[],
+  activeEmailProviders: (state: State) => state.EMAIL_CLIENT.emailProviders,
 };
 
 export const useActiveEmailProviders = () =>
@@ -223,9 +218,6 @@ export const setEmailProviders: Actions["setEmailProviders"] = (
 ) => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.emailProviders = emailProviders;
-    if (state.EMAIL_CLIENT.activeEmailProviderIndexes.length === 0) {
-      state.EMAIL_CLIENT.activeEmailProviderIndexes = [0];
-    }
   });
 };
 

@@ -76,7 +76,7 @@ const baseMessagePartSchema = object({
   partId: string(),
   mimeType: string(),
   filename: string(),
-  headers: array(headerSchema),
+  headers: withDefault(array(headerSchema), []),
   body: messagePartBodySchema,
 });
 
@@ -121,7 +121,7 @@ export const messageResponseSchema = object({
   threadId: string(),
   snippet: string(),
   id: string(),
-  labelIds: array(string()),
+  labelIds: withDefault(array(string()), []),
 });
 
 export const messageListResponseSchema = object({
