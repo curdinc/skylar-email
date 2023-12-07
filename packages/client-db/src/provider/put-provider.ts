@@ -10,14 +10,16 @@ export async function putProvider({
 }: {
   provider: ProviderInsertType;
 }) {
-  console.log("put provider", provider);
+  const existingProvider = await clientDb.provider.get({
+    email: provider.email,
+  });
+
   const updatedProvider: ProviderType = {
     ...provider,
     updated_at: Date.now(),
     created_at: Date.now(),
+    provider_id: existingProvider?.provider_id,
   };
-
-  const existingProvider = await clientDb.provider.get(provider.email);
 
   if (existingProvider) {
     updatedProvider.created_at = existingProvider.created_at;

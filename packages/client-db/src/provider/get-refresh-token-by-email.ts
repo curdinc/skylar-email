@@ -5,5 +5,5 @@ export async function getRefreshTokenByEmail({
 }: {
   emailAddress: string;
 }) {
-  return (await clientDb.provider.get(emailAddress))?.refresh_token;
+  return (await clientDb.provider.get({ email: emailAddress }))?.refresh_token;
 }

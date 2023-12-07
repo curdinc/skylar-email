@@ -17,5 +17,6 @@ export * from "./src/hooks/use-thread-snippets";
 export * from "./src/lib/thread-filters";
 
 export * from "./src/provider/get-all-providers";
+export * from "./src/provider/get-provider-by-id";
 export * from "./src/provider/get-refresh-token-by-email";
 export * from "./src/provider/put-provider";

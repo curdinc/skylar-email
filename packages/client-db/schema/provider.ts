@@ -1,1 +1,1 @@
-export const PROVIDER_INDEX = `&email, created_at` as const;
+export const PROVIDER_INDEX = `++provider_id, &email, created_at` as const;
