@@ -4,28 +4,27 @@ import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
 import {
-  setAttachments,
-  setComposedEmail,
-  setThreadToReplyTo,
+  resetComposeMessage,
   useActiveEmails,
   useGlobalStore,
 } from "@skylar/logic";
 import type { EmailComposeType } from "@skylar/parsers-and-types";
 import { EmailComposeSchema } from "@skylar/parsers-and-types";
 
-import { useSendEmail } from "~/app/(emailClient)/(workspace)/[emailIndex]/use-send-mail";
 import { useToast } from "~/components/ui/use-toast";
-import { isAttachmentSizeValid } from "~/lib/email";
+import {
+  formatEmailAddresses,
+  getSenderReplyToEmailAddresses,
+  isAttachmentSizeValid,
+} from "~/lib/email";
+import { useSendEmail } from "./use-send-mail";
 
-export const useReplyEmail = () => {
+export const useMessageComposer = () => {
   const replyThread = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
   const composeEmailType = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.COMPOSING.emailType,
-  );
-  const codeMirrorInstance = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.COMPOSING.codeMirrorInstance,
+    (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
   );
   const activeEmails = useActiveEmails();
   const currentEmail = activeEmails[0];
@@ -37,42 +36,34 @@ export const useReplyEmail = () => {
   const { toast } = useToast();
 
   const defaultFormValues = () => {
-    let replyTo: string[] = [];
-    let cc: string[] = [];
+    const replyTo: string[] = [];
+    const cc: string[] = [];
     switch (composeEmailType) {
       case "forward": {
-        replyTo = [];
-        cc = [];
         break;
       }
       case "new-email": {
-        replyTo = [];
-        cc = [];
         break;
       }
       case "reply-sender": {
-        // TODO: check for reply to value before setting from
-        const senderEmail = replyThread?.from.at(-1)?.[0]?.email;
-        replyTo = senderEmail ? [senderEmail] : [];
-        cc = [];
+        const senderEmailAddresses = getSenderReplyToEmailAddresses(
+          replyThread?.from.at(-1),
+          replyThread?.reply_to.at(-1),
+        );
+        replyTo.push(...senderEmailAddresses);
         break;
       }
       case "reply-all": {
-        const senderEmail = replyThread?.from.at(-1)?.[0]?.email;
+        const senderEmailAddresses = getSenderReplyToEmailAddresses(
+          replyThread?.from.at(-1),
+          replyThread?.reply_to.at(-1),
+        );
+        replyTo.push(...senderEmailAddresses);
+        replyTo.push(
+          ...formatEmailAddresses(currentEmail, replyThread?.to.at(-1)),
+        );
 
-        replyTo =
-          replyThread?.to
-            .at(-1)
-            ?.map((to) => to.email)
-            .filter((email) => email !== currentEmail) ?? [];
-        if (senderEmail) {
-          replyTo.push(senderEmail);
-        }
-        cc =
-          replyThread?.cc
-            .at(-1)
-            ?.map((cc) => cc.email)
-            .filter((email) => email !== currentEmail) ?? [];
+        cc.push(...formatEmailAddresses(currentEmail, replyThread?.cc.at(-1)));
         break;
       }
       default:
@@ -143,15 +134,7 @@ export const useReplyEmail = () => {
       toast({
         title: "Email sent!",
       });
-      setThreadToReplyTo(undefined);
-      setComposedEmail("");
-      setAttachments(() => []);
-      attachments.forEach((attachment) => {
-        if (attachment.preview) {
-          URL.revokeObjectURL(attachment.preview);
-        }
-      });
-      codeMirrorInstance?.setValue("");
+      resetComposeMessage();
     },
   });
 

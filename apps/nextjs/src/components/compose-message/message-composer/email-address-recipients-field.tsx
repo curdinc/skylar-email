@@ -6,7 +6,7 @@ import { Button } from "~/components/ui/button";
 import { InputBaseStyle } from "~/components/ui/input";
 import { cn } from "~/lib/ui";
 
-export const EmailRecipientsField = (
+export const EmailAddressRecipientsField = (
   args: Partial<Parameters<typeof ReactMultiEmail>[0]>,
 ) => {
   return (

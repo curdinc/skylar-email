@@ -6,12 +6,9 @@ import type { EmailType } from "@skylar/client-db/schema/email";
 import { modifyLabels } from "@skylar/gmail-api";
 import { useActiveEmailProviders, useGlobalStore } from "@skylar/logic";
 
-import { useEmailThreadPageKeymaps } from "~/lib/keymap-hooks";
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export function useThreadPage() {
-  useEmailThreadPageKeymaps();
-
   const threadId = useGlobalStore(
     (state) => state.EMAIL_CLIENT.activeThread?.email_provider_thread_id,
   );
