@@ -1,4 +1,4 @@
-import { setMostRecentlyAffectedThreads } from "@skylar/logic";
+import { setMostRecentlyAffectedThreads, setReplyMessage } from "@skylar/logic";
 
 import { Icons } from "~/components/icons";
 import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
@@ -21,11 +21,38 @@ export const getThreadActions = (
   afterClientDbUpdate: (() => Promise<void>)[],
 ) => {
   return {
+    forward: {
+      icon: Icons.forward,
+      name: "Forward",
+      tooltipDescription: "Forward email",
+      applyFn: async () => {
+        const [thread] = await getThreads();
+        setReplyMessage(thread, "forward");
+      },
+    },
+    replySender: {
+      icon: Icons.replySender,
+      name: "Reply to Sender",
+      tooltipDescription: "Reply to sender",
+      applyFn: async () => {
+        const [thread] = await getThreads();
+        setReplyMessage(thread, "reply-sender");
+      },
+    },
+    replyAll: {
+      icon: Icons.replyAll,
+      name: "Reply All",
+      tooltipDescription: "Reply All in thread",
+      applyFn: async () => {
+        const [thread] = await getThreads();
+        setReplyMessage(thread, "reply-all");
+      },
+    },
     trashThread: {
       icon: Icons.trash,
       name: "Trash",
       tooltipDescription: "Trash thread",
-      applyFn: async (accessToken: string) => {
+      applyFn: async (accessToken) => {
         const threads = await getThreads();
         await trashThreads({
           accessToken,
@@ -50,7 +77,7 @@ export const getThreadActions = (
       icon: Icons.archive,
       name: "Archive",
       tooltipDescription: "Archive thread",
-      applyFn: async (accessToken: string) => {
+      applyFn: async (accessToken) => {
         const threads = await getThreads();
         await archiveThreads({
           accessToken,
@@ -75,7 +102,7 @@ export const getThreadActions = (
       icon: Icons.archive,
       name: "Unarchive",
       tooltipDescription: "Unarchive thread",
-      applyFn: async (accessToken: string) => {
+      applyFn: async (accessToken) => {
         const threads = await getThreads();
         await unarchiveThreads({
           accessToken,
@@ -100,7 +127,7 @@ export const getThreadActions = (
       icon: Icons.markRead,
       name: "Mark as read",
       tooltipDescription: "Archive thread",
-      applyFn: async (accessToken: string) => {
+      applyFn: async (accessToken) => {
         const threads = await getThreads();
         await markReadThreads({
           accessToken,
@@ -118,14 +145,14 @@ export const getThreadActions = (
         };
       },
       undoToastConfig: {
-        title: "Thread archived.",
+        title: "Thread marked as read.",
       },
     },
     markUnreadThread: {
       icon: Icons.markUnread,
       name: "Mark as unread",
       tooltipDescription: "Unarchive thread",
-      applyFn: async (accessToken: string) => {
+      applyFn: async (accessToken) => {
         const threads = await getThreads();
         setMostRecentlyAffectedThreads(threads);
         await markUnreadThreads({
@@ -144,14 +171,14 @@ export const getThreadActions = (
         };
       },
       undoToastConfig: {
-        title: "Thread unarchived.",
+        title: "Thread marked as unread.",
       },
     },
     modifyThreadLabels: {
       icon: Icons.addLabel,
       name: "Add Labels",
       tooltipDescription: "Add Labels to thread",
-      applyFn: async (accessToken: string, newLabels: string[]) => {
+      applyFn: async (accessToken, newLabels: string[]) => {
         const threads = await getThreads();
         const labelsToAdd: string[][] = [];
         const labelsToRemove: string[][] = [];

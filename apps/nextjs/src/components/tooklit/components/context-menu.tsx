@@ -41,7 +41,6 @@ export function ThreadContextMenu({
     activeEmail: email,
     afterClientDbUpdate: [refetch],
     getThreads: () => {
-      console.log("getThreads");
       return getEmailThreadsFrom({
         // todo: fix this accessor
         senderEmail: thread.from[0]?.[0]?.email ?? "",
@@ -67,7 +66,7 @@ export function ThreadContextMenu({
     toast({
       title: "Action Undone",
       duration: 10000,
-      description: "Operation successfull!",
+      description: "Operation successful!",
     });
   };
 
@@ -75,10 +74,14 @@ export function ThreadContextMenu({
     item: ConfigOption<T>,
     undoFn: () => Promise<void>,
   ) => {
+    if (!("undoToastConfig" in item)) {
+      return;
+    }
+
     toast({
       title: item.undoToastConfig.title,
-      duration: 10000,
-      description: "Operation successfull!",
+      duration: 10_000,
+      description: "Operation successful!",
       action: (
         <ToastAction
           onClick={async () => {
@@ -99,7 +102,10 @@ export function ThreadContextMenu({
       const accessToken = await fetchGmailAccessToken();
       action
         .applyFn(accessToken, ...args)
-        .then((undoFn: () => Promise<void>) => {
+        .then((undoFn) => {
+          if (typeof undoFn !== "function") {
+            return;
+          }
           showUndoToast(action, undoFn);
         })
         .catch((e) => console.error(e));
@@ -122,15 +128,9 @@ export function ThreadContextMenu({
       {/*  className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm" */}
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-64">
-        <ContextMenuItem inset disabled>
-          Reply
-        </ContextMenuItem>
-        <ContextMenuItem inset disabled>
-          Reply All
-        </ContextMenuItem>
-        <ContextMenuItem inset disabled>
-          Forward
-        </ContextMenuItem>
+        {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.replySender)}
+        {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.replyAll)}
+        {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.forward)}
         <ContextMenuSeparator />
         {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.archiveThread)}
         {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.trashThread)}
