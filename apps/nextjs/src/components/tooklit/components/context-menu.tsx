@@ -2,6 +2,7 @@ import { ToastAction } from "@radix-ui/react-toast";
 
 import { getEmailThreadsFrom } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
+import { useGlobalStore } from "@skylar/logic";
 
 import {
   ContextMenu,
@@ -29,23 +30,28 @@ export function ThreadContextMenu({
   thread: ThreadType;
   refetch: () => Promise<void>;
 }) {
-  const email = "curdcorp@gmail.com"; // TODO: change this to the active email
+  const activeEmailAddress = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.activeEmailAddress,
+  );
+
+  if (!activeEmailAddress) throw new Error("No active email address");
+
   const INBOX_TOOLKIT_THREAD_ACTIONS = getThreadActions(
     async () => {
       return Promise.resolve([thread]);
     },
-    email,
+    activeEmailAddress,
     [refetch],
   );
   const INBOX_TOOLKIT_SENDER_ACTIONS = getSenderActions({
-    activeEmail: email,
+    activeEmail: activeEmailAddress,
     afterClientDbUpdate: [refetch],
     getThreads: () => {
       console.log("getThreads");
       return getEmailThreadsFrom({
         // todo: fix this accessor
         senderEmail: thread.from[0]?.[0]?.email ?? "",
-        clientEmail: email,
+        clientEmail: activeEmailAddress,
       });
     },
   });
@@ -56,7 +62,7 @@ export function ThreadContextMenu({
 
   const fetchGmailAccessToken = async () => {
     const token = await fetchGmailAccessTokenMutation({
-      email,
+      email: activeEmailAddress,
     });
     if (!token) throw new Error("Error fetching access token.");
     return token;

@@ -1,1 +1,2 @@
 export const GET_EMAIL_PROVIDERS = "GET_EMAIL_PROVIDERS";
+export const ACCESS_TOKEN = "ACCESS_TOKEN";

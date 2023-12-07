@@ -1,8 +1,13 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import { Allotment } from "allotment";
 
-import { useGlobalStore } from "@skylar/logic";
+import {
+  setActiveEmailAddress,
+  useActiveEmailProviders,
+  useGlobalStore,
+} from "@skylar/logic";
 
 import { ReplyEmail } from "~/components/compose-email/reply-email";
 import { EmailThreadPage } from "./[threadId]/page";
@@ -11,6 +16,12 @@ import { EmailListViewer } from "./email-list-viewer";
 const MIN_PANE_SIZE = 250;
 
 export default function Inbox() {
+  const { emailIndex } = useParams();
+  const providers = useActiveEmailProviders();
+  setActiveEmailAddress(
+    providers.find((p) => p.provider_id?.toString() === (emailIndex as string))
+      ?.email,
+  );
   const respondingThread = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );

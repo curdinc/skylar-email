@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 
-import { setActiveEmailProviderIndexes } from "@skylar/logic";
+import { setActiveThread } from "@skylar/logic";
 
 import { cn } from "~/lib/ui";
 
@@ -25,10 +25,7 @@ export function EmailAccountNav({
   const pathname = usePathname();
 
   useEffect(() => {
-    if (typeof emailIndex !== "string") {
-      throw new Error("emailIndex must be a string");
-    }
-    setActiveEmailProviderIndexes((_) => [parseInt(emailIndex)]);
+    setActiveThread(undefined);
   }, [emailIndex]);
 
   return (
