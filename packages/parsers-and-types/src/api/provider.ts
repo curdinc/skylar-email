@@ -1,6 +1,7 @@
 import type { SupportedEmailProviderType } from "../..";
 
 type ProviderIndexType = {
+  provider_id?: number;
   email: string;
   created_at?: number;
   updated_at?: number;
@@ -16,5 +17,5 @@ export type ProviderType = ProviderIndexType & {
 export type ProviderInfoType = Omit<ProviderType, "refresh_token">;
 export type ProviderInsertType = Omit<
   ProviderType,
-  "created_at" | "updated_at"
+  "provider_id" | "created_at" | "updated_at"
 >;
