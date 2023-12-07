@@ -1,8 +1,10 @@
+import { useCallback, useEffect } from "react";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
+import type { ThreadType } from "@skylar/client-db/schema/thread";
 import {
   resetComposeMessage,
   useActiveEmails,
@@ -35,54 +37,60 @@ export const useMessageComposer = () => {
 
   const { toast } = useToast();
 
-  const defaultFormValues = () => {
-    const replyTo: string[] = [];
-    const cc: string[] = [];
-    switch (composeEmailType) {
-      case "forward": {
-        break;
-      }
-      case "new-email": {
-        break;
-      }
-      case "reply-sender": {
-        const senderEmailAddresses = getSenderReplyToEmailAddresses(
-          replyThread?.from.at(-1),
-          replyThread?.reply_to.at(-1),
-        );
-        replyTo.push(...senderEmailAddresses);
-        break;
-      }
-      case "reply-all": {
-        const senderEmailAddresses = getSenderReplyToEmailAddresses(
-          replyThread?.from.at(-1),
-          replyThread?.reply_to.at(-1),
-        );
-        replyTo.push(...senderEmailAddresses);
-        replyTo.push(
-          ...formatEmailAddresses(currentEmail, replyThread?.to.at(-1)),
-        );
+  const defaultFormValues = useCallback(
+    (thread?: ThreadType) => {
+      const replyTo: string[] = [];
+      const cc: string[] = [];
+      switch (composeEmailType) {
+        case "forward": {
+          break;
+        }
+        case "new-email": {
+          break;
+        }
+        case "reply-sender": {
+          const senderEmailAddresses = getSenderReplyToEmailAddresses(
+            thread?.from.at(-1),
+            thread?.reply_to.at(-1),
+          );
+          replyTo.push(...senderEmailAddresses);
+          break;
+        }
+        case "reply-all": {
+          const senderEmailAddresses = getSenderReplyToEmailAddresses(
+            thread?.from.at(-1),
+            thread?.reply_to.at(-1),
+          );
+          replyTo.push(...senderEmailAddresses);
+          replyTo.push(
+            ...formatEmailAddresses(currentEmail, thread?.to.at(-1)),
+          );
 
-        cc.push(...formatEmailAddresses(currentEmail, replyThread?.cc.at(-1)));
-        break;
+          cc.push(...formatEmailAddresses(currentEmail, thread?.cc.at(-1)));
+          break;
+        }
+        default:
+          break;
       }
-      default:
-        break;
-    }
 
-    return {
-      from: currentEmail,
-      to: replyTo,
-      cc: cc,
-      bcc: [],
-      subject: replyThread?.subject ?? "",
-      composeString: "",
-    };
-  };
+      return {
+        from: currentEmail,
+        to: replyTo,
+        cc: cc,
+        bcc: [],
+        subject: thread?.subject ?? "",
+        composeString: "",
+      };
+    },
+    [composeEmailType, currentEmail],
+  );
   const form = useForm<EmailComposeType>({
     resolver: valibotResolver(EmailComposeSchema),
-    defaultValues: defaultFormValues(),
+    defaultValues: defaultFormValues(replyThread),
   });
+  useEffect(() => {
+    form.reset(defaultFormValues(replyThread));
+  }, [defaultFormValues, form, replyThread]);
 
   const submitMutation = useMutation({
     mutationFn: async (values: EmailComposeType) => {
