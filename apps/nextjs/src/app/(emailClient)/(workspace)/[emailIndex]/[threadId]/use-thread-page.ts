@@ -21,8 +21,6 @@ export function useThreadPage() {
     emailProviderThreadId: threadId ?? "",
   });
 
-  console.log("emailThread", emailThread);
-
   const { mutateAsync: fetchGmailAccessToken } = useAccessToken();
 
   const { mutate: markAsRead } = useMutation({
