@@ -1,3 +1,5 @@
+"use client";
+
 import { Allotment } from "allotment";
 
 import { useGlobalStore } from "@skylar/logic";

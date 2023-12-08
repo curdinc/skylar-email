@@ -1,3 +1,5 @@
+"use client";
+
 import { Fragment, useEffect, useState } from "react";
 
 import { filterForLabels } from "@skylar/client-db";
