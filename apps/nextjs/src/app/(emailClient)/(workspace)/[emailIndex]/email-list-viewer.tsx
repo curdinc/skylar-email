@@ -41,6 +41,7 @@ export const EmailListViewer = () => {
     if (!activeLabels) {
       return;
     }
+
     setActiveLabels(activeLabels);
   }, [activeEmailAddress, labels]);
 

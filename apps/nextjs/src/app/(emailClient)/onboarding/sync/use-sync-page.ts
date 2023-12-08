@@ -1,31 +1,30 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import {
   bulkPutEmails,
   upsertEmailSyncInfo,
+  useAllEmailProviders,
   useEmailSyncInfo,
 } from "@skylar/client-db";
-import { setEmailProviders, useActiveEmailProviders } from "@skylar/logic";
+import { setEmailProviders } from "@skylar/logic";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useLogger } from "~/lib/logger";
-import { useGetProviders } from "~/lib/provider/use-get-providers";
 import { useEmailFullSync } from "./use-email-full-sync";
 
 export function useSyncPage() {
-  const activeEmailProviders = useActiveEmailProviders();
-  const activeEmails = useMemo(
-    () => activeEmailProviders.map((provider) => provider.email),
-    [activeEmailProviders],
-  );
-  const { data: emailProviders, isLoading: isLoadingAllEmailProviders } =
-    useGetProviders();
+  const { data: allEmailProviders, isLoading: isLoadingAllEmailProviders } =
+    useAllEmailProviders();
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
-    { emailAddresses: activeEmails },
+    {
+      emailAddresses: (allEmailProviders ?? []).map(
+        (provider) => provider.email,
+      ),
+    },
   );
   const { syncProgress, syncStep, startEmailFullSync, emailsToSync } =
     useEmailFullSync();
@@ -36,28 +35,31 @@ export function useSyncPage() {
   useEffect(() => {
     if (
       !isLoadingAllEmailProviders &&
-      emailProviders &&
-      !activeEmailProviders?.length
+      allEmailProviders &&
+      !allEmailProviders?.length
     ) {
-      setEmailProviders(emailProviders);
+      setEmailProviders(allEmailProviders);
     }
   }, [
-    activeEmailProviders?.length,
-    emailProviders,
+    allEmailProviders?.length,
+    allEmailProviders,
     isLoadingAllEmailProviders,
   ]);
 
   useEffect(() => {
-    if (isLoadingEmailSyncInfo || !activeEmails.length) {
+    if (!allEmailProviders) {
+      return;
+    }
+    if (isLoadingEmailSyncInfo || !allEmailProviders.length) {
       return;
     } else if (
       !isLoadingEmailSyncInfo &&
-      emailSyncInfo?.length === activeEmails.length
+      emailSyncInfo?.length === allEmailProviders.length
     ) {
       router.push("/0");
     } else {
       console.log("starting sync");
-      for (const activeEmailProvider of activeEmailProviders) {
+      for (const activeEmailProvider of allEmailProviders) {
         const syncInfo = emailSyncInfo?.find(
           (info) =>
             info.email_sync_info_id.toLowerCase() ===
@@ -102,8 +104,8 @@ export function useSyncPage() {
       }
     }
   }, [
-    activeEmailProviders,
-    activeEmails.length,
+    allEmailProviders,
+    allEmailProviders?.length,
     emailSyncInfo,
     emailSyncInfo?.length,
     isLoadingEmailSyncInfo,
@@ -114,7 +116,7 @@ export function useSyncPage() {
   ]);
 
   return {
-    activeEmailProviders,
+    activeEmailProviders: allEmailProviders,
     emailsToSync,
     syncProgress,
     syncStep,

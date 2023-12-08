@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { REDIRECT_TO_SEARCH_STRING } from "@skylar/auth/client";
-import { useActiveEmailProviders } from "@skylar/logic";
+import { useAllEmailProviders } from "@skylar/client-db";
 
 export const usePostLogin = () => {
   const router = useRouter();
@@ -11,15 +11,19 @@ export const usePostLogin = () => {
   const redirectToPath =
     searchParams.get(REDIRECT_TO_SEARCH_STRING) ?? "/inbox";
 
-  const activeEmailProviders = useActiveEmailProviders();
+  const { data: allEmailProviders, isLoading: isLoadingAllEmailProviders } =
+    useAllEmailProviders();
 
   useEffect(() => {
-    if (!activeEmailProviders.length) {
+    if (!allEmailProviders) {
+      return;
+    }
+    if (!allEmailProviders.length) {
       router.push("/onboarding/connect");
     } else {
       router.push(redirectToPath);
     }
-  }, [activeEmailProviders, router, redirectToPath]);
+  }, [allEmailProviders, router, redirectToPath]);
 
-  return { isLoading: false };
+  return { isLoading: isLoadingAllEmailProviders };
 };

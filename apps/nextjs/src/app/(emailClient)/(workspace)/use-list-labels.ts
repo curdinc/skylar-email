@@ -1,29 +1,29 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { useAllEmailProviders } from "@skylar/client-db";
 import { listLabels } from "@skylar/gmail-api";
-import { useActiveEmails } from "@skylar/logic";
 
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export const LIST_LABEL_QUERY_KEY = "listLabels";
 export function useListLabels() {
-  const activeEmails = useActiveEmails();
+  const { data: allEmailProviders } = useAllEmailProviders();
   const { mutateAsync: fetchAccessToken } = useAccessToken();
 
   return useQuery({
-    queryKey: [LIST_LABEL_QUERY_KEY, activeEmails],
+    queryKey: [LIST_LABEL_QUERY_KEY, allEmailProviders],
     queryFn: async () => {
-      const labelPromise = activeEmails.map(async (email) => {
+      const labelPromise = (allEmailProviders ?? []).map(async (provider) => {
         const accessToken = await fetchAccessToken({
-          email: email,
+          email: provider.email,
         });
 
         const labels = await listLabels({
           accessToken,
-          emailId: email,
+          emailId: provider.email,
         });
 
-        return { [email]: labels };
+        return { [provider.email]: labels };
       });
 
       const labelsResponse = await Promise.allSettled(labelPromise);

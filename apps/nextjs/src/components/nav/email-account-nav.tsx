@@ -5,11 +5,8 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 
-import {
-  setActiveEmailAddress,
-  setActiveThread,
-  useActiveEmailProviders,
-} from "@skylar/logic";
+import { useAllEmailProviders } from "@skylar/client-db";
+import { setActiveEmailAddress, setActiveThread } from "@skylar/logic";
 
 import { cn } from "~/lib/ui";
 
@@ -27,16 +24,19 @@ export function EmailAccountNav({
 }: SidebarNavProps) {
   const { emailIndex } = useParams();
   const pathname = usePathname();
-  const providers = useActiveEmailProviders();
+  const { data: allEmailProviders } = useAllEmailProviders();
 
   useEffect(() => {
     setActiveThread(undefined);
-    setActiveEmailAddress(
-      providers.find(
-        (p) => p.provider_id?.toString() === (emailIndex as string),
-      )?.email,
-    );
-  }, [emailIndex, providers]);
+    if (!allEmailProviders) {
+      return;
+    }
+    const activeEmail = allEmailProviders.find(
+      (p) => p.provider_id?.toString() === (emailIndex as string),
+    )?.email;
+
+    setActiveEmailAddress(activeEmail);
+  }, [emailIndex, allEmailProviders]);
 
   return (
     <nav className={cn("flex  flex-col gap-5", className)} {...props}>

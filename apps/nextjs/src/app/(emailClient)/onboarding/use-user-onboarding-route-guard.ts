@@ -1,19 +1,21 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { useActiveEmailProviders } from "@skylar/logic";
+import { useAllEmailProviders } from "@skylar/client-db";
 
 export const useUserOnboardingRouteGuard = () => {
   const router = useRouter();
-  const activeEmailProviders = useActiveEmailProviders();
+
+  const { data: allEmailProviders, isLoading: isLoadingAllEmailProviders } =
+    useAllEmailProviders();
 
   useEffect(() => {
-    if (!activeEmailProviders.length) {
+    if (!allEmailProviders?.length) {
       router.push("/onboarding/connect");
     } else {
       router.push("/onboarding/sync");
     }
-  }, [activeEmailProviders, router]);
+  }, [allEmailProviders, router]);
 
-  return { isLoading: false };
+  return { isLoading: isLoadingAllEmailProviders };
 };

@@ -18,7 +18,6 @@ export function EmailList({
   const activeEmailAddress = useGlobalStore(
     (state) => state.EMAIL_CLIENT.activeEmailAddress,
   );
-
   const { status, data, error, fetchNextPage, hasNextPage, refetch } =
     useThreadSnippetsInfinite({
       userEmails: activeEmailAddress ? [activeEmailAddress] : [],

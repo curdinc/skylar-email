@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { bulkUpdateEmails, useEmailThread } from "@skylar/client-db";
 import type { EmailType } from "@skylar/client-db/schema/email";
 import { modifyLabels } from "@skylar/gmail-api";
-import { useActiveEmailProviders, useGlobalStore } from "@skylar/logic";
+import { useGlobalStore } from "@skylar/logic";
 
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
@@ -12,7 +12,6 @@ export function useThreadPage() {
   const threadId = useGlobalStore(
     (state) => state.EMAIL_CLIENT.activeThread?.email_provider_thread_id,
   );
-  const emailProviderInfos = useActiveEmailProviders();
 
   const { emailThread, isLoading: isLoadingThread } = useEmailThread({
     emailProviderThreadId: threadId ?? "",
@@ -67,7 +66,8 @@ export function useThreadPage() {
   });
 
   useEffect(() => {
-    if (!isLoadingThread && emailThread?.length && emailProviderInfos?.length) {
+    // TODO: why did we need to check for emailProviderInfos?.length?
+    if (!isLoadingThread && emailThread?.length) {
       emailThread.map((email) => {
         markAsRead({
           email,
@@ -77,7 +77,7 @@ export function useThreadPage() {
         });
       });
     }
-  }, [emailProviderInfos?.length, emailThread, isLoadingThread, markAsRead]);
+  }, [emailThread, isLoadingThread, markAsRead]);
 
   return { isLoadingThread, emailThread };
 }

@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import type { Editor } from "codemirror";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
@@ -45,9 +44,7 @@ export type State = {
   };
   EMAIL_CLIENT: {
     activeEmailAddress: string | undefined;
-    activeEmailProviderIndexes: number[];
     emailProviders: ProviderInfoType[];
-    emailList: EmailListData[];
     CONTEXT_MENU: {
       mostRecentlyAffectedThreads: ThreadType[];
     };
@@ -79,15 +76,9 @@ type Actions = {
   setInviteCodeIdBeingDeleted: (
     inviteCodeId: State["SETTINGS"]["INVITE_CODE"]["inviteCodeIdBeingDeleted"],
   ) => void;
-  setActiveEmailProviderIndexes: (
-    updateFn: (
-      prev: State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
-    ) => State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
-  ) => void;
   setEmailProviders: (
     emailProviders: State["EMAIL_CLIENT"]["emailProviders"],
   ) => void;
-  setEmailListData: (treeViewData: State["EMAIL_CLIENT"]["emailList"]) => void;
   setActiveThread: (thread: State["EMAIL_CLIENT"]["activeThread"]) => void;
   resetActiveThread: () => void;
   setReplyMessage: (
@@ -122,9 +113,7 @@ export const useGlobalStore = create(
   immer<State>(() => ({
     EMAIL_CLIENT: {
       activeEmailAddress: undefined,
-      activeEmailProviderIndexes: [],
       emailProviders: [],
-      emailList: [],
       CONTEXT_MENU: {
         mostRecentlyAffectedThreads: [],
       },
@@ -174,14 +163,6 @@ export const COMPUTED_STATE_SELECTOR = {
 export const useActiveEmailProviders = () =>
   useOptimizedGlobalStore(COMPUTED_STATE_SELECTOR.activeEmailProviders);
 
-export const useActiveEmails = () => {
-  const activeEmailProviders = useActiveEmailProviders();
-  return useMemo(
-    () => activeEmailProviders.map((provider) => provider.email),
-    [activeEmailProviders],
-  );
-};
-
 export const useAllShortcutNames = () =>
   useOptimizedGlobalStore((state) =>
     Object.keys(state.SHORTCUT).filter((key) => key !== "setShortcuts"),
@@ -212,14 +193,6 @@ export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"]
       state.SETTINGS.INVITE_CODE.inviteCodeIdBeingDeleted = inviteCodeId;
     });
 
-export const setActiveEmailProviderIndexes: Actions["setActiveEmailProviderIndexes"] =
-  (updateFn) =>
-    useGlobalStore.setState((state) => {
-      state.EMAIL_CLIENT.activeEmailProviderIndexes = updateFn(
-        state.EMAIL_CLIENT.activeEmailProviderIndexes,
-      );
-    });
-
 export const setActiveEmailAddress: Actions["setActiveEmailAddress"] = (
   emailAddress?: string,
 ) =>
@@ -232,12 +205,6 @@ export const setEmailProviders: Actions["setEmailProviders"] = (
 ) => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.emailProviders = emailProviders;
-  });
-};
-
-export const setEmailList: Actions["setEmailListData"] = (emailList) => {
-  useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.emailList = emailList;
   });
 };
 

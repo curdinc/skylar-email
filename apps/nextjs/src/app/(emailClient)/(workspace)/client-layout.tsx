@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -9,30 +8,24 @@ import {
   bulkPutEmails,
   bulkUpdateEmails,
   updateEmailSyncInfo,
+  useAllEmailProviders,
   useEmailSyncInfo,
 } from "@skylar/client-db";
-import { setEmailProviders, useActiveEmailProviders } from "@skylar/logic";
 
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
-import { useGetProviders } from "~/lib/provider/use-get-providers";
 import { useEmailPartialSync } from "./use-email-partial-sync";
 
 export const ClientLayout = () => {
   useInboxKeymaps();
-  const activeEmailProviders = useActiveEmailProviders();
-  const activeEmails = useMemo(
-    () => activeEmailProviders.map((provider) => provider.email),
-    [activeEmailProviders],
-  );
-
   const router = useRouter();
-  const { data: emailProviders, isLoading: isLoadingEmailProviders } =
-    useGetProviders();
+  const { data: allEmailProviders } = useAllEmailProviders();
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
     {
-      emailAddresses: activeEmails,
+      emailAddresses: (allEmailProviders ?? []).map(
+        (provider) => provider.email,
+      ),
     },
   );
   const { emailPartialSync } = useEmailPartialSync();
@@ -40,21 +33,24 @@ export const ClientLayout = () => {
   useQuery({
     queryKey: [
       isLoadingEmailSyncInfo,
-      activeEmailProviders.length,
+      allEmailProviders,
       emailSyncInfo?.length,
     ],
     queryFn: async () => {
+      if (!allEmailProviders) {
+        throw new Error("Reached a bad state");
+      }
       let updatedEmails = false;
-      if (isLoadingEmailSyncInfo || !activeEmailProviders.length) {
+      if (isLoadingEmailSyncInfo || !allEmailProviders.length) {
         throw new Error("Not ready to sync emails");
       }
 
-      if (emailSyncInfo?.length !== activeEmailProviders.length) {
+      if (emailSyncInfo?.length !== allEmailProviders.length) {
         router.push("/onboarding/sync");
         return updatedEmails;
       }
 
-      for (const activeEmailProvider of activeEmailProviders) {
+      for (const activeEmailProvider of allEmailProviders) {
         const syncInfo = emailSyncInfo.find(
           (syncInfo) =>
             syncInfo.email_sync_info_id.toLowerCase() ===
@@ -115,16 +111,11 @@ export const ClientLayout = () => {
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    enabled: !isLoadingEmailSyncInfo && !!activeEmailProviders.length,
+    enabled:
+      !isLoadingEmailSyncInfo &&
+      allEmailProviders &&
+      !!allEmailProviders.length,
   });
-
-  useEffect(() => {
-    if (isLoadingEmailProviders) {
-      return;
-    } else if (emailProviders) {
-      setEmailProviders(emailProviders);
-    }
-  }, [emailProviders, isLoadingEmailProviders]);
 
   return <></>;
 };
