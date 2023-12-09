@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { REDIRECT_TO_SEARCH_STRING } from "@skylar/auth/client";
-
-import { api } from "~/lib/api";
+import { useAllEmailProviders } from "@skylar/client-db";
 
 export const usePostLogin = () => {
   const router = useRouter();
@@ -12,31 +11,19 @@ export const usePostLogin = () => {
   const redirectToPath =
     searchParams.get(REDIRECT_TO_SEARCH_STRING) ?? "/inbox";
 
-  const { data: userOnboardStep, isLoading } =
-    api.onboarding.getUserOnboardStep.useQuery(undefined);
+  const { data: allEmailProviders, isLoading: isLoadingAllEmailProviders } =
+    useAllEmailProviders();
+
   useEffect(() => {
-    if (!isLoading) {
-      switch (userOnboardStep) {
-        case "invite-code": {
-          router.push("/onboarding/code");
-          break;
-        }
-        case "email-provider": {
-          {
-            router.push("/onboarding/connect");
-            break;
-          }
-        }
-        case "card": {
-          router.push("/onboarding/card");
-          break;
-        }
-        case "done": {
-          router.push(redirectToPath);
-          break;
-        }
-      }
+    if (!allEmailProviders) {
+      return;
     }
-  }, [isLoading, redirectToPath, router, userOnboardStep]);
-  return { isLoading };
+    if (!allEmailProviders.length) {
+      router.push("/onboarding/connect");
+    } else {
+      router.push(redirectToPath);
+    }
+  }, [allEmailProviders, router, redirectToPath]);
+
+  return { isLoading: isLoadingAllEmailProviders };
 };

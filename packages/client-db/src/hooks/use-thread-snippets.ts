@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 
 import type { ThreadType } from "../../schema/thread";
-import { getThreadSnippets } from "../emails/get-thread-snippets";
+import { getThreadSnippets } from "../email/get-thread-snippets";
 import type { GetParameters } from "../types/extract-params";
 
 export const THREAD_SNIPPETS_QUERY_KEY = "threadSnippets";

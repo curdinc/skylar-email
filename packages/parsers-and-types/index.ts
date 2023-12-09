@@ -43,7 +43,6 @@ export {
 } from "./src/api/email-provider/oauth";
 
 // ENV ITEMS
-export type { EmailProviderDetailType } from "./src/api/provider";
 export { BackendEnvSchema } from "./src/backend/env";
 export type { BackendEnvType } from "./src/backend/env";
 export { createEnv } from "./src/create-env";
@@ -55,3 +54,6 @@ export {
 
 // CONSTANTS
 export * from "./src/constants/email-providers";
+
+// CLIENT DB TABLES
+export * from "./src/client-db-schema/provider";

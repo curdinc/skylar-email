@@ -9,8 +9,12 @@ export async function bulkPutEmails({ emails }: { emails: EmailType[] }) {
     clientDb.email,
     clientDb.thread,
     async () => {
-      await clientDb.email.bulkPut(emails);
-      await clientDb.thread.bulkPut(threads);
+      await clientDb.email.bulkPut(emails).catch((error) => {
+        console.error("error in bulk put emails", error);
+      });
+      await clientDb.thread.bulkPut(threads).catch((error) => {
+        console.error("error in bulk put threads", error);
+      });
     },
   );
 }

@@ -1,53 +1,63 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
-import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import { usePathname } from "next/navigation";
 
-import { setActiveEmailProviderIndexes } from "@skylar/logic";
+import { useAllEmailProviders } from "@skylar/client-db";
 
 import { cn } from "~/lib/ui";
-
-type SidebarNavProps = {
-  items: {
-    href: string;
-    title: string;
-  }[];
-} & React.HTMLAttributes<HTMLElement>;
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Skeleton } from "../ui/skeleton";
 
 export function EmailAccountNav({
   className,
-  items,
   ...props
-}: SidebarNavProps) {
-  const { emailIndex } = useParams();
+}: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
+  const { data: allEmailProviders, isLoading } = useAllEmailProviders();
 
-  useEffect(() => {
-    if (typeof emailIndex !== "string") {
-      throw new Error("emailIndex must be a string");
-    }
-    setActiveEmailProviderIndexes((_) => [parseInt(emailIndex)]);
-  }, [emailIndex]);
+  const allEmailProvidersProfileInfo = (allEmailProviders ?? []).map(
+    (account) => ({
+      href: `${account.provider_id}`,
+      title: account.email,
+      imageUri: account.image_uri,
+      name: account.inbox_name,
+    }),
+  );
+
+  let body = (
+    <>
+      <Skeleton className="h-10 w-10 rounded-full" />
+      <Skeleton className="h-10 w-10 rounded-full" />
+      <Skeleton className="h-10 w-10 rounded-full" />
+    </>
+  );
+  if (!isLoading) {
+    body = (
+      <>
+        {allEmailProvidersProfileInfo.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={cn(
+              pathname === item.href
+                ? "hover:cursor-default"
+                : "transition-opacity hover:cursor-pointer hover:opacity-70",
+            )}
+          >
+            <Avatar>
+              <AvatarImage src={item.imageUri} />
+              <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
+            </Avatar>
+          </Link>
+        ))}
+      </>
+    );
+  }
 
   return (
     <nav className={cn("flex  flex-col gap-5", className)} {...props}>
-      {items.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={cn(
-            pathname === item.href
-              ? "hover:cursor-default"
-              : "transition-opacity hover:cursor-pointer hover:opacity-70",
-          )}
-        >
-          <Avatar>
-            <AvatarFallback>{item.title.slice(0, 2)}</AvatarFallback>
-          </Avatar>
-        </Link>
-      ))}
+      {body}
     </nav>
   );
 }

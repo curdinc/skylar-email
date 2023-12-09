@@ -4,29 +4,25 @@ import { useRouter } from "next/navigation";
 import {
   bulkPutEmails,
   upsertEmailSyncInfo,
+  useAllEmailProviders,
   useEmailSyncInfo,
 } from "@skylar/client-db";
-import {
-  setEmailProviders,
-  useActiveEmailProviders,
-  useActiveEmails,
-} from "@skylar/logic";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
-import { api } from "~/lib/api";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useLogger } from "~/lib/logger";
 import { useEmailFullSync } from "./use-email-full-sync";
 
 export function useSyncPage() {
-  const activeEmails = useActiveEmails();
-  const activeEmailProviders = useActiveEmailProviders();
-  const { data: emailProviders, isLoading: isLoadingAllEmailProviders } =
-    api.emailProvider.getAll.useQuery();
+  const { data: allEmailProviders } = useAllEmailProviders();
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
-    { emailAddresses: activeEmails },
+    {
+      emailAddresses: (allEmailProviders ?? []).map(
+        (provider) => provider.email,
+      ),
+    },
   );
   const { syncProgress, syncStep, startEmailFullSync, emailsToSync } =
     useEmailFullSync();
@@ -35,30 +31,19 @@ export function useSyncPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (
-      !isLoadingAllEmailProviders &&
-      emailProviders &&
-      !activeEmailProviders?.length
-    ) {
-      setEmailProviders(emailProviders);
+    if (!allEmailProviders) {
+      return;
     }
-  }, [
-    activeEmailProviders?.length,
-    emailProviders,
-    isLoadingAllEmailProviders,
-  ]);
-
-  useEffect(() => {
-    if (isLoadingEmailSyncInfo || !activeEmails.length) {
+    if (isLoadingEmailSyncInfo || !allEmailProviders.length) {
       return;
     } else if (
       !isLoadingEmailSyncInfo &&
-      emailSyncInfo?.length === activeEmails.length
+      emailSyncInfo?.length === allEmailProviders.length
     ) {
-      router.push("/inbox");
+      router.push("/0");
     } else {
       console.log("starting sync");
-      for (const activeEmailProvider of activeEmailProviders) {
+      for (const activeEmailProvider of allEmailProviders) {
         const syncInfo = emailSyncInfo?.find(
           (info) =>
             info.email_sync_info_id.toLowerCase() ===
@@ -69,7 +54,7 @@ export function useSyncPage() {
         }
         startEmailFullSync(
           activeEmailProvider.email,
-          activeEmailProvider.emailProvider,
+          activeEmailProvider.email_provider,
         )
           .then(async (emailData) => {
             console.log("emailData", emailData);
@@ -103,9 +88,8 @@ export function useSyncPage() {
       }
     }
   }, [
-    activeEmails,
-    activeEmailProviders,
-    activeEmails.length,
+    allEmailProviders,
+    allEmailProviders?.length,
     emailSyncInfo,
     emailSyncInfo?.length,
     isLoadingEmailSyncInfo,
@@ -116,7 +100,7 @@ export function useSyncPage() {
   ]);
 
   return {
-    activeEmailProviders,
+    activeEmailProviders: allEmailProviders,
     emailsToSync,
     syncProgress,
     syncStep,

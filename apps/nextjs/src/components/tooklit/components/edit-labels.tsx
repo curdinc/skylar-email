@@ -5,6 +5,7 @@ import { ToastAction } from "@radix-ui/react-toast";
 import { Check } from "lucide-react";
 
 import type { ThreadType } from "@skylar/client-db/schema/thread";
+import { useGlobalStore } from "@skylar/logic";
 
 import { useListLabels } from "~/app/(emailClient)/(workspace)/use-list-labels";
 import { Button } from "~/components/ui/button";
@@ -16,8 +17,8 @@ import {
   CommandItem,
 } from "~/components/ui/command";
 import { useToast } from "~/components/ui/use-toast";
-import { api } from "~/lib/api";
 import { GMAIL_IMMUTABLE_LABELS } from "~/lib/inbox-toolkit/constants";
+import { useAccessToken } from "~/lib/provider/use-access-token";
 import { cn } from "~/lib/ui";
 import type { ConfigOption, MoveThreadArgs } from "../config-option-type";
 
@@ -32,7 +33,9 @@ export function EditLabels({
   // when a label is selected, toggle the value
   const { data: labelData } = useListLabels();
   const { toast, dismiss } = useToast();
-  const email = "curdcorp@gmail.com";
+  const emailAddress = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.activeEmailAddress,
+  );
   const [labels, setLabels] = useState<Record<string, boolean>>(
     thread.email_provider_labels.reduce(
       (acc, label) => {
@@ -42,6 +45,8 @@ export function EditLabels({
       {} as Record<string, boolean>,
     ),
   );
+
+  if (!emailAddress) throw new Error("No active email address");
 
   const showUndoSuccessToast = () => {
     toast({
@@ -86,12 +91,11 @@ export function EditLabels({
     };
   };
 
-  const { mutateAsync: fetchGmailAccessTokenMutation } =
-    api.gmail.getAccessToken.useMutation();
+  const { mutateAsync: fetchGmailAccessTokenMutation } = useAccessToken();
 
   const fetchGmailAccessToken = async () => {
     const token = await fetchGmailAccessTokenMutation({
-      email,
+      email: emailAddress,
     });
     if (!token) throw new Error("Error fetching access token.");
     return token;
@@ -114,7 +118,7 @@ export function EditLabels({
       <CommandGroup>
         <div className="max-h-60 overflow-auto">
           {labelData
-            ? labelData[email]
+            ? labelData[emailAddress]
                 ?.filter((label) => {
                   return GMAIL_IMMUTABLE_LABELS.indexOf(label.id) === -1;
                 })
