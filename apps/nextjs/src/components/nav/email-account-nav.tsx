@@ -23,6 +23,7 @@ export function EmailAccountNav({
 }: SidebarNavProps) {
   const pathname = usePathname();
 
+  console.log("allEmailProvidersProfileInfo", allEmailProvidersProfileInfo);
   return (
     <nav className={cn("flex  flex-col gap-5", className)} {...props}>
       {allEmailProvidersProfileInfo.map((item) => (
