@@ -26,7 +26,7 @@ export const ClientLayout = () => {
   useInboxKeymaps();
   const router = useRouter();
   const { data: allEmailProviders } = useAllEmailProviders();
-  const { emailIndex } = useParams();
+  const { providerIndex } = useParams();
 
   useEffect(() => {
     resetActiveThread();
@@ -36,11 +36,11 @@ export const ClientLayout = () => {
       return;
     }
     const activeEmail = allEmailProviders.find(
-      (p) => p.provider_id?.toString() === (emailIndex as string),
+      (p) => p.provider_id?.toString() === (providerIndex as string),
     )?.email;
 
     setActiveEmailAddress(activeEmail);
-  }, [emailIndex, allEmailProviders]);
+  }, [providerIndex, allEmailProviders]);
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
     {
