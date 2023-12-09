@@ -2,6 +2,7 @@ import { ToastAction } from "@radix-ui/react-toast";
 
 import { getEmailThreadsFrom } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
+import { useGlobalStore } from "@skylar/logic";
 
 import {
   ContextMenu,
@@ -14,7 +15,7 @@ import {
   ContextMenuTrigger,
 } from "~/components/ui/context-menu";
 import { useToast } from "~/components/ui/use-toast";
-import { api } from "~/lib/api";
+import { useAccessToken } from "~/lib/provider/use-access-token";
 import type { ConfigOption } from "../config-option-type";
 import { getSenderActions } from "../sender/sender-option-config";
 import { getThreadActions } from "../thread/thread-option-config";
@@ -29,34 +30,38 @@ export function ThreadContextMenu({
   thread: ThreadType;
   refetch: () => Promise<void>;
 }) {
-  const email = "curdcorp@gmail.com"; // TODO: change this to the active email
+  const activeEmailAddress = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.activeEmailAddress,
+  );
+
+  if (!activeEmailAddress) throw new Error("No active email address");
+
   const INBOX_TOOLKIT_THREAD_ACTIONS = getThreadActions(
     async () => {
       return Promise.resolve([thread]);
     },
-    email,
+    activeEmailAddress,
     [refetch],
   );
   const INBOX_TOOLKIT_SENDER_ACTIONS = getSenderActions({
-    activeEmail: email,
+    activeEmail: activeEmailAddress,
     afterClientDbUpdate: [refetch],
     getThreads: () => {
       return getEmailThreadsFrom({
         // todo: fix this accessor
         senderEmail: thread.from[0]?.[0]?.email ?? "",
-        clientEmail: email,
+        clientEmail: activeEmailAddress,
       });
     },
   });
 
   const { toast, dismiss } = useToast();
 
-  const { mutateAsync: fetchGmailAccessTokenMutation } =
-    api.gmail.getAccessToken.useMutation();
+  const { mutateAsync: fetchGmailAccessTokenMutation } = useAccessToken();
 
   const fetchGmailAccessToken = async () => {
     const token = await fetchGmailAccessTokenMutation({
-      email,
+      email: activeEmailAddress,
     });
     if (!token) throw new Error("Error fetching access token.");
     return token;

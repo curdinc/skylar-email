@@ -1,7 +1,9 @@
+"use client";
+
 import { Fragment, useEffect, useState } from "react";
 
 import { filterForLabels } from "@skylar/client-db";
-import { useActiveEmails } from "@skylar/logic";
+import { useGlobalStore } from "@skylar/logic";
 
 import { Icons } from "~/components/icons";
 import { useLogger } from "~/lib/logger";
@@ -11,7 +13,9 @@ import { EmailList } from "./email-list";
 export const EmailListViewer = () => {
   const logger = useLogger();
   const { data: labels, isLoading } = useListLabels();
-  const activeEmails = useActiveEmails();
+  const activeEmailAddress = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.activeEmailAddress,
+  );
 
   const [activeLabels, setActiveLabels] = useState<
     { name: string; id: string }[]
@@ -30,18 +34,16 @@ export const EmailListViewer = () => {
   };
 
   useEffect(() => {
-    if (!labels) {
+    if (!labels || !activeEmailAddress) {
       return;
     }
-    const activeLabels = activeEmails
-      .map((email) => {
-        return labels[email];
-      })
-      .filter((labels) => !!labels)
-      .flat() as (typeof labels)[keyof typeof labels];
+    const activeLabels = labels[activeEmailAddress];
+    if (!activeLabels) {
+      return;
+    }
 
     setActiveLabels(activeLabels);
-  }, [activeEmails, labels]);
+  }, [activeEmailAddress, labels]);
 
   if (isLoading) {
     return <div>Loading ...</div>;

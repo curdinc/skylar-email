@@ -5,11 +5,7 @@ import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
 import type { ThreadType } from "@skylar/client-db/schema/thread";
-import {
-  resetComposeMessage,
-  useActiveEmails,
-  useGlobalStore,
-} from "@skylar/logic";
+import { resetComposeMessage, useGlobalStore } from "@skylar/logic";
 import type { EmailComposeType } from "@skylar/parsers-and-types";
 import { EmailComposeSchema } from "@skylar/parsers-and-types";
 
@@ -28,8 +24,9 @@ export const useMessageComposer = () => {
   const composeEmailType = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
   );
-  const activeEmails = useActiveEmails();
-  const currentEmail = activeEmails[0];
+  const activeEmailAddress = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.activeEmailAddress,
+  );
   const attachments = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.attachments,
   );
@@ -63,10 +60,12 @@ export const useMessageComposer = () => {
           );
           replyTo.push(...senderEmailAddresses);
           replyTo.push(
-            ...formatEmailAddresses(currentEmail, thread?.to.at(-1)),
+            ...formatEmailAddresses(activeEmailAddress, thread?.to.at(-1)),
           );
 
-          cc.push(...formatEmailAddresses(currentEmail, thread?.cc.at(-1)));
+          cc.push(
+            ...formatEmailAddresses(activeEmailAddress, thread?.cc.at(-1)),
+          );
           break;
         }
         default:
@@ -74,7 +73,7 @@ export const useMessageComposer = () => {
       }
 
       return {
-        from: currentEmail,
+        from: activeEmailAddress,
         to: replyTo,
         cc: cc,
         bcc: [],
@@ -82,7 +81,7 @@ export const useMessageComposer = () => {
         composeString: "",
       };
     },
-    [composeEmailType, currentEmail],
+    [composeEmailType, activeEmailAddress],
   );
   const form = useForm<EmailComposeType>({
     resolver: valibotResolver(EmailComposeSchema),

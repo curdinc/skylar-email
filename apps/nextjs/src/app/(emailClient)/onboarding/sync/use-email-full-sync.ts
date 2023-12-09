@@ -4,8 +4,8 @@ import { fullSync } from "@skylar/gmail-api";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types/src/api/email-provider/oauth";
 
-import { api } from "~/lib/api";
 import { useLogger } from "~/lib/logger";
+import { useAccessToken } from "~/lib/provider/use-access-token";
 
 // source: https://stackoverflow.com/questions/45735472/generate-a-random-number-between-2-values-to-2-decimals-places-in-javascript
 function genRand(min: number, max: number, decimalPlaces: number) {
@@ -34,8 +34,7 @@ export const useEmailFullSync = () => {
   const [syncStep, setSyncStep] = useState<
     (typeof SYNC_STEPS)[keyof typeof SYNC_STEPS]
   >("Getting access to inbox");
-  const { mutateAsync: fetchGmailAccessToken } =
-    api.gmail.getAccessToken.useMutation();
+  const { mutateAsync: fetchGmailAccessToken } = useAccessToken();
   const logger = useLogger();
 
   useEffect(() => {

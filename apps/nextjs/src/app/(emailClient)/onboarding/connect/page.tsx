@@ -69,9 +69,11 @@ export default function ConnectEmailOnboardingForm() {
         <Button
           isLoading={isConnectingToEmailProvider}
           disabled={isCheckingUserOnboardStep}
-          onClick={
-            emailProvider === "gmail" ? connectToGmail : connectToOutlook
-          }
+          onClick={() => {
+            const connect =
+              emailProvider === "gmail" ? connectToGmail : connectToOutlook;
+            connect();
+          }}
           className="w-full"
         >
           Connect to {emailProviderDisplayName}

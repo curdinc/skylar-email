@@ -1,11 +1,9 @@
-import { useMemo } from "react";
 import type { Editor } from "codemirror";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
 
 import type { ThreadType } from "@skylar/client-db/schema/thread";
-import type { schema } from "@skylar/db";
 import type {
   AllComposeMessageOptionsType,
   SupportedAuthProvidersType,
@@ -44,9 +42,7 @@ export type State = {
     };
   };
   EMAIL_CLIENT: {
-    activeEmailProviderIndexes: number[];
-    emailProviders: (typeof schema.emailProviderDetail.$inferSelect)[];
-    emailList: EmailListData[];
+    activeEmailAddress: string | undefined;
     CONTEXT_MENU: {
       mostRecentlyAffectedThreads: ThreadType[];
     };
@@ -78,15 +74,6 @@ type Actions = {
   setInviteCodeIdBeingDeleted: (
     inviteCodeId: State["SETTINGS"]["INVITE_CODE"]["inviteCodeIdBeingDeleted"],
   ) => void;
-  setActiveEmailProviderIndexes: (
-    updateFn: (
-      prev: State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
-    ) => State["EMAIL_CLIENT"]["activeEmailProviderIndexes"],
-  ) => void;
-  setEmailProviders: (
-    emailProviders: State["EMAIL_CLIENT"]["emailProviders"],
-  ) => void;
-  setEmailListData: (treeViewData: State["EMAIL_CLIENT"]["emailList"]) => void;
   setActiveThread: (thread: State["EMAIL_CLIENT"]["activeThread"]) => void;
   resetActiveThread: () => void;
   setReplyMessage: (
@@ -110,6 +97,9 @@ type Actions = {
   setIsSelecting: (
     isSelecting: State["EMAIL_CLIENT"]["COMPOSING"]["isSelecting"],
   ) => void;
+  setActiveEmailAddress: (
+    emailAddress: State["EMAIL_CLIENT"]["activeEmailAddress"],
+  ) => void;
   setComposeMessage: (emailType: ValidComposeMessageOptionsType) => void;
 };
 
@@ -117,9 +107,7 @@ type Actions = {
 export const useGlobalStore = create(
   immer<State>(() => ({
     EMAIL_CLIENT: {
-      activeEmailProviderIndexes: [],
-      emailProviders: [],
-      emailList: [],
+      activeEmailAddress: undefined,
       CONTEXT_MENU: {
         mostRecentlyAffectedThreads: [],
       },
@@ -162,27 +150,6 @@ export const useOptimizedGlobalStore = <T>(arg: (state: State) => T) => {
 };
 
 // Computed states
-export const COMPUTED_STATE_SELECTOR = {
-  activeEmailProviders: (state: State) =>
-    state.EMAIL_CLIENT.activeEmailProviderIndexes
-      .map((index) => {
-        return state.EMAIL_CLIENT.emailProviders[index];
-      })
-      .filter(
-        (provider) => !!provider,
-      ) as (typeof schema.emailProviderDetail.$inferSelect)[],
-};
-export const useActiveEmailProviders = () =>
-  useOptimizedGlobalStore(COMPUTED_STATE_SELECTOR.activeEmailProviders);
-
-export const useActiveEmails = () => {
-  const activeEmailProviders = useActiveEmailProviders();
-  return useMemo(
-    () => activeEmailProviders.map((provider) => provider.email),
-    [activeEmailProviders],
-  );
-};
-
 export const useAllShortcutNames = () =>
   useOptimizedGlobalStore((state) =>
     Object.keys(state.SHORTCUT).filter((key) => key !== "setShortcuts"),
@@ -213,30 +180,12 @@ export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"]
       state.SETTINGS.INVITE_CODE.inviteCodeIdBeingDeleted = inviteCodeId;
     });
 
-export const setActiveEmailProviderIndexes: Actions["setActiveEmailProviderIndexes"] =
-  (updateFn) =>
-    useGlobalStore.setState((state) => {
-      state.EMAIL_CLIENT.activeEmailProviderIndexes = updateFn(
-        state.EMAIL_CLIENT.activeEmailProviderIndexes,
-      );
-    });
-
-export const setEmailProviders: Actions["setEmailProviders"] = (
-  emailProviders,
-) => {
+export const setActiveEmailAddress: Actions["setActiveEmailAddress"] = (
+  emailAddress?: string,
+) =>
   useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.emailProviders = emailProviders;
-    if (state.EMAIL_CLIENT.activeEmailProviderIndexes.length === 0) {
-      state.EMAIL_CLIENT.activeEmailProviderIndexes = [0];
-    }
+    state.EMAIL_CLIENT.activeEmailAddress = emailAddress;
   });
-};
-
-export const setEmailList: Actions["setEmailListData"] = (emailList) => {
-  useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.emailList = emailList;
-  });
-};
 
 export const setActiveThread: Actions["setActiveThread"] = (thread) => {
   useGlobalStore.setState((state) => {
