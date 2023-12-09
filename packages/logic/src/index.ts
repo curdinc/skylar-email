@@ -6,7 +6,6 @@ import { useShallow } from "zustand/react/shallow";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 import type {
   AllComposeMessageOptionsType,
-  ProviderInfoType,
   SupportedAuthProvidersType,
   ValidComposeMessageOptionsType,
   ValidReplyMessageOptionsType,
@@ -44,7 +43,6 @@ export type State = {
   };
   EMAIL_CLIENT: {
     activeEmailAddress: string | undefined;
-    emailProviders: ProviderInfoType[];
     CONTEXT_MENU: {
       mostRecentlyAffectedThreads: ThreadType[];
     };
@@ -75,9 +73,6 @@ type Actions = {
   setLoggingInto: (loggingInto: State["LOGIN"]["loggingInto"]) => void;
   setInviteCodeIdBeingDeleted: (
     inviteCodeId: State["SETTINGS"]["INVITE_CODE"]["inviteCodeIdBeingDeleted"],
-  ) => void;
-  setEmailProviders: (
-    emailProviders: State["EMAIL_CLIENT"]["emailProviders"],
   ) => void;
   setActiveThread: (thread: State["EMAIL_CLIENT"]["activeThread"]) => void;
   resetActiveThread: () => void;
@@ -113,7 +108,6 @@ export const useGlobalStore = create(
   immer<State>(() => ({
     EMAIL_CLIENT: {
       activeEmailAddress: undefined,
-      emailProviders: [],
       CONTEXT_MENU: {
         mostRecentlyAffectedThreads: [],
       },
@@ -156,13 +150,6 @@ export const useOptimizedGlobalStore = <T>(arg: (state: State) => T) => {
 };
 
 // Computed states
-export const COMPUTED_STATE_SELECTOR = {
-  activeEmailProviders: (state: State) => state.EMAIL_CLIENT.emailProviders,
-};
-
-export const useActiveEmailProviders = () =>
-  useOptimizedGlobalStore(COMPUTED_STATE_SELECTOR.activeEmailProviders);
-
 export const useAllShortcutNames = () =>
   useOptimizedGlobalStore((state) =>
     Object.keys(state.SHORTCUT).filter((key) => key !== "setShortcuts"),
@@ -199,14 +186,6 @@ export const setActiveEmailAddress: Actions["setActiveEmailAddress"] = (
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.activeEmailAddress = emailAddress;
   });
-
-export const setEmailProviders: Actions["setEmailProviders"] = (
-  emailProviders,
-) => {
-  useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.emailProviders = emailProviders;
-  });
-};
 
 export const setActiveThread: Actions["setActiveThread"] = (thread) => {
   useGlobalStore.setState((state) => {

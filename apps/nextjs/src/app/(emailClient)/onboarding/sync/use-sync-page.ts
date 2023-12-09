@@ -7,7 +7,6 @@ import {
   useAllEmailProviders,
   useEmailSyncInfo,
 } from "@skylar/client-db";
-import { setEmailProviders } from "@skylar/logic";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
@@ -16,8 +15,7 @@ import { useLogger } from "~/lib/logger";
 import { useEmailFullSync } from "./use-email-full-sync";
 
 export function useSyncPage() {
-  const { data: allEmailProviders, isLoading: isLoadingAllEmailProviders } =
-    useAllEmailProviders();
+  const { data: allEmailProviders } = useAllEmailProviders();
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
     {
@@ -31,20 +29,6 @@ export function useSyncPage() {
   const router = useRouter();
   const logger = useLogger();
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (
-      !isLoadingAllEmailProviders &&
-      allEmailProviders &&
-      !allEmailProviders?.length
-    ) {
-      setEmailProviders(allEmailProviders);
-    }
-  }, [
-    allEmailProviders?.length,
-    allEmailProviders,
-    isLoadingAllEmailProviders,
-  ]);
 
   useEffect(() => {
     if (!allEmailProviders) {

@@ -3,7 +3,6 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
 
 import { putProvider } from "@skylar/client-db";
-import { setEmailProviders } from "@skylar/logic";
 import type {
   ProviderInsertType,
   SupportedEmailProviderType,
@@ -48,14 +47,6 @@ export function useConnectEmailProviderPage() {
         inbox_name: emailProviderInfo.providerInfo.name,
         refresh_token: emailProviderInfo.providerInfo.refreshToken,
       });
-      setEmailProviders([
-        {
-          email_provider: emailProviderInfo.providerType,
-          email: emailProviderInfo.providerInfo.email,
-          image_uri: emailProviderInfo.providerInfo.imageUri,
-          inbox_name: emailProviderInfo.providerInfo.name,
-        },
-      ]);
       setIsConnectingToEmailProvider(false);
     },
   });

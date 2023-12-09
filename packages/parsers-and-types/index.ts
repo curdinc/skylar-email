@@ -6,7 +6,6 @@ export * from "./src/api/email";
 export * from "./src/api/invite-code";
 export * from "./src/api/mailing-list";
 export * from "./src/api/onboarding";
-export * from "./src/api/provider";
 export * from "./src/auth";
 
 export * from "./src/api/email-provider/gmail-provider";
@@ -55,3 +54,6 @@ export {
 
 // CONSTANTS
 export * from "./src/constants/email-providers";
+
+// CLIENT DB TABLES
+export * from "./src/client-db-schema/provider";
