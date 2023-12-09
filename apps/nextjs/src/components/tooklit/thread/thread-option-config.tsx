@@ -1,4 +1,4 @@
-import { setMostRecentlyAffectedThreads } from "@skylar/logic";
+import { setMostRecentlyAffectedThreads, setReplyMessage } from "@skylar/logic";
 
 import { Icons } from "~/components/icons";
 import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
@@ -21,7 +21,38 @@ export const getThreadActions = (
   afterClientDbUpdate: (() => Promise<void>)[],
 ) => {
   return {
+    forward: {
+      type: "non-reversible-action",
+      icon: Icons.forward,
+      name: "Forward",
+      tooltipDescription: "Forward email",
+      applyFn: async () => {
+        const [thread] = await getThreads();
+        setReplyMessage(thread, "forward");
+      },
+    },
+    replySender: {
+      type: "non-reversible-action",
+      icon: Icons.replySender,
+      name: "Reply to Sender",
+      tooltipDescription: "Reply to sender",
+      applyFn: async () => {
+        const [thread] = await getThreads();
+        setReplyMessage(thread, "reply-sender");
+      },
+    },
+    replyAll: {
+      type: "non-reversible-action",
+      icon: Icons.replyAll,
+      name: "Reply All",
+      tooltipDescription: "Reply All in thread",
+      applyFn: async () => {
+        const [thread] = await getThreads();
+        setReplyMessage(thread, "reply-all");
+      },
+    },
     trashThread: {
+      type: "reversible-action",
       icon: Icons.trash,
       name: "Trash",
       tooltipDescription: "Trash thread",
@@ -47,6 +78,7 @@ export const getThreadActions = (
       },
     },
     archiveThread: {
+      type: "reversible-action",
       icon: Icons.archive,
       name: "Archive",
       tooltipDescription: "Archive thread",
@@ -72,6 +104,7 @@ export const getThreadActions = (
       },
     },
     unarchiveThread: {
+      type: "reversible-action",
       icon: Icons.archive,
       name: "Unarchive",
       tooltipDescription: "Unarchive thread",
@@ -97,6 +130,7 @@ export const getThreadActions = (
       },
     },
     markReadThread: {
+      type: "reversible-action",
       icon: Icons.markRead,
       name: "Mark as read",
       tooltipDescription: "Archive thread",
@@ -118,10 +152,11 @@ export const getThreadActions = (
         };
       },
       undoToastConfig: {
-        title: "Thread archived.",
+        title: "Thread marked as read.",
       },
     },
     markUnreadThread: {
+      type: "reversible-action",
       icon: Icons.markUnread,
       name: "Mark as unread",
       tooltipDescription: "Unarchive thread",
@@ -144,10 +179,11 @@ export const getThreadActions = (
         };
       },
       undoToastConfig: {
-        title: "Thread unarchived.",
+        title: "Thread marked as unread.",
       },
     },
     modifyThreadLabels: {
+      type: "reversible-action",
       icon: Icons.addLabel,
       name: "Add Labels",
       tooltipDescription: "Add Labels to thread",

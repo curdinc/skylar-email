@@ -44,9 +44,9 @@ export const AttachmentList = () => {
   }
 
   const files = attachments.map((attachment, index) => {
-    let PreviewImage = <Icons.FileDefault className="h-10 w-10 p-1.5" />;
+    let PreviewImage = <Icons.fileDefault className="h-10 w-10 p-1.5" />;
     if (attachment.file.type.startsWith("video/")) {
-      PreviewImage = <Icons.FileVideo className="h-10 w-10 p-1.5" />;
+      PreviewImage = <Icons.fileVideo className="h-10 w-10 p-1.5" />;
     }
     if (attachment.preview) {
       PreviewImage = (

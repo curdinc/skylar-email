@@ -8,6 +8,7 @@ import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
+  ContextMenuPortal,
   ContextMenuSeparator,
   ContextMenuSub,
   ContextMenuSubContent,
@@ -47,7 +48,6 @@ export function ThreadContextMenu({
     activeEmail: activeEmailAddress,
     afterClientDbUpdate: [refetch],
     getThreads: () => {
-      console.log("getThreads");
       return getEmailThreadsFrom({
         // todo: fix this accessor
         senderEmail: thread.from[0]?.[0]?.email ?? "",
@@ -72,7 +72,7 @@ export function ThreadContextMenu({
     toast({
       title: "Action Undone",
       duration: 10000,
-      description: "Operation successfull!",
+      description: "Operation successful!",
     });
   };
 
@@ -80,10 +80,14 @@ export function ThreadContextMenu({
     item: ConfigOption<T>,
     undoFn: () => Promise<void>,
   ) => {
+    if (!("undoToastConfig" in item)) {
+      return;
+    }
+
     toast({
       title: item.undoToastConfig.title,
-      duration: 10000,
-      description: "Operation successfull!",
+      duration: 10_000,
+      description: "Operation successful!",
       action: (
         <ToastAction
           onClick={async () => {
@@ -104,7 +108,10 @@ export function ThreadContextMenu({
       const accessToken = await fetchGmailAccessToken();
       action
         .applyFn(accessToken, ...args)
-        .then((undoFn: () => Promise<void>) => {
+        .then((undoFn) => {
+          if (typeof undoFn !== "function") {
+            return;
+          }
           showUndoToast(action, undoFn);
         })
         .catch((e) => console.error(e));
@@ -127,15 +134,9 @@ export function ThreadContextMenu({
       {/*  className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm" */}
       <ContextMenuTrigger>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-64">
-        <ContextMenuItem inset disabled>
-          Reply
-        </ContextMenuItem>
-        <ContextMenuItem inset disabled>
-          Reply All
-        </ContextMenuItem>
-        <ContextMenuItem inset disabled>
-          Forward
-        </ContextMenuItem>
+        {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.replySender)}
+        {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.replyAll)}
+        {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.forward)}
         <ContextMenuSeparator />
         {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.archiveThread)}
         {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.trashThread)}
@@ -146,42 +147,41 @@ export function ThreadContextMenu({
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuSub>
-          <ContextMenuSubTrigger inset>Move to</ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-48">
-            <div className="pl-2 text-sm">Move to:</div>
-            {displayContextOption(
-              INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels,
-              ["CATEGORY_PERSONAL"],
-              ["CATEGORY_SOCIAL"],
-            )}
-          </ContextMenuSubContent>
-        </ContextMenuSub>
-        <ContextMenuSub>
           <ContextMenuSubTrigger inset>Sender actions</ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-48">
-            {displayContextOption(INBOX_TOOLKIT_SENDER_ACTIONS.trashFromSender)}
-            {displayContextOption(
-              INBOX_TOOLKIT_SENDER_ACTIONS.archiveFromSender,
-            )}
-            <ContextMenuSub>
-              <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
-              <ContextMenuSubContent>
-                <EditLabels
-                  thread={thread}
-                  editLabelAction={INBOX_TOOLKIT_SENDER_ACTIONS.labelFromSender}
-                />
-              </ContextMenuSubContent>
-            </ContextMenuSub>
-          </ContextMenuSubContent>
+          <ContextMenuPortal>
+            <ContextMenuSubContent className="w-48">
+              {displayContextOption(
+                INBOX_TOOLKIT_SENDER_ACTIONS.trashFromSender,
+              )}
+              {displayContextOption(
+                INBOX_TOOLKIT_SENDER_ACTIONS.archiveFromSender,
+              )}
+              <ContextMenuSub>
+                <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
+                <ContextMenuSubContent>
+                  <EditLabels
+                    thread={thread}
+                    editLabelAction={
+                      INBOX_TOOLKIT_SENDER_ACTIONS.labelFromSender
+                    }
+                  />
+                </ContextMenuSubContent>
+              </ContextMenuSub>
+            </ContextMenuSubContent>
+          </ContextMenuPortal>
         </ContextMenuSub>
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
-          <ContextMenuSubContent>
-            <EditLabels
-              thread={thread}
-              editLabelAction={INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels}
-            />
-          </ContextMenuSubContent>
+          <ContextMenuPortal>
+            <ContextMenuSubContent>
+              <EditLabels
+                thread={thread}
+                editLabelAction={
+                  INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels
+                }
+              />
+            </ContextMenuSubContent>
+          </ContextMenuPortal>
         </ContextMenuSub>
       </ContextMenuContent>
     </ContextMenu>

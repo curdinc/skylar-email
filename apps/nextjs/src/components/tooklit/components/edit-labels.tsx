@@ -52,7 +52,7 @@ export function EditLabels({
     toast({
       title: "Action Undone",
       duration: 10000,
-      description: "Operation successfull!",
+      description: "Operation successful!",
     });
   };
 
@@ -60,10 +60,13 @@ export function EditLabels({
     item: ConfigOption<T>,
     undoFn: () => Promise<void>,
   ) => {
+    if (item.type !== "reversible-action") {
+      return;
+    }
     toast({
       title: item.undoToastConfig.title,
       duration: 10000,
-      description: "Operation successfull!",
+      description: "Operation successful!",
       action: (
         <ToastAction
           onClick={async () => {
@@ -82,12 +85,14 @@ export function EditLabels({
   const runAction = <T,>(action: ConfigOption<T>, ...args: T[]) => {
     return async () => {
       const accessToken = await fetchGmailAccessToken();
-      action
-        .applyFn(accessToken, ...args)
-        .then((undoFn: () => Promise<void>) => {
+      try {
+        const undoFn = await action.applyFn(accessToken, ...args);
+        if (undoFn) {
           showUndoToast(action, undoFn);
-        })
-        .catch((e) => console.error(e));
+        }
+      } catch (e) {
+        // Show error here
+      }
     };
   };
 
@@ -108,8 +113,9 @@ export function EditLabels({
       if (inputRef.current) {
         inputRef.current.focus();
       }
-    }, 150); // This is so that the function is not called before the component mounts
+    }, 100); // This is so that the function is not called before the component mounts
   }, []);
+
   return (
     <Command>
       <CommandInput ref={inputRef} placeholder="Search labels..." />

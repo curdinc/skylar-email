@@ -7,10 +7,13 @@ import { useGlobalStore } from "@skylar/logic";
 
 import { Icons } from "~/components/icons";
 import { useLogger } from "~/lib/logger";
-import { useListLabels } from "../use-list-labels";
-import { EmailList } from "./email-list";
+import { useListLabels } from "../../app/(emailClient)/(workspace)/use-list-labels";
+import { MessageList } from "./message-list";
 
-export const EmailListViewer = () => {
+/**
+ * @returns The component that renders all the labels of a user and the corresponding messages
+ */
+export const MessageListViewer = () => {
   const logger = useLogger();
   const { data: labels, isLoading } = useListLabels();
   const activeEmailAddress = useGlobalStore(
@@ -70,7 +73,7 @@ export const EmailListViewer = () => {
               {ButtonIcon} {label.name}
             </button>
             {visibleLabels[label.id] && (
-              <EmailList
+              <MessageList
                 filters={[filterForLabels([label.id])]}
                 uniqueListId={label.id}
               />

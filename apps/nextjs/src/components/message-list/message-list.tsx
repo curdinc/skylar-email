@@ -9,7 +9,12 @@ import { setActiveThread, useGlobalStore } from "@skylar/logic";
 import { ThreadContextMenu } from "~/components/tooklit/components/context-menu";
 import { cn } from "~/lib/ui";
 
-export function EmailList({
+/**
+ *
+ * @param {string} uniqueListId: The unique id of the list
+ * @returns The component that renders all the messages of a user for a given set of filter
+ */
+export function MessageList({
   filters,
   uniqueListId,
 }: Pick<Parameters<typeof useThreadSnippetsInfinite>[0], "filters"> & {
