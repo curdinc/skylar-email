@@ -1,5 +1,7 @@
 import type { SupportedEmailProviderType } from "../..";
 
+export const PROVIDER_INDEX = `++provider_id, &email, provider_type` as const;
+
 type ProviderIndexType = {
   provider_id?: number;
   email: string;

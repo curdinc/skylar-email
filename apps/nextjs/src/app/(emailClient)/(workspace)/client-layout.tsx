@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -11,6 +12,11 @@ import {
   useAllEmailProviders,
   useEmailSyncInfo,
 } from "@skylar/client-db";
+import {
+  resetActiveThread,
+  resetComposeMessage,
+  setActiveEmailAddress,
+} from "@skylar/logic";
 
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
@@ -20,6 +26,21 @@ export const ClientLayout = () => {
   useInboxKeymaps();
   const router = useRouter();
   const { data: allEmailProviders } = useAllEmailProviders();
+  const { emailIndex } = useParams();
+
+  useEffect(() => {
+    resetActiveThread();
+    resetComposeMessage();
+
+    if (!allEmailProviders) {
+      return;
+    }
+    const activeEmail = allEmailProviders.find(
+      (p) => p.provider_id?.toString() === (emailIndex as string),
+    )?.email;
+
+    setActiveEmailAddress(activeEmail);
+  }, [emailIndex, allEmailProviders]);
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
     {
