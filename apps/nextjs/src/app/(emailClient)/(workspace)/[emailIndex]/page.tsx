@@ -1,14 +1,24 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Allotment } from "allotment";
 
 import { useGlobalStore } from "@skylar/logic";
 
-import { MessageComposer } from "~/components/compose-message/message-composer";
 import { EmailThreadPage } from "./[threadId]/page";
 import { EmailListViewer } from "./email-list-viewer";
 
 const MIN_PANE_SIZE = 250;
+
+const MessageComposer = dynamic(
+  async () => {
+    const { MessageComposer } = await import(
+      "~/components/compose-message/message-composer"
+    );
+    return MessageComposer;
+  },
+  { ssr: false },
+);
 
 export default function Inbox() {
   const messageType = useGlobalStore(
