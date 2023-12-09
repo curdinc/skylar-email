@@ -22,6 +22,7 @@ export const getThreadActions = (
 ) => {
   return {
     forward: {
+      type: "non-reversible-action",
       icon: Icons.forward,
       name: "Forward",
       tooltipDescription: "Forward email",
@@ -31,6 +32,7 @@ export const getThreadActions = (
       },
     },
     replySender: {
+      type: "non-reversible-action",
       icon: Icons.replySender,
       name: "Reply to Sender",
       tooltipDescription: "Reply to sender",
@@ -40,6 +42,7 @@ export const getThreadActions = (
       },
     },
     replyAll: {
+      type: "non-reversible-action",
       icon: Icons.replyAll,
       name: "Reply All",
       tooltipDescription: "Reply All in thread",
@@ -49,10 +52,11 @@ export const getThreadActions = (
       },
     },
     trashThread: {
+      type: "reversible-action",
       icon: Icons.trash,
       name: "Trash",
       tooltipDescription: "Trash thread",
-      applyFn: async (accessToken) => {
+      applyFn: async (accessToken: string) => {
         const threads = await getThreads();
         await trashThreads({
           accessToken,
@@ -74,10 +78,11 @@ export const getThreadActions = (
       },
     },
     archiveThread: {
+      type: "reversible-action",
       icon: Icons.archive,
       name: "Archive",
       tooltipDescription: "Archive thread",
-      applyFn: async (accessToken) => {
+      applyFn: async (accessToken: string) => {
         const threads = await getThreads();
         await archiveThreads({
           accessToken,
@@ -99,10 +104,11 @@ export const getThreadActions = (
       },
     },
     unarchiveThread: {
+      type: "reversible-action",
       icon: Icons.archive,
       name: "Unarchive",
       tooltipDescription: "Unarchive thread",
-      applyFn: async (accessToken) => {
+      applyFn: async (accessToken: string) => {
         const threads = await getThreads();
         await unarchiveThreads({
           accessToken,
@@ -124,10 +130,11 @@ export const getThreadActions = (
       },
     },
     markReadThread: {
+      type: "reversible-action",
       icon: Icons.markRead,
       name: "Mark as read",
       tooltipDescription: "Archive thread",
-      applyFn: async (accessToken) => {
+      applyFn: async (accessToken: string) => {
         const threads = await getThreads();
         await markReadThreads({
           accessToken,
@@ -149,10 +156,11 @@ export const getThreadActions = (
       },
     },
     markUnreadThread: {
+      type: "reversible-action",
       icon: Icons.markUnread,
       name: "Mark as unread",
       tooltipDescription: "Unarchive thread",
-      applyFn: async (accessToken) => {
+      applyFn: async (accessToken: string) => {
         const threads = await getThreads();
         setMostRecentlyAffectedThreads(threads);
         await markUnreadThreads({
@@ -175,10 +183,11 @@ export const getThreadActions = (
       },
     },
     modifyThreadLabels: {
+      type: "reversible-action",
       icon: Icons.addLabel,
       name: "Add Labels",
       tooltipDescription: "Add Labels to thread",
-      applyFn: async (accessToken, newLabels: string[]) => {
+      applyFn: async (accessToken: string, newLabels: string[]) => {
         const threads = await getThreads();
         const labelsToAdd: string[][] = [];
         const labelsToRemove: string[][] = [];

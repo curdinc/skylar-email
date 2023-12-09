@@ -8,6 +8,7 @@ import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
+  ContextMenuPortal,
   ContextMenuSeparator,
   ContextMenuSub,
   ContextMenuSubContent,
@@ -146,42 +147,41 @@ export function ThreadContextMenu({
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuSub>
-          <ContextMenuSubTrigger inset>Move to</ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-48">
-            <div className="pl-2 text-sm">Move to:</div>
-            {displayContextOption(
-              INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels,
-              ["CATEGORY_PERSONAL"],
-              ["CATEGORY_SOCIAL"],
-            )}
-          </ContextMenuSubContent>
-        </ContextMenuSub>
-        <ContextMenuSub>
           <ContextMenuSubTrigger inset>Sender actions</ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-48">
-            {displayContextOption(INBOX_TOOLKIT_SENDER_ACTIONS.trashFromSender)}
-            {displayContextOption(
-              INBOX_TOOLKIT_SENDER_ACTIONS.archiveFromSender,
-            )}
-            <ContextMenuSub>
-              <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
-              <ContextMenuSubContent>
-                <EditLabels
-                  thread={thread}
-                  editLabelAction={INBOX_TOOLKIT_SENDER_ACTIONS.labelFromSender}
-                />
-              </ContextMenuSubContent>
-            </ContextMenuSub>
-          </ContextMenuSubContent>
+          <ContextMenuPortal>
+            <ContextMenuSubContent className="w-48">
+              {displayContextOption(
+                INBOX_TOOLKIT_SENDER_ACTIONS.trashFromSender,
+              )}
+              {displayContextOption(
+                INBOX_TOOLKIT_SENDER_ACTIONS.archiveFromSender,
+              )}
+              <ContextMenuSub>
+                <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
+                <ContextMenuSubContent>
+                  <EditLabels
+                    thread={thread}
+                    editLabelAction={
+                      INBOX_TOOLKIT_SENDER_ACTIONS.labelFromSender
+                    }
+                  />
+                </ContextMenuSubContent>
+              </ContextMenuSub>
+            </ContextMenuSubContent>
+          </ContextMenuPortal>
         </ContextMenuSub>
         <ContextMenuSub>
           <ContextMenuSubTrigger inset>Label as</ContextMenuSubTrigger>
-          <ContextMenuSubContent>
-            <EditLabels
-              thread={thread}
-              editLabelAction={INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels}
-            />
-          </ContextMenuSubContent>
+          <ContextMenuPortal>
+            <ContextMenuSubContent>
+              <EditLabels
+                thread={thread}
+                editLabelAction={
+                  INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels
+                }
+              />
+            </ContextMenuSubContent>
+          </ContextMenuPortal>
         </ContextMenuSub>
       </ContextMenuContent>
     </ContextMenu>
