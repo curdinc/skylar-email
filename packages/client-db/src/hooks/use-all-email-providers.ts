@@ -11,5 +11,6 @@ export function useAllEmailProviders() {
       const emailProviders = await getAllProviders();
       return emailProviders;
     },
+    gcTime: 0,
   });
 }

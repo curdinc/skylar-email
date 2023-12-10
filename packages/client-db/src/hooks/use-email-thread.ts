@@ -14,6 +14,7 @@ export function useEmailThread(args: GetParameters<typeof getEmailThread>) {
       });
       return emailThread;
     },
+    gcTime: 0,
   });
 
   return { emailThread, isLoading };

@@ -39,6 +39,7 @@ export function useThreadSnippetsPaginated(
     },
     placeholderData: keepPreviousData,
     enabled: !!args.userEmails.length,
+    gcTime: 0,
   });
 
   const nextPage = useCallback(() => {
@@ -95,5 +96,6 @@ export function useThreadSnippetsInfinite(
     initialPageParam: { lastThread: undefined as undefined | ThreadType },
     refetchInterval: 2_000, // 2 seconds
     structuralSharing: false, // TODO: rewrite to use more granular filtering
+    gcTime: 0,
   });
 }
