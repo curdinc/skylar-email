@@ -12,6 +12,8 @@ import {
 import { Progress } from "~/components/ui/progress";
 import { useSyncPage } from "./use-sync-page";
 
+export const runtime = "edge";
+
 export default function SyncProgress() {
   const { providersSyncing, syncProgress, syncStep } = useSyncPage();
 

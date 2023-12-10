@@ -8,6 +8,8 @@ import { useGlobalStore } from "@skylar/logic";
 import { LabelAccordion } from "~/components/label-accordion-menu/label-accordion";
 import { ThreadViewer } from "~/components/thread-viewer/index";
 
+export const runtime = "edge";
+
 const MIN_PANE_SIZE = 250;
 
 const MessageComposer = dynamic(

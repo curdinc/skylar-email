@@ -394,8 +394,8 @@ importers:
         specifier: ^0.1.0
         version: link:../parsers-and-types
       drizzle-orm:
-        specifier: ^0.28.5
-        version: 0.28.5(@neondatabase/serverless@0.6.0)(pg@8.11.3)(postgres@3.3.5)
+        specifier: ^0.29.1
+        version: 0.29.1(@neondatabase/serverless@0.6.0)(pg@8.11.3)(postgres@3.3.5)
     devDependencies:
       '@skylar/eslint-config':
         specifier: ^0.2.0
@@ -4555,8 +4555,8 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.28.5(@neondatabase/serverless@0.6.0)(pg@8.11.3)(postgres@3.3.5):
-    resolution: {integrity: sha512-6r6Iw4c38NAmW6TiKH3TUpGUQ1YdlEoLJOQptn8XPx3Z63+vFNKfAiANqrIiYZiMjKR9+NYAL219nFrmo1duXA==}
+  /drizzle-orm@0.29.1(@neondatabase/serverless@0.6.0)(pg@8.11.3)(postgres@3.3.5):
+    resolution: {integrity: sha512-yItc4unfHnk8XkDD3/bdC63vdboTY7e7I03lCF1OJYABXSIfQYU9BFTQJXMMovVeb3T1/OJWwfW/70T1XPnuUA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'

@@ -6,6 +6,8 @@ import { stripeConfig } from "~/lib/config";
 import { stripePromise } from "~/lib/stripe";
 import { PaymentCollectionForm } from "./payment-collection-form";
 
+export const runtime = "edge";
+
 export default function AddCardForm() {
   return (
     <Elements stripe={stripePromise} options={stripeConfig}>

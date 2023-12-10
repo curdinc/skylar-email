@@ -4,6 +4,8 @@ import { Icons } from "~/components/icons";
 import { siteConfig } from "~/lib/config";
 import { MailingListForm } from "./mailing-list-form";
 
+export const runtime = "edge";
+
 const whySkylarList = [
   {
     title: "Perfect timing, everytime.",

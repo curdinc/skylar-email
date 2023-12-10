@@ -27,7 +27,7 @@
   "dependencies": {
     "@neondatabase/serverless": "^0.6.0",
     "@skylar/parsers-and-types": "^0.1.0",
-    "drizzle-orm": "^0.28.5"
+    "drizzle-orm": "^0.29.1"
   },
   "devDependencies": {
     "@skylar/eslint-config": "^0.2.0",

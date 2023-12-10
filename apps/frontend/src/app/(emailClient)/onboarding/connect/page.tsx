@@ -14,6 +14,8 @@ import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { useConnectEmailProviderPage } from "./use-connect-page";
 
+export const runtime = "edge";
+
 export default function ConnectEmailOnboardingForm() {
   const {
     onSelectEmailProvider,

@@ -10,6 +10,8 @@ import {
 } from "~/components/ui/card";
 import { useCardConfirmationPage } from "./use-card-cofirmation-page";
 
+export const runtime = "edge";
+
 export default function CardConfirmationPage() {
   useCardConfirmationPage();
   return (
