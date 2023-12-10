@@ -6,9 +6,11 @@ import { getAndParseMessages } from "../utils/get-and-parse-messages";
 export async function fullSync({
   accessToken,
   emailId,
+  onError,
 }: {
   accessToken: string;
   emailId: string;
+  onError?: (error: Error) => void;
 }): Promise<SyncResponseType> {
   // get all messages
   const messages = await getMessageListUnbounded({
@@ -28,6 +30,7 @@ export async function fullSync({
     accessToken: accessToken,
     emailId,
     messageIds,
+    onError,
   });
 
   const lastCheckedHistoryId = newMessages[0]?.historyId;

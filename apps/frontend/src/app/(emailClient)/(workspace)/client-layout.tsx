@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -15,20 +15,25 @@ import {
 import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
 import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
 
+import { identifyUser } from "~/lib/analytics/capture-event";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
+import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 import { useEmailPartialSync } from "./use-email-partial-sync";
 
 export const ClientLayout = () => {
   useInboxKeymaps();
   const router = useRouter();
+  const { data: activeEmailAddress } = useActiveEmailAddress();
 
-  const { providerIndex } = useParams();
   useEffect(() => {
+    if (activeEmailAddress) {
+      identifyUser(activeEmailAddress);
+    }
     resetActiveThread();
     resetComposeMessage();
-  }, [providerIndex]);
+  }, [activeEmailAddress]);
 
   const { mutateAsync: emailPartialSync } = useEmailPartialSync();
 

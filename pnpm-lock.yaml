@@ -216,6 +216,9 @@ importers:
       next-axiom:
         specifier: 1.0.0-rc.1
         version: 1.0.0-rc.1(next@13.5.4)(react@18.2.0)
+      posthog-js:
+        specifier: ^1.94.1
+        version: 1.94.1
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -249,6 +252,9 @@ importers:
       tailwind-merge:
         specifier: ^1.14.0
         version: 1.14.0
+      ts-case-convert:
+        specifier: ^2.0.5
+        version: 2.0.5
     devDependencies:
       '@skylar/api':
         specifier: ^0.1.0
@@ -5256,6 +5262,10 @@ packages:
     resolution: {integrity: sha512-3yurQZ2hD9VISAhJJP9bpYFNQrHHBXE2JxxjY5aLEcDi46RmAzJE2OC9FAde0yis5ElW0jTTzs0zfg/Cca4XqQ==}
     dev: false
 
+  /fflate@0.4.8:
+    resolution: {integrity: sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==}
+    dev: false
+
   /figures@3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
     engines: {node: '>=8'}
@@ -7097,6 +7107,12 @@ packages:
   /postgres@3.3.5:
     resolution: {integrity: sha512-+JD93VELV9gHkqpV5gdL5/70HdGtEw4/XE1S4BC8f1mcPmdib3K5XsKVbnR1XcAyC41zOnifJ+9YRKxdIsXiUw==}
 
+  /posthog-js@1.94.1:
+    resolution: {integrity: sha512-O9JnF7FM/OX8p0o/SEmzzOWj4wgnyTCMRApIoZkjn7Ds1Q5M5wUMhIYXFe4ugd6xBXetrnJU5rF3OvW2n93vcA==}
+    dependencies:
+      fflate: 0.4.8
+    dev: false
+
   /prebuild-install@7.1.1:
     resolution: {integrity: sha512-jAXscXWMcCK8GgCoHOfIr0ODh5ai8mj63L2nWrjuAgXE6tDyYGnx4/8o/rCgU+B4JSyZBKbeZqzhtwtC3ovxjw==}
     engines: {node: '>=10'}
@@ -8131,6 +8147,10 @@ packages:
       typescript: '>=4.2.0'
     dependencies:
       typescript: 5.2.2
+    dev: false
+
+  /ts-case-convert@2.0.5:
+    resolution: {integrity: sha512-nDSNYqlRK7jeUVdvo9C+wjMmEJMk7kIwHW6GUghRoKUnLn0V26VJ7ZVL0ApvOKuMorRzpfb1m3X4qkfD+h8xIw==}
     dev: false
 
   /ts-interface-checker@0.1.13:

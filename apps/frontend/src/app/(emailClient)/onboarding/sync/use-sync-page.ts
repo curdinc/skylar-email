@@ -11,6 +11,8 @@ import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
+import { captureEvent } from "~/lib/analytics/capture-event";
+import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useLogger } from "~/lib/logger";
 import {
@@ -99,17 +101,36 @@ export function useSyncPage() {
     };
     if (!runOnceRef.current) {
       runOnceRef.current = true;
-      startEmailFullSync().catch((e) => {
-        logger.error("Error performing full sync for user gmail inbox", {
-          parserError: JSON.stringify(formatValidatorError(e), null, 2),
-          error: e,
-        });
-        toast({
-          variant: "destructive",
-          title: "Error syncing your inbox",
-          description: "Please try again later.",
-        });
+      captureEvent({
+        event: TrackingEvents.syncStarted,
+        properties: {},
       });
+      const fullSyncStart = performance.now();
+      startEmailFullSync()
+        .then(() => {
+          const fullSyncEnd = performance.now();
+          captureEvent({
+            event: TrackingEvents.syncCompleted,
+            properties: {
+              secondsElapsed: (fullSyncEnd - fullSyncStart) / 1000,
+            },
+          });
+        })
+        .catch((e) => {
+          captureEvent({
+            event: TrackingEvents.syncFailed,
+            properties: {},
+          });
+          logger.error("Error performing full sync for user gmail inbox", {
+            parserError: JSON.stringify(formatValidatorError(e), null, 2),
+            error: e,
+          });
+          toast({
+            variant: "destructive",
+            title: "Error syncing your inbox",
+            description: "Please try again later.",
+          });
+        });
     }
   }, [logger, router, startEmailFullSyncForAddress, toast]);
 

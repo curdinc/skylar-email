@@ -9,16 +9,18 @@ export async function bulkPutMessages({
   messages: MessageType[];
 }) {
   const threads = await buildThreadList(messages);
-  await clientDb
-    .transaction("rw", clientDb.message, clientDb.thread, async () => {
+  await clientDb.transaction(
+    "rw",
+    clientDb.message,
+    clientDb.thread,
+    async () => {
+      // https://dexie.org/docs/Promise/Promise.catch() - transaction will not abort
       await clientDb.message.bulkPut(messages).catch((error) => {
-        console.error("error in bulk put emails", error);
+        console.info("failed to add some messages", error);
       });
       await clientDb.thread.bulkPut(threads).catch((error) => {
-        console.error("error in bulk put threads", error);
+        console.info("failed to add some threads", error);
       });
-    })
-    .catch((error) => {
-      console.error("error in bulkPutMessages transaction", error);
-    });
+    },
+  );
 }

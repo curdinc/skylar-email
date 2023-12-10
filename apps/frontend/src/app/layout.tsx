@@ -2,9 +2,11 @@ import { Inter, Montserrat } from "next/font/google";
 
 import "~/styles/globals.css";
 
+import { Suspense } from "react";
 import { cookies, headers } from "next/headers";
 import { AxiomWebVitals } from "next-axiom";
 
+import { PostHogPageview } from "~/components/analytics/posthog-pageview";
 import { Toaster } from "~/components/ui/toaster";
 import { env } from "~/env";
 import { siteConfig } from "~/lib/config";
@@ -77,6 +79,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           fontHeading.variable,
         )}
       >
+        <Suspense>
+          <PostHogPageview />
+        </Suspense>
         <AxiomWebVitals />
         <ClientProvider
           cookies={cookies().getAll()}
