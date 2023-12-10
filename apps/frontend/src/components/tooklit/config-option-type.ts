@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 
-import type { ThreadType } from "@skylar/client-db/schema/thread";
+import type { ThreadType } from "@skylar/parsers-and-types";
 
 export type MoveThreadArgs = string[];
 

@@ -1,5 +1,5 @@
-import type { ThreadType } from "@skylar/client-db/schema/thread";
 import { batchTrashThreads } from "@skylar/gmail-api";
+import type { ThreadType } from "@skylar/parsers-and-types";
 
 import { updateAndSaveLabels } from "../utils";
 

@@ -3,5 +3,12 @@
   "compilerOptions": {
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
-  "include": ["*.ts", "src", "schema"]
+  "include": [
+    "*.ts",
+    "src",
+    "schema",
+    "../parsers-and-types/src/client-db-schema/message.ts",
+    "../parsers-and-types/src/client-db-schema/sync.ts",
+    "../parsers-and-types/src/client-db-schema/thread.ts"
+  ]
 }

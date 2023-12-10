@@ -6,32 +6,29 @@ import type { StripeError, StripePaymentElement } from "@stripe/stripe-js";
 import { useQuery } from "@tanstack/react-query";
 
 import { useToast } from "~/components/ui/use-toast";
-import { api } from "~/lib/api";
 import { useLogger } from "~/lib/logger";
 
 function useCreateCustomer() {
-  const { toast } = useToast();
-
-  const [isCustomerCreated, setIsCustomerCreated] = useState(false);
-  const { mutate: maybeCreateCustomer } =
-    api.stripe.maybeCreateCustomer.useMutation({
-      onSuccess: () => {
-        setIsCustomerCreated(true);
-      },
-      onError: () => {
-        toast({
-          title: "Something went wrong",
-          description:
-            "Error setting up payment collection. Please refresh and try again",
-          variant: "destructive",
-        });
-      },
-    });
+  const [isCustomerCreated, _setIsCustomerCreated] = useState(false);
+  // const { mutate: maybeCreateCustomer } =
+  //   api.stripe.maybeCreateCustomer.useMutation({
+  //     onSuccess: () => {
+  //       setIsCustomerCreated(true);
+  //     },
+  //     onError: () => {
+  //       toast({
+  //         title: "Something went wrong",
+  //         description:
+  //           "Error setting up payment collection. Please refresh and try again",
+  //         variant: "destructive",
+  //       });
+  //     },
+  //   });
 
   useQuery({
     queryKey: ["stripe", "maybeCreateCustomer"],
     queryFn: () => {
-      maybeCreateCustomer();
+      // maybeCreateCustomer();
       return "OK" as const;
     },
     refetchOnMount: false,
@@ -76,10 +73,10 @@ function useSubmitPaymentElement() {
   const { toast } = useToast();
   const { isCustomerCreated } = useCreateCustomer();
 
-  const { mutateAsync: createSetupIntent } =
-    api.stripe.createSetupIntent.useMutation();
+  // const { mutateAsync: createSetupIntent } =
+  //   api.stripe.createSetupIntent.useMutation();
 
-  const handlePaymentError = useCallback(
+  const _handlePaymentError = useCallback(
     (error: StripeError) => {
       logger.error("Error submitting stripe payment element", {
         ...error,
@@ -112,19 +109,19 @@ function useSubmitPaymentElement() {
         return;
       }
 
-      const setupIntent = await createSetupIntent();
+      // const setupIntent = await createSetupIntent();
 
       try {
-        const { error: confirmationError } = await stripe.confirmSetup({
-          clientSecret: setupIntent.clientSecret ?? "",
-          elements,
-          confirmParams: {
-            return_url: `${location.origin}/onboarding/card/confirm`,
-          },
-        });
-        if (confirmationError) {
-          handlePaymentError(confirmationError);
-        }
+        // const { error: confirmationError } = await stripe.confirmSetup({
+        //   clientSecret: setupIntent.clientSecret ?? "",
+        //   elements,
+        //   confirmParams: {
+        //     return_url: `${location.origin}/onboarding/card/confirm`,
+        //   },
+        // });
+        // if (confirmationError) {
+        //   handlePaymentError(confirmationError);
+        // }
       } catch (e) {
         logger.error("Error confirming stripe setup intent", {
           error: e,
@@ -133,14 +130,7 @@ function useSubmitPaymentElement() {
         setIsSubmittingPaymentDetails(false);
       }
     },
-    [
-      canSubmitPaymentDetail,
-      createSetupIntent,
-      elements,
-      handlePaymentError,
-      logger,
-      stripe,
-    ],
+    [canSubmitPaymentDetail, elements, logger],
   );
 
   return {

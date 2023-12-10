@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Letter } from "react-letter";
 
-import type { MessageType } from "@skylar/client-db/schema/message";
+import type { MessageType } from "@skylar/parsers-and-types";
 
 import { formatTimeToMMMDDYYYYHHmm } from "~/lib/email";
 import { cn } from "~/lib/ui";

@@ -10,16 +10,11 @@ import {
 
 export const ClientEnvSchemaObject = {
   NEXT_PUBLIC_BACKEND_URL: string([url()]),
-  NEXT_PUBLIC_SUPABASE_URL: string([url()]),
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: string(),
-  NEXT_PUBLIC_STRIPE_PUBLISHABLE_API_KEY: string(),
   NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID: string(),
   NEXT_PUBLIC_POSTHOG_KEY: string(),
 };
 
-export const ServerEnvSchemaObject = {
-  SUPABASE_JWT_SECRET: string(),
-};
+export const ServerEnvSchemaObject = {};
 
 export const SharedEnvSchemaObject = {
   VERCEL_URL: transform(optional(string()), (v) => {

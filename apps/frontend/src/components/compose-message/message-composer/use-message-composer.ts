@@ -4,9 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
-import type { ThreadType } from "@skylar/client-db/schema/thread";
 import { resetComposeMessage, useGlobalStore } from "@skylar/logic";
-import type { EmailComposeType } from "@skylar/parsers-and-types";
+import type { EmailComposeType, ThreadType } from "@skylar/parsers-and-types";
 import { EmailComposeSchema } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";

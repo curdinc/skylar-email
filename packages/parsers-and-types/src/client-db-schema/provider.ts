@@ -1,4 +1,4 @@
-import type { SupportedEmailProviderType } from "../..";
+import type { SupportedEmailProviderType } from "../api/email-provider/oauth";
 
 export const PROVIDER_INDEX =
   `++provider_id, &user_email_address, type` as const;

@@ -7,7 +7,7 @@ import {
   getEmailSyncInfo,
   upsertEmailSyncInfo,
 } from "@skylar/client-db";
-import type { EmailSyncInfoType } from "@skylar/client-db/schema/sync";
+import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";

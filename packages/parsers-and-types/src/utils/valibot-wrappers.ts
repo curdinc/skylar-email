@@ -16,16 +16,6 @@ export function formatValidatorError(err: unknown) {
   return err instanceof ValiError ? flatten(err) : undefined;
 }
 
-export function formatErrors(err: unknown) {
-  if (err instanceof ValiError) {
-    return JSON.stringify(flatten(err));
-  }
-  if (err instanceof Error) {
-    return err.message;
-  }
-  return JSON.stringify(err);
-}
-
 export function parse<TInput, TOutput, T extends BaseSchema<TInput, TOutput>>(
   schema: T,
   raw: unknown,

@@ -5,8 +5,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useInView } from "react-intersection-observer";
 
 import { isThreadUnread, useThreadSnippetsInfinite } from "@skylar/client-db";
-import type { ThreadType } from "@skylar/client-db/schema/thread";
 import { setActiveThread } from "@skylar/logic";
+import type { ThreadType } from "@skylar/parsers-and-types";
 
 import { ThreadContextMenu } from "~/components/tooklit/components/context-menu";
 import { captureEvent } from "~/lib/analytics/capture-event";

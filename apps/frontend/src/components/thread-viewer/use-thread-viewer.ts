@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import { bulkUpdateMessages, useThread } from "@skylar/client-db";
-import type { MessageType } from "@skylar/client-db/schema/message";
 import { modifyLabels } from "@skylar/gmail-api";
 import { useGlobalStore } from "@skylar/logic";
+import type { MessageType } from "@skylar/parsers-and-types";
 
 import { useAccessToken } from "~/lib/provider/use-access-token";
 

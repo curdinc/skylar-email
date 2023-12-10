@@ -12,8 +12,8 @@ import {
   getEmailSyncInfo,
   updateEmailSyncInfo,
 } from "@skylar/client-db";
-import type { EmailSyncInfoType } from "@skylar/client-db/schema/sync";
 import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
+import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";

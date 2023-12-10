@@ -1,5 +1,5 @@
 import { bulkPutThreads } from "@skylar/client-db";
-import type { ThreadType } from "@skylar/client-db/schema/thread";
+import type { ThreadType } from "@skylar/parsers-and-types";
 
 import { GMAIL_IMMUTABLE_LABELS } from "./constants";
 

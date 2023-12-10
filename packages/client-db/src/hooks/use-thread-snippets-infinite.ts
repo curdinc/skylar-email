@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import type { ThreadType } from "../../schema/thread";
+import type { ThreadType } from "@skylar/parsers-and-types";
+
 import { getThreadSnippets } from "../thread/get-thread-snippets";
 import type { GetParameters } from "../types/extract-params";
 

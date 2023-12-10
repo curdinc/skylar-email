@@ -1,4 +1,5 @@
-import type { MessageIndexType, MessageType } from "../../schema/message";
+import type { MessageIndexType, MessageType } from "@skylar/parsers-and-types";
+
 import { clientDb } from "../db";
 import { bulkGetMessages } from "./bulk-get-messages";
 import { bulkPutMessages } from "./bulk-put-messages";

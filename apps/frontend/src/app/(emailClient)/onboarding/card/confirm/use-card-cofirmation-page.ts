@@ -2,8 +2,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useStripe } from "@stripe/react-stripe-js";
 import { useQuery } from "@tanstack/react-query";
 
-import { api } from "~/lib/api";
-
 export function useCheckSuccessfulSetupIntent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -11,8 +9,6 @@ export function useCheckSuccessfulSetupIntent() {
   const setupIntentClientSecret = searchParams.get(
     "setup_intent_client_secret",
   );
-  const { mutateAsync: setDefaultPaymentMethod } =
-    api.stripe.setDefaultPaymentMethod.useMutation();
 
   useQuery({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
@@ -33,12 +29,12 @@ export function useCheckSuccessfulSetupIntent() {
       if (setupIntent) {
         switch (setupIntent.status) {
           case "succeeded": {
-            await setDefaultPaymentMethod({
-              paymentMethodId:
-                typeof setupIntent.payment_method === "string"
-                  ? setupIntent.payment_method
-                  : setupIntent.payment_method?.id ?? "",
-            });
+            // await setDefaultPaymentMethod({
+            //   paymentMethodId:
+            //     typeof setupIntent.payment_method === "string"
+            //       ? setupIntent.payment_method
+            //       : setupIntent.payment_method?.id ?? "",
+            // });
             router.push("/onboarding/sync");
             break;
           }

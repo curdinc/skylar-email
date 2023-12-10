@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ToastAction } from "@radix-ui/react-toast";
 import { Check } from "lucide-react";
 
-import type { ThreadType } from "@skylar/client-db/schema/thread";
+import type { ThreadType } from "@skylar/parsers-and-types";
 
 import { useListLabels } from "~/app/(emailClient)/(workspace)/use-list-labels";
 import { Button } from "~/components/ui/button";

@@ -1,7 +1,7 @@
-import type { MessageType } from "@skylar/client-db/schema/message";
 import type { State } from "@skylar/logic";
 import type {
   EmailSenderType,
+  MessageType,
   SenderType,
   SyncResponseType,
 } from "@skylar/parsers-and-types";

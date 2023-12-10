@@ -1,7 +1,7 @@
 import { ToastAction } from "@radix-ui/react-toast";
 
 import { getAllThreadsFromSenderEmailAddress } from "@skylar/client-db";
-import type { ThreadType } from "@skylar/client-db/schema/thread";
+import type { ThreadType } from "@skylar/parsers-and-types";
 
 import {
   ContextMenu,
