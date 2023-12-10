@@ -48,20 +48,18 @@ export async function buildThreadList(messages: MessageType[]) {
   const existingThreadMap = new Map<string, ThreadType>();
   existingThreads.forEach((thread) => {
     if (thread) {
-      existingThreadMap.set(thread.email_provider_thread_id, thread);
+      existingThreadMap.set(thread.provider_thread_id, thread);
     }
   });
 
   const threads = await messages.reduce(
     async (threads, message) => {
-      const { provider_thread_id: email_provider_thread_id } = message;
+      const { provider_thread_id } = message;
       const resolvedThreads = await threads;
-      const thread: ThreadType = resolvedThreads.get(
-        email_provider_thread_id,
-      ) ??
-        existingThreadMap.get(email_provider_thread_id) ?? {
+      const thread: ThreadType = resolvedThreads.get(provider_thread_id) ??
+        existingThreadMap.get(provider_thread_id) ?? {
           user_email_address: "",
-          email_provider_thread_id: "",
+          provider_thread_id: "",
           email_provider_message_id: [],
           rfc822_message_id: [],
           subject: "",
@@ -123,9 +121,9 @@ export async function buildThreadList(messages: MessageType[]) {
         )
         .filter((x) => !!x);
 
-      resolvedThreads.set(email_provider_thread_id, {
+      resolvedThreads.set(provider_thread_id, {
         user_email_address: message.user_email_address,
-        email_provider_thread_id: message.provider_thread_id,
+        provider_thread_id: message.provider_thread_id,
         email_provider_message_id: thread.email_provider_message_id.concat([
           message.provider_message_id,
         ]),

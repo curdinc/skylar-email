@@ -1,7 +1,7 @@
 import type { SenderType } from "@skylar/parsers-and-types";
 
 export type ThreadIndexType = {
-  email_provider_thread_id: string;
+  provider_thread_id: string;
   user_email_address: string;
   email_provider_message_id: string[];
   subject_search: string[];
@@ -31,7 +31,7 @@ export type ThreadType = ThreadIndexType & {
   delivered_to: SenderType[][];
 };
 
-export const THREAD_INDEX = `&email_provider_thread_id,
+export const THREAD_INDEX = `&provider_thread_id,
 user_email_address,
 *email_provider_message_id,
 *subject_search,

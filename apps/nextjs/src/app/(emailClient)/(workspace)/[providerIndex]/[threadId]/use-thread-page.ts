@@ -10,7 +10,7 @@ import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export function useThreadPage() {
   const threadId = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.activeThread?.email_provider_thread_id,
+    (state) => state.EMAIL_CLIENT.activeThread?.provider_thread_id,
   );
 
   const { thread, isLoading: isLoadingThread } = useThread({

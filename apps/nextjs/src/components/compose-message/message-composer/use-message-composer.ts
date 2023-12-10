@@ -133,7 +133,7 @@ export const useMessageComposer = () => {
           replyConfig: {
             inReplyToRfcMessageId: replyThread.rfc822_message_id[0] ?? "",
             references: replyThread.rfc822_message_id,
-            providerThreadId: replyThread.email_provider_thread_id,
+            providerThreadId: replyThread.provider_thread_id,
             rootSubject: replyThread.subject,
           },
         },

@@ -33,6 +33,6 @@ export async function moveThreads({
     addLabels: labelsToAdd,
     deleteLabels: labelsToRemove,
     emailId: email,
-    threadIds: updatedThreads.map((t) => t.email_provider_thread_id),
+    threadIds: updatedThreads.map((t) => t.provider_thread_id),
   });
 }
