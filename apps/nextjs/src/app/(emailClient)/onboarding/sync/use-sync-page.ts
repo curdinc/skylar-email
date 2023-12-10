@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -12,54 +12,65 @@ import { formatValidatorError } from "@skylar/parsers-and-types";
 import { useToast } from "~/components/ui/use-toast";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useLogger } from "~/lib/logger";
+import {
+  ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX,
+  ROUTE_EMAIL_PROVIDER_INBOX,
+  ROUTE_ONBOARDING_CONNECT,
+} from "~/lib/routes";
 import { useEmailFullSync } from "./use-email-full-sync";
 
 export function useSyncPage() {
-  const { data: allEmailProviders } = useAllEmailProviders();
+  const { data: allEmailProviders, isPending: isLoadingAllEmailProviders } =
+    useAllEmailProviders();
 
-  const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
-    {
+  const { data: emailSyncInfo, isLoading: isLoadingEmailSyncInfo } =
+    useEmailSyncInfo({
       emailAddresses: (allEmailProviders ?? []).map(
         (provider) => provider.email,
       ),
-    },
-  );
-  const { syncProgress, syncStep, startEmailFullSync, emailsToSync } =
-    useEmailFullSync();
+    });
+  const runOnceRef = useRef(false);
+  const {
+    syncProgress,
+    syncStep,
+    emailFullSyncMutation: { mutateAsync: startEmailFullSync },
+    providersSyncing,
+  } = useEmailFullSync();
   const router = useRouter();
   const logger = useLogger();
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!allEmailProviders) {
+    if (isLoadingEmailSyncInfo || isLoadingAllEmailProviders) {
       return;
     }
-    if (isLoadingEmailSyncInfo || !allEmailProviders.length) {
+    if (!allEmailProviders?.length) {
+      router.push(ROUTE_ONBOARDING_CONNECT);
       return;
-    } else if (
-      !isLoadingEmailSyncInfo &&
-      emailSyncInfo?.length === allEmailProviders.length
-    ) {
-      router.push("/0");
-    } else {
-      console.log("starting sync");
-      for (const activeEmailProvider of allEmailProviders) {
+    }
+    if (emailSyncInfo?.length === allEmailProviders.length) {
+      router.push(
+        ROUTE_EMAIL_PROVIDER_INBOX(ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX),
+      );
+    } else if (!runOnceRef.current) {
+      runOnceRef.current = true;
+      for (const emailProvider of allEmailProviders) {
         const syncInfo = emailSyncInfo?.find(
           (info) =>
             info.email_sync_info_id.toLowerCase() ===
-            activeEmailProvider.email.toLowerCase(),
+            emailProvider.email.toLowerCase(),
         );
         if (syncInfo?.full_sync_completed_on) {
           continue;
         }
-        startEmailFullSync(
-          activeEmailProvider.email,
-          activeEmailProvider.email_provider,
-        )
+        startEmailFullSync({
+          emailToSync: emailProvider.email,
+          emailProvider: emailProvider.email_provider,
+        })
           .then(async (emailData) => {
             console.log("emailData", emailData);
             const emailToSave = convertGmailEmailToClientDbEmail(
-              activeEmailProvider.email,
+              emailProvider.email,
               emailData.newMessages,
             );
             await bulkPutEmails({
@@ -67,7 +78,7 @@ export function useSyncPage() {
             });
             await upsertEmailSyncInfo({
               emailSyncInfo: {
-                email_sync_info_id: activeEmailProvider.email,
+                email_sync_info_id: emailProvider.email,
                 full_sync_completed_on: new Date().getTime(),
                 last_sync_history_id: emailData.lastCheckedHistoryId,
                 last_sync_history_id_updated_at: new Date().getTime(),
@@ -89,9 +100,8 @@ export function useSyncPage() {
     }
   }, [
     allEmailProviders,
-    allEmailProviders?.length,
     emailSyncInfo,
-    emailSyncInfo?.length,
+    isLoadingAllEmailProviders,
     isLoadingEmailSyncInfo,
     logger,
     router,
@@ -100,8 +110,8 @@ export function useSyncPage() {
   ]);
 
   return {
-    activeEmailProviders: allEmailProviders,
-    emailsToSync,
+    emailProviders: allEmailProviders,
+    providersSyncing,
     syncProgress,
     syncStep,
     startEmailFullSync,
