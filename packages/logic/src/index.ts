@@ -42,7 +42,6 @@ export type State = {
     };
   };
   EMAIL_CLIENT: {
-    activeEmailAddress: string | undefined;
     CONTEXT_MENU: {
       mostRecentlyAffectedThreads: ThreadType[];
     };
@@ -97,9 +96,6 @@ type Actions = {
   setIsSelecting: (
     isSelecting: State["EMAIL_CLIENT"]["COMPOSING"]["isSelecting"],
   ) => void;
-  setActiveEmailAddress: (
-    emailAddress: State["EMAIL_CLIENT"]["activeEmailAddress"],
-  ) => void;
   setComposeMessage: (emailType: ValidComposeMessageOptionsType) => void;
 };
 
@@ -107,7 +103,6 @@ type Actions = {
 export const useGlobalStore = create(
   immer<State>(() => ({
     EMAIL_CLIENT: {
-      activeEmailAddress: undefined,
       CONTEXT_MENU: {
         mostRecentlyAffectedThreads: [],
       },
@@ -179,13 +174,6 @@ export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"]
     useGlobalStore.setState((state) => {
       state.SETTINGS.INVITE_CODE.inviteCodeIdBeingDeleted = inviteCodeId;
     });
-
-export const setActiveEmailAddress: Actions["setActiveEmailAddress"] = (
-  emailAddress?: string,
-) =>
-  useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.activeEmailAddress = emailAddress;
-  });
 
 export const setActiveThread: Actions["setActiveThread"] = (thread) => {
   useGlobalStore.setState((state) => {

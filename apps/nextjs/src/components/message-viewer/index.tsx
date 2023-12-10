@@ -1,23 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import { Letter } from "react-letter";
 
 import type { EmailType } from "@skylar/client-db/schema/email";
 
+import { formatTimeToMMMDDYYYYHHmm } from "~/lib/email";
+import { cn } from "~/lib/ui";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "~/components/ui/accordion";
-import { RawHtmlDisplay } from "~/components/ui/raw-html-display";
-import { TypographyH1 } from "~/components/ui/typography";
-import { formatTimeToMMMDDYYYYHHmm } from "~/lib/email";
-import { cn } from "~/lib/ui";
-import { useThreadPage } from "./use-thread-page";
+} from "../ui/accordion";
+import { TypographyH1 } from "../ui/typography";
+import { useMessageViewer } from "./use-message-viewer";
 
-export function EmailThreadPage() {
-  const { emailThread, isLoadingThread } = useThreadPage();
+export function MessageViewer() {
+  const { emailThread, isLoadingThread } = useMessageViewer();
 
   if (isLoadingThread) {
     return <div>Loading...</div>;
@@ -48,12 +48,11 @@ export function EmailDisplay({
   isOpenInitially: boolean;
 }) {
   const dateUpdated = formatTimeToMMMDDYYYYHHmm(email.created_at);
-  const [isOpen, setIsOpen] = useState(isOpenInitially ? email.subject : "");
 
+  const [isOpen, setIsOpen] = useState(isOpenInitially ? email.subject : "");
   const onClickEmailHeader = (isEmailOpen: string) => {
     setIsOpen(isEmailOpen);
   };
-
   return (
     <Accordion
       type="single"
@@ -69,7 +68,8 @@ export function EmailDisplay({
         >
           <div className="flex w-full min-w-full flex-col items-baseline justify-between md:flex-row">
             <div className="min-w-fit text-base font-semibold">
-              {email.from.name ?? email.from.email}
+              {email.from.name ? email.from.name : email.from.email}
+              {email.from.name && ` <${email.from.email}>`}
             </div>
 
             <div className="min-w-fit text-sm text-muted-foreground">
@@ -82,21 +82,30 @@ export function EmailDisplay({
               {email.to.length > 1 ? `& ${email.to.length - 1} others` : null}
             </div>
           ) : (
-            <RawHtmlDisplay
-              className={"truncate text-sm text-muted-foreground"}
+            <Letter
+              className={
+                "w-full min-w-0 truncate text-sm text-muted-foreground"
+              }
               html={email.snippet_html}
             />
           )}
         </AccordionTrigger>
         <AccordionContent>
           {/* TODO: Display inline image */}
-          <RawHtmlDisplay
-            className={cn(
-              !email.content_html && "whitespace-pre-wrap",
-              "w-full min-w-0",
-              "prose",
-            )}
-            html={email.content_html ? email.content_html : email.content_text}
+          <Letter
+            className={cn(!email.content_html && "whitespace-pre-wrap")}
+            html={email.content_html ?? ""}
+            text={email.content_text}
+            // Leaving comments here to show that
+            // we can rewrite external resources and links if needed in the future
+            // rewriteExternalResources={(resource) => {
+            //   console.log("resource", resource);
+            //   return resource;
+            // }}
+            // rewriteExternalLinks={(link) => {
+            //   console.log("link", link);
+            //   return link;
+            // }}
           />
         </AccordionContent>
       </AccordionItem>

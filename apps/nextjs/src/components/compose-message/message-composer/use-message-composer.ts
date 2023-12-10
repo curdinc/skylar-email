@@ -11,10 +11,11 @@ import { EmailComposeSchema } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
 import {
-  formatEmailAddresses,
+  formatEmailSenderTypeAndRemoveUserEmail,
   getSenderReplyToEmailAddresses,
   isAttachmentSizeValid,
 } from "~/lib/email";
+import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useSendEmail } from "./use-send-mail";
 
 export const useMessageComposer = () => {
@@ -24,9 +25,7 @@ export const useMessageComposer = () => {
   const composeEmailType = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
   );
-  const activeEmailAddress = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.activeEmailAddress,
-  );
+  const { data: activeEmailAddress } = useActiveEmailAddress();
   const attachments = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.attachments,
   );
@@ -60,11 +59,17 @@ export const useMessageComposer = () => {
           );
           replyTo.push(...senderEmailAddresses);
           replyTo.push(
-            ...formatEmailAddresses(activeEmailAddress, thread?.to.at(-1)),
+            ...formatEmailSenderTypeAndRemoveUserEmail(
+              activeEmailAddress,
+              thread?.to.at(-1),
+            ),
           );
 
           cc.push(
-            ...formatEmailAddresses(activeEmailAddress, thread?.cc.at(-1)),
+            ...formatEmailSenderTypeAndRemoveUserEmail(
+              activeEmailAddress,
+              thread?.cc.at(-1),
+            ),
           );
           break;
         }

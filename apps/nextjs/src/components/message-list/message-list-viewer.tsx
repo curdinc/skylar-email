@@ -3,10 +3,10 @@
 import { Fragment, useEffect, useState } from "react";
 
 import { filterForLabels } from "@skylar/client-db";
-import { useGlobalStore } from "@skylar/logic";
 
 import { Icons } from "~/components/icons";
 import { useLogger } from "~/lib/logger";
+import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useListLabels } from "../../app/(emailClient)/(workspace)/use-list-labels";
 import { MessageList } from "./message-list";
 
@@ -16,9 +16,7 @@ import { MessageList } from "./message-list";
 export const MessageListViewer = () => {
   const logger = useLogger();
   const { data: labels, isLoading } = useListLabels();
-  const activeEmailAddress = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.activeEmailAddress,
-  );
+  const { data: activeEmailAddress } = useActiveEmailAddress();
 
   const [activeLabels, setActiveLabels] = useState<
     { name: string; id: string }[]

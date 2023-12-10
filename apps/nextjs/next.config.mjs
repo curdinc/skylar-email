@@ -1,4 +1,3 @@
-// Importing env files here to validate on build
 import { withAxiom } from "next-axiom";
 
 /** @type {import("next").NextConfig} */

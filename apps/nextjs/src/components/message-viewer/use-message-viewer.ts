@@ -8,7 +8,7 @@ import { useGlobalStore } from "@skylar/logic";
 
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
-export function useThreadPage() {
+export function useMessageViewer() {
   const threadId = useGlobalStore(
     (state) => state.EMAIL_CLIENT.activeThread?.email_provider_thread_id,
   );

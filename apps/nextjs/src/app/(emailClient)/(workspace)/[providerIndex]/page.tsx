@@ -6,7 +6,7 @@ import { Allotment } from "allotment";
 import { useGlobalStore } from "@skylar/logic";
 
 import { MessageListViewer } from "~/components/message-list/message-list-viewer";
-import { EmailThreadPage } from "./[threadId]/page";
+import { MessageViewer } from "~/components/message-viewer/index";
 
 const MIN_PANE_SIZE = 250;
 
@@ -35,7 +35,7 @@ export default function Inbox() {
         <Allotment vertical>
           <div className="h-full overflow-auto">
             {/* Single Thread viewer */}
-            <EmailThreadPage />
+            <MessageViewer />
           </div>
           {messageType !== "none" && (
             <div className="h-full overflow-auto">

@@ -4,9 +4,10 @@ import { useInView } from "react-intersection-observer";
 
 import { isThreadUnread, useThreadSnippetsInfinite } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
-import { setActiveThread, useGlobalStore } from "@skylar/logic";
+import { setActiveThread } from "@skylar/logic";
 
 import { ThreadContextMenu } from "~/components/tooklit/components/context-menu";
+import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { cn } from "~/lib/ui";
 
 /**
@@ -20,9 +21,8 @@ export function MessageList({
 }: Pick<Parameters<typeof useThreadSnippetsInfinite>[0], "filters"> & {
   uniqueListId: string;
 }) {
-  const activeEmailAddress = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.activeEmailAddress,
-  );
+  const { data: activeEmailAddress } = useActiveEmailAddress();
+
   const { status, data, error, fetchNextPage, hasNextPage, refetch } =
     useThreadSnippetsInfinite({
       userEmails: activeEmailAddress ? [activeEmailAddress] : [],

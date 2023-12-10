@@ -63,6 +63,7 @@
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.48.2",
     "react-intersection-observer": "^9.5.3",
+    "react-letter": "^0.4.0",
     "react-multi-email": "^1.0.19",
     "react-simplemde-editor": "^5.2.0",
     "showdown": "^2.1.0",
