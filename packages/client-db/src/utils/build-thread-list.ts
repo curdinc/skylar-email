@@ -89,7 +89,7 @@ export async function buildThreadList(messages: MessageType[]) {
       thread.from.push([message.from]);
       thread.to.push(message.to);
       thread.cc.push(message.cc[0]?.email_address ? message.cc : []);
-      thread.bcc.push(message.bcc.email_address ? [message.bcc] : []);
+      thread.bcc.push(message.bcc?.email_address ? [message.bcc] : []);
       thread.reply_to.push(message.reply_to);
       thread.delivered_to.push(message.delivered_to);
 
@@ -105,8 +105,8 @@ export async function buildThreadList(messages: MessageType[]) {
         .concat(message.cc.map((cc) => cc.name ?? ""))
         .filter((x) => !!x);
       thread.bcc_search = thread.bcc_search
-        .concat(message.bcc.email_address)
-        .concat(message.bcc.name ?? "")
+        .concat(message.bcc?.email_address ?? "")
+        .concat(message.bcc?.name ?? "")
         .filter((x) => !!x);
       thread.reply_to_search = thread.reply_to_search
         .concat(message.reply_to.map((replyTo) => replyTo.email_address))

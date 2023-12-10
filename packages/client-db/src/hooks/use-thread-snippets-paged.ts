@@ -1,5 +1,5 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import type { ThreadType } from "../../schema/thread";
 import { getThreadSnippets } from "../thread/get-thread-snippets";

@@ -9,10 +9,10 @@ import {
   bulkPutMessages,
   bulkUpdateMessages,
   getAllProviders,
+  getEmailSyncInfo,
   updateEmailSyncInfo,
 } from "@skylar/client-db";
 import type { EmailSyncInfoType } from "@skylar/client-db/schema/sync";
-import { getEmailSyncInfo } from "@skylar/client-db/src/sync/get-email-sync-info";
 import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
 
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";

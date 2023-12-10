@@ -22,7 +22,7 @@ export function useSendEmail() {
       const accessToken = await fetchGmailAccessToken({
         email: emailAddress,
       });
-
+      console.log("emailConfig", emailConfig);
       const composedEmail = await composeEmail(emailConfig);
       const sendMessageResponse = await sendMail({
         accessToken,

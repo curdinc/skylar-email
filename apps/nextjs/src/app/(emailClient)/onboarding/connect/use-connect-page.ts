@@ -29,8 +29,7 @@ export function useConnectEmailProviderPage() {
     }
   };
 
-  const [isConnectingToProvider, setIsConnectingToProvider] =
-    useState(false);
+  const [isConnectingToProvider, setIsConnectingToProvider] = useState(false);
 
   const { mutate: addProvider } = useMutation({
     mutationFn: async (provider: ProviderInsertType) => {
