@@ -29,7 +29,6 @@ export const ClientLayout = () => {
 
   useEffect(() => {
     if (activeEmailAddress) {
-      console.log("changed user to", activeEmailAddress);
       identifyUser(activeEmailAddress);
     }
     resetActiveThread();
