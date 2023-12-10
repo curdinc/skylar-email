@@ -1,4 +1,5 @@
-import type { MessageIndexType } from "../../schema/message";
+import type { MessageIndexType } from "@skylar/parsers-and-types";
+
 import { clientDb } from "../db";
 
 export async function getMessagesFromThreadId({

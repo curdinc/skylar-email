@@ -1,4 +1,5 @@
-import type { ThreadIndexType, ThreadType } from "../../schema/thread";
+import type { ThreadIndexType, ThreadType } from "@skylar/parsers-and-types";
+
 import { clientDb } from "../db";
 import { filterForEmails } from "../utils/thread-filters";
 

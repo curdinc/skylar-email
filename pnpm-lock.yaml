@@ -79,7 +79,7 @@ importers:
         specifier: ^3.6.0
         version: 3.6.0
 
-  apps/nextjs:
+  apps/frontend:
     dependencies:
       '@formkit/auto-animate':
         specifier: ^0.8.0
@@ -427,9 +427,6 @@ importers:
 
   packages/gmail-api:
     dependencies:
-      '@skylar/logger':
-        specifier: ^0.1.0
-        version: link:../logger
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../parsers-and-types
@@ -3334,17 +3331,10 @@ packages:
       update-check: 1.5.4
     dev: false
 
-  /@types/codemirror@5.60.13:
-    resolution: {integrity: sha512-qLWcKUwYDYB7mZpE++0Jn3i1TJ2GW8nlhALRAfjaKgb1HRnk2qcNqWxZ+BpPY1h4n4IQT0foThaOxWHxEL8MnQ==}
-    dependencies:
-      '@types/tern': 0.23.7
-    dev: false
-
   /@types/codemirror@5.60.15:
     resolution: {integrity: sha512-dTOvwEQ+ouKJ/rE9LT1Ue2hmP6H1mZv5+CCnNWu2qtiOe2LQa9lCprEY20HxiDmV/Bxh+dXjywmy5aKvoGjULA==}
     dependencies:
       '@types/tern': 0.23.7
-    dev: true
 
   /@types/dompurify@3.0.3:
     resolution: {integrity: sha512-odiGr/9/qMqjcBOe5UhcNLOFHSYmKFOyr+bJ/Xu3Qp4k1pNPAlNLUVNNLcLfjQI7+W7ObX58EdD3H+3p3voOvA==}
@@ -4639,7 +4629,7 @@ packages:
   /easymde@2.18.0:
     resolution: {integrity: sha512-IxVVUxNWIoXLeqtBU4BLc+eS/ScYhT1Dcb6yF5Wchoj1iXAV+TIIDWx+NCaZhY7RcSHqDPKllbYq7nwGKILnoA==}
     dependencies:
-      '@types/codemirror': 5.60.13
+      '@types/codemirror': 5.60.15
       '@types/marked': 4.3.2
       codemirror: 5.65.15
       codemirror-spell-checker: 1.1.2
@@ -7384,7 +7374,7 @@ packages:
       react: '>=16.8.2'
       react-dom: '>=16.8.2'
     dependencies:
-      '@types/codemirror': 5.60.13
+      '@types/codemirror': 5.60.15
       easymde: 2.18.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)

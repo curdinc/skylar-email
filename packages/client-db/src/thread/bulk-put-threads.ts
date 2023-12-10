@@ -1,4 +1,5 @@
-import type { ThreadType } from "../../schema/thread";
+import type { ThreadType } from "@skylar/parsers-and-types";
+
 import { clientDb } from "../db";
 
 export async function bulkPutThreads({ threads }: { threads: ThreadType[] }) {

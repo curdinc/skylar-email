@@ -1,10 +1,4 @@
-import { TRPCError } from "@trpc/server";
-
-import {
-  createInviteCode,
-  deleteInviteCode,
-  getUserInviteCodes,
-} from "@skylar/db";
+import { createInviteCode, deleteInviteCode } from "@skylar/db";
 import {
   DeleteInviteCodeSchema,
   validatorTrpcWrapper,
@@ -14,51 +8,35 @@ import { createTRPCRouter } from "../trpc/factory";
 import { publicProcedure } from "../trpc/procedures";
 
 export const inviteCodeRouter = createTRPCRouter({
-  getInviteCodes: publicProcedure.query(
-    async ({
-      ctx: {
-        db,
-        session: { user },
-      },
-    }) => {
-      const inviteCodes = await getUserInviteCodes({
-        db,
-        userObj: user,
-      });
-      return inviteCodes ?? [];
-    },
-  ),
-  generateNewInviteCode: publicProcedure.mutation(
-    async ({
-      ctx: {
-        db,
-        session: { user },
-      },
-    }) => {
-      const inviteCode = `skylar_alpha_${
-        Math.random().toString(36).substring(2) +
-        Math.random().toString(36).substring(2)
-      }`;
+  getInviteCodes: publicProcedure.query(() => {
+    // TODO: Implement this
 
-      const inviteCodes = await getUserInviteCodes({
-        db,
-        userObj: user,
-      });
-      if ((inviteCodes?.length ?? 0) > 10) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message:
-            "You can only have 10 invite codes at a time. Please delete any active ones before creating a new one.",
-        });
-      }
+    return [];
+  }),
+  generateNewInviteCode: publicProcedure.mutation(async ({ ctx: { db } }) => {
+    const inviteCode = `skylar_alpha_${
+      Math.random().toString(36).substring(2) +
+      Math.random().toString(36).substring(2)
+    }`;
+    // TODO: Implement this
 
-      return createInviteCode({
-        db,
-        userId: user.userId,
-        inviteCode,
-      });
-    },
-  ),
+    // const inviteCodes = await getUserInviteCodes({
+    //   db,
+    //   userObj: user,
+    // });
+    // if ((inviteCodes?.length ?? 0) > 10) {
+    //   throw new TRPCError({
+    //     code: "BAD_REQUEST",
+    //     message:
+    //       "You can only have 10 invite codes at a time. Please delete any active ones before creating a new one.",
+    //   });
+    // }
+
+    return createInviteCode({
+      db,
+      inviteCode,
+    });
+  }),
   deleteInviteCode: publicProcedure
     .input(validatorTrpcWrapper(DeleteInviteCodeSchema))
     .mutation(async ({ ctx: { db }, input: { inviteCodeId } }) => {
