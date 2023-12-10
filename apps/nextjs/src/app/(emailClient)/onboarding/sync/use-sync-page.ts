@@ -51,10 +51,7 @@ export function useSyncPage() {
         if (syncInfo?.full_sync_completed_on) {
           continue;
         }
-        startEmailFullSync(
-          activeEmailProvider.email,
-          activeEmailProvider.email_provider,
-        )
+        startEmailFullSync(activeEmailProvider.email, activeEmailProvider.type)
           .then(async (emailData) => {
             console.log("emailData", emailData);
             const emailToSave = convertGmailEmailToClientDbEmail(

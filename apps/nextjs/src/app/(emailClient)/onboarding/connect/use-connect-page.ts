@@ -37,7 +37,7 @@ export function useConnectEmailProviderPage() {
   const { mutate: exchangeCode } = api.oauth.googleCodeExchange.useMutation({
     onSuccess(emailProviderInfo) {
       addProvider({
-        email_provider: emailProviderInfo.providerType,
+        type: emailProviderInfo.providerType,
         email: emailProviderInfo.providerInfo.email,
         image_uri: emailProviderInfo.providerInfo.imageUri,
         inbox_name: emailProviderInfo.providerInfo.name,

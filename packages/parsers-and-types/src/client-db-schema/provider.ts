@@ -1,6 +1,6 @@
 import type { SupportedEmailProviderType } from "../..";
 
-export const PROVIDER_INDEX = `++provider_id, &email, provider_type` as const;
+export const PROVIDER_INDEX = `++provider_id, &email, type` as const;
 
 type ProviderIndexType = {
   provider_id?: number;
@@ -10,7 +10,7 @@ type ProviderIndexType = {
 };
 
 export type ProviderType = ProviderIndexType & {
-  email_provider: SupportedEmailProviderType;
+  type: SupportedEmailProviderType;
   inbox_name: string;
   image_uri: string;
   refresh_token: string;
