@@ -10,7 +10,7 @@ export function useProviderSyncInfo({
 }: {
   emailAddresses: string[];
 }) {
-  const query = useQuery({
+  return useQuery({
     queryKey: [EMAIL_SYNC_INFO_QUERY_KEY, emailAddresses, emailAddresses[0]],
     queryFn: async () => {
       if (!emailAddresses.length) return undefined;
@@ -27,7 +27,6 @@ export function useProviderSyncInfo({
       return syncInfo;
     },
     enabled: !!emailAddresses.length,
+    gcTime: 0,
   });
-
-  return { ...query, emailSyncInfo: query.data };
 }

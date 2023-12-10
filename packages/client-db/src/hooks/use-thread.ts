@@ -14,6 +14,7 @@ export function useThread(args: GetParameters<typeof getMessagesFromThreadId>) {
       });
       return emailThread;
     },
+    gcTime: 0,
   });
 
   return { ...query, thread: query.data };

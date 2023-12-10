@@ -1,4 +1,3 @@
-import type { Logger } from "@skylar/logger";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 
 import { getAndParseMessages } from "../utils/get-and-parse-messages";
@@ -8,12 +7,10 @@ export async function partialSync({
   accessToken,
   emailId,
   startHistoryId,
-  logger,
 }: {
   accessToken: string;
   emailId: string;
   startHistoryId: string;
-  logger: Logger;
 }): Promise<SyncResponseType> {
   // get all messages
   const messageChanges = await getMessageChangesFromHistoryId({
@@ -35,7 +32,6 @@ export async function partialSync({
     accessToken: accessToken,
     emailId,
     messageIds: messageChanges.messagesAdded,
-    logger,
   });
 
   return {

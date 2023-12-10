@@ -2,13 +2,14 @@
 
 import { useSelectedLayoutSegment } from "next/navigation";
 
+import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 import { cn } from "~/lib/ui";
 
 export function Step() {
   const segment = useSelectedLayoutSegment();
 
   return (
-    <div className={cn("relative", segment === "sync" && "hidden")}>
+    <div className={cn("relative")}>
       <div
         className="absolute left-0 top-2 h-0.5 w-full bg-muted"
         aria-hidden="true"
@@ -17,8 +18,7 @@ export function Step() {
           className={cn(
             "left absolute h-full w-1/4 bg-gradient-to-r from-primary",
             segment === "connect" && "w-4/5",
-            (segment === "card" || segment === "confirm") &&
-              "w-full bg-primary",
+            segment === "sync" && "w-full bg-primary",
           )}
         />
       </div>
@@ -29,7 +29,7 @@ export function Step() {
               "flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground",
               "bg-primary text-primary-foreground",
             )}
-            href="/onboarding/code"
+            href={ROUTE_ONBOARDING_CONNECT}
           >
             1
           </a>
@@ -37,24 +37,12 @@ export function Step() {
         <li className="text-left">
           <a
             className={cn(
-              "flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground ",
-              (segment === "connect" || segment === "card") &&
-                "bg-primary text-primary-foreground",
+              "flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground",
+              segment === "sync" && "bg-primary text-primary-foreground",
             )}
-            href="/onboarding/connect"
+            href={ROUTE_ONBOARDING_SYNC}
           >
             2
-          </a>
-        </li>
-        <li className="text-left">
-          <a
-            className={cn(
-              "flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground",
-              segment === "card" && "bg-primary text-primary-foreground",
-            )}
-            href="/onboarding/card"
-          >
-            3
           </a>
         </li>
       </ul>

@@ -26,7 +26,7 @@ export default function AuthenticationPage({
               deliver greater and more impactful work faster than ever
               before.&rdquo;
             </p>
-            <footer className="text-sm">Larry SKy</footer>
+            <footer className="text-sm">Larry Sky</footer>
           </blockquote>
         </div>
       </div>

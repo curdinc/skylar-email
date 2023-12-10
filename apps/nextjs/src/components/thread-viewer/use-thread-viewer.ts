@@ -8,7 +8,7 @@ import { useGlobalStore } from "@skylar/logic";
 
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
-export function useThreadPage() {
+export function useMessageViewer() {
   const threadId = useGlobalStore(
     (state) => state.EMAIL_CLIENT.activeThread?.provider_thread_id,
   );
@@ -66,7 +66,6 @@ export function useThreadPage() {
   });
 
   useEffect(() => {
-    // TODO: why did we need to check for emailProviderInfos?.length?
     if (!isLoadingThread && thread?.length) {
       thread.map((message) => {
         markAsRead({

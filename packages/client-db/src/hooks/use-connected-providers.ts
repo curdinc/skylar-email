@@ -11,6 +11,7 @@ export function useConnectedProviders() {
       const emailProviders = await getAllProviders();
       return emailProviders;
     },
+    gcTime: 0,
   });
   return { ...query };
 }

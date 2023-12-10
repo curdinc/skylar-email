@@ -231,6 +231,9 @@ importers:
       react-intersection-observer:
         specifier: ^9.5.3
         version: 9.5.3(react@18.2.0)
+      react-letter:
+        specifier: ^0.4.0
+        version: 0.4.0(react@18.2.0)
       react-multi-email:
         specifier: ^1.0.19
         version: 1.0.19(react-dom@18.2.0)(react@18.2.0)
@@ -6168,6 +6171,10 @@ packages:
       language-subtag-registry: 0.3.22
     dev: false
 
+  /lettersanitizer@1.0.5:
+    resolution: {integrity: sha512-OEJjdlRE96uKB0VfMi4nb3hBctYl1Ss6DQg9SPXRpGcjaBjcmDaibp0ZIdQu1TPwMAEvWC8xRqIcTAooElSDIg==}
+    dev: false
+
   /levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -7294,6 +7301,16 @@ packages:
 
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+    dev: false
+
+  /react-letter@0.4.0(react@18.2.0):
+    resolution: {integrity: sha512-OFjh9kjMSN7uUxOCI40tB9zdD8nEmyM3L33bL5AvlLfvXvkhjmHcIXj6dbS2x70PDFo/TPRq/RWwNxaiKVIVEQ==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      lettersanitizer: 1.0.5
+      react: 18.2.0
     dev: false
 
   /react-multi-email@1.0.19(react-dom@18.2.0)(react@18.2.0):

@@ -6,20 +6,18 @@ import type {
   SyncResponseType,
 } from "@skylar/parsers-and-types";
 
-import { sanitize } from "./htmlSanitizer";
-
 export function convertGmailEmailToClientDbEmail(
   emailAddress: string,
   messages: SyncResponseType["newMessages"],
 ): MessageType[] {
   return messages.map((message) => {
-    const emailTextContent = message.emailData.plain
+    const messageTextContent = message.emailData.plain
       .map((content) => {
         return Buffer.from(content, "base64").toString("utf-8");
       })
       .join(" ");
 
-    const emailHtmlContent = message.emailData.html
+    const messageHtmlContent = message.emailData.html
       .map((contentHtml) => {
         return Buffer.from(contentHtml, "base64").toString("utf-8");
       })
@@ -57,9 +55,9 @@ export function convertGmailEmailToClientDbEmail(
       email_provider_labels: message.providerLabels,
       skylar_labels: [],
       subject: message.emailMetadata.subject,
-      snippet_html: sanitize(message.snippet).__html,
-      content_text: sanitize(emailTextContent).__html,
-      content_html: sanitize(emailHtmlContent).__html,
+      snippet_html: message.snippet,
+      content_text: messageTextContent,
+      content_html: messageHtmlContent,
     };
   });
 }
@@ -106,7 +104,7 @@ export const getSenderReplyToEmailAddresses = (
   return [];
 };
 
-export const formatEmailAddresses = (
+export const formatEmailSenderTypeAndRemoveUserEmail = (
   userEmailAddress?: string,
   emailAddresses?: SenderType[],
 ): string[] => {

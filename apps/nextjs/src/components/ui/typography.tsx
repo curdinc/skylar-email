@@ -10,7 +10,7 @@ export const TypographyH1 = React.forwardRef<
     <h1
       ref={ref}
       className={cn(
-        "scroll-m-20 text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl",
+        "scroll-m-20 text-2xl font-extrabold tracking-tight sm:text-3xl md:text-4xl",
         className,
       )}
       {...props}

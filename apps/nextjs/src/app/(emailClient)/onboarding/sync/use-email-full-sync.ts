@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 import { fullSync } from "@skylar/gmail-api";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types/src/api/email-provider/oauth";
 
-import { useLogger } from "~/lib/logger";
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
 // source: https://stackoverflow.com/questions/45735472/generate-a-random-number-between-2-values-to-2-decimals-places-in-javascript
@@ -27,15 +27,19 @@ const SYNC_STEPS = {
 
 export const useEmailFullSync = () => {
   const [isSyncingMap, setIsSyncingMap] = useState<Record<string, boolean>>({});
-  const emailsToSync = Object.keys(isSyncingMap).filter((email) => {
+  const providersToSync = Object.keys(isSyncingMap);
+  const providersSyncing = Object.keys(isSyncingMap).filter((email) => {
     return isSyncingMap[email];
   });
+  const completedProvidersSync = Object.keys(isSyncingMap).filter((email) => {
+    return !isSyncingMap[email];
+  });
+
   const [syncProgress, setSyncProgress] = useState(0);
   const [syncStep, setSyncStep] = useState<
     (typeof SYNC_STEPS)[keyof typeof SYNC_STEPS]
   >("Getting access to inbox");
   const { mutateAsync: fetchGmailAccessToken } = useAccessToken();
-  const logger = useLogger();
 
   useEffect(() => {
     if (Object.values(isSyncingMap).some((arg) => arg)) {
@@ -73,8 +77,8 @@ export const useEmailFullSync = () => {
     }
   }, [syncProgress]);
 
-  const startGmailFullSync = useCallback(
-    async (gmailToSync: string) => {
+  const { mutateAsync: startGmailFullSync } = useMutation({
+    mutationFn: async (gmailToSync: string) => {
       const accessToken = await fetchGmailAccessToken({
         email: gmailToSync,
       });
@@ -82,15 +86,19 @@ export const useEmailFullSync = () => {
       const emailData = await fullSync({
         accessToken,
         emailId: gmailToSync,
-        logger,
       });
       return emailData;
     },
-    [fetchGmailAccessToken, logger],
-  );
+  });
 
-  const startEmailFullSync = useCallback(
-    async (emailToSync: string, emailProvider: SupportedEmailProviderType) => {
+  const emailFullSyncMutation = useMutation({
+    mutationFn: async ({
+      emailProvider,
+      emailToSync,
+    }: {
+      emailToSync: string;
+      emailProvider: SupportedEmailProviderType;
+    }) => {
       setIsSyncingMap((prev) => ({ ...prev, [emailToSync]: true }));
       let emailData: SyncResponseType;
       try {
@@ -109,12 +117,13 @@ export const useEmailFullSync = () => {
         throw e;
       }
     },
-    [startGmailFullSync],
-  );
+  });
 
   return {
-    emailsToSync,
-    startEmailFullSync,
+    providersToSync,
+    providersSyncing,
+    completedProvidersSync,
+    emailFullSyncMutation,
     syncProgress,
     syncStep,
   };

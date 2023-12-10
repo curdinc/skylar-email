@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
 
 import type { ThreadType } from "../../schema/thread";
 import { getThreadSnippets } from "../thread/get-thread-snippets";
@@ -35,6 +35,7 @@ export function useThreadSnippetsPaginated(
     },
     placeholderData: keepPreviousData,
     enabled: !!args.userEmails.length,
+    gcTime: 0,
   });
   const threads = query.data;
 

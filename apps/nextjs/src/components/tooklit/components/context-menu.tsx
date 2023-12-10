@@ -2,7 +2,6 @@ import { ToastAction } from "@radix-ui/react-toast";
 
 import { getAllThreadsFromSenderEmailAddress } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
-import { useGlobalStore } from "@skylar/logic";
 
 import {
   ContextMenu,
@@ -17,6 +16,7 @@ import {
 } from "~/components/ui/context-menu";
 import { useToast } from "~/components/ui/use-toast";
 import { useAccessToken } from "~/lib/provider/use-access-token";
+import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import type { ConfigOption } from "../config-option-type";
 import { getSenderActions } from "../sender/sender-option-config";
 import { getThreadActions } from "../thread/thread-option-config";
@@ -31,9 +31,7 @@ export function ThreadContextMenu({
   thread: ThreadType;
   refetch: () => Promise<void>;
 }) {
-  const activeEmailAddress = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.activeEmailAddress,
-  );
+  const { data: activeEmailAddress } = useActiveEmailAddress();
 
   if (!activeEmailAddress) throw new Error("No active email address");
 
