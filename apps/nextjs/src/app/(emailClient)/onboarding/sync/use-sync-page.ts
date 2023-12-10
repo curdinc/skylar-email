@@ -3,10 +3,11 @@ import { useRouter } from "next/navigation";
 
 import {
   bulkPutEmails,
+  getAllProviders,
+  getEmailSyncInfo,
   upsertEmailSyncInfo,
-  useAllEmailProviders,
-  useEmailSyncInfo,
 } from "@skylar/client-db";
+import type { EmailSyncInfoType } from "@skylar/client-db/schema/sync";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
@@ -20,20 +21,11 @@ import {
 import { useEmailFullSync } from "./use-email-full-sync";
 
 export function useSyncPage() {
-  const { data: allEmailProviders, isPending: isLoadingAllEmailProviders } =
-    useAllEmailProviders();
-
-  const { data: emailSyncInfo, isLoading: isLoadingEmailSyncInfo } =
-    useEmailSyncInfo({
-      emailAddresses: (allEmailProviders ?? []).map(
-        (provider) => provider.email,
-      ),
-    });
   const runOnceRef = useRef(false);
   const {
     syncProgress,
     syncStep,
-    emailFullSyncMutation: { mutateAsync: startEmailFullSync },
+    emailFullSyncMutation: { mutateAsync: startEmailFullSyncForAddress },
     providersSyncing,
   } = useEmailFullSync();
   const router = useRouter();
@@ -41,79 +33,89 @@ export function useSyncPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (isLoadingEmailSyncInfo || isLoadingAllEmailProviders) {
-      return;
-    }
-    if (!allEmailProviders?.length) {
-      router.push(ROUTE_ONBOARDING_CONNECT);
-      return;
-    }
-    if (emailSyncInfo?.length === allEmailProviders.length) {
-      router.push(
-        ROUTE_EMAIL_PROVIDER_INBOX(ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX),
-      );
-    } else if (!runOnceRef.current) {
-      runOnceRef.current = true;
-      for (const emailProvider of allEmailProviders) {
+    const startEmailFullSync = async () => {
+      // get all connected providers
+      const providers = await getAllProviders();
+      if (!providers?.length) {
+        // nothing connected, go connect first
+        router.push(ROUTE_ONBOARDING_CONNECT);
+        return;
+      }
+
+      const emailSyncInfo: EmailSyncInfoType[] = [];
+      for (const provider of providers) {
+        const syncInfo = await getEmailSyncInfo({
+          emailAddress: provider.email,
+        });
+        if (syncInfo) {
+          emailSyncInfo.push(syncInfo);
+        }
+      }
+
+      if (emailSyncInfo?.length === providers.length) {
+        // everything is already synced, go to inbox
+        router.push(
+          ROUTE_EMAIL_PROVIDER_INBOX(ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX),
+        );
+        return;
+      }
+
+      // start syncing
+      for (const provider of providers) {
         const syncInfo = emailSyncInfo?.find(
           (info) =>
             info.email_sync_info_id.toLowerCase() ===
-            emailProvider.email.toLowerCase(),
+            provider.email.toLowerCase(),
         );
         if (syncInfo?.full_sync_completed_on) {
           continue;
         }
-        startEmailFullSync({
-          emailToSync: emailProvider.email,
-          emailProvider: emailProvider.email_provider,
-        })
-          .then(async (emailData) => {
-            console.log("emailData", emailData);
-            const emailToSave = convertGmailEmailToClientDbEmail(
-              emailProvider.email,
-              emailData.newMessages,
-            );
-            await bulkPutEmails({
-              emails: emailToSave,
-            });
-            await upsertEmailSyncInfo({
-              emailSyncInfo: {
-                email_sync_info_id: emailProvider.email,
-                full_sync_completed_on: new Date().getTime(),
-                last_sync_history_id: emailData.lastCheckedHistoryId,
-                last_sync_history_id_updated_at: new Date().getTime(),
-              },
-            });
-          })
-          .catch((e) => {
-            logger.error("Error performing full sync for user gmail inbox", {
-              parserError: JSON.stringify(formatValidatorError(e), null, 2),
-              error: e,
-            });
-            toast({
-              variant: "destructive",
-              title: "Error syncing your inbox",
-              description: "Please try again later.",
-            });
-          });
+
+        const emailData = await startEmailFullSyncForAddress({
+          emailProvider: provider.email_provider,
+          emailToSync: provider.email,
+        });
+        console.log("emailData", emailData);
+        const emailToSave = convertGmailEmailToClientDbEmail(
+          provider.email,
+          emailData.newMessages,
+        );
+        await bulkPutEmails({
+          emails: emailToSave,
+        });
+        await upsertEmailSyncInfo({
+          emailSyncInfo: {
+            email_sync_info_id: provider.email,
+            full_sync_completed_on: new Date().getTime(),
+            last_sync_history_id: emailData.lastCheckedHistoryId,
+            last_sync_history_id_updated_at: new Date().getTime(),
+          },
+        });
       }
+
+      router.push(
+        ROUTE_EMAIL_PROVIDER_INBOX(ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX),
+      );
+    };
+    if (!runOnceRef.current) {
+      runOnceRef.current = true;
+      startEmailFullSync().catch((e) => {
+        logger.error("Error performing full sync for user gmail inbox", {
+          parserError: JSON.stringify(formatValidatorError(e), null, 2),
+          error: e,
+        });
+        toast({
+          variant: "destructive",
+          title: "Error syncing your inbox",
+          description: "Please try again later.",
+        });
+      });
     }
-  }, [
-    allEmailProviders,
-    emailSyncInfo,
-    isLoadingAllEmailProviders,
-    isLoadingEmailSyncInfo,
-    logger,
-    router,
-    startEmailFullSync,
-    toast,
-  ]);
+  }, [logger, router, startEmailFullSyncForAddress, toast]);
 
   return {
-    emailProviders: allEmailProviders,
     providersSyncing,
     syncProgress,
     syncStep,
-    startEmailFullSync,
   };
 }
