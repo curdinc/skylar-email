@@ -1,5 +1,5 @@
 {
-  "name": "create-t3-turbo",
+  "name": "skylar-email",
   "private": true,
   "engines": {
     "node": ">=v18.17.1"
@@ -7,6 +7,7 @@
   "packageManager": "pnpm@8.7.1",
   "scripts": {
     "build": "turbo build",
+    "build:pages": "turbo build:pages",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "db:push": "pnpm -F db push",
