@@ -5,7 +5,7 @@ import { Allotment } from "allotment";
 
 import { useGlobalStore } from "@skylar/logic";
 
-import { MessageListViewer } from "~/components/message-list/message-list-viewer";
+import { LabelAccordion } from "~/components/label-accordion-menu/label-accordion";
 import { EmailThreadPage } from "./[threadId]/page";
 
 const MIN_PANE_SIZE = 250;
@@ -28,8 +28,7 @@ export default function Inbox() {
   return (
     <Allotment minSize={MIN_PANE_SIZE} defaultSizes={[100, 200]}>
       <Allotment.Pane snap>
-        {/* Label list viewer */}
-        <MessageListViewer />
+        <LabelAccordion />
       </Allotment.Pane>
       <Allotment.Pane>
         <Allotment vertical>

@@ -13,7 +13,7 @@ import { MessageList } from "./message-list";
 /**
  * @returns The component that renders all the labels of a user and the corresponding messages
  */
-export const MessageListViewer = () => {
+export const LabelAccordion = () => {
   const logger = useLogger();
   const { data: labels, isLoading } = useListLabels();
   const activeEmailAddress = useGlobalStore(
