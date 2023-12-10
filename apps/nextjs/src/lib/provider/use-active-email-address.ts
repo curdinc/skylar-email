@@ -22,8 +22,8 @@ export const useActiveEmailAddress = () => {
 
   useEffect(() => {
     const checkValidProviderId = async () => {
-      const emailAddress = await getProviderById({ id: providerId });
-      if (!emailAddress && providerId !== ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX) {
+      const provider = await getProviderById({ id: providerId });
+      if (!provider && providerId !== ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX) {
         router.push(
           ROUTE_EMAIL_PROVIDER_INBOX(ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX),
         );

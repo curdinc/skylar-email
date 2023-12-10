@@ -35,19 +35,19 @@ export function EmailAccountNav({
   if (!isLoading) {
     body = (
       <>
-        {allEmailProvidersProfileInfo.map((item) => (
+        {allEmailProvidersProfileInfo.map((providerInfo) => (
           <Link
-            key={item.href}
-            href={item.href}
+            key={providerInfo.href}
+            href={providerInfo.href}
             className={cn(
-              pathname === item.href
+              pathname === providerInfo.href
                 ? "hover:cursor-default"
                 : "transition-opacity hover:cursor-pointer hover:opacity-70",
             )}
           >
             <Avatar>
-              <AvatarImage src={item.imageUri} />
-              <AvatarFallback>{item.name.slice(0, 2)}</AvatarFallback>
+              <AvatarImage src={providerInfo.imageUri} />
+              <AvatarFallback>{providerInfo.name.slice(0, 2)}</AvatarFallback>
             </Avatar>
           </Link>
         ))}
