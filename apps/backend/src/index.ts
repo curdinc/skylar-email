@@ -1,0 +1,101 @@
+import type { Context } from "hono";
+import { Hono } from "hono";
+import { env } from "hono/adapter";
+import { cors } from "hono/cors";
+
+import { appRouter, createTRPCContext } from "@skylar/api";
+import { getDb } from "@skylar/db";
+import { getServerLogger } from "@skylar/logger";
+import {
+  BackendEnvSchema,
+  formatValidatorError,
+  parse,
+} from "@skylar/parsers-and-types";
+
+import { trpcServer } from "./trpc-middleware";
+
+type Bindings = {
+  JWT_SECRET: string;
+};
+
+const app = new Hono<{ Bindings: Bindings }>();
+
+function getEnvVars(
+  c: Context<
+    {
+      Bindings: Bindings;
+    },
+    "*",
+    object
+  >,
+) {
+  try {
+    const envVars = parse(BackendEnvSchema, env(c));
+    return envVars;
+  } catch (e) {
+    console.log(JSON.stringify(formatValidatorError(e), null, 2));
+    throw e;
+  }
+}
+
+// TRPC routes
+// app.options("/trpc/*", (c) => {
+//   const response = c.newResponse(null, { status: 204 });
+//   response.headers.set("Access-Control-Allow-Origin", "*");
+//   response.headers.set("Access-Control-Request-Method", "*");
+//   response.headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
+//   response.headers.set("Access-Control-Allow-Headers", "*");
+//   return response;
+// });
+
+app.use("/trpc/*", async (c, next) => {
+  const envVars = getEnvVars(c);
+  return await cors({
+    origin: [envVars.APP_URL],
+    allowMethods: ["POST", "GET", "OPTIONS"],
+  })(c, next);
+});
+
+app.use("/trpc/*", async (c, next) => {
+  const envVars = getEnvVars(c);
+
+  const db = getDb(envVars.DATABASE_URL);
+  const logger = getServerLogger({
+    req: c.req.raw,
+    token: envVars.AXIOM_TOKEN,
+    dataset: envVars.AXIOM_DATASET,
+    orgId: envVars.AXIOM_ORG_ID,
+    url: envVars.AXIOM_URL,
+  });
+
+  const response = await trpcServer({
+    router: appRouter,
+    endpoint: "/trpc",
+    onError({ error, path }) {
+      logger.error(`>>> tRPC Error on '${path}'`, { ...error });
+    },
+    createContext: () => {
+      return createTRPCContext({
+        req: c.req.raw,
+        env: {
+          GOOGLE_PROVIDER_CLIENT_ID: envVars.GOOGLE_PROVIDER_CLIENT_ID,
+          GOOGLE_PROVIDER_CLIENT_SECRET: envVars.GOOGLE_PROVIDER_CLIENT_SECRET,
+        },
+        db,
+        logger,
+      });
+    },
+  })(c, next);
+
+  await logger.flush();
+  return response;
+});
+
+// checking for alive-ness
+app.post("/", (c) => {
+  return c.json({
+    message: "Hello world",
+  });
+});
+
+export default app;
