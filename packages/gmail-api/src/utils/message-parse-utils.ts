@@ -1,4 +1,3 @@
-import type { Logger } from "@skylar/logger";
 import type {
   emailBodyParseResultType,
   emailMetadataParseResultType,
@@ -102,12 +101,10 @@ export function getEmailMetadata(
 export function getEmailBody({
   messageResponse,
   emailProviderMessageId,
-  logger,
   emailId,
 }: {
   messageResponse: MessageResponseType;
   emailProviderMessageId: string;
-  logger: Logger;
   emailId: string;
 }) {
   const result: emailBodyParseResultType = {
@@ -132,26 +129,21 @@ export function getEmailBody({
       result.html.push(part.body.data ?? "");
     } else if (part.body.attachmentId) {
       const attachmentId = part.body.attachmentId;
-      if (attachmentId) {
-        result.attachments.push({
-          partId: part.partId,
-          mimeType: part.mimeType,
-          filename: part.filename,
-          body: { ...part.body, attachmentId },
-        });
-      } else {
-        logger.debug("Weird state reached: attachment without id", {
+      result.attachments.push({
+        partId: part.partId,
+        mimeType: part.mimeType,
+        filename: part.filename,
+        body: { ...part.body, attachmentId },
+      });
+    } else {
+      throw new Error(
+        JSON.stringify({
+          cause: "unhandled mimeType",
           mimeType: part.mimeType,
           emailId,
           emailProviderMessageId,
-        });
-      }
-    } else {
-      logger.debug("unhandled mimeType", {
-        mimeType: part.mimeType,
-        emailId,
-        emailProviderMessageId,
-      });
+        }),
+      );
     }
   }
 
