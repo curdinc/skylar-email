@@ -1,6 +1,6 @@
 import { EMAIL_PROVIDER_LABELS } from "@skylar/parsers-and-types";
 
-import type { ThreadType } from "../../schema/thread";
+import type { ThreadType } from "../../../parsers-and-types/src/client-db-schema/threadd-types/src/client-db-schema/thread";
 
 export function filterForInbox(args: { invert: boolean } = { invert: false }) {
   return (thread: ThreadType) => {

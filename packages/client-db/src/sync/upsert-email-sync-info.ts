@@ -1,4 +1,4 @@
-import type { EmailSyncInfoType } from "../../schema/sync";
+import type { EmailSyncInfoType } from "../../../parsers-and-types/src/client-db-schema/syncand-types/src/client-db-schema/sync";
 import { clientDb } from "../db";
 
 export async function upsertEmailSyncInfo({

@@ -1,4 +1,7 @@
-import type { ThreadIndexType, ThreadType } from "../../schema/thread";
+import type {
+  ThreadIndexType,
+  ThreadType,
+} from "../../../parsers-and-types/src/client-db-schema/threadd-types/src/client-db-schema/thread";
 import { clientDb } from "../db";
 import { filterForEmails } from "../utils/thread-filters";
 

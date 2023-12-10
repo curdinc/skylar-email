@@ -1,4 +1,5 @@
-import type { MessageType } from "../../schema/message";
+import type { MessageType } from "@skylar/parsers-and-types/src/client-db-schema/message-types/src/client-db-schema/message";
+
 import { clientDb } from "../db";
 import { buildThreadList } from "../utils/build-thread-list";
 

@@ -1,4 +1,4 @@
-import type { SenderType } from "@skylar/parsers-and-types";
+import type { SenderType } from "./shared";
 
 export type MessageIndexType = {
   provider_message_id: string;
