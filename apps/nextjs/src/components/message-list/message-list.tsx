@@ -1,5 +1,5 @@
-import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { useInView } from "react-intersection-observer";
 
 import { isThreadUnread, useThreadSnippetsInfinite } from "@skylar/client-db";
@@ -21,7 +21,7 @@ export function MessageList({
 }: Pick<Parameters<typeof useThreadSnippetsInfinite>[0], "filters"> & {
   uniqueListId: string;
 }) {
-  const {data: activeEmailAddress} = useActiveEmailAddress();
+  const { data: activeEmailAddress } = useActiveEmailAddress();
 
   const { status, data, error, fetchNextPage, hasNextPage, refetch } =
     useThreadSnippetsInfinite({

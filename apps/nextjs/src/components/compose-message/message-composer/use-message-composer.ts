@@ -25,7 +25,7 @@ export const useMessageComposer = () => {
   const composeEmailType = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
   );
-  const {data: activeEmailAddress} = useActiveEmailAddress();
+  const { data: activeEmailAddress } = useActiveEmailAddress();
   const attachments = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.attachments,
   );
