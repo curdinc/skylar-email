@@ -1,4 +1,5 @@
 // GENERAL
+export * from "./src/utils/format";
 export * from "./src/utils/valibot-wrappers";
 
 // FEATURE SPECIFIC
@@ -20,7 +21,7 @@ export {
 // ENV ITEMS
 export { createEnv } from "./src/create-env";
 export * from "./src/env/backend";
-export * from "./src/env/www";
+export * from "./src/env/frontend";
 
 // CONSTANTS
 export * from "./src/constants/email-providers";

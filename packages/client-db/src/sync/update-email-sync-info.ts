@@ -1,4 +1,5 @@
-import type { EmailSyncInfoType } from "../../../parsers-and-types/src/client-db-schema/syncand-types/src/client-db-schema/sync";
+import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
+
 import { clientDb } from "../db";
 
 export async function updateEmailSyncInfo({

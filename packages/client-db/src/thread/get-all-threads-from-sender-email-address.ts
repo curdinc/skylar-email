@@ -1,6 +1,8 @@
-import type { MessageIndexType } from "@skylar/parsers-and-types/src/client-db-schema/message-types/src/client-db-schema/message";
+import type {
+  MessageIndexType,
+  ThreadIndexType,
+} from "@skylar/parsers-and-types";
 
-import type { ThreadIndexType } from "../../../parsers-and-types/src/client-db-schema/threadd-types/src/client-db-schema/thread";
 import { clientDb } from "../db";
 
 export async function getAllThreadsFromSenderEmailAddress({

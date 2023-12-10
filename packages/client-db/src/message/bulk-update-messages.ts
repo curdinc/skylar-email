@@ -1,11 +1,8 @@
-import { MessageIndexType, MessageType } from "@skylar/parsers-and-types/src/client-db-schema/message";
+import type { MessageIndexType, MessageType } from "@skylar/parsers-and-types";
+
 import { clientDb } from "../db";
 import { bulkGetMessages } from "./bulk-get-messages";
 import { bulkPutMessages } from "./bulk-put-messages";
-import type { } from / parsers - and - types / src / client - db - schema / message;
-  MessageIndexType,
-  MessageType,
-} from "../../../parsers-and-types/src/client-db-schema/message";
 
 export async function bulkUpdateMessages({
   messages,

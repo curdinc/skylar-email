@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-import type { ThreadType } from "../../../parsers-and-types/src/client-db-schema/threadd-types/src/client-db-schema/thread";
+import type { ThreadType } from "@skylar/parsers-and-types";
+
 import { getThreadSnippets } from "../thread/get-thread-snippets";
 import type { GetParameters } from "../types/extract-params";
 

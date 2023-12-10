@@ -3,10 +3,9 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
 
-import type { ThreadType } from "@skylar/client-db/schema/thread";
 import type {
   AllComposeMessageOptionsType,
-  SupportedAuthProvidersType,
+  ThreadType,
   ValidComposeMessageOptionsType,
   ValidReplyMessageOptionsType,
 } from "@skylar/parsers-and-types";
@@ -35,7 +34,6 @@ export type EmailListData =
 
 export type State = {
   ONBOARDING: { alphaCode: string };
-  LOGIN: { loggingInto: SupportedAuthProvidersType | undefined };
   SETTINGS: {
     INVITE_CODE: {
       inviteCodeIdBeingDeleted: number | undefined;
@@ -69,7 +67,6 @@ export type State = {
 
 type Actions = {
   setAlphaCode: (alphaCode: State["ONBOARDING"]["alphaCode"]) => void;
-  setLoggingInto: (loggingInto: State["LOGIN"]["loggingInto"]) => void;
   setInviteCodeIdBeingDeleted: (
     inviteCodeId: State["SETTINGS"]["INVITE_CODE"]["inviteCodeIdBeingDeleted"],
   ) => void;
@@ -121,9 +118,6 @@ export const useGlobalStore = create(
         inviteCodeIdBeingDeleted: undefined,
       },
     },
-    LOGIN: {
-      loggingInto: undefined,
-    },
     ONBOARDING: {
       alphaCode: "",
     },
@@ -162,11 +156,6 @@ export const setShortcuts: Actions["setShortcuts"] = (shortcuts) =>
       ...state.SHORTCUT,
       ...shortcuts,
     };
-  });
-
-export const setLoggingInto: Actions["setLoggingInto"] = (loggingInto) =>
-  useGlobalStore.setState((state) => {
-    state.LOGIN.loggingInto = loggingInto;
   });
 
 export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"] =

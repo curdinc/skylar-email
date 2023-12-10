@@ -3,9 +3,6 @@ import { object, string } from "valibot";
 
 export const BackendEnvSchema = object({
   APP_URL: string(),
-  SUPABASE_JWT_SECRET: string(),
-  SUPABASE_ANON_KEY: string(),
-  SUPABASE_URL: string(),
   DATABASE_URL: string(),
   AXIOM_TOKEN: string(),
   AXIOM_DATASET: string(),
@@ -13,7 +10,6 @@ export const BackendEnvSchema = object({
   AXIOM_URL: string(),
   GOOGLE_PROVIDER_CLIENT_SECRET: string(),
   GOOGLE_PROVIDER_CLIENT_ID: string(),
-  STRIPE_SECRET_KEY: string(),
 });
 
 export type BackendEnvType = Output<typeof BackendEnvSchema>;

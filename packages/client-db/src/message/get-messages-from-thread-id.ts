@@ -1,4 +1,4 @@
-import type { MessageIndexType } from "@skylar/parsers-and-types/src/client-db-schema/message-types/src/client-db-schema/message";
+import type { MessageIndexType } from "@skylar/parsers-and-types";
 
 import { clientDb } from "../db";
 

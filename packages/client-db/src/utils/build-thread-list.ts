@@ -1,6 +1,5 @@
-import type { MessageType } from "@skylar/parsers-and-types/src/client-db-schema/message-types/src/client-db-schema/message";
+import type { MessageType, ThreadType } from "@skylar/parsers-and-types";
 
-import type { ThreadType } from "../../../parsers-and-types/src/client-db-schema/threadd-types/src/client-db-schema/thread";
 import { bulkGetThreads } from "../message/bulk-get-threads";
 
 const USELESS_WORDS = [
