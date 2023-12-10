@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "build": "pnpm with-env next build",
-    "build:pages": "npx @cloudflare/next-on-pages@1",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "concurrently \"lt --port 3000 --subdomain skylar-frontend-$(grep DEV_NAME ../../.env | cut -d '=' -f2)\" \"pnpm with-env next dev\"",
     "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",

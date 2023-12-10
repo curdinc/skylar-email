@@ -5,10 +5,6 @@
     "topo": {
       "dependsOn": ["^topo"]
     },
-    "build:pages": {
-      "dependsOn": ["^build"],
-      "outputs": [".vercel/**", "next-env.d.ts"]
-    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "next-env.d.ts", ".expo/**"]
