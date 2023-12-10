@@ -12,12 +12,14 @@ export * from "./src/thread/bulk-put-threads";
 
 export * from "./src/hooks/use-email-address-by-id";
 export * from "./src/hooks/use-all-email-providers";
+export * from "./src/hooks/use-email-address-by-id";
 export * from "./src/hooks/use-email-sync-info";
 export * from "./src/hooks/use-email-thread";
 export * from "./src/hooks/use-thread-snippets";
 
 export * from "./src/lib/thread-filters";
 
+export * from "./src/email/get-email-sync-info";
 export * from "./src/provider/get-all-providers";
 export * from "./src/provider/get-provider-by-id";
 export * from "./src/provider/get-refresh-token-by-email";

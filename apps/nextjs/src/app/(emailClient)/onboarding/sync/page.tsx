@@ -13,12 +13,12 @@ import { Progress } from "~/components/ui/progress";
 import { useSyncPage } from "./use-sync-page";
 
 export default function SyncProgress() {
-  const { emailsToSync, syncProgress, syncStep } = useSyncPage();
+  const { providersSyncing, syncProgress, syncStep } = useSyncPage();
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Initializing {emailsToSync.join(", ")}</CardTitle>
+        <CardTitle>Initializing {providersSyncing.join(", ")}</CardTitle>
         <CardDescription>
           We are setting up your inbox right now. This can take a while. please
           keep this tab open

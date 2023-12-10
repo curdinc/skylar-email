@@ -1,14 +1,37 @@
+import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-import { useEmailAddressById } from "@skylar/client-db";
+import { getProviderById, useEmailAddressById } from "@skylar/client-db";
+import { formatErrors } from "@skylar/parsers-and-types";
+
+import { useLogger } from "../logger";
+import {
+  ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX,
+  ROUTE_EMAIL_PROVIDER_INBOX,
+} from "../routes";
 
 export const useActiveEmailAddress = () => {
   const { providerIndex } = useParams();
+  const logger = useLogger();
   const router = useRouter();
-  const emailIdNumber =
+  const providerId =
     parseInt(typeof providerIndex === "string" ? providerIndex : "1", 10) ?? 1;
-  if (emailIdNumber < 1) {
-    router.push("/1");
+  if (providerId < 1) {
+    router.push(ROUTE_EMAIL_PROVIDER_INBOX(ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX));
   }
-  return useEmailAddressById(emailIdNumber);
+
+  useEffect(() => {
+    const checkValidProviderId = async () => {
+      const emailAddress = await getProviderById({ id: providerId });
+      if (!emailAddress && providerId !== ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX) {
+        router.push(
+          ROUTE_EMAIL_PROVIDER_INBOX(ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX),
+        );
+      }
+    };
+    checkValidProviderId().catch((e) => {
+      logger.error(formatErrors(e));
+    });
+  });
+  return useEmailAddressById(providerId);
 };

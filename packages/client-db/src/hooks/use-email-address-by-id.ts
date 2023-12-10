@@ -10,5 +10,6 @@ export const useEmailAddressById = (id: number) => {
       const provider = await getProviderById({ id });
       return provider?.email;
     },
+    gcTime: 0,
   });
 };

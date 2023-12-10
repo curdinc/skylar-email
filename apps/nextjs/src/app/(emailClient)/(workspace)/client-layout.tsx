@@ -8,20 +8,21 @@ import {
   bulkDeleteEmails,
   bulkPutEmails,
   bulkUpdateEmails,
+  getAllProviders,
+  getEmailSyncInfo,
   updateEmailSyncInfo,
-  useAllEmailProviders,
-  useEmailSyncInfo,
 } from "@skylar/client-db";
+import type { EmailSyncInfoType } from "@skylar/client-db/schema/sync";
 import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
 
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
+import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 import { useEmailPartialSync } from "./use-email-partial-sync";
 
 export const ClientLayout = () => {
   useInboxKeymaps();
   const router = useRouter();
-  const { data: allEmailProviders } = useAllEmailProviders();
 
   const { providerIndex } = useParams();
   useEffect(() => {
@@ -29,49 +30,46 @@ export const ClientLayout = () => {
     resetComposeMessage();
   }, [providerIndex]);
 
-  const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
-    {
-      emailAddresses: (allEmailProviders ?? []).map(
-        (provider) => provider.email,
-      ),
-    },
-  );
-  const { emailPartialSync } = useEmailPartialSync();
+  const { mutateAsync: emailPartialSync } = useEmailPartialSync();
 
   useQuery({
-    queryKey: [
-      isLoadingEmailSyncInfo,
-      allEmailProviders,
-      emailSyncInfo?.length,
-    ],
+    queryKey: [],
     queryFn: async () => {
-      if (!allEmailProviders) {
-        throw new Error("Reached a bad state");
-      }
       let updatedEmails = false;
-      if (isLoadingEmailSyncInfo || !allEmailProviders.length) {
-        throw new Error("Not ready to sync emails");
-      }
 
-      if (emailSyncInfo?.length !== allEmailProviders.length) {
-        router.push("/onboarding/sync");
+      const connectedProviders = await getAllProviders();
+      if (!connectedProviders.length) {
+        router.push(ROUTE_ONBOARDING_CONNECT);
         return updatedEmails;
       }
 
-      for (const activeEmailProvider of allEmailProviders) {
+      const emailSyncInfo: EmailSyncInfoType[] = [];
+      for (const provider of connectedProviders) {
+        const syncInfo = await getEmailSyncInfo({
+          emailAddress: provider.email,
+        });
+        if (!syncInfo) {
+          router.push(ROUTE_ONBOARDING_SYNC);
+          return updatedEmails;
+        }
+        emailSyncInfo.push(syncInfo);
+      }
+
+      for (const emailProvider of connectedProviders) {
         const syncInfo = emailSyncInfo.find(
           (syncInfo) =>
             syncInfo.email_sync_info_id.toLowerCase() ===
-            activeEmailProvider.email.toLowerCase(),
+            emailProvider.email.toLowerCase(),
         );
         if (!syncInfo) {
-          router.push("/onboarding/sync");
+          router.push(ROUTE_ONBOARDING_SYNC);
           return updatedEmails;
         }
-        const emailData = await emailPartialSync(
-          activeEmailProvider?.email,
-          syncInfo?.last_sync_history_id,
-        );
+
+        const emailData = await emailPartialSync({
+          emailAddressToSync: emailProvider.email,
+          startHistoryId: syncInfo?.last_sync_history_id,
+        });
         if (!emailData) {
           return updatedEmails;
         }
@@ -79,7 +77,7 @@ export const ClientLayout = () => {
         console.log("emailData", emailData);
         if (emailData.newMessages.length) {
           const emailToSave = convertGmailEmailToClientDbEmail(
-            activeEmailProvider.email,
+            emailProvider.email,
             emailData.newMessages,
           );
           await bulkPutEmails({
@@ -105,7 +103,7 @@ export const ClientLayout = () => {
           updatedEmails = true;
         }
         await updateEmailSyncInfo({
-          syncEmailAddressToUpdate: activeEmailProvider.email,
+          syncEmailAddressToUpdate: emailProvider.email,
           emailSyncInfo: {
             last_sync_history_id: emailData.lastCheckedHistoryId,
             last_sync_history_id_updated_at: new Date().getTime(),
@@ -114,15 +112,11 @@ export const ClientLayout = () => {
         return updatedEmails;
       }
     },
-    refetchInterval: 40_000, // 40 seconds in milliseconds
+    refetchInterval: 20_000, // 20 seconds in milliseconds
     refetchIntervalInBackground: true,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    enabled:
-      !isLoadingEmailSyncInfo &&
-      allEmailProviders &&
-      !!allEmailProviders.length,
   });
 
   return <></>;

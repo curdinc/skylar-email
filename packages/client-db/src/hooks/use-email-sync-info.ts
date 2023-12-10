@@ -10,7 +10,7 @@ export function useEmailSyncInfo({
 }: {
   emailAddresses: string[];
 }) {
-  const { data: emailSyncInfo, isLoading } = useQuery({
+  return useQuery({
     queryKey: [EMAIL_SYNC_INFO_QUERY_KEY, emailAddresses, emailAddresses[0]],
     queryFn: async () => {
       if (!emailAddresses.length) return undefined;
@@ -27,7 +27,6 @@ export function useEmailSyncInfo({
       return syncInfo;
     },
     enabled: !!emailAddresses.length,
+    gcTime: 0,
   });
-
-  return { emailSyncInfo, isLoading };
 }
