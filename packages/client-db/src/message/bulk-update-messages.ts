@@ -1,30 +1,30 @@
-import type { EmailIndexType, EmailType } from "../../schema/email";
+import type { MessageIndexType, MessageType } from "../../schema/message";
 import { clientDb } from "../db";
-import { bulkGetEmails } from "./bulk-get-emails";
-import { bulkPutEmails } from "./bulk-put-emails";
+import { bulkGetMessages } from "./bulk-get-messages";
+import { bulkPutMessages } from "./bulk-put-messages";
 
-export async function bulkUpdateEmails({
+export async function bulkUpdateMessages({
   emails,
 }: {
-  emails: (Partial<EmailType> &
-    Pick<EmailIndexType, "email_provider_message_id">)[];
+  emails: (Partial<MessageType> &
+    Pick<MessageIndexType, "email_provider_message_id">)[];
 }) {
   await clientDb.transaction(
     "rw",
-    clientDb.email,
+    clientDb.message,
     clientDb.thread,
     async () => {
-      const emailIdToEmail = new Map<string, Partial<EmailType>>();
+      const emailIdToEmail = new Map<string, Partial<MessageType>>();
       emails.forEach((email) => {
         emailIdToEmail.set(email.email_provider_message_id, email);
       });
       const emailIds = Array.from(emailIdToEmail.keys());
 
       const fullEmails = (
-        await bulkGetEmails({
+        await bulkGetMessages({
           emailIds: emailIds,
         })
-      ).filter((email) => !!email) as EmailType[];
+      ).filter((email) => !!email) as MessageType[];
       const updatedEmails = fullEmails.map((email) => {
         const update = emailIdToEmail.get(email.email_provider_message_id);
         if (!update) {
@@ -38,7 +38,7 @@ export async function bulkUpdateEmails({
         };
       });
 
-      await bulkPutEmails({ emails: updatedEmails });
+      await bulkPutMessages({ emails: updatedEmails });
     },
   );
 }

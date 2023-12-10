@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import { bulkUpdateEmails, useEmailThread } from "@skylar/client-db";
-import type { EmailType } from "@skylar/client-db/schema/email";
+import { bulkUpdateMessages, useThread } from "@skylar/client-db";
+import type { MessageType } from "@skylar/client-db/schema/message";
 import { modifyLabels } from "@skylar/gmail-api";
 import { useGlobalStore } from "@skylar/logic";
 
@@ -13,7 +13,7 @@ export function useThreadPage() {
     (state) => state.EMAIL_CLIENT.activeThread?.email_provider_thread_id,
   );
 
-  const { emailThread, isLoading: isLoadingThread } = useEmailThread({
+  const { emailThread, isLoading: isLoadingThread } = useThread({
     emailProviderThreadId: threadId ?? "",
   });
 
@@ -27,7 +27,7 @@ export function useThreadPage() {
       emailAddress,
     }: {
       emailAddress: string;
-      email: EmailType;
+      email: MessageType;
       addLabels: string[];
       deleteLabels: string[];
     }) => {
@@ -50,7 +50,7 @@ export function useThreadPage() {
       if (!labelData) {
         return;
       }
-      await bulkUpdateEmails({
+      await bulkUpdateMessages({
         emails: [
           {
             email_provider_message_id: labelData.id,

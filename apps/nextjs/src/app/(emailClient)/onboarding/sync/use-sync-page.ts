@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import {
-  bulkPutEmails,
+  bulkPutMessages,
   upsertEmailSyncInfo,
-  useAllEmailProviders,
-  useEmailSyncInfo,
+  useConnectedProviders,
+  useProviderSyncInfo,
 } from "@skylar/client-db";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
@@ -15,15 +15,14 @@ import { useLogger } from "~/lib/logger";
 import { useEmailFullSync } from "./use-email-full-sync";
 
 export function useSyncPage() {
-  const { data: allEmailProviders } = useAllEmailProviders();
+  const { data: allEmailProviders } = useConnectedProviders();
 
-  const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
-    {
+  const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } =
+    useProviderSyncInfo({
       emailAddresses: (allEmailProviders ?? []).map(
         (provider) => provider.email,
       ),
-    },
-  );
+    });
   const { syncProgress, syncStep, startEmailFullSync, emailsToSync } =
     useEmailFullSync();
   const router = useRouter();
@@ -40,7 +39,7 @@ export function useSyncPage() {
       !isLoadingEmailSyncInfo &&
       emailSyncInfo?.length === allEmailProviders.length
     ) {
-      router.push("/0");
+      router.push("/1");
     } else {
       console.log("starting sync");
       for (const activeEmailProvider of allEmailProviders) {
@@ -62,7 +61,7 @@ export function useSyncPage() {
               activeEmailProvider.email,
               emailData.newMessages,
             );
-            await bulkPutEmails({
+            await bulkPutMessages({
               emails: emailToSave,
             });
             await upsertEmailSyncInfo({

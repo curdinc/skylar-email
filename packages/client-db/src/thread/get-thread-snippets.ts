@@ -1,6 +1,6 @@
 import type { ThreadIndexType, ThreadType } from "../../schema/thread";
 import { clientDb } from "../db";
-import { filterForEmails } from "../lib/thread-filters";
+import { filterForEmails } from "../utils/thread-filters";
 
 export async function getThreadSnippets({
   userEmails,

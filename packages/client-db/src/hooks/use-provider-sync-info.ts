@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 
 import type { EmailSyncInfoType } from "../../schema/sync";
-import { getEmailSyncInfo } from "../email/get-email-sync-info";
+import { getEmailSyncInfo } from "../sync/get-email-sync-info";
 
 export const EMAIL_SYNC_INFO_QUERY_KEY = "emailSyncInfo";
 
-export function useEmailSyncInfo({
+export function useProviderSyncInfo({
   emailAddresses,
 }: {
   emailAddresses: string[];
 }) {
-  const { data: emailSyncInfo, isLoading } = useQuery({
+  const query = useQuery({
     queryKey: [EMAIL_SYNC_INFO_QUERY_KEY, emailAddresses, emailAddresses[0]],
     queryFn: async () => {
       if (!emailAddresses.length) return undefined;
@@ -29,5 +29,5 @@ export function useEmailSyncInfo({
     enabled: !!emailAddresses.length,
   });
 
-  return { emailSyncInfo, isLoading };
+  return { ...query, emailSyncInfo: query.data };
 }

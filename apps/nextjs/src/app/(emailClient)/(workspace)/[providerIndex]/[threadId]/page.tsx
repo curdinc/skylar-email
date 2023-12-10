@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import type { EmailType } from "@skylar/client-db/schema/email";
+import type { MessageType } from "@skylar/client-db/schema/message";
 
 import {
   Accordion,
@@ -44,7 +44,7 @@ export function EmailDisplay({
   email,
   isOpenInitially,
 }: {
-  email: EmailType;
+  email: MessageType;
   isOpenInitially: boolean;
 }) {
   const dateUpdated = formatTimeToMMMDDYYYYHHmm(email.created_at);

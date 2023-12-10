@@ -1,6 +1,6 @@
 import { ToastAction } from "@radix-ui/react-toast";
 
-import { getEmailThreadsFrom } from "@skylar/client-db";
+import { getAllThreadsFromSenderEmailAddress } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/client-db/schema/thread";
 import { useGlobalStore } from "@skylar/logic";
 
@@ -48,7 +48,7 @@ export function ThreadContextMenu({
     activeEmail: activeEmailAddress,
     afterClientDbUpdate: [refetch],
     getThreads: () => {
-      return getEmailThreadsFrom({
+      return getAllThreadsFromSenderEmailAddress({
         // todo: fix this accessor
         senderEmail: thread.from[0]?.[0]?.email ?? "",
         clientEmail: activeEmailAddress,

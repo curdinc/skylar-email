@@ -1,4 +1,4 @@
-export type EmailIndexType = {
+export type MessageIndexType = {
   email_provider_message_id: string;
   email_provider_thread_id: string;
   user_email_address: string;
@@ -6,14 +6,14 @@ export type EmailIndexType = {
   created_at: number;
 };
 
-export type EmailType = EmailIndexType & {
+export type MessageType = MessageIndexType & {
   subject: string;
-  from: EmailSenderType;
-  to: EmailSenderType[];
-  cc: EmailSenderType[];
-  bcc: EmailSenderType;
-  reply_to: EmailSenderType[];
-  delivered_to: EmailSenderType[];
+  from: SenderType;
+  to: SenderType[];
+  cc: SenderType[];
+  bcc: SenderType;
+  reply_to: SenderType[];
+  delivered_to: SenderType[];
   in_reply_to?: string;
   content_html?: string;
   content_text: string;
@@ -36,9 +36,9 @@ export type EmailType = EmailIndexType & {
   >;
 };
 
-type EmailSenderType = { name?: string; email: string };
+type SenderType = { name?: string; email: string };
 
-export const EMAIL_INDEX = `&email_provider_message_id,
+export const MESSAGE_INDEX = `&email_provider_message_id,
 email_provider_thread_id,
 user_email_address,
 &rfc822_message_id,

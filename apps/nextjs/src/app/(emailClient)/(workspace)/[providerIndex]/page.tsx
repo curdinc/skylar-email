@@ -38,7 +38,6 @@ export default function Inbox() {
           </div>
           {messageType !== "none" && (
             <div className="h-full overflow-auto">
-              {/* Message composer */}
               <MessageComposer />
             </div>
           )}

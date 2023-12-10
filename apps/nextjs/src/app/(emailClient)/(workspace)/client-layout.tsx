@@ -5,12 +5,12 @@ import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  bulkDeleteEmails,
-  bulkPutEmails,
-  bulkUpdateEmails,
+  bulkDeleteMessages,
+  bulkPutMessages,
+  bulkUpdateMessages,
   updateEmailSyncInfo,
-  useAllEmailProviders,
-  useEmailSyncInfo,
+  useConnectedProviders,
+  useProviderSyncInfo,
 } from "@skylar/client-db";
 import {
   resetActiveThread,
@@ -25,7 +25,7 @@ import { useEmailPartialSync } from "./use-email-partial-sync";
 export const ClientLayout = () => {
   useInboxKeymaps();
   const router = useRouter();
-  const { data: allEmailProviders } = useAllEmailProviders();
+  const { data: allEmailProviders } = useConnectedProviders();
   const { providerIndex } = useParams();
 
   useEffect(() => {
@@ -42,13 +42,12 @@ export const ClientLayout = () => {
     setActiveEmailAddress(activeEmail);
   }, [providerIndex, allEmailProviders]);
 
-  const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
-    {
+  const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } =
+    useProviderSyncInfo({
       emailAddresses: (allEmailProviders ?? []).map(
         (provider) => provider.email,
       ),
-    },
-  );
+    });
   const { emailPartialSync } = useEmailPartialSync();
 
   useQuery({
@@ -95,19 +94,19 @@ export const ClientLayout = () => {
             activeEmailProvider.email,
             emailData.newMessages,
           );
-          await bulkPutEmails({
+          await bulkPutMessages({
             emails: emailToSave,
           });
           updatedEmails = true;
         }
         if (emailData.messagesDeleted?.length) {
-          await bulkDeleteEmails({
+          await bulkDeleteMessages({
             emailIds: emailData.messagesDeleted,
           });
           updatedEmails = true;
         }
         if (emailData.labelsModified?.length) {
-          await bulkUpdateEmails({
+          await bulkUpdateMessages({
             emails: emailData.labelsModified.map((email) => {
               return {
                 email_provider_message_id: email.emailProviderMessageId,

@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import { useAllEmailProviders } from "@skylar/client-db";
+import { useConnectedProviders } from "@skylar/client-db";
 
 export const useUserOnboardingRouteGuard = () => {
   const router = useRouter();
 
   const { data: allEmailProviders, isLoading: isLoadingAllEmailProviders } =
-    useAllEmailProviders();
+    useConnectedProviders();
 
   useEffect(() => {
     if (!allEmailProviders?.length) {

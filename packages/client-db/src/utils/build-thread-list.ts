@@ -1,6 +1,6 @@
-import type { EmailType } from "../../schema/email";
+import type { MessageType } from "../../schema/message";
 import type { ThreadType } from "../../schema/thread";
-import { bulkGetThreads } from "../email/bulk-get-threads";
+import { bulkGetThreads } from "../message/bulk-get-threads";
 
 const USELESS_WORDS = [
   "",
@@ -35,7 +35,7 @@ function buildSearchableString(text: string) {
   return Array.from(wordSet);
 }
 
-export async function buildThreadList(emails: EmailType[]) {
+export async function buildThreadList(emails: MessageType[]) {
   const emailProviderThreadIds = emails.map(
     (email) => email.email_provider_thread_id,
   );

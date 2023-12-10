@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { useAllEmailProviders } from "@skylar/client-db";
+import { useConnectedProviders } from "@skylar/client-db";
 import { listLabels } from "@skylar/gmail-api";
 
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export const LIST_LABEL_QUERY_KEY = "listLabels";
 export function useListLabels() {
-  const { data: allEmailProviders } = useAllEmailProviders();
+  const { data: allEmailProviders } = useConnectedProviders();
   const { mutateAsync: fetchAccessToken } = useAccessToken();
 
   return useQuery({

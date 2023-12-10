@@ -1,6 +1,6 @@
 import { clientDb } from "../db";
 
-export async function getRefreshTokenByEmail({
+export async function getRefreshTokenByEmailAddress({
   emailAddress,
 }: {
   emailAddress: string;

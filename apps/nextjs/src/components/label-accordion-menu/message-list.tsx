@@ -61,6 +61,7 @@ export function MessageList({
       });
     }
   }, [fetchNextPage, hasNextPageInView]);
+  console.log("data", data);
   return (
     <div>
       {status === "pending" ? (

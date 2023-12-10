@@ -1,4 +1,4 @@
-import type { EmailType } from "@skylar/client-db/schema/email";
+import type { MessageType } from "@skylar/client-db/schema/message";
 import type { State } from "@skylar/logic";
 import type {
   EmailSenderType,
@@ -10,7 +10,7 @@ import { sanitize } from "./htmlSanitizer";
 export function convertGmailEmailToClientDbEmail(
   emailAddress: string,
   emails: SyncResponseType["newMessages"],
-): EmailType[] {
+): MessageType[] {
   return emails.map((email) => {
     const emailTextContent = email.emailData.plain
       .map((content) => {
@@ -34,7 +34,7 @@ export function convertGmailEmailToClientDbEmail(
           prev[current.filename] = current;
           return prev;
         },
-        {} as EmailType["attachments"],
+        {} as MessageType["attachments"],
       ),
       created_at: email.emailMetadata.createdAt.getTime(),
       email_provider_thread_id: email.emailProviderThreadId,
