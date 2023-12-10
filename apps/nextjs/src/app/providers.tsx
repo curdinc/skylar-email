@@ -7,9 +7,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
+import { PostHogProvider } from "posthog-js/react";
 import superjson from "superjson";
 
 import { env } from "~/env";
+import { posthogInstance } from "~/lib/analytics/posthog-instance";
 import { api } from "~/lib/api";
 
 /**
@@ -17,6 +19,7 @@ import { api } from "~/lib/api";
  * * TRPC Client
  * * React Query Client
  * * Google OAuth Provider
+ * * PostHog Provider
  * @param props
  * @returns
  */
@@ -59,15 +62,17 @@ export function ClientProvider(props: {
   );
 
   return (
-    <GoogleOAuthProvider clientId={props.googleProviderClientId}>
-      <api.Provider client={trpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryStreamedHydration transformer={superjson}>
-            {props.children}
-          </ReactQueryStreamedHydration>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </api.Provider>
-    </GoogleOAuthProvider>
+    <PostHogProvider client={posthogInstance()}>
+      <GoogleOAuthProvider clientId={props.googleProviderClientId}>
+        <api.Provider client={trpcClient} queryClient={queryClient}>
+          <QueryClientProvider client={queryClient}>
+            <ReactQueryStreamedHydration transformer={superjson}>
+              {props.children}
+            </ReactQueryStreamedHydration>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </api.Provider>
+      </GoogleOAuthProvider>
+    </PostHogProvider>
   );
 }
