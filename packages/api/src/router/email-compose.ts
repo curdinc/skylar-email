@@ -38,7 +38,7 @@ export const emailComposeRouter = createTRPCRouter({
       }
       msg.setSender({
         name: emailConfig.from.name,
-        addr: emailConfig.from.email,
+        addr: emailConfig.from.emailAddress,
       });
       msg.setRecipient(emailConfig.to);
       msg.setSubject(emailConfig.subject);

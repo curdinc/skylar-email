@@ -20,19 +20,18 @@ export function useConnectEmailProviderPage() {
   const logger = useLogger();
   const { toast } = useToast();
 
-  const [emailProvider, setEmailProvider] =
+  const [providerType, setProviderType] =
     useState<SupportedEmailProviderType>("gmail");
 
   const onSelectEmailProvider = (provider: string) => {
     if (provider === "gmail" || provider === "outlook") {
-      setEmailProvider(provider);
+      setProviderType(provider);
     }
   };
 
-  const [isConnectingToEmailProvider, setIsConnectingToEmailProvider] =
-    useState(false);
+  const [isConnectingToProvider, setIsConnectingToProvider] = useState(false);
 
-  const { mutate: addEmailProvider } = useMutation({
+  const { mutate: addProvider } = useMutation({
     mutationFn: async (provider: ProviderInsertType) => {
       await putProvider({ provider });
     },
@@ -48,7 +47,7 @@ export function useConnectEmailProviderPage() {
       });
     },
     onSettled: () => {
-      setIsConnectingToEmailProvider(false);
+      setIsConnectingToProvider(false);
     },
     onSuccess: () => {
       router.push(ROUTE_ONBOARDING_SYNC);
@@ -57,9 +56,9 @@ export function useConnectEmailProviderPage() {
 
   const { mutate: exchangeCode } = api.oauth.googleCodeExchange.useMutation({
     onSuccess(emailProviderInfo) {
-      addEmailProvider({
-        email_provider: emailProviderInfo.providerType,
-        email: emailProviderInfo.providerInfo.email,
+      addProvider({
+        type: emailProviderInfo.providerType,
+        user_email_address: emailProviderInfo.providerInfo.email,
         image_uri: emailProviderInfo.providerInfo.imageUri,
         inbox_name: emailProviderInfo.providerInfo.name,
         refresh_token: emailProviderInfo.providerInfo.refreshToken,
@@ -77,13 +76,13 @@ export function useConnectEmailProviderPage() {
       });
     },
     onError: (errorResponse) => {
-      setIsConnectingToEmailProvider(false);
+      setIsConnectingToProvider(false);
       logger.error("User encounter error connecting to Google", {
         ...errorResponse,
       });
     },
     onNonOAuthError(nonOAuthError) {
-      setIsConnectingToEmailProvider(false);
+      setIsConnectingToProvider(false);
       logger.info("User encounter non oauth error connecting to google", {
         ...nonOAuthError,
       });
@@ -92,7 +91,7 @@ export function useConnectEmailProviderPage() {
   });
 
   const connectToGmail = useCallback(() => {
-    setIsConnectingToEmailProvider(true);
+    setIsConnectingToProvider(true);
     initiateConnectToGmail();
   }, [initiateConnectToGmail]);
 
@@ -102,10 +101,10 @@ export function useConnectEmailProviderPage() {
 
   return {
     onSelectEmailProvider,
-    emailProvider,
-    emailProviderDisplayName:
-      emailProvider.charAt(0).toUpperCase() + emailProvider.slice(1),
-    isConnectingToEmailProvider,
+    providerType,
+    providerTypeDisplayName:
+      providerType.charAt(0).toUpperCase() + providerType.slice(1),
+    isConnectingToProvider,
     connectToGmail,
     connectToOutlook,
   };

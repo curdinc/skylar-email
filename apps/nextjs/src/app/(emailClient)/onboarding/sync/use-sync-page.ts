@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import {
-  bulkPutEmails,
+  bulkPutMessages,
   getAllProviders,
   getEmailSyncInfo,
   upsertEmailSyncInfo,
@@ -45,7 +45,7 @@ export function useSyncPage() {
       const emailSyncInfo: EmailSyncInfoType[] = [];
       for (const provider of providers) {
         const syncInfo = await getEmailSyncInfo({
-          emailAddress: provider.email,
+          emailAddress: provider.user_email_address,
         });
         if (syncInfo) {
           emailSyncInfo.push(syncInfo);
@@ -64,30 +64,30 @@ export function useSyncPage() {
       for (const provider of providers) {
         const syncInfo = emailSyncInfo?.find(
           (info) =>
-            info.email_sync_info_id.toLowerCase() ===
-            provider.email.toLowerCase(),
+            info.user_email_address.toLowerCase() ===
+            provider.user_email_address.toLowerCase(),
         );
         if (syncInfo?.full_sync_completed_on) {
           continue;
         }
 
-        const emailData = await startEmailFullSyncForAddress({
-          emailProvider: provider.email_provider,
-          emailToSync: provider.email,
+        const messageData = await startEmailFullSyncForAddress({
+          emailProvider: provider.type,
+          emailToSync: provider.user_email_address,
         });
-        console.log("emailData", emailData);
-        const emailToSave = convertGmailEmailToClientDbEmail(
-          provider.email,
-          emailData.newMessages,
+        console.log("messageData", messageData);
+        const messagesToSave = convertGmailEmailToClientDbEmail(
+          provider.user_email_address,
+          messageData.newMessages,
         );
-        await bulkPutEmails({
-          emails: emailToSave,
+        await bulkPutMessages({
+          messages: messagesToSave,
         });
         await upsertEmailSyncInfo({
           emailSyncInfo: {
-            email_sync_info_id: provider.email,
+            user_email_address: provider.user_email_address,
             full_sync_completed_on: new Date().getTime(),
-            last_sync_history_id: emailData.lastCheckedHistoryId,
+            last_sync_history_id: messageData.lastCheckedHistoryId,
             last_sync_history_id_updated_at: new Date().getTime(),
           },
         });

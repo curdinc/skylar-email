@@ -1,7 +1,7 @@
-import type { EmailSenderType } from "@skylar/parsers-and-types";
+import type { SenderType } from "@skylar/parsers-and-types";
 
 export type ThreadIndexType = {
-  email_provider_thread_id: string;
+  provider_thread_id: string;
   user_email_address: string;
   email_provider_message_id: string[];
   subject_search: string[];
@@ -23,15 +23,15 @@ export type ThreadType = ThreadIndexType & {
   content: string[];
   latest_snippet_html: string;
   rfc822_message_id: string[];
-  from: EmailSenderType[][];
-  to: EmailSenderType[][];
-  cc: EmailSenderType[][];
-  bcc: EmailSenderType[][];
-  reply_to: EmailSenderType[][];
-  delivered_to: EmailSenderType[][];
+  from: SenderType[][];
+  to: SenderType[][];
+  cc: SenderType[][];
+  bcc: SenderType[][];
+  reply_to: SenderType[][];
+  delivered_to: SenderType[][];
 };
 
-export const THREAD_INDEX = `&email_provider_thread_id,
+export const THREAD_INDEX = `&provider_thread_id,
 user_email_address,
 *email_provider_message_id,
 *subject_search,

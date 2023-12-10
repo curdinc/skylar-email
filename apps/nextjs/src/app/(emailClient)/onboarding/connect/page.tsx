@@ -17,11 +17,11 @@ import { useConnectEmailProviderPage } from "./use-connect-page";
 export default function ConnectEmailOnboardingForm() {
   const {
     onSelectEmailProvider,
-    emailProvider,
-    emailProviderDisplayName,
+    providerType,
+    providerTypeDisplayName,
     connectToGmail,
     connectToOutlook,
-    isConnectingToEmailProvider,
+    isConnectingToProvider,
   } = useConnectEmailProviderPage();
 
   return (
@@ -35,7 +35,7 @@ export default function ConnectEmailOnboardingForm() {
           defaultValue="card"
           className="grid grid-cols-2 gap-4"
           onValueChange={onSelectEmailProvider}
-          value={emailProvider}
+          value={providerType}
         >
           <div>
             <RadioGroupItem value="gmail" id="gmail" className="peer sr-only" />
@@ -66,15 +66,15 @@ export default function ConnectEmailOnboardingForm() {
       </CardContent>
       <CardFooter>
         <Button
-          isLoading={isConnectingToEmailProvider}
+          isLoading={isConnectingToProvider}
           onClick={() => {
             const connect =
-              emailProvider === "gmail" ? connectToGmail : connectToOutlook;
+              providerType === "gmail" ? connectToGmail : connectToOutlook;
             connect();
           }}
           className="w-full"
         >
-          Connect to {emailProviderDisplayName}
+          Connect to {providerTypeDisplayName}
         </Button>
       </CardFooter>
     </Card>

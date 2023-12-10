@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { useAllEmailProviders } from "@skylar/client-db";
+import { useConnectedProviders } from "@skylar/client-db";
 
 import { cn } from "~/lib/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -14,12 +14,12 @@ export function EmailAccountNav({
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
-  const { data: allEmailProviders, isLoading } = useAllEmailProviders();
+  const { data: allEmailProviders, isLoading } = useConnectedProviders();
 
   const allEmailProvidersProfileInfo = (allEmailProviders ?? []).map(
     (account) => ({
       href: `${account.provider_id}`,
-      title: account.email,
+      title: account.user_email_address,
       imageUri: account.image_uri,
       name: account.inbox_name,
     }),

@@ -1,12 +1,8 @@
 import { useCallback, useState } from "react";
-import {
-  keepPreviousData,
-  useInfiniteQuery,
-  useQuery,
-} from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import type { ThreadType } from "../../schema/thread";
-import { getThreadSnippets } from "../email/get-thread-snippets";
+import { getThreadSnippets } from "../thread/get-thread-snippets";
 import type { GetParameters } from "../types/extract-params";
 
 export const THREAD_SNIPPETS_QUERY_KEY = "threadSnippets";
@@ -16,7 +12,7 @@ export function useThreadSnippetsPaginated(
 ) {
   const [lastThreads, setLastThreads] = useState<ThreadType[]>([]);
 
-  const { data: threads, isLoading } = useQuery({
+  const query = useQuery({
     queryKey: [
       THREAD_SNIPPETS_QUERY_KEY,
       lastThreads,
@@ -41,6 +37,7 @@ export function useThreadSnippetsPaginated(
     enabled: !!args.userEmails.length,
     gcTime: 0,
   });
+  const threads = query.data;
 
   const nextPage = useCallback(() => {
     if (threads) {
@@ -54,48 +51,10 @@ export function useThreadSnippetsPaginated(
     setLastThreads([...lastThreads]);
   }, [lastThreads]);
   return {
+    ...query,
     threads,
-    isLoading: isLoading || !args.userEmails.length,
+    isLoading: query.isLoading || !args.userEmails.length,
     nextPage,
     prevPage,
   };
-}
-
-export function useThreadSnippetsInfinite(
-  args: Omit<GetParameters<typeof getThreadSnippets>, "lastEntry"> & {
-    uid?: string;
-  },
-) {
-  return useInfiniteQuery({
-    queryKey: [
-      THREAD_SNIPPETS_QUERY_KEY,
-      args.limit,
-      args.sort,
-      args.orderBy,
-      args.filters,
-      args.userEmails,
-      args.uid,
-    ],
-    queryFn: async ({ pageParam }) => {
-      const threadSnippets = await getThreadSnippets({
-        userEmails: args.userEmails,
-        filters: args.filters,
-        limit: args.limit,
-        lastEntry: pageParam.lastThread,
-        sort: args.sort,
-        orderBy: args.orderBy,
-      });
-      return threadSnippets;
-    },
-    getNextPageParam: (lastPage, _pages) => {
-      if (lastPage.length === 0) {
-        return undefined;
-      }
-      return { lastThread: lastPage.at(-1) };
-    },
-    initialPageParam: { lastThread: undefined as undefined | ThreadType },
-    refetchInterval: 2_000, // 2 seconds
-    structuralSharing: false, // TODO: rewrite to use more granular filtering
-    gcTime: 0,
-  });
 }

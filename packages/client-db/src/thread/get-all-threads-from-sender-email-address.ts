@@ -1,8 +1,8 @@
-import type { EmailIndexType } from "../../schema/email";
+import type { MessageIndexType } from "../../schema/message";
 import type { ThreadIndexType } from "../../schema/thread";
 import { clientDb } from "../db";
 
-export async function getEmailThreadsFrom({
+export async function getAllThreadsFromSenderEmailAddress({
   senderEmail,
   clientEmail,
 }: {
@@ -13,5 +13,5 @@ export async function getEmailThreadsFrom({
     .where("from_search" satisfies keyof ThreadIndexType)
     .anyOfIgnoreCase(senderEmail)
     .and((thread) => thread.user_email_address === clientEmail)
-    .sortBy("created_at" satisfies keyof EmailIndexType);
+    .sortBy("created_at" satisfies keyof MessageIndexType);
 }

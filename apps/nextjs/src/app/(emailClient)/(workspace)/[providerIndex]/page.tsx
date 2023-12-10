@@ -5,8 +5,8 @@ import { Allotment } from "allotment";
 
 import { useGlobalStore } from "@skylar/logic";
 
-import { MessageListViewer } from "~/components/message-list/message-list-viewer";
-import { MessageViewer } from "~/components/message-viewer/index";
+import { LabelAccordion } from "~/components/label-accordion-menu/label-accordion";
+import { ThreadViewer } from "~/components/thread-viewer/index";
 
 const MIN_PANE_SIZE = 250;
 
@@ -28,18 +28,16 @@ export default function Inbox() {
   return (
     <Allotment minSize={MIN_PANE_SIZE} defaultSizes={[100, 200]}>
       <Allotment.Pane snap>
-        {/* Label list viewer */}
-        <MessageListViewer />
+        <LabelAccordion />
       </Allotment.Pane>
       <Allotment.Pane>
         <Allotment vertical>
           <div className="h-full overflow-auto">
             {/* Single Thread viewer */}
-            <MessageViewer />
+            <ThreadViewer />
           </div>
           {messageType !== "none" && (
             <div className="h-full overflow-auto">
-              {/* Message composer */}
               <MessageComposer />
             </div>
           )}

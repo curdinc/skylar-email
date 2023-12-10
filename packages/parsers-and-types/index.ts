@@ -57,3 +57,4 @@ export * from "./src/constants/email-providers";
 
 // CLIENT DB TABLES
 export * from "./src/client-db-schema/provider";
+export * from "./src/client-db-schema/shared";

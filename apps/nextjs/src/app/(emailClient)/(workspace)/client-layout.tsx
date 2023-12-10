@@ -5,9 +5,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  bulkDeleteEmails,
-  bulkPutEmails,
-  bulkUpdateEmails,
+  bulkDeleteMessages,
+  bulkPutMessages,
+  bulkUpdateMessages,
   getAllProviders,
   getEmailSyncInfo,
   updateEmailSyncInfo,
@@ -46,7 +46,7 @@ export const ClientLayout = () => {
       const emailSyncInfo: EmailSyncInfoType[] = [];
       for (const provider of connectedProviders) {
         const syncInfo = await getEmailSyncInfo({
-          emailAddress: provider.email,
+          emailAddress: provider.user_email_address,
         });
         if (!syncInfo) {
           router.push(ROUTE_ONBOARDING_SYNC);
@@ -55,11 +55,11 @@ export const ClientLayout = () => {
         emailSyncInfo.push(syncInfo);
       }
 
-      for (const emailProvider of connectedProviders) {
+      for (const provider of connectedProviders) {
         const syncInfo = emailSyncInfo.find(
           (syncInfo) =>
-            syncInfo.email_sync_info_id.toLowerCase() ===
-            emailProvider.email.toLowerCase(),
+            syncInfo.user_email_address.toLowerCase() ===
+            provider.user_email_address.toLowerCase(),
         );
         if (!syncInfo) {
           router.push(ROUTE_ONBOARDING_SYNC);
@@ -67,7 +67,7 @@ export const ClientLayout = () => {
         }
 
         const emailData = await emailPartialSync({
-          emailAddressToSync: emailProvider.email,
+          emailAddressToSync: provider.user_email_address,
           startHistoryId: syncInfo?.last_sync_history_id,
         });
         if (!emailData) {
@@ -77,25 +77,25 @@ export const ClientLayout = () => {
         console.log("emailData", emailData);
         if (emailData.newMessages.length) {
           const emailToSave = convertGmailEmailToClientDbEmail(
-            emailProvider.email,
+            provider.user_email_address,
             emailData.newMessages,
           );
-          await bulkPutEmails({
-            emails: emailToSave,
+          await bulkPutMessages({
+            messages: emailToSave,
           });
           updatedEmails = true;
         }
         if (emailData.messagesDeleted?.length) {
-          await bulkDeleteEmails({
-            emailIds: emailData.messagesDeleted,
+          await bulkDeleteMessages({
+            providerMessageIds: emailData.messagesDeleted,
           });
           updatedEmails = true;
         }
         if (emailData.labelsModified?.length) {
-          await bulkUpdateEmails({
-            emails: emailData.labelsModified.map((email) => {
+          await bulkUpdateMessages({
+            messages: emailData.labelsModified.map((email) => {
               return {
-                email_provider_message_id: email.emailProviderMessageId,
+                provider_message_id: email.emailProviderMessageId,
                 email_provider_labels: email.newLabels,
               };
             }),
@@ -103,7 +103,7 @@ export const ClientLayout = () => {
           updatedEmails = true;
         }
         await updateEmailSyncInfo({
-          syncEmailAddressToUpdate: emailProvider.email,
+          syncEmailAddressToUpdate: provider.user_email_address,
           emailSyncInfo: {
             last_sync_history_id: emailData.lastCheckedHistoryId,
             last_sync_history_id_updated_at: new Date().getTime(),

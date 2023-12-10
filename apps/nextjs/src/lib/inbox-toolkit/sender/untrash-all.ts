@@ -1,4 +1,4 @@
-import { getEmailThreadsFrom } from "@skylar/client-db";
+import { getAllThreadsFromSenderEmailAddress } from "@skylar/client-db";
 
 import { untrashThreads } from "../thread/untrash-threads";
 
@@ -13,7 +13,7 @@ export async function untrashAll({
   afterClientDbUpdate: (() => Promise<unknown>)[];
   senderEmail: string;
 }) {
-  const threads = await getEmailThreadsFrom({
+  const threads = await getAllThreadsFromSenderEmailAddress({
     clientEmail: email,
     senderEmail,
   });

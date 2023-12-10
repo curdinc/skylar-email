@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import { bulkUpdateEmails, useEmailThread } from "@skylar/client-db";
-import type { EmailType } from "@skylar/client-db/schema/email";
+import { bulkUpdateMessages, useThread } from "@skylar/client-db";
+import type { MessageType } from "@skylar/client-db/schema/message";
 import { modifyLabels } from "@skylar/gmail-api";
 import { useGlobalStore } from "@skylar/logic";
 
@@ -10,10 +10,10 @@ import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export function useMessageViewer() {
   const threadId = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.activeThread?.email_provider_thread_id,
+    (state) => state.EMAIL_CLIENT.activeThread?.provider_thread_id,
   );
 
-  const { emailThread, isLoading: isLoadingThread } = useEmailThread({
+  const { thread, isLoading: isLoadingThread } = useThread({
     emailProviderThreadId: threadId ?? "",
   });
 
@@ -23,15 +23,15 @@ export function useMessageViewer() {
     mutationFn: async ({
       addLabels,
       deleteLabels,
-      email,
+      message,
       emailAddress,
     }: {
       emailAddress: string;
-      email: EmailType;
+      message: MessageType;
       addLabels: string[];
       deleteLabels: string[];
     }) => {
-      if (email.email_provider_labels.includes("UNREAD")) {
+      if (message.email_provider_labels.includes("UNREAD")) {
         const accessToken = await fetchGmailAccessToken({
           email: emailAddress,
         });
@@ -41,7 +41,7 @@ export function useMessageViewer() {
           emailId: emailAddress,
           addLabels,
           deleteLabels,
-          messageId: email.email_provider_message_id,
+          messageId: message.provider_message_id,
         });
         return labelData;
       }
@@ -50,12 +50,12 @@ export function useMessageViewer() {
       if (!labelData) {
         return;
       }
-      await bulkUpdateEmails({
-        emails: [
+      await bulkUpdateMessages({
+        messages: [
           {
-            email_provider_message_id: labelData.id,
+            provider_message_id: labelData.id,
             email_provider_labels: labelData.labelIds,
-            email_provider_thread_id: labelData.threadId,
+            provider_thread_id: labelData.threadId,
           },
         ],
       });
@@ -66,18 +66,17 @@ export function useMessageViewer() {
   });
 
   useEffect(() => {
-    // TODO: why did we need to check for emailProviderInfos?.length?
-    if (!isLoadingThread && emailThread?.length) {
-      emailThread.map((email) => {
+    if (!isLoadingThread && thread?.length) {
+      thread.map((message) => {
         markAsRead({
-          email,
-          emailAddress: email.user_email_address,
+          message,
+          emailAddress: message.user_email_address,
           addLabels: [],
           deleteLabels: ["UNREAD"],
         });
       });
     }
-  }, [emailThread, isLoadingThread, markAsRead]);
+  }, [thread, isLoadingThread, markAsRead]);
 
-  return { isLoadingThread, emailThread };
+  return { isLoadingThread, thread };
 }
