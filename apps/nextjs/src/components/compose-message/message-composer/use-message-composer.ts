@@ -15,6 +15,7 @@ import {
   getSenderReplyToEmailAddresses,
   isAttachmentSizeValid,
 } from "~/lib/email";
+import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useSendEmail } from "./use-send-mail";
 
 export const useMessageComposer = () => {
@@ -24,9 +25,7 @@ export const useMessageComposer = () => {
   const composeEmailType = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
   );
-  const activeEmailAddress = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.activeEmailAddress,
-  );
+  const {data: activeEmailAddress} = useActiveEmailAddress();
   const attachments = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.attachments,
   );

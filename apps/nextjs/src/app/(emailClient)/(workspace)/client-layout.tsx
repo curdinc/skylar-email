@@ -12,11 +12,7 @@ import {
   useAllEmailProviders,
   useEmailSyncInfo,
 } from "@skylar/client-db";
-import {
-  resetActiveThread,
-  resetComposeMessage,
-  setActiveEmailAddress,
-} from "@skylar/logic";
+import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
 
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
@@ -26,21 +22,12 @@ export const ClientLayout = () => {
   useInboxKeymaps();
   const router = useRouter();
   const { data: allEmailProviders } = useAllEmailProviders();
-  const { providerIndex } = useParams();
 
+  const { providerIndex } = useParams();
   useEffect(() => {
     resetActiveThread();
     resetComposeMessage();
-
-    if (!allEmailProviders) {
-      return;
-    }
-    const activeEmail = allEmailProviders.find(
-      (p) => p.provider_id?.toString() === (providerIndex as string),
-    )?.email;
-
-    setActiveEmailAddress(activeEmail);
-  }, [providerIndex, allEmailProviders]);
+  }, [providerIndex]);
 
   const { emailSyncInfo, isLoading: isLoadingEmailSyncInfo } = useEmailSyncInfo(
     {

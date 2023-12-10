@@ -71,10 +71,6 @@ export function formatTimeToMMMDDYYYYHHmm(time: number): string {
   });
 }
 
-export const getFromEmailAddress = (message: EmailType): string => {
-  return message.from.email;
-};
-
 export const getSenderReplyToEmailAddresses = (
   fromAddresses?: EmailSenderType[],
   replyToAddresses?: EmailSenderType[],
