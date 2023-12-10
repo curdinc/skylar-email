@@ -41,7 +41,7 @@ export function convertGmailEmailToClientDbEmail(
       provider_thread_id: message.emailProviderThreadId,
       provider_message_id: message.emailProviderMessageId,
       rfc822_message_id: message.emailMetadata.rfc822MessageId,
-      bcc: convertGmailSendersToClientDbSender([message.emailMetadata.bcc])[0]!,
+      bcc: convertGmailSendersToClientDbSender([message.emailMetadata.bcc])[0],
       cc: convertGmailSendersToClientDbSender(message.emailMetadata.cc),
       from: convertGmailSendersToClientDbSender([
         message.emailMetadata.from,
@@ -64,11 +64,13 @@ export function convertGmailEmailToClientDbEmail(
   });
 }
 
-function convertGmailSendersToClientDbSender(senders: EmailSenderType[]) {
-  return senders.map((sender) => ({
-    name: sender.name,
-    email_address: sender.emailAddress,
-  }));
+function convertGmailSendersToClientDbSender(senders?: EmailSenderType[]) {
+  return (
+    senders?.map((sender) => ({
+      name: sender.name,
+      email_address: sender.emailAddress,
+    })) ?? []
+  );
 }
 
 export function formatTimeToMMMDD(time: number): string {

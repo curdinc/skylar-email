@@ -13,7 +13,7 @@ export type MessageType = MessageIndexType & {
   from: SenderType;
   to: SenderType[];
   cc: SenderType[];
-  bcc: SenderType;
+  bcc?: SenderType;
   reply_to: SenderType[];
   delivered_to: SenderType[];
   in_reply_to?: string;
