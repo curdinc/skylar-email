@@ -16,7 +16,6 @@ import { useConnectEmailProviderPage } from "./use-connect-page";
 
 export default function ConnectEmailOnboardingForm() {
   const {
-    isCheckingUserOnboardStep,
     onSelectEmailProvider,
     emailProvider,
     emailProviderDisplayName,
@@ -68,7 +67,6 @@ export default function ConnectEmailOnboardingForm() {
       <CardFooter>
         <Button
           isLoading={isConnectingToEmailProvider}
-          disabled={isCheckingUserOnboardStep}
           onClick={() => {
             const connect =
               emailProvider === "gmail" ? connectToGmail : connectToOutlook;
