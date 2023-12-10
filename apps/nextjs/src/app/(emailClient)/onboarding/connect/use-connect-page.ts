@@ -31,15 +31,11 @@ export function useConnectEmailProviderPage() {
       await putProvider({ provider });
     },
   });
-  const utils = api.useUtils();
 
   const [isConnectingToEmailProvider, setIsConnectingToEmailProvider] =
     useState(false);
   const { mutate: exchangeCode } = api.oauth.googleCodeExchange.useMutation({
     onSuccess(emailProviderInfo) {
-      utils.onboarding.getUserOnboardStep.invalidate().catch((e) => {
-        logger.error("Error invalidating user onboarding step", { error: e });
-      });
       addProvider({
         email_provider: emailProviderInfo.providerType,
         email: emailProviderInfo.providerInfo.email,

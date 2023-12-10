@@ -11,10 +11,10 @@ import {
 } from "@skylar/parsers-and-types";
 
 import { createTRPCRouter } from "../trpc/factory";
-import { protectedProcedure } from "../trpc/procedures";
+import { publicProcedure } from "../trpc/procedures";
 
 export const inviteCodeRouter = createTRPCRouter({
-  getInviteCodes: protectedProcedure.query(
+  getInviteCodes: publicProcedure.query(
     async ({
       ctx: {
         db,
@@ -28,7 +28,7 @@ export const inviteCodeRouter = createTRPCRouter({
       return inviteCodes ?? [];
     },
   ),
-  generateNewInviteCode: protectedProcedure.mutation(
+  generateNewInviteCode: publicProcedure.mutation(
     async ({
       ctx: {
         db,
@@ -59,7 +59,7 @@ export const inviteCodeRouter = createTRPCRouter({
       });
     },
   ),
-  deleteInviteCode: protectedProcedure
+  deleteInviteCode: publicProcedure
     .input(validatorTrpcWrapper(DeleteInviteCodeSchema))
     .mutation(async ({ ctx: { db }, input: { inviteCodeId } }) => {
       await deleteInviteCode({

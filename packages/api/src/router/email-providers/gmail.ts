@@ -5,10 +5,10 @@ import {
 } from "@skylar/parsers-and-types";
 
 import { createTRPCRouter } from "../../trpc/factory";
-import { protectedProcedure } from "../../trpc/procedures";
+import { publicProcedure } from "../../trpc/procedures";
 
 export const gmailRouter = createTRPCRouter({
-  getAccessToken: protectedProcedure
+  getAccessToken: publicProcedure
     .input(validatorTrpcWrapper(getGmailAccessTokenSchema))
     .mutation(async ({ ctx, input }) => {
       console.log("Fetching access token for: ", input.email);

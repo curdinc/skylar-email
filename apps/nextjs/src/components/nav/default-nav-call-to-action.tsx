@@ -2,9 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { useLogOut, useUser } from "@skylar/auth/client";
-
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -18,8 +16,6 @@ import {
 } from "../ui/dropdown-menu";
 
 export const DefaultNavCallToAction = () => {
-  const user = useUser();
-  const signOut = useLogOut();
   const router = useRouter();
   const goToSetting = () => {
     router.push("/settings");
@@ -30,36 +26,28 @@ export const DefaultNavCallToAction = () => {
   //     Login
   //   </Link>
   // );
-  let navItem = <></>;
-  if (user) {
-    navItem = (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button className="w-full gap-2" variant={"ghost"} size="lg">
-            <div className="text-sm font-semibold">{user.name}</div>
-            <Avatar>
-              <AvatarImage src={user.imageUri} />
-              <AvatarFallback>{user.name.slice(0, 2)}</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuGroup>
-            <DropdownMenuItem onClick={goToSetting}>
-              Settings
-              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={signOut}>
-            Log out
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+  const navItem = (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button className="w-full gap-2" variant={"ghost"} size="lg">
+          <div className="text-sm font-semibold">{"ANON"}</div>
+          <Avatar>
+            <AvatarFallback>{"PP"}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={goToSetting}>
+            Settings
+            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-  }
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
   return <nav className="w-full">{navItem}</nav>;
 };

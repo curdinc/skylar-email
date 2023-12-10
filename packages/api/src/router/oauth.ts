@@ -10,10 +10,10 @@ import {
 } from "@skylar/parsers-and-types";
 
 import { createTRPCRouter } from "../trpc/factory";
-import { protectedProcedure } from "../trpc/procedures";
+import { publicProcedure } from "../trpc/procedures";
 
 export const oauthRouter = createTRPCRouter({
-  googleCodeExchange: protectedProcedure
+  googleCodeExchange: publicProcedure
     .input(validatorTrpcWrapper(oauthOnboardingSchema))
     .mutation(async ({ ctx: { env }, input }) => {
       if (input.provider !== "gmail") {

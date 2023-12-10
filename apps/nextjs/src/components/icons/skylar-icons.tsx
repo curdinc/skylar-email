@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 
-import { useUser } from "@skylar/auth/client";
-
 import { siteConfig } from "~/lib/config";
 import { cn } from "~/lib/ui";
 import { ImageLogo } from "../ui/image-logo";
@@ -31,11 +29,9 @@ export const SkylarIconWithText = ({
   textClassName?: string;
   logoClassName?: string;
 }) => {
-  const user = useUser();
-  const defaultHref = user ? "/inbox" : "/";
   return (
     <Link
-      href={href ?? defaultHref}
+      href={href ?? "/"}
       className={cn("flex items-center space-x-2", linkClassName)}
     >
       <SkylarIcon className={logoClassName} />

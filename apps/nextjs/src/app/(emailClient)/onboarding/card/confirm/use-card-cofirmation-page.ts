@@ -13,7 +13,6 @@ export function useCheckSuccessfulSetupIntent() {
   );
   const { mutateAsync: setDefaultPaymentMethod } =
     api.stripe.setDefaultPaymentMethod.useMutation();
-  const utils = api.useUtils();
 
   useQuery({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
@@ -40,7 +39,6 @@ export function useCheckSuccessfulSetupIntent() {
                   ? setupIntent.payment_method
                   : setupIntent.payment_method?.id ?? "",
             });
-            await utils.onboarding.getUserOnboardStep.invalidate();
             router.push("/onboarding/sync");
             break;
           }

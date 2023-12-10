@@ -1,5 +1,3 @@
-import type { Session } from "@skylar/auth";
-import { getSession } from "@skylar/auth";
 import type { DbType } from "@skylar/db";
 import type { Logger } from "@skylar/logger";
 
@@ -13,7 +11,15 @@ import type { Logger } from "@skylar/logger";
  *
  */
 type CreateContextOptions = {
-  session?: Session;
+  session: {
+    user: {
+      userId: number;
+      email: string;
+      name: string;
+      authProviderId: string;
+      authProvider: "github" | "discord" | "facebook" | "google";
+    };
+  };
   env: {
     JWT_SECRET: string;
     GOOGLE_PROVIDER_CLIENT_ID: string;
@@ -47,7 +53,7 @@ const createInnerTRPCContext = (opts: CreateContextOptions) => {
  * process every request that goes through your tRPC endpoint
  * @link https://trpc.io/docs/context
  */
-export const createTRPCContext = async ({
+export const createTRPCContext = ({
   req,
   env,
   logger,
@@ -58,18 +64,21 @@ export const createTRPCContext = async ({
   env: CreateContextOptions["env"];
   db: DbType;
 }) => {
-  const authHeader = req?.headers.get("Authorization") ?? undefined;
-  const session = await getSession({
-    JWT_SECRET: env.JWT_SECRET,
-    authHeader,
-  });
   const source = req?.headers.get("x-trpc-source") ?? "unknown";
 
-  logger.info(`>>> tRPC Request from ${source} by ${session?.user?.name}`);
+  logger.info(`>>> tRPC Request from ${source}`);
 
   return createInnerTRPCContext({
+    session: {
+      user: {
+        userId: 1, //FIXME:
+        email: "stub@gmail.com",
+        name: "stub",
+        authProviderId: "stub",
+        authProvider: "google",
+      },
+    },
     logger,
-    session,
     env,
     db,
   });

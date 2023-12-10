@@ -7,10 +7,10 @@ import {
 } from "@skylar/parsers-and-types";
 
 import { createTRPCRouter } from "../trpc/factory";
-import { protectedProcedure } from "../trpc/procedures";
+import { publicProcedure } from "../trpc/procedures";
 
 export const emailComposeRouter = createTRPCRouter({
-  composeRfc822Email: protectedProcedure
+  composeRfc822Email: publicProcedure
     .input(validatorTrpcWrapper(emailConfigSchema))
     .mutation(({ input: emailConfig }) => {
       if (
