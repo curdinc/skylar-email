@@ -96,6 +96,8 @@ export function EmailDisplay({
             className={cn(!email.content_html && "whitespace-pre-wrap")}
             html={email.content_html ?? ""}
             text={email.content_text}
+            // Leaving comments here to show that
+            // we can rewrite external resources and links if needed in the future
             // rewriteExternalResources={(resource) => {
             //   console.log("resource", resource);
             //   return resource;
