@@ -11,7 +11,7 @@ import { EmailComposeSchema } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
 import {
-  formatEmailAddresses,
+  formatEmailSenderTypeAndRemoveUserEmail,
   getSenderReplyToEmailAddresses,
   isAttachmentSizeValid,
 } from "~/lib/email";
@@ -60,11 +60,17 @@ export const useMessageComposer = () => {
           );
           replyTo.push(...senderEmailAddresses);
           replyTo.push(
-            ...formatEmailAddresses(activeEmailAddress, thread?.to.at(-1)),
+            ...formatEmailSenderTypeAndRemoveUserEmail(
+              activeEmailAddress,
+              thread?.to.at(-1),
+            ),
           );
 
           cc.push(
-            ...formatEmailAddresses(activeEmailAddress, thread?.cc.at(-1)),
+            ...formatEmailSenderTypeAndRemoveUserEmail(
+              activeEmailAddress,
+              thread?.cc.at(-1),
+            ),
           );
           break;
         }
