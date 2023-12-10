@@ -14,17 +14,17 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { TypographyH1 } from "../ui/typography";
-import { useMessageViewer } from "./use-thread-viewer";
+import { useThreadViewer } from "./use-thread-viewer";
 
 export function ThreadViewer() {
-  const { thread, isLoadingThread } = useMessageViewer();
+  const { thread, isLoadingThread } = useThreadViewer();
 
   if (isLoadingThread) {
     return <div>Loading...</div>;
   }
   const EmailList = thread?.map((email, idx) => {
     return (
-      <EmailDisplay
+      <ThreadDisplay
         message={email}
         key={email.rfc822_message_id}
         isOpenInitially={idx === thread.length - 1}
@@ -40,7 +40,7 @@ export function ThreadViewer() {
   );
 }
 
-export function EmailDisplay({
+export function ThreadDisplay({
   message,
   isOpenInitially,
 }: {
