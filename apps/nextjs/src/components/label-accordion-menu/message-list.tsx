@@ -1,7 +1,7 @@
 "use client";
 
-import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { useInView } from "react-intersection-observer";
 
 import { isThreadUnread, useThreadSnippetsInfinite } from "@skylar/client-db";
@@ -63,7 +63,7 @@ export function MessageList({
       });
     }
   }, [fetchNextPage, hasNextPageInView]);
-  
+
   return (
     <div>
       {status === "pending" ? (
