@@ -45,7 +45,7 @@ export function useSyncPage() {
       const emailSyncInfo: EmailSyncInfoType[] = [];
       for (const provider of providers) {
         const syncInfo = await getEmailSyncInfo({
-          emailAddress: provider.email,
+          emailAddress: provider.user_email_address,
         });
         if (syncInfo) {
           emailSyncInfo.push(syncInfo);
@@ -65,7 +65,7 @@ export function useSyncPage() {
         const syncInfo = emailSyncInfo?.find(
           (info) =>
             info.user_email_address.toLowerCase() ===
-            provider.email.toLowerCase(),
+            provider.user_email_address.toLowerCase(),
         );
         if (syncInfo?.full_sync_completed_on) {
           continue;
@@ -73,11 +73,11 @@ export function useSyncPage() {
 
         const messageData = await startEmailFullSyncForAddress({
           emailProvider: provider.type,
-          emailToSync: provider.email,
+          emailToSync: provider.user_email_address,
         });
         console.log("messageData", messageData);
         const messagesToSave = convertGmailEmailToClientDbEmail(
-          provider.email,
+          provider.user_email_address,
           messageData.newMessages,
         );
         await bulkPutMessages({
@@ -85,7 +85,7 @@ export function useSyncPage() {
         });
         await upsertEmailSyncInfo({
           emailSyncInfo: {
-            user_email_address: provider.email,
+            user_email_address: provider.user_email_address,
             full_sync_completed_on: new Date().getTime(),
             last_sync_history_id: messageData.lastCheckedHistoryId,
             last_sync_history_id_updated_at: new Date().getTime(),

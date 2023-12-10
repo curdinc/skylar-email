@@ -15,15 +15,15 @@ export function useListLabels() {
     queryFn: async () => {
       const labelPromise = (allEmailProviders ?? []).map(async (provider) => {
         const accessToken = await fetchAccessToken({
-          email: provider.email,
+          email: provider.user_email_address,
         });
 
         const labels = await listLabels({
           accessToken,
-          emailId: provider.email,
+          emailId: provider.user_email_address,
         });
 
-        return { [provider.email]: labels };
+        return { [provider.user_email_address]: labels };
       });
 
       const labelsResponse = await Promise.allSettled(labelPromise);

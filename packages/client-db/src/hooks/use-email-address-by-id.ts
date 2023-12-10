@@ -8,7 +8,7 @@ export const useEmailAddressById = (id: number) => {
     queryKey: [GET_ACTIVE_EMAIL_ADDRESS, id],
     queryFn: async () => {
       const provider = await getProviderById({ id });
-      return provider?.email;
+      return provider?.user_email_address ?? "";
     },
     gcTime: 0,
   });

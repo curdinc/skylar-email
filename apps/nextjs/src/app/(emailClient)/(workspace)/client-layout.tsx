@@ -46,7 +46,7 @@ export const ClientLayout = () => {
       const emailSyncInfo: EmailSyncInfoType[] = [];
       for (const provider of connectedProviders) {
         const syncInfo = await getEmailSyncInfo({
-          emailAddress: provider.email,
+          emailAddress: provider.user_email_address,
         });
         if (!syncInfo) {
           router.push(ROUTE_ONBOARDING_SYNC);
@@ -55,11 +55,11 @@ export const ClientLayout = () => {
         emailSyncInfo.push(syncInfo);
       }
 
-      for (const emailProvider of connectedProviders) {
+      for (const provider of connectedProviders) {
         const syncInfo = emailSyncInfo.find(
           (syncInfo) =>
             syncInfo.user_email_address.toLowerCase() ===
-            emailProvider.email.toLowerCase(),
+            provider.user_email_address.toLowerCase(),
         );
         if (!syncInfo) {
           router.push(ROUTE_ONBOARDING_SYNC);
@@ -67,7 +67,7 @@ export const ClientLayout = () => {
         }
 
         const emailData = await emailPartialSync({
-          emailAddressToSync: emailProvider.email,
+          emailAddressToSync: provider.user_email_address,
           startHistoryId: syncInfo?.last_sync_history_id,
         });
         if (!emailData) {
@@ -77,7 +77,7 @@ export const ClientLayout = () => {
         console.log("emailData", emailData);
         if (emailData.newMessages.length) {
           const emailToSave = convertGmailEmailToClientDbEmail(
-            emailProvider.email,
+            provider.user_email_address,
             emailData.newMessages,
           );
           await bulkPutMessages({
@@ -103,7 +103,7 @@ export const ClientLayout = () => {
           updatedEmails = true;
         }
         await updateEmailSyncInfo({
-          syncEmailAddressToUpdate: emailProvider.email,
+          syncEmailAddressToUpdate: provider.user_email_address,
           emailSyncInfo: {
             last_sync_history_id: emailData.lastCheckedHistoryId,
             last_sync_history_id_updated_at: new Date().getTime(),

@@ -19,7 +19,7 @@ export function EmailAccountNav({
   const allEmailProvidersProfileInfo = (allEmailProviders ?? []).map(
     (account) => ({
       href: `${account.provider_id}`,
-      title: account.email,
+      title: account.user_email_address,
       imageUri: account.image_uri,
       name: account.inbox_name,
     }),

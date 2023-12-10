@@ -11,7 +11,7 @@ export async function putProvider({
   provider: ProviderInsertType;
 }) {
   const existingProvider = await clientDb.provider.get({
-    email: provider.email,
+    user_email_address: provider.user_email_address,
   });
 
   const updatedProvider: ProviderType = {

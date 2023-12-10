@@ -58,7 +58,7 @@ export function useConnectEmailProviderPage() {
     onSuccess(emailProviderInfo) {
       addProvider({
         type: emailProviderInfo.providerType,
-        email: emailProviderInfo.providerInfo.email,
+        user_email_address: emailProviderInfo.providerInfo.email,
         image_uri: emailProviderInfo.providerInfo.imageUri,
         inbox_name: emailProviderInfo.providerInfo.name,
         refresh_token: emailProviderInfo.providerInfo.refreshToken,
