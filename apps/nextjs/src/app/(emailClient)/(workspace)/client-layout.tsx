@@ -73,7 +73,7 @@ export const ClientLayout = () => {
       for (const activeEmailProvider of allEmailProviders) {
         const syncInfo = emailSyncInfo.find(
           (syncInfo) =>
-            syncInfo.email_sync_info_id.toLowerCase() ===
+            syncInfo.user_email_address.toLowerCase() ===
             activeEmailProvider.email.toLowerCase(),
         );
         if (!syncInfo) {
@@ -95,21 +95,21 @@ export const ClientLayout = () => {
             emailData.newMessages,
           );
           await bulkPutMessages({
-            emails: emailToSave,
+            messages: emailToSave,
           });
           updatedEmails = true;
         }
         if (emailData.messagesDeleted?.length) {
           await bulkDeleteMessages({
-            emailIds: emailData.messagesDeleted,
+            providerMessageIds: emailData.messagesDeleted,
           });
           updatedEmails = true;
         }
         if (emailData.labelsModified?.length) {
           await bulkUpdateMessages({
-            emails: emailData.labelsModified.map((email) => {
+            messages: emailData.labelsModified.map((email) => {
               return {
-                email_provider_message_id: email.emailProviderMessageId,
+                provider_message_id: email.emailProviderMessageId,
                 email_provider_labels: email.newLabels,
               };
             }),

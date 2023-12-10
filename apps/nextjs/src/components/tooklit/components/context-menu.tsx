@@ -50,7 +50,7 @@ export function ThreadContextMenu({
     getThreads: () => {
       return getAllThreadsFromSenderEmailAddress({
         // todo: fix this accessor
-        senderEmail: thread.from[0]?.[0]?.email ?? "",
+        senderEmail: thread.from[0]?.[0]?.email_address ?? "",
         clientEmail: activeEmailAddress,
       });
     },

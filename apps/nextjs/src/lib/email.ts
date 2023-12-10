@@ -2,6 +2,7 @@ import type { MessageType } from "@skylar/client-db/schema/message";
 import type { State } from "@skylar/logic";
 import type {
   EmailSenderType,
+  SenderType,
   SyncResponseType,
 } from "@skylar/parsers-and-types";
 
@@ -9,16 +10,16 @@ import { sanitize } from "./htmlSanitizer";
 
 export function convertGmailEmailToClientDbEmail(
   emailAddress: string,
-  emails: SyncResponseType["newMessages"],
+  messages: SyncResponseType["newMessages"],
 ): MessageType[] {
-  return emails.map((email) => {
-    const emailTextContent = email.emailData.plain
+  return messages.map((message) => {
+    const emailTextContent = message.emailData.plain
       .map((content) => {
         return Buffer.from(content, "base64").toString("utf-8");
       })
       .join(" ");
 
-    const emailHtmlContent = email.emailData.html
+    const emailHtmlContent = message.emailData.html
       .map((contentHtml) => {
         return Buffer.from(contentHtml, "base64").toString("utf-8");
       })
@@ -26,35 +27,48 @@ export function convertGmailEmailToClientDbEmail(
 
     return {
       user_email_address: emailAddress,
-      attachment_names: email.emailData.attachments.map(
+      attachment_names: message.emailData.attachments.map(
         (attachment) => attachment.filename,
       ),
-      attachments: email.emailData.attachments.reduce(
+      attachments: message.emailData.attachments.reduce(
         (prev, current) => {
           prev[current.filename] = current;
           return prev;
         },
         {} as MessageType["attachments"],
       ),
-      created_at: email.emailMetadata.createdAt.getTime(),
-      email_provider_thread_id: email.emailProviderThreadId,
-      email_provider_message_id: email.emailProviderMessageId,
-      rfc822_message_id: email.emailMetadata.rfc822MessageId,
-      bcc: email.emailMetadata.bcc,
-      cc: email.emailMetadata.cc,
-      from: email.emailMetadata.from,
-      to: email.emailMetadata.to,
-      reply_to: email.emailMetadata.replyTo,
-      delivered_to: email.emailMetadata.deliveredTo,
-      in_reply_to: email.emailMetadata.inReplyTo.email,
-      email_provider_labels: email.providerLabels,
+      created_at: message.emailMetadata.createdAt.getTime(),
+      provider_thread_id: message.emailProviderThreadId,
+      provider_message_id: message.emailProviderMessageId,
+      rfc822_message_id: message.emailMetadata.rfc822MessageId,
+      bcc: convertGmailSendersToClientDbSender([message.emailMetadata.bcc])[0]!,
+      cc: convertGmailSendersToClientDbSender(message.emailMetadata.cc),
+      from: convertGmailSendersToClientDbSender([
+        message.emailMetadata.from,
+      ])[0]!,
+      to: convertGmailSendersToClientDbSender(message.emailMetadata.to),
+      reply_to: convertGmailSendersToClientDbSender(
+        message.emailMetadata.replyTo,
+      ),
+      delivered_to: convertGmailSendersToClientDbSender(
+        message.emailMetadata.deliveredTo,
+      ),
+      in_reply_to: message.emailMetadata.inReplyTo.emailAddress,
+      email_provider_labels: message.providerLabels,
       skylar_labels: [],
-      subject: email.emailMetadata.subject,
-      snippet_html: sanitize(email.snippet).__html,
+      subject: message.emailMetadata.subject,
+      snippet_html: sanitize(message.snippet).__html,
       content_text: sanitize(emailTextContent).__html,
       content_html: sanitize(emailHtmlContent).__html,
     };
   });
+}
+
+function convertGmailSendersToClientDbSender(senders: EmailSenderType[]) {
+  return senders.map((sender) => ({
+    name: sender.name,
+    email_address: sender.emailAddress,
+  }));
 }
 
 export function formatTimeToMMMDD(time: number): string {
@@ -74,15 +88,17 @@ export function formatTimeToMMMDDYYYYHHmm(time: number): string {
 }
 
 export const getSenderReplyToEmailAddresses = (
-  fromAddresses?: EmailSenderType[],
-  replyToAddresses?: EmailSenderType[],
+  fromAddresses?: SenderType[],
+  replyToAddresses?: SenderType[],
 ): string[] => {
   if (replyToAddresses?.length) {
-    return replyToAddresses.map((replyToAddress) => replyToAddress.email);
+    return replyToAddresses.map(
+      (replyToAddress) => replyToAddress.email_address,
+    );
   }
   if (fromAddresses?.length) {
     return fromAddresses.map((fromAddress) => {
-      return fromAddress.email;
+      return fromAddress.email_address;
     });
   }
   return [];
@@ -90,11 +106,11 @@ export const getSenderReplyToEmailAddresses = (
 
 export const formatEmailAddresses = (
   userEmailAddress?: string,
-  emailAddresses?: EmailSenderType[],
+  emailAddresses?: SenderType[],
 ): string[] => {
   return (
     emailAddresses
-      ?.map((emailAddress) => emailAddress.email)
+      ?.map((emailAddress) => emailAddress.email_address)
       ?.filter((emailAddress) => {
         return emailAddress !== userEmailAddress;
       }) ?? []

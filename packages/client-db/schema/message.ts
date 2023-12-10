@@ -1,6 +1,8 @@
+import type { SenderType } from "@skylar/parsers-and-types";
+
 export type MessageIndexType = {
-  email_provider_message_id: string;
-  email_provider_thread_id: string;
+  provider_message_id: string;
+  provider_thread_id: string;
   user_email_address: string;
   rfc822_message_id: string;
   created_at: number;
@@ -36,10 +38,8 @@ export type MessageType = MessageIndexType & {
   >;
 };
 
-type SenderType = { name?: string; email: string };
-
-export const MESSAGE_INDEX = `&email_provider_message_id,
-email_provider_thread_id,
+export const MESSAGE_INDEX = `&provider_message_id,
+provider_thread_id,
 user_email_address,
 &rfc822_message_id,
 created_at` as const;

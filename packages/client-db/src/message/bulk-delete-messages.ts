@@ -1,19 +1,23 @@
 import { clientDb } from "../db";
 import { bulkGetMessages } from "./bulk-get-messages";
 
-export async function bulkDeleteMessages({ emailIds }: { emailIds: string[] }) {
+export async function bulkDeleteMessages({
+  providerMessageIds,
+}: {
+  providerMessageIds: string[];
+}) {
   const emailsToDelete = await bulkGetMessages({
-    emailIds,
+    providerMessageIds: providerMessageIds,
   });
   const threadIdsToDelete = emailsToDelete
-    .map((email) => email?.email_provider_thread_id)
+    .map((email) => email?.provider_thread_id)
     .filter((id) => !!id) as string[];
   await clientDb.transaction(
     "rw",
     clientDb.message,
     clientDb.thread,
     async () => {
-      await clientDb.message.bulkDelete(emailIds);
+      await clientDb.message.bulkDelete(providerMessageIds);
       await clientDb.thread.bulkDelete(threadIdsToDelete);
     },
   );

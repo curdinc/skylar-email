@@ -45,7 +45,7 @@ export function useSyncPage() {
       for (const activeEmailProvider of allEmailProviders) {
         const syncInfo = emailSyncInfo?.find(
           (info) =>
-            info.email_sync_info_id.toLowerCase() ===
+            info.user_email_address.toLowerCase() ===
             activeEmailProvider.email.toLowerCase(),
         );
         if (syncInfo?.full_sync_completed_on) {
@@ -62,11 +62,11 @@ export function useSyncPage() {
               emailData.newMessages,
             );
             await bulkPutMessages({
-              emails: emailToSave,
+              messages: emailToSave,
             });
             await upsertEmailSyncInfo({
               emailSyncInfo: {
-                email_sync_info_id: activeEmailProvider.email,
+                user_email_address: activeEmailProvider.email,
                 full_sync_completed_on: new Date().getTime(),
                 last_sync_history_id: emailData.lastCheckedHistoryId,
                 last_sync_history_id_updated_at: new Date().getTime(),

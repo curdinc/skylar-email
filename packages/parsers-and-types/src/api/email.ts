@@ -21,7 +21,7 @@ export const SUPPORTED_EMAIL_CATEGORIES = [
 
 export const emailSenderSchema = object({
   name: optional(string()),
-  email: emailSchema,
+  emailAddress: emailSchema,
 });
 
 export const attachmentSchema = object({

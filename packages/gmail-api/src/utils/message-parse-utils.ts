@@ -7,11 +7,11 @@ import type {
 } from "@skylar/parsers-and-types";
 
 // parses "email", "<email>", "firstname lastname <email>"
-function parseEmailSenderValue(value: string) {
+function parseEmailSenderValue(value: string): EmailSenderType {
   const stripStr = value.trim();
   if (stripStr.indexOf("<") < 0) {
     return {
-      email: stripStr,
+      emailAddress: stripStr,
     };
   }
   const splitStr = stripStr.split("<");
@@ -20,10 +20,10 @@ function parseEmailSenderValue(value: string) {
   const firstChar = firstPart.at(0);
 
   const name = firstChar == '"' ? "" : splitStr[0]?.trim();
-  const email = splitStr[1]!.replace(">", "");
+  const emailAddress = splitStr[1]!.replace(">", "");
   return {
     name,
-    email,
+    emailAddress,
   };
 }
 
@@ -42,10 +42,10 @@ export function getEmailMetadata(
     rfc822MessageId: string;
     to: EmailSenderType[];
   } = {
-    from: { email: "" },
+    from: { emailAddress: "" },
     subject: "",
-    inReplyTo: { email: "" },
-    bcc: { email: "" },
+    inReplyTo: { emailAddress: "" },
+    bcc: { emailAddress: "" },
     cc: [],
     deliveredTo: [],
     replyTo: [],

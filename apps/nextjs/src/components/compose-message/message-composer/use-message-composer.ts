@@ -122,7 +122,7 @@ export const useMessageComposer = () => {
         emailAddress: values.from,
         emailConfig: {
           from: {
-            email: values.from,
+            emailAddress: values.from,
           },
           subject: values.subject,
           to: values.to,

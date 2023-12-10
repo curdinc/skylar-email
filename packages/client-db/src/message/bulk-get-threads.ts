@@ -1,9 +1,9 @@
 import { clientDb } from "../db";
 
 export async function bulkGetThreads({
-  emailProviderThreadIds,
+  providerThreadIds,
 }: {
-  emailProviderThreadIds: string[];
+  providerThreadIds: string[];
 }) {
-  return clientDb.thread.bulkGet(emailProviderThreadIds);
+  return clientDb.thread.bulkGet(providerThreadIds);
 }

@@ -7,7 +7,7 @@ export async function getMessagesFromThreadId({
   emailProviderThreadId: string;
 }) {
   return clientDb.message
-    .where("email_provider_thread_id" satisfies keyof MessageIndexType)
+    .where("provider_thread_id" satisfies keyof MessageIndexType)
     .equals(emailProviderThreadId)
     .sortBy("created_at" satisfies keyof MessageIndexType);
 }

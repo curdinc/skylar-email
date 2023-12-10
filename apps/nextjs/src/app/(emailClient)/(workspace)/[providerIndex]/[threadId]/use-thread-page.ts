@@ -13,7 +13,7 @@ export function useThreadPage() {
     (state) => state.EMAIL_CLIENT.activeThread?.email_provider_thread_id,
   );
 
-  const { emailThread, isLoading: isLoadingThread } = useThread({
+  const { thread, isLoading: isLoadingThread } = useThread({
     emailProviderThreadId: threadId ?? "",
   });
 
@@ -23,15 +23,15 @@ export function useThreadPage() {
     mutationFn: async ({
       addLabels,
       deleteLabels,
-      email,
+      message,
       emailAddress,
     }: {
       emailAddress: string;
-      email: MessageType;
+      message: MessageType;
       addLabels: string[];
       deleteLabels: string[];
     }) => {
-      if (email.email_provider_labels.includes("UNREAD")) {
+      if (message.email_provider_labels.includes("UNREAD")) {
         const accessToken = await fetchGmailAccessToken({
           email: emailAddress,
         });
@@ -41,7 +41,7 @@ export function useThreadPage() {
           emailId: emailAddress,
           addLabels,
           deleteLabels,
-          messageId: email.email_provider_message_id,
+          messageId: message.provider_message_id,
         });
         return labelData;
       }
@@ -51,11 +51,11 @@ export function useThreadPage() {
         return;
       }
       await bulkUpdateMessages({
-        emails: [
+        messages: [
           {
-            email_provider_message_id: labelData.id,
+            provider_message_id: labelData.id,
             email_provider_labels: labelData.labelIds,
-            email_provider_thread_id: labelData.threadId,
+            provider_thread_id: labelData.threadId,
           },
         ],
       });
@@ -67,17 +67,17 @@ export function useThreadPage() {
 
   useEffect(() => {
     // TODO: why did we need to check for emailProviderInfos?.length?
-    if (!isLoadingThread && emailThread?.length) {
-      emailThread.map((email) => {
+    if (!isLoadingThread && thread?.length) {
+      thread.map((message) => {
         markAsRead({
-          email,
-          emailAddress: email.user_email_address,
+          message,
+          emailAddress: message.user_email_address,
           addLabels: [],
           deleteLabels: ["UNREAD"],
         });
       });
     }
-  }, [emailThread, isLoadingThread, markAsRead]);
+  }, [thread, isLoadingThread, markAsRead]);
 
-  return { isLoadingThread, emailThread };
+  return { isLoadingThread, thread };
 }

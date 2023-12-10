@@ -4,10 +4,10 @@ import { bulkGetMessages } from "./bulk-get-messages";
 import { bulkPutMessages } from "./bulk-put-messages";
 
 export async function bulkUpdateMessages({
-  emails,
+  messages,
 }: {
-  emails: (Partial<MessageType> &
-    Pick<MessageIndexType, "email_provider_message_id">)[];
+  messages: (Partial<MessageType> &
+    Pick<MessageIndexType, "provider_message_id">)[];
 }) {
   await clientDb.transaction(
     "rw",
@@ -15,21 +15,21 @@ export async function bulkUpdateMessages({
     clientDb.thread,
     async () => {
       const emailIdToEmail = new Map<string, Partial<MessageType>>();
-      emails.forEach((email) => {
-        emailIdToEmail.set(email.email_provider_message_id, email);
+      messages.forEach((email) => {
+        emailIdToEmail.set(email.provider_message_id, email);
       });
       const emailIds = Array.from(emailIdToEmail.keys());
 
       const fullEmails = (
         await bulkGetMessages({
-          emailIds: emailIds,
+          providerMessageIds: emailIds,
         })
       ).filter((email) => !!email) as MessageType[];
       const updatedEmails = fullEmails.map((email) => {
-        const update = emailIdToEmail.get(email.email_provider_message_id);
+        const update = emailIdToEmail.get(email.provider_message_id);
         if (!update) {
           throw new Error(
-            `Could not find email with email_provider_message_id: ${email.email_provider_message_id}`,
+            `Could not find email with provider_message_id: ${email.provider_message_id}`,
           );
         }
         return {
@@ -38,7 +38,7 @@ export async function bulkUpdateMessages({
         };
       });
 
-      await bulkPutMessages({ emails: updatedEmails });
+      await bulkPutMessages({ messages: updatedEmails });
     },
   );
 }
