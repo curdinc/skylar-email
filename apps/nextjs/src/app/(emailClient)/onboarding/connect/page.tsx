@@ -12,6 +12,8 @@ import {
 } from "~/components/ui/card";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+import { captureEvent } from "~/lib/analytics/capture-event";
+import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { useConnectEmailProviderPage } from "./use-connect-page";
 
 export default function ConnectEmailOnboardingForm() {
@@ -23,6 +25,16 @@ export default function ConnectEmailOnboardingForm() {
     connectToOutlook,
     isConnectingToProvider,
   } = useConnectEmailProviderPage();
+
+  const onInitiateConnect = () => {
+    captureEvent({
+      event: TrackingEvents.connectProviderButtonClicked,
+      properties: { providerType },
+    });
+    const connect =
+      providerType === "gmail" ? connectToGmail : connectToOutlook;
+    connect();
+  };
 
   return (
     <Card>
@@ -67,11 +79,7 @@ export default function ConnectEmailOnboardingForm() {
       <CardFooter>
         <Button
           isLoading={isConnectingToProvider}
-          onClick={() => {
-            const connect =
-              providerType === "gmail" ? connectToGmail : connectToOutlook;
-            connect();
-          }}
+          onClick={onInitiateConnect}
           className="w-full"
         >
           Connect to {providerTypeDisplayName}

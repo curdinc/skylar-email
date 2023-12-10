@@ -102,10 +102,12 @@ export function getEmailBody({
   messageResponse,
   emailProviderMessageId,
   emailId,
+  onError,
 }: {
   messageResponse: MessageResponseType;
   emailProviderMessageId: string;
   emailId: string;
+  onError?: (error: Error) => void;
 }) {
   const result: emailBodyParseResultType = {
     plain: [],
@@ -136,12 +138,13 @@ export function getEmailBody({
         body: { ...part.body, attachmentId },
       });
     } else {
-      throw new Error(
-        JSON.stringify({
-          cause: "unhandled mimeType",
-          mimeType: part.mimeType,
-          emailId,
-          emailProviderMessageId,
+      onError?.(
+        new Error("unhandled mimeType", {
+          cause: {
+            mimeType: part.mimeType,
+            emailId,
+            emailProviderMessageId,
+          },
         }),
       );
     }

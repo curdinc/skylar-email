@@ -5,16 +5,25 @@ export const TrackingEvents = {
   connectedProvider: "connected_provider",
   syncStarted: "sync_started",
   syncCompleted: "sync_completed",
-  speedUpClicked: "speed_up_clicked",
+  syncFailed: "sync_failed",
+  speedUpButtonClicked: "speed_up_button_clicked",
+  threadOpened: "thread_opened",
 } as const;
 
+// use Record<string, never> for the value of events with no properties
 export type TrackingEventProperties = {
-  [TrackingEvents.connectProviderButtonClicked]: Record<string, never>; // no properties
+  [TrackingEvents.connectProviderButtonClicked]: {
+    providerType: SupportedEmailProviderType;
+  };
   [TrackingEvents.connectedProvider]: {
-    type: SupportedEmailProviderType;
+    providerType: SupportedEmailProviderType;
     emailAddress: string;
   };
   [TrackingEvents.syncStarted]: Record<string, never>;
-  [TrackingEvents.syncCompleted]: Record<string, never>;
-  [TrackingEvents.speedUpClicked]: Record<string, never>;
+  [TrackingEvents.syncCompleted]: {
+    secondsElapsed: number;
+  };
+  [TrackingEvents.syncFailed]: Record<string, never>;
+  [TrackingEvents.speedUpButtonClicked]: Record<string, never>;
+  [TrackingEvents.threadOpened]: Record<string, never>;
 };

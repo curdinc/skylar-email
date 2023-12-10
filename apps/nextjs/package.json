@@ -69,7 +69,8 @@
     "react-simplemde-editor": "^5.2.0",
     "showdown": "^2.1.0",
     "superjson": "1.13.1",
-    "tailwind-merge": "^1.14.0"
+    "tailwind-merge": "^1.14.0",
+    "ts-case-convert": "^2.0.5"
   },
   "devDependencies": {
     "@skylar/api": "^0.1.0",
