@@ -32,7 +32,6 @@
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-oauth/google": "^0.11.1",
     "@replit/codemirror-vscode-keymap": "^6.0.2",
-    "@skylar/auth": "^0.1.0",
     "@skylar/client-db": "^0.1.0",
     "@skylar/gmail-api": "^0.1.0",
     "@skylar/logger": "^0.1.0",

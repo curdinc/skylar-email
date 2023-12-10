@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -9,29 +9,8 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import superjson from "superjson";
 
-import { AUTH_TOKEN_COOKIE_NAME, AuthListener } from "@skylar/auth/client";
-
 import { env } from "~/env";
 import { api } from "~/lib/api";
-import { onLogoutRedirectTo } from "~/lib/auth/client";
-
-export function AuthListenerSkylar({
-  supabaseKey,
-  supabaseUrl,
-}: {
-  supabaseKey: string;
-  supabaseUrl: string;
-}) {
-  const onLogoutRedirectToFn = useCallback(onLogoutRedirectTo, []);
-
-  return (
-    <AuthListener
-      supabaseKey={supabaseKey}
-      supabaseUrl={supabaseUrl}
-      onLogoutRedirectTo={onLogoutRedirectToFn}
-    />
-  );
-}
 
 /**
  * This wraps the entire app with the client providers needed.
@@ -41,14 +20,12 @@ export function AuthListenerSkylar({
  * @param props
  * @returns
  */
-export function ClientProvider(
-  props: {
-    children: React.ReactNode;
-    headers?: Headers;
-    cookies: RequestCookie[];
-    googleProviderClientId: string;
-  } & Parameters<typeof AuthListenerSkylar>[0],
-) {
+export function ClientProvider(props: {
+  children: React.ReactNode;
+  headers?: Headers;
+  cookies: RequestCookie[];
+  googleProviderClientId: string;
+}) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -73,26 +50,7 @@ export function ClientProvider(
           url: env.NEXT_PUBLIC_BACKEND_URL,
           headers() {
             const headers = new Map(props.headers);
-            let auth = props.cookies.find((cookie) => {
-              return cookie.name === AUTH_TOKEN_COOKIE_NAME;
-            });
-            if (!auth && window !== undefined) {
-              const clientCookies = document.cookie
-                .split("; ")
-                .map((c) => {
-                  const [key, v] = c.split("=");
-                  if (!v) return;
-                  return { name: key, value: decodeURIComponent(v) };
-                })
-                .filter((c) => !!c) as { name: string; value: string }[];
-              auth = clientCookies.find((cookie) => {
-                return cookie.name === AUTH_TOKEN_COOKIE_NAME;
-              });
-            }
             headers.set("x-trpc-source", "nextjs-react");
-            if (auth?.value) {
-              headers.set("Authorization", `Bearer ${auth?.value}`);
-            }
             return Object.fromEntries(headers);
           },
         }),
@@ -105,10 +63,6 @@ export function ClientProvider(
       <api.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <ReactQueryStreamedHydration transformer={superjson}>
-            <AuthListenerSkylar
-              supabaseKey={props.supabaseKey}
-              supabaseUrl={props.supabaseUrl}
-            />
             {props.children}
           </ReactQueryStreamedHydration>
           <ReactQueryDevtools initialIsOpen={false} />

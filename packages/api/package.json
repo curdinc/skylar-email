@@ -12,7 +12,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@skylar/auth": "^0.1.0",
     "@skylar/db": "^0.1.0",
     "@skylar/gmail-api": "^0.1.0",
     "@skylar/parsers-and-types": "^0.1.0",

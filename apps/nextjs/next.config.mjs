@@ -6,7 +6,6 @@ const config = {
   reactStrictMode: true,
   /** Enables hot reloading for local packages without a build step */
   transpilePackages: [
-    "@skylar/auth",
     "@skylar/logic",
     "@skylar/logger",
     "@skylar/parsers-and-types",

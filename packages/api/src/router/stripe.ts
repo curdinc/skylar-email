@@ -13,7 +13,7 @@ import {
 } from "@skylar/parsers-and-types";
 
 import { createMiddleware, createTRPCRouter } from "../trpc/factory";
-import { protectedProcedure } from "../trpc/procedures";
+import { publicProcedure } from "../trpc/procedures";
 
 const injectStripe = createMiddleware(async ({ ctx: { env }, next }) => {
   const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
@@ -27,7 +27,7 @@ const injectStripe = createMiddleware(async ({ ctx: { env }, next }) => {
   });
 });
 
-const stripeProcedure = protectedProcedure.use(injectStripe);
+const stripeProcedure = publicProcedure.use(injectStripe);
 export const stripeRouter = createTRPCRouter({
   maybeCreateCustomer: stripeProcedure.mutation(
     async ({
