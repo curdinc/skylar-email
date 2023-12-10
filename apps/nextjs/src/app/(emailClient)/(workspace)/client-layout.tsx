@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import {
   bulkDeleteEmails,
@@ -112,7 +112,7 @@ export const ClientLayout = () => {
         return updatedEmails;
       }
     },
-    refetchInterval: 40_000, // 40 seconds in milliseconds
+    refetchInterval: 20_000, // 20 seconds in milliseconds
     refetchIntervalInBackground: true,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
