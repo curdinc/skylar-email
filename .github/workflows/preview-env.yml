@@ -72,7 +72,7 @@ jobs:
           echo "siteUrl=$FRONT_END_URL" >> $GITHUB_OUTPUT
 
   comment:
-    name: Comment output on PR
+    name: Comment output
     if: github.actor!= 'dependabot[bot]'
     runs-on: ubuntu-latest
     needs:
