@@ -58,6 +58,7 @@
     "lucide-react": "^0.288.0",
     "next": "^13.5.4",
     "next-axiom": "1.0.0-rc.1",
+    "posthog-js": "^1.94.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
@@ -68,7 +69,8 @@
     "react-simplemde-editor": "^5.2.0",
     "showdown": "^2.1.0",
     "superjson": "1.13.1",
-    "tailwind-merge": "^1.14.0"
+    "tailwind-merge": "^1.14.0",
+    "ts-case-convert": "^2.0.5"
   },
   "devDependencies": {
     "@skylar/api": "^0.1.0",

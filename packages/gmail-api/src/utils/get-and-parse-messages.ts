@@ -8,10 +8,12 @@ export async function getAndParseMessages({
   messageIds,
   accessToken,
   emailId,
+  onError,
 }: {
   messageIds: string[];
   accessToken: string;
   emailId: string;
+  onError?: (error: Error) => void;
 }): Promise<messageDetailsType[]> {
   const rawMessages = await getMessageUnbounded({
     messageIds,
@@ -25,6 +27,7 @@ export async function getAndParseMessages({
       messageResponse: msg,
       emailProviderMessageId: msg.id,
       emailId,
+      onError,
     });
     return {
       snippet: msg.snippet,

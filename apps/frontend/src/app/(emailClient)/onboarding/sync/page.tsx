@@ -10,6 +10,8 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
+import { captureEvent } from "~/lib/analytics/capture-event";
+import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { useSyncPage } from "./use-sync-page";
 
 export default function SyncProgress() {
@@ -31,6 +33,11 @@ export default function SyncProgress() {
       <CardFooter className="justify-end">
         <Button
           onClick={() => {
+            captureEvent({
+              event: TrackingEvents.speedUpButtonClicked,
+              properties: {},
+            });
+
             console.log("syncProgress", syncProgress);
           }}
         >

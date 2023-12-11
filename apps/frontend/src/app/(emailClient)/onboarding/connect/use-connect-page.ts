@@ -10,6 +10,8 @@ import type {
 } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
+import { captureEvent, identifyUser } from "~/lib/analytics/capture-event";
+import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { api } from "~/lib/api";
 import { GMAIL_SCOPES } from "~/lib/config";
 import { useLogger } from "~/lib/logger";
@@ -62,6 +64,16 @@ export function useConnectEmailProviderPage() {
         image_uri: emailProviderInfo.providerInfo.imageUri,
         inbox_name: emailProviderInfo.providerInfo.name,
         refresh_token: emailProviderInfo.providerInfo.refreshToken,
+      });
+
+      identifyUser(emailProviderInfo.providerInfo.email);
+
+      captureEvent({
+        event: TrackingEvents.connectedProvider,
+        properties: {
+          providerType,
+          emailAddress: emailProviderInfo.providerInfo.email,
+        },
       });
     },
   });

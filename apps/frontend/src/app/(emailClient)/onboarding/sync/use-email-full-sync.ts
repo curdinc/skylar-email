@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useLogger } from "next-axiom";
 
 import { fullSync } from "@skylar/gmail-api";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
@@ -77,6 +78,8 @@ export const useEmailFullSync = () => {
     }
   }, [syncProgress]);
 
+  const logger = useLogger();
+
   const { mutateAsync: startGmailFullSync } = useMutation({
     mutationFn: async (gmailToSync: string) => {
       const accessToken = await fetchGmailAccessToken({
@@ -86,6 +89,9 @@ export const useEmailFullSync = () => {
       const emailData = await fullSync({
         accessToken,
         emailId: gmailToSync,
+        onError: (e) => {
+          logger.error(e.message, e);
+        },
       });
       return emailData;
     },

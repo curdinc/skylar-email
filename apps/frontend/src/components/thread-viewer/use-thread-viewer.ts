@@ -8,7 +8,7 @@ import type { MessageType } from "@skylar/parsers-and-types";
 
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
-export function useMessageViewer() {
+export function useThreadViewer() {
   const threadId = useGlobalStore(
     (state) => state.EMAIL_CLIENT.activeThread?.provider_thread_id,
   );

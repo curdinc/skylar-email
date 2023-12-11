@@ -9,6 +9,8 @@ import { setActiveThread } from "@skylar/logic";
 import type { ThreadType } from "@skylar/parsers-and-types";
 
 import { ThreadContextMenu } from "~/components/tooklit/components/context-menu";
+import { captureEvent } from "~/lib/analytics/capture-event";
+import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { cn } from "~/lib/ui";
 
@@ -36,6 +38,11 @@ export function MessageList({
 
   const onClickThread = (thread: ThreadType) => {
     return () => {
+      captureEvent({
+        event: TrackingEvents.threadOpened,
+        properties: {},
+      });
+
       setActiveThread(thread);
     };
   };
