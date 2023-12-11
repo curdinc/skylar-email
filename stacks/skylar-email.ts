@@ -36,7 +36,7 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
       url: "http://localhost:3000",
     },
     environment: {
-      NEXT_PUBLIC_BACKEND_URL: `${backend.url}/trpc`,
+      NEXT_PUBLIC_BACKEND_URL: backend.url,
       NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID:
         process.env.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID!,
       NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY!,
