@@ -54,6 +54,7 @@ const config = {
     ".next",
     "dist",
     "pnpm-lock.yaml",
+    "sst-env.d.ts",
   ],
   reportUnusedDisableDirectives: true,
 };
