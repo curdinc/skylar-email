@@ -10,7 +10,7 @@ export default {
     };
   },
   stacks(app) {
-    if (app.stage !== "production") {
+    if (app.stage !== "prod") {
       app.setDefaultRemovalPolicy("destroy");
     }
     app.stack(Frontend);

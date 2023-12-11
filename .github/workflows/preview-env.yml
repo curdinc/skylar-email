@@ -14,25 +14,16 @@ permissions:
 env:
   PR_PREFIX: pr-${{ github.event.pull_request.number }}
 
-# on:
-#   pull_request:
-#     branches: ["*"]
-
-# permissions:
-#   id-token: write # This is required for requesting the JWT
-#   contents: read # This is required for actions/checkout
-
-# Concurrency group name ensures concurrent workflow runs wait for any in-progress job to finish
-concurrency:
-  group: merge-${{ github.ref }}
-
 jobs:
   frontend:
-    name: Deploy Frontend for PR
     if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     outputs:
       url: ${{ steps.sst-frontend-outputs.outputs.siteUrl }}
+    env:
+      NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID }}
+      NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
+      NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
