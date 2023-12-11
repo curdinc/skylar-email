@@ -15,11 +15,12 @@ env:
   PR_PREFIX: pr-${{ github.event.pull_request.number }}
 
 jobs:
-  frontend:
+  deployPreviewEnv:
     if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     outputs:
-      url: ${{ steps.sst-frontend-outputs.outputs.siteUrl }}
+      frontendUrl: ${{ steps.sst-frontend-outputs.outputs.frontendUrl }}
+      backendUrl: ${{ steps.sst-backend-outputs.outputs.backendUrl }}
     env:
       NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID }}
       NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
@@ -64,19 +65,26 @@ jobs:
       - name: Deploy frontend
         run: pnpm sst deploy --stage $PR_PREFIX
 
-      - name: Extract Site URL and set output
+      - name: Extract frontend URL and set output
         id: sst-frontend-outputs
         run: |
           cat .sst/outputs.json
-          FRONT_END_URL=$(jq -r '.[].SiteUrl | select(. != null)' .sst/outputs.json)
-          echo "siteUrl=$FRONT_END_URL" >> $GITHUB_OUTPUT
+          FRONTEND_URL=$(jq -r '.[].FrontendUrl | select(. != null)' .sst/outputs.json)
+          echo "frontendUrl=$FRONTEND_URL" >> $GITHUB_OUTPUT
+
+      - name: Extract backend URL and set output
+        id: sst-backend-outputs
+        run: |
+          cat .sst/outputs.json
+          BACKEND_URL=$(jq -r '.[].FrontendUrl | select(. != null)' .sst/outputs.json)
+          echo "backendUrl=$FRONT_END_URL" >> $GITHUB_OUTPUT
 
   comment:
     name: Comment output
     if: github.actor!= 'dependabot[bot]'
     runs-on: ubuntu-latest
     needs:
-      - frontend
+      - deployPreviewEnv
     steps:
       - name: Find Comment
         uses: peter-evans/find-comment@v2
@@ -101,11 +109,9 @@ jobs:
             </td></tr>
             <tr><td><strong>Status:</strong></td><td>&nbsp;✅&nbsp; Deploy successful!</td></tr>
             <tr><td><strong>Preview URL:</strong></td><td>
-            <a href='${{ needs.frontend.outputs.url }}'>${{ needs.frontend.outputs.url }}</a>
+            <a href='${{ needs.deployPreviewEnv.outputs.frontendUrl }}'>${{ needs.deployPreviewEnv.outputs.frontendUrl }}</a>
+            </td></tr>
+            <tr><td><strong>API URL:</strong></td><td>
+            <a href='${{ needs.deployPreviewEnv.outputs.backendUrl }}'>${{ needs.deployPreviewEnv.outputs.backendUrl }}</a>
             </td></tr>
             </table>
-
-# For future when we have backend deployed here too
-# <tr><td><strong>API URL:</strong></td><td>
-# <a href='${{ needs.backend.outputs.api-endpoint }}'>${{ needs.backend.outputs.api-endpoint }}</a>
-# </td></tr>

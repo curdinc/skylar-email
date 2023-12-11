@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "concurrently \"lt --port 8787 --subdomain skylar-backend-$(grep DEV_NAME ../../.env | cut -d '=' -f2)\" \"wrangler dev src/index.ts\"",
+    "dev": "cd ../../ && pnpm sst dev",
     "build": "wrangler deploy src/index.ts --dry-run --outdir dist",
     "clean": "rm -rf .turbo dist node_modules",
     "lint": "eslint .",
@@ -16,18 +16,16 @@
     "@skylar/logger": "^0.1.0",
     "@skylar/parsers-and-types": "^0.1.0",
     "@trpc/server": "10.7.1-alpha-next-2023-10-20-20-37-31.88",
-    "hono": "^3.7.3"
+    "hono": "^3.11.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230821.0",
     "@skylar/eslint-config": "0.2.0",
     "@skylar/prettier-config": "^0.1.0",
     "@skylar/tsconfig": "^0.1.0",
     "concurrently": "^8.2.1",
     "eslint": "^8.48.0",
-    "localtunnel": "^2.0.2",
-    "typescript": "^5.2.2",
-    "wrangler": "^3.6.0"
+    "sst": "^2.38.4",
+    "typescript": "^5.2.2"
   },
   "eslintConfig": {
     "extends": [

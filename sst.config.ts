@@ -1,6 +1,6 @@
 import type { SSTConfig } from "sst";
 
-import { Frontend } from "./stacks/frontend";
+import { SkylarEmailConstructs } from "./stacks/skylar-email";
 
 export default {
   config(_input) {
@@ -13,6 +13,6 @@ export default {
     if (app.stage !== "prod") {
       app.setDefaultRemovalPolicy("destroy");
     }
-    app.stack(Frontend);
+    app.stack(SkylarEmailConstructs);
   },
 } satisfies SSTConfig;
