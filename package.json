@@ -23,13 +23,13 @@
     "@manypkg/cli": "^0.21.0",
     "@skylar/prettier-config": "^0.1.0",
     "@turbo/gen": "^1.10.13",
+    "aws-cdk-lib": "2.110.1",
+    "constructs": "10.3.0",
     "cross-env": "^7.0.3",
     "prettier": "^3.0.3",
-    "turbo": "^1.10.13",
-    "typescript": "^5.2.2",
     "sst": "^2.38.4",
-    "aws-cdk-lib": "2.110.1",
-    "constructs": "10.3.0"
+    "turbo": "^1.10.13",
+    "typescript": "^5.2.2"
   },
   "prettier": "@skylar/prettier-config"
 }

@@ -89,8 +89,8 @@
     "encoding": "^0.1.13",
     "eslint": "^8.48.0",
     "localtunnel": "^2.0.2",
-    "typescript": "^5.2.2",
-    "sst": "^2.38.4"
+    "sst": "^2.38.4",
+    "typescript": "^5.2.2"
   },
   "eslintConfig": {
     "root": true,
