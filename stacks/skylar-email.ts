@@ -28,7 +28,7 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
       "ANY /{proxy+}": "./apps/backend/src/index.handler",
     },
   });
-  console.log("backend.url", backend.url);
+
   const frontend = new NextjsSite(stack, "frontend", {
     path: "./apps/frontend",
     runtime: "nodejs20.x",
