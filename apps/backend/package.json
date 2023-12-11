@@ -4,7 +4,6 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "cd ../../ && pnpm sst dev",
-    "build": "wrangler deploy src/index.ts --dry-run --outdir dist",
     "clean": "rm -rf .turbo dist node_modules",
     "lint": "eslint .",
     "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
