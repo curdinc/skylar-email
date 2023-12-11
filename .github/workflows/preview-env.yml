@@ -1,4 +1,4 @@
-name: Deploy to prod
+name: Deploy Preview Environment
 
 # Only trigger, when the CI workflow succeeds
 on:
@@ -82,6 +82,7 @@ jobs:
           cat .sst/outputs.json
           FRONT_END_URL=$(jq -r '.[].SiteUrl | select(. != null)' .sst/outputs.json)
           echo "siteUrl=$FRONT_END_URL" >> $GITHUB_OUTPUT
+
   comment:
     name: Comment output on PR
     if: github.actor!= 'dependabot[bot]'

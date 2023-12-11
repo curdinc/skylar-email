@@ -1,4 +1,4 @@
-name: Destroy PR Environment
+name: Destroy Preview Environment
 
 on:
   pull_request:
