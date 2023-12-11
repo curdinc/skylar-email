@@ -2,11 +2,8 @@ name: Deploy Preview Environment
 
 # Only trigger, when the CI workflow succeeds
 on:
-  workflow_run:
-    workflows: ["CI"]
-    types:
-      - completed
-    branches-ignore: ["main"]
+  pull_request:
+    branches: ["*"]
 
 permissions:
   contents: write
