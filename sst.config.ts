@@ -10,6 +10,9 @@ export default {
     };
   },
   stacks(app) {
+    if (app.stage !== "production") {
+      app.setDefaultRemovalPolicy("destroy");
+    }
     app.stack(Frontend);
   },
 } satisfies SSTConfig;
