@@ -71,7 +71,7 @@ jobs:
         run: pnpm turbo build --filter=frontend
 
       - name: Deploy frontend
-        run: pnpx sst deploy --stage $PR_PREFIX
+        run: pnpm sst deploy --stage $PR_PREFIX
 
       - name: Extract Site URL and set output
         id: sst-frontend-outputs
