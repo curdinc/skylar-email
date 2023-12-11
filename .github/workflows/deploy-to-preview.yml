@@ -1,0 +1,122 @@
+name: Deploy to prod
+
+# Only trigger, when the CI workflow succeeds
+on:
+  workflow_run:
+    workflows: ["CI build"]
+    types:
+      - completed
+    branches-ignore: ["main"]
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+  deployments: write
+
+env:
+  PR_PREFIX: pr-${{ github.event.pull_request.number }}
+
+# on:
+#   pull_request:
+#     branches: ["*"]
+
+# permissions:
+#   id-token: write # This is required for requesting the JWT
+#   contents: read # This is required for actions/checkout
+
+# Concurrency group name ensures concurrent workflow runs wait for any in-progress job to finish
+concurrency:
+  group: merge-${{ github.ref }}
+
+jobs:
+  frontend:
+    name: Deploy Frontend for PR
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.sst-frontend-outputs.outputs.siteUrl }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Configure Non Prod AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.4.0
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install deps (with cache)
+        run: pnpm install
+
+      - name: Build
+        run: pnpm turbo build --filter=frontend
+
+      - name: Deploy frontend
+        run: pnpx sst deploy --stage $PR_PREFIX
+
+      - name: Extract Site URL and set output
+        id: sst-frontend-outputs
+        run: |
+          cat .sst/outputs.json
+          FRONT_END_URL=$(jq -r '.[].SiteUrl | select(. != null)' .sst/outputs.json)
+          echo "siteUrl=$FRONT_END_URL" >> $GITHUB_OUTPUT
+  comment:
+    name: Comment output on PR
+    if: github.actor!= 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    needs:
+      - frontend
+    steps:
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        if: success() && github.event.number
+        id: fc
+        with:
+          issue-number: ${{ github.event.number }}
+          body-includes: "🚀 Successfully deployed preview environment"
+
+      - name: Create Comment
+        uses: peter-evans/create-or-update-comment@v3
+        if: success() && github.event.number
+        with:
+          issue-number: ${{ github.event.number }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ## 🚀 Successfully deployed preview environment
+
+            <table><tr><td><strong>Latest commit:</strong> </td><td>
+            <code>${{ github.sha }}</code>
+            </td></tr>
+            <tr><td><strong>Status:</strong></td><td>&nbsp;✅&nbsp; Deploy successful!</td></tr>
+            <tr><td><strong>Preview URL:</strong></td><td>
+            <a href='${{ needs.frontend.outputs.url }}'>${{ needs.frontend.outputs.url }}</a>
+            </td></tr>
+            </table>
+
+# For future when we have backend deployed here too
+# <tr><td><strong>API URL:</strong></td><td>
+# <a href='${{ needs.backend.outputs.api-endpoint }}'>${{ needs.backend.outputs.api-endpoint }}</a>
+# </td></tr>

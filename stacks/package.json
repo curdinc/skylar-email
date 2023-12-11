@@ -1,0 +1,19 @@
+{
+  "name": "@skylar/stacks",
+  "private": true,
+  "version": "0.1.0",
+  "main": "index.mjs",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "sst": "^2.38.4"
+  },
+  "devDependencies": {
+    "@skylar/tsconfig": "^0.1.0",
+    "typescript": "^5.2.2"
+  },
+  "prettier": "@skylar/prettier-config"
+}

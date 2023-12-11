@@ -8,6 +8,10 @@ node_modules
 # testing
 coverage
 
+# SST
+.sst
+.open-next
+
 # next.js
 .next/
 out/
