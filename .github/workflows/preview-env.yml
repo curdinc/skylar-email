@@ -1,10 +1,11 @@
-name: Deploy Preview Environment
+name: Preview Environment
 
 # Only trigger, when the CI workflow succeeds
 on:
   pull_request:
     branches: ["*"]
 
+# This action is copied and edited from https://joshghent.com/github-actions-pr-env/
 permissions:
   contents: write
   pull-requests: write
@@ -15,7 +16,8 @@ env:
   PR_PREFIX: pr-${{ github.event.pull_request.number }}
 
 jobs:
-  deployPreviewEnv:
+  deploy:
+    name: Deploy
     if: github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     outputs:
@@ -76,15 +78,15 @@ jobs:
         id: sst-backend-outputs
         run: |
           cat .sst/outputs.json
-          BACKEND_URL=$(jq -r '.[].FrontendUrl | select(. != null)' .sst/outputs.json)
-          echo "backendUrl=$FRONT_END_URL" >> $GITHUB_OUTPUT
+          BACKEND_URL=$(jq -r '.[].BackendUrl | select(. != null)' .sst/outputs.json)
+          echo "backendUrl=$BACKEND_URL" >> $GITHUB_OUTPUT
 
   comment:
-    name: Comment output
+    name: Output Links
     if: github.actor!= 'dependabot[bot]'
     runs-on: ubuntu-latest
     needs:
-      - deployPreviewEnv
+      - deploy
     steps:
       - name: Find Comment
         uses: peter-evans/find-comment@v2
@@ -109,9 +111,9 @@ jobs:
             </td></tr>
             <tr><td><strong>Status:</strong></td><td>&nbsp;✅&nbsp; Deploy successful!</td></tr>
             <tr><td><strong>Preview URL:</strong></td><td>
-            <a href='${{ needs.deployPreviewEnv.outputs.frontendUrl }}'>${{ needs.deployPreviewEnv.outputs.frontendUrl }}</a>
+            <a href='${{ needs.deploy.outputs.frontendUrl }}'>${{ needs.deploy.outputs.frontendUrl }}</a>
             </td></tr>
             <tr><td><strong>API URL:</strong></td><td>
-            <a href='${{ needs.deployPreviewEnv.outputs.backendUrl }}'>${{ needs.deployPreviewEnv.outputs.backendUrl }}</a>
+            <a href='${{ needs.deploy.outputs.backendUrl }}'>${{ needs.deploy.outputs.backendUrl }}</a>
             </td></tr>
             </table>

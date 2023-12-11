@@ -35,6 +35,7 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
     dev: {
       url: "http://localhost:3000",
     },
+    warm: 15,
     environment: {
       NEXT_PUBLIC_BACKEND_URL: backend.url,
       NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID:
