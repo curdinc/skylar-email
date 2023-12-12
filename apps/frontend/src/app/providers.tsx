@@ -50,7 +50,7 @@ export function ClientProvider(props: {
             (opts.direction === "down" && opts.result instanceof Error),
         }),
         unstable_httpBatchStreamLink({
-          url: env.NEXT_PUBLIC_BACKEND_URL,
+          url: `${env.NEXT_PUBLIC_BACKEND_URL}/trpc`,
           headers() {
             const headers = new Map(props.headers);
             headers.set("x-trpc-source", "nextjs-react");

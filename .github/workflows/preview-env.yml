@@ -1,0 +1,124 @@
+name: Preview Env
+
+# Only trigger, when the CI workflow succeeds
+on:
+  pull_request:
+    branches: ["*"]
+
+# This action is copied and edited from https://joshghent.com/github-actions-pr-env/
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+  deployments: write
+
+env:
+  PR_PREFIX: pr-${{ github.event.pull_request.number }}
+
+jobs:
+  deploy:
+    name: Deploy
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    outputs:
+      frontendUrl: ${{ steps.sst-frontend-outputs.outputs.frontendUrl }}
+      backendUrl: ${{ steps.sst-backend-outputs.outputs.backendUrl }}
+    env:
+      NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID }}
+      GOOGLE_PROVIDER_CLIENT_SECRET: ${{ secrets.GOOGLE_PROVIDER_CLIENT_SECRET }}
+      NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}
+      NEXT_PUBLIC_AXIOM_TOKEN: ${{ secrets.NEXT_PUBLIC_AXIOM_TOKEN }}
+      NEXT_PUBLIC_AXIOM_DATASET: ${{ secrets.NEXT_PUBLIC_AXIOM_DATASET }}
+      AXIOM_URL: ${{ secrets.AXIOM_URL }}
+      AXIOM_ORG_ID: ${{ secrets.AXIOM_ORG_ID }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Configure Non Prod AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.4.0
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: |
+          echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install deps (with cache)
+        run: pnpm install
+
+      - name: Build frontend
+        run: pnpm turbo build --filter=frontend
+
+      - name: Deploy frontend and backend
+        run: pnpm sst deploy --stage $PR_PREFIX
+
+      - name: Extract frontend URL and set output
+        id: sst-frontend-outputs
+        run: |
+          cat .sst/outputs.json
+          FRONTEND_URL=$(jq -r '.[].FrontendUrl | select(. != null)' .sst/outputs.json)
+          echo "frontendUrl=$FRONTEND_URL" >> $GITHUB_OUTPUT
+
+      - name: Extract backend URL and set output
+        id: sst-backend-outputs
+        run: |
+          cat .sst/outputs.json
+          BACKEND_URL=$(jq -r '.[].BackendUrl | select(. != null)' .sst/outputs.json)
+          echo "backendUrl=$BACKEND_URL" >> $GITHUB_OUTPUT
+
+  comment:
+    name: Output Links
+    if: github.actor!= 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    needs:
+      - deploy
+    steps:
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        if: success() && github.event.number
+        id: fc
+        with:
+          issue-number: ${{ github.event.number }}
+          body-includes: "🚀 Successfully deployed preview environment"
+
+      - name: Create Comment
+        uses: peter-evans/create-or-update-comment@v3
+        if: success() && github.event.number
+        with:
+          issue-number: ${{ github.event.number }}
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            ## 🚀 Successfully deployed preview environment
+
+            <table><tr><td><strong>Latest commit:</strong> </td><td>
+            <code>${{ github.sha }}</code>
+            </td></tr>
+            <tr><td><strong>Status:</strong></td><td>&nbsp;✅&nbsp; Deploy successful!</td></tr>
+            <tr><td><strong>Preview URL:</strong></td><td>
+            <a href='${{ needs.deploy.outputs.frontendUrl }}'>${{ needs.deploy.outputs.frontendUrl }}</a>
+            </td></tr>
+            <tr><td><strong>API URL:</strong></td><td>
+            <a href='${{ needs.deploy.outputs.backendUrl }}'>${{ needs.deploy.outputs.backendUrl }}</a>
+            </td></tr>
+            </table>
