@@ -68,7 +68,7 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
     },
     warm: 15,
     environment: {
-      NEXT_PUBLIC_BACKEND_URL: backend.customDomainUrl,
+      NEXT_PUBLIC_BACKEND_URL: backend.customDomainUrl ?? backend.url,
       NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY!,
     },
   });

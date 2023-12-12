@@ -11,6 +11,7 @@ coverage
 # SST
 .sst
 .open-next
+cdk.context.json
 
 # next.js
 .next/
