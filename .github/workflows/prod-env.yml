@@ -1,4 +1,4 @@
-name: Deploy Production Environment
+name: Production Env
 on:
   push:
     branches: ["main"]
@@ -12,12 +12,18 @@ permissions:
   contents: read # This is required for actions/checkout
 
 jobs:
-  frontend:
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_PROVIDER_CLIENT_ID }}
-      NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
+      GOOGLE_PROVIDER_CLIENT_SECRET: ${{ secrets.GOOGLE_PROVIDER_CLIENT_SECRET }}
       NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}
+      NEXT_PUBLIC_AXIOM_TOKEN: ${{ secrets.NEXT_PUBLIC_AXIOM_TOKEN }}
+      NEXT_PUBLIC_AXIOM_DATASET: ${{ secrets.NEXT_PUBLIC_AXIOM_DATASET }}
+      AXIOM_URL: ${{ secrets.AXIOM_URL }}
+      AXIOM_ORG_ID: ${{ secrets.AXIOM_ORG_ID }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -52,8 +58,8 @@ jobs:
       - name: Install deps (with cache)
         run: pnpm install
 
-      - name: Build
+      - name: Build frontend
         run: pnpm turbo build --filter=frontend
 
-      - name: Deploy frontend
+      - name: Deploy frontend and backend
         run: pnpm sst deploy --stage prod
