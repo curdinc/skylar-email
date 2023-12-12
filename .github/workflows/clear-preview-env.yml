@@ -22,7 +22,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          aws-region: ${{ secrets.AWS_REGION }}}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2.4.0
