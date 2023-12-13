@@ -64,6 +64,7 @@ export function useConnectEmailProviderPage() {
         image_uri: emailProviderInfo.providerInfo.imageUri,
         inbox_name: emailProviderInfo.providerInfo.name,
         refresh_token: emailProviderInfo.providerInfo.refreshToken,
+        access_token: emailProviderInfo.accessToken,
       });
 
       identifyUser(emailProviderInfo.providerInfo.email);
