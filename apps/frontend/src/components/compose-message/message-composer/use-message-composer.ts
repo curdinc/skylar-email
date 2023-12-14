@@ -39,10 +39,9 @@ export const useMessageComposer = () => {
     (thread?: ThreadType) => {
       const replyTo: string[] = [];
       const cc: string[] = [];
-      let subject = thread?.subject ?? "";
+      const subject = thread?.subject ?? "";
       switch (composeEmailType) {
         case "forward": {
-          subject = `Fwd: ${subject}`;
           break;
         }
         case "new-email": {
