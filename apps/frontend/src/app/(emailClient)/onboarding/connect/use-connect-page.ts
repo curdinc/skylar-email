@@ -47,8 +47,6 @@ export function useConnectEmailProviderPage() {
         error,
         variables,
       });
-    },
-    onSettled: () => {
       setIsConnectingToProvider(false);
     },
     onSuccess: () => {
