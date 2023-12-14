@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 
 import { useConnectedProviders } from "@skylar/client-db";
 
+import { ROUTE_ONBOARDING_CONNECT } from "~/lib/routes";
 import { cn } from "~/lib/ui";
+import { Icons } from "../icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
 
@@ -18,7 +20,7 @@ export function EmailAccountNav({
 
   const allEmailProvidersProfileInfo = (allEmailProviders ?? []).map(
     (account) => ({
-      href: `${account.provider_id}`,
+      href: `/${account.provider_id}`,
       title: account.user_email_address,
       imageUri: account.image_uri,
       name: account.inbox_name,
@@ -51,6 +53,18 @@ export function EmailAccountNav({
             </Avatar>
           </Link>
         ))}
+        <Link
+          href={ROUTE_ONBOARDING_CONNECT}
+          className={cn(
+            "transition-opacity hover:cursor-pointer hover:opacity-70",
+          )}
+        >
+          <Avatar>
+            <AvatarFallback>
+              <Icons.add className="opacity-70" />
+            </AvatarFallback>
+          </Avatar>
+        </Link>
       </>
     );
   }
