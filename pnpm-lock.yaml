@@ -492,6 +492,9 @@ importers:
 
   packages/logic:
     dependencies:
+      '@skylar/client-db':
+        specifier: ^0.1.0
+        version: link:../client-db
       immer:
         specifier: ^10.0.3
         version: 10.0.3
@@ -502,9 +505,6 @@ importers:
       '@skylar/api':
         specifier: ^0.1.0
         version: link:../api
-      '@skylar/client-db':
-        specifier: ^0.1.0
-        version: link:../client-db
       '@skylar/db':
         specifier: ^0.1.0
         version: link:../db

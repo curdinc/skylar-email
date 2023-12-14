@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
 
+import { bulkGetMessages } from "@skylar/client-db";
 import type {
   AllComposeMessageOptionsType,
   ThreadType,
@@ -191,6 +192,40 @@ export const setReplyMessage: Actions["setReplyMessage"] = (
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.respondingThread = thread;
     state.EMAIL_CLIENT.COMPOSING.messageType = replyType;
+    if (replyType === "forward") {
+      const latestProviderMessageId = thread?.email_provider_message_id.at(-1);
+      if (!latestProviderMessageId) {
+        return;
+      }
+      bulkGetMessages({
+        providerMessageIds: [latestProviderMessageId],
+      })
+        .then(([message]) => {
+          if (!message) {
+            return;
+          }
+          setComposedEmail(
+            `<br><br><p>---------- Forwarded message ---------</p>
+<p>From: ${
+              message.from.name
+                ? `${message.from.name}<${message.from.email_address}>`
+                : message.from.email_address
+            }</p> 
+<p>Date: ${new Date(message.created_at).toString()}</p>
+<p>Subject: ${message.subject}</p>
+<p>To: ${message.to
+              .map((email) => email.email_address)
+              .join(", ")}</p>            
+${message?.content_html ?? message?.content_text ?? ""}</p>`,
+          );
+        })
+        .catch((e) => {
+          console.error(
+            "Error fetching message when setting forward content",
+            e,
+          );
+        });
+    }
   });
 };
 
