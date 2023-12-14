@@ -40,11 +40,10 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
     cors: {
       allowMethods: ["GET", "POST", "OPTIONS"],
       allowHeaders: ["*"],
-      allowOrigins: [
+      allowOrigins:
         stack.stage === "prod"
-          ? `https://${BASE_CUSTOM_DOMAIN}`
-          : frontendPreviewCustomDomainWithProtocol,
-      ],
+          ? [`https://${BASE_CUSTOM_DOMAIN}`]
+          : [frontendPreviewCustomDomainWithProtocol, "http://localhost:3000"],
     },
     routes: {
       "ANY /{proxy+}": "./apps/backend/src/index.handler",
