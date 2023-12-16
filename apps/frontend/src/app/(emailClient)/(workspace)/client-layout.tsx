@@ -24,7 +24,7 @@ import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 import { useEmailPartialSync } from "./use-email-partial-sync";
 import type { GmailBackgroundSyncWorker } from "./web-workers/gmail-background-sync/types";
 
-// HANDLES PARTIAL SYNCING OF EMAILS and continues full sync
+// HANDLES PARTIAL SYNCING OF EMAILS and continues incremental sync
 export const ClientLayout = () => {
   useInboxKeymaps();
   const router = useRouter();

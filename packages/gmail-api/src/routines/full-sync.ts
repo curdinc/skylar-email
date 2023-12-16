@@ -4,7 +4,7 @@ import { GMAIL_MAX_FETCH_PER_SECOND } from "../constants";
 import { getMessageList } from "../core-api";
 import { getAndParseMessages } from "../utils/get-and-parse-messages";
 
-export async function fullSync({
+export async function incrementalSync({
   accessToken,
   emailId,
   pageToken,

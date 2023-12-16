@@ -4,7 +4,7 @@ import {
   getProviderByEmailAddress,
   updateEmailSyncInfo,
 } from "@skylar/client-db";
-import { fullSync } from "@skylar/gmail-api";
+import { incrementalSync } from "@skylar/gmail-api";
 
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 
@@ -30,7 +30,7 @@ export async function backgroundSync({
     }
     const startTime = performance.now();
     //FIXME: propagate errors to the main thread
-    const syncResult = await fullSync({
+    const syncResult = await incrementalSync({
       accessToken: provider.access_token, //FIXME: make sure this is fresh
       emailId: provider.user_email_address,
       pageToken: nextPageToken,

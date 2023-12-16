@@ -20,23 +20,22 @@ import {
   ROUTE_EMAIL_PROVIDER_INBOX,
   ROUTE_ONBOARDING_CONNECT,
 } from "~/lib/routes";
-import { useEmailFullSync } from "./use-email-full-sync";
+import { useProviderInitialSync } from "./use-email-full-sync";
 
-// HANDLES FULL SYNC OF EMAILS
 export function useSyncPage() {
   const runOnceRef = useRef(false);
   const {
     syncProgress,
     syncStep,
-    emailFullSyncMutation: { mutateAsync: startEmailFullSyncForAddress },
+    providerInitialSyncMutation: { mutateAsync: startProviderInitialSync },
     providersSyncing,
-  } = useEmailFullSync();
+  } = useProviderInitialSync();
   const router = useRouter();
   const logger = useLogger();
   const { toast } = useToast();
 
   useEffect(() => {
-    const startEmailFullSync = async () => {
+    const startSync = async () => {
       // get all connected providers
       const providers = await getAllProviders();
       if (!providers?.length) {
@@ -75,7 +74,7 @@ export function useSyncPage() {
           continue;
         }
 
-        const messageData = await startEmailFullSyncForAddress({
+        const messageData = await startProviderInitialSync({
           emailProvider: provider.type,
           emailToSync: provider.user_email_address,
         });
@@ -109,13 +108,12 @@ export function useSyncPage() {
         properties: {},
       });
 
-      //FIXME: rename - this is not a full sync its the onboarding sync
-      startEmailFullSync().catch((e) => {
+      startSync().catch((e) => {
         captureEvent({
           event: TrackingEvents.syncFailed,
           properties: {},
         });
-        logger.error("Error performing full sync for user gmail inbox", {
+        logger.error("Error performing initial sync for user gmail inbox", {
           parserError: JSON.stringify(formatValidatorError(e), null, 2),
           error: e,
         });
@@ -126,7 +124,7 @@ export function useSyncPage() {
         });
       });
     }
-  }, [logger, router, startEmailFullSyncForAddress, toast]);
+  }, [logger, router, startProviderInitialSync, toast]);
 
   return {
     providersSyncing,
