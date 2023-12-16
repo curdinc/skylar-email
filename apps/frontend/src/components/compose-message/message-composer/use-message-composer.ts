@@ -9,6 +9,8 @@ import type { EmailComposeType, ThreadType } from "@skylar/parsers-and-types";
 import { EmailComposeSchema } from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
+import { captureEvent } from "~/lib/analytics/capture-event";
+import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import {
   formatEmailSenderTypeAndRemoveUserEmail,
   getSenderReplyToEmailAddresses,
@@ -150,6 +152,15 @@ export const useMessageComposer = () => {
   });
 
   const onSubmit = form.handleSubmit((values) => {
+    captureEvent({
+      event: TrackingEvents.composeSendMessage,
+      properties: {
+        isShortcut: false,
+        messageConversationLength:
+          replyThread?.email_provider_message_id.length ?? 0,
+        wordCount: values.composeString.length,
+      },
+    });
     submitMutation.mutate(values);
   });
 
