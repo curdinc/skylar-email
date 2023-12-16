@@ -2,7 +2,6 @@ export type GmailBackgroundSyncParams = {
   emailAddress: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export interface GmailBackgroundSyncWorker extends Omit<Worker, "postMessage"> {
+export type GmailBackgroundSyncWorker = {
   postMessage: (message: GmailBackgroundSyncParams) => void;
-}
+} & Omit<Worker, "postMessage">;
