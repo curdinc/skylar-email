@@ -40,16 +40,14 @@ export function useInboxKeymaps() {
     const ALWAYS_ON_KEYS = [shortcut.spotlight, shortcut.close];
     const keyMap: KeyBindingMap = {
       [shortcut.spotlight]: (e) => {
-        console.log("launch spotlight search", e.key, e.code);
+        console.warn("launch spotlight search", e.key, e.code);
       },
       [shortcut.close]: () => {
         const currentMessageType =
           useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.messageType;
-        console.log("currentMessageType", currentMessageType);
         if (currentMessageType !== "none") {
           const isMultiSelecting =
             useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.isSelecting;
-          console.log("isMultiSelecting", isMultiSelecting);
           if (isMultiSelecting) {
             setIsSelecting(false);
           } else {
@@ -58,7 +56,6 @@ export function useInboxKeymaps() {
         } else {
           const activeThread =
             useGlobalStore.getState().EMAIL_CLIENT.activeThread;
-          console.log("activeThread", activeThread);
           if (activeThread) {
             resetActiveThread();
           }
