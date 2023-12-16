@@ -30,6 +30,9 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
         },
       },
     },
+    accessLog: {
+      retention: stack.stage === "prod" ? "one_month" : "one_day",
+    },
     customDomain: {
       domainName:
         stack.stage === "prod"
@@ -65,7 +68,7 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
       domainAlias:
         stack.stage === "prod" ? frontendCustomDomainAlias : undefined,
     },
-    warm: 15,
+    warm: stack.stage === "prod" ? 15 : 0,
     environment: {
       NEXT_PUBLIC_BACKEND_URL: backend.customDomainUrl ?? backend.url,
       NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY!,
