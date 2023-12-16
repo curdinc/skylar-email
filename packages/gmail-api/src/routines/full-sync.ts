@@ -6,17 +6,21 @@ import { getAndParseMessages } from "../utils/get-and-parse-messages";
 export async function fullSync({
   accessToken,
   emailId,
+  pageToken,
   onError,
 }: {
   accessToken: string;
   emailId: string;
+  pageToken?: string;
   onError?: (error: Error) => void;
 }): Promise<SyncResponseType> {
   // get all messages
-  const messages = await getMessageListUnbounded({
-    accessToken,
-    emailId,
-  });
+  const { messageListResponses: messages, nextPageToken } =
+    await getMessageListUnbounded({
+      accessToken,
+      emailId,
+      pageToken,
+    });
 
   if (messages.length === 0) {
     throw new Error("No messages found", {
@@ -44,5 +48,6 @@ export async function fullSync({
   return {
     newMessages,
     lastCheckedHistoryId,
+    nextPageToken,
   };
 }
