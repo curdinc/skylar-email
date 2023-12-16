@@ -1,6 +1,8 @@
 import { setMostRecentlyAffectedThreads, setReplyMessage } from "@skylar/logic";
 
 import { Icons } from "~/components/icons";
+import { captureEvent } from "~/lib/analytics/capture-event";
+import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
 import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
 import { markUnreadThreads } from "~/lib/inbox-toolkit/thread/mark-unread-threads";
@@ -28,7 +30,17 @@ export const getThreadActions = (
       tooltipDescription: "Forward email",
       applyFn: async () => {
         const [thread] = await getThreads();
-        setReplyMessage(thread, "forward");
+        if (thread) {
+          captureEvent({
+            event: TrackingEvents.composeForwardMessage,
+            properties: {
+              isShortcut: false,
+              messageConversationLength:
+                thread.email_provider_message_id.length,
+            },
+          });
+          setReplyMessage(thread, "forward");
+        }
       },
     },
     replySender: {
@@ -38,7 +50,17 @@ export const getThreadActions = (
       tooltipDescription: "Reply to sender",
       applyFn: async () => {
         const [thread] = await getThreads();
-        setReplyMessage(thread, "reply-sender");
+        if (thread) {
+          captureEvent({
+            event: TrackingEvents.composeReplySenderMessage,
+            properties: {
+              isShortcut: false,
+              messageConversationLength:
+                thread.email_provider_message_id.length,
+            },
+          });
+          setReplyMessage(thread, "reply-sender");
+        }
       },
     },
     replyAll: {
@@ -48,7 +70,17 @@ export const getThreadActions = (
       tooltipDescription: "Reply All in thread",
       applyFn: async () => {
         const [thread] = await getThreads();
-        setReplyMessage(thread, "reply-all");
+        if (thread) {
+          captureEvent({
+            event: TrackingEvents.composeReplyAllMessage,
+            properties: {
+              isShortcut: false,
+              messageConversationLength:
+                thread.email_provider_message_id.length,
+            },
+          });
+          setReplyMessage(thread, "reply-all");
+        }
       },
     },
     trashThread: {
