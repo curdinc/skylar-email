@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -29,7 +29,6 @@ export const ClientLayout = () => {
   useInboxKeymaps();
   const router = useRouter();
   const { data: activeEmailAddress } = useActiveEmailAddress();
-  const runOnceRef = useRef(false);
   const { data: allSyncInfo } = useAllSyncInfo();
 
   useEffect(() => {
@@ -45,31 +44,32 @@ export const ClientLayout = () => {
   // create workers for each email address
   useEffect(() => {
     if (!allSyncInfo) return;
-    if (!runOnceRef.current) {
-      runOnceRef.current = true;
-      const unsyncedEmailAddresses = allSyncInfo
-        .filter((syncInfo) => !syncInfo.full_sync_completed_on)
-        .map((syncInfo) => syncInfo.user_email_address);
+    console.log("allSyncInfo", allSyncInfo);
 
-      const createdWorkers = unsyncedEmailAddresses.map((emailAddress) => {
-        const newWorker: GmailBackgroundSyncWorker = new Worker(
-          new URL(
-            "./web-workers/gmail-background-sync/worker.ts",
-            import.meta.url,
-          ),
-        );
-        newWorker.postMessage({
-          emailAddress,
-        });
-        return newWorker;
+    console.log("creating workers for unsynced email addresses");
+    const unsyncedEmailAddresses = allSyncInfo
+      .filter((syncInfo) => !syncInfo.full_sync_completed_on)
+      .map((syncInfo) => syncInfo.user_email_address);
+    console.log("unsyncedEmailAddresses", unsyncedEmailAddresses);
+
+    const createdWorkers = unsyncedEmailAddresses.map((emailAddress) => {
+      const newWorker: GmailBackgroundSyncWorker = new Worker(
+        new URL(
+          "./web-workers/gmail-background-sync/worker.ts",
+          import.meta.url,
+        ),
+      );
+      newWorker.postMessage({
+        emailAddress,
       });
+      return newWorker;
+    });
 
-      // close workers on unmount
-      return () => {
-        // close workers
-        createdWorkers.forEach((worker) => worker.terminate());
-      };
-    }
+    // close workers on unmount
+    return () => {
+      // close workers
+      createdWorkers.forEach((worker) => worker.terminate());
+    };
   }, [allSyncInfo]);
 
   // partial sync emails

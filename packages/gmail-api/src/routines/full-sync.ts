@@ -1,6 +1,7 @@
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 
-import { getMessageListUnbounded } from "../unbounded-core-api";
+import { GMAIL_MAX_FETCH_PER_SECOND } from "../constants";
+import { getMessageList } from "../core-api";
 import { getAndParseMessages } from "../utils/get-and-parse-messages";
 
 export async function fullSync({
@@ -8,19 +9,21 @@ export async function fullSync({
   emailId,
   pageToken,
   onError,
+  numberOfMessagesToFetch,
 }: {
   accessToken: string;
   emailId: string;
   pageToken?: string;
   onError?: (error: Error) => void;
+  numberOfMessagesToFetch: number;
 }): Promise<SyncResponseType> {
   // get all messages
-  const { messageListResponses: messages, nextPageToken } =
-    await getMessageListUnbounded({
-      accessToken,
-      emailId,
-      pageToken,
-    });
+  const { messages, nextPageToken } = await getMessageList({
+    accessToken,
+    emailId,
+    pageToken: pageToken ?? "",
+    maxResults: numberOfMessagesToFetch,
+  });
 
   if (messages.length === 0) {
     throw new Error("No messages found", {
@@ -35,6 +38,7 @@ export async function fullSync({
     emailId,
     messageIds,
     onError,
+    fetchMessageChunkSize: GMAIL_MAX_FETCH_PER_SECOND,
   });
 
   const lastCheckedHistoryId = newMessages[0]?.historyId;

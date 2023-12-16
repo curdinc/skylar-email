@@ -1,5 +1,6 @@
 import type { messageDetailsType } from "@skylar/parsers-and-types";
 
+import { GMAIL_MAX_BATCH_REQUEST_SIZE } from "../constants";
 import { getMessageUnbounded } from "../unbounded-core-api";
 import { getEmailBody, getEmailMetadata } from "./message-parse-utils";
 
@@ -8,16 +9,19 @@ export async function getAndParseMessages({
   accessToken,
   emailId,
   onError,
+  fetchMessageChunkSize = GMAIL_MAX_BATCH_REQUEST_SIZE,
 }: {
   messageIds: string[];
   accessToken: string;
   emailId: string;
   onError?: (error: Error) => void;
+  fetchMessageChunkSize?: number;
 }): Promise<messageDetailsType[]> {
   const rawMessages = await getMessageUnbounded({
     messageIds,
     accessToken,
     emailId,
+    chunkSize: fetchMessageChunkSize,
   });
 
   const parsedMessages = rawMessages.map((msg) => {
@@ -40,11 +44,4 @@ export async function getAndParseMessages({
   });
 
   return parsedMessages;
-  // const parsedMessagesWithAttachments = await resolveAttachments({
-  //   accessToken,
-  //   emailId,
-  //   messageDetailList: parsedMessages,
-  // });
-
-  // return parsedMessagesWithAttachments;
 }

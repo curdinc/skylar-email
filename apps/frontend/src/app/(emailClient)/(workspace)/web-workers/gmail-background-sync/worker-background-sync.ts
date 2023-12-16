@@ -6,9 +6,9 @@ import {
 } from "@skylar/client-db";
 import { fullSync } from "@skylar/gmail-api";
 
-import { captureEvent } from "~/lib/analytics/capture-event";
-import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
+
+const MESSAGES_PER_SYNC = 50;
 
 export async function backgroundSync({
   emailAddress,
@@ -35,6 +35,7 @@ export async function backgroundSync({
       emailId: provider.user_email_address,
       pageToken: nextPageToken,
       onError: (error) => console.error("error", error),
+      numberOfMessagesToFetch: MESSAGES_PER_SYNC,
     });
 
     const messagesToSave = convertGmailEmailToClientDbEmail(
@@ -56,7 +57,7 @@ export async function backgroundSync({
     console.log("single background sync took", endTime - startTime, "ms");
     // TODO: add perf to posthog?
 
-    // continue sync recursively
+    // schedule next sync
     await syncAction(syncResult.nextPageToken);
   };
 
@@ -70,13 +71,7 @@ export async function backgroundSync({
     },
   });
 
-  captureEvent({
-    event: TrackingEvents.syncCompleted,
-    properties: {
-      timestamp: new Date().getTime(),
-      uuid: emailAddress,
-    },
-  });
+  console.log("background sync completed");
 
   self.close();
 }

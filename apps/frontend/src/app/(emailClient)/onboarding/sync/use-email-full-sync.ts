@@ -8,6 +8,8 @@ import type { SupportedEmailProviderType } from "@skylar/parsers-and-types/src/a
 
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
+const INITIAL_MESSAGES_TO_FETCH = 150;
+
 // source: https://stackoverflow.com/questions/45735472/generate-a-random-number-between-2-values-to-2-decimals-places-in-javascript
 function genRand(min: number, max: number, decimalPlaces: number) {
   const rand =
@@ -92,6 +94,7 @@ export const useEmailFullSync = () => {
         onError: (e) => {
           logger.error(e.message, e);
         },
+        numberOfMessagesToFetch: INITIAL_MESSAGES_TO_FETCH,
       });
       return emailData;
     },
