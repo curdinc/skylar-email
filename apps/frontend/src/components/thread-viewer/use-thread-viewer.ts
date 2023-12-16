@@ -60,9 +60,6 @@ export function useThreadViewer() {
         ],
       });
     },
-    onError: (error) => {
-      console.log("error", error);
-    },
   });
 
   useEffect(() => {

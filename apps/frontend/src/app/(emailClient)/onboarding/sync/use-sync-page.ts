@@ -77,7 +77,6 @@ export function useSyncPage() {
           emailProvider: provider.type,
           emailToSync: provider.user_email_address,
         });
-        console.log("messageData", messageData);
         const messagesToSave = convertGmailEmailToClientDbEmail(
           provider.user_email_address,
           messageData.newMessages,
