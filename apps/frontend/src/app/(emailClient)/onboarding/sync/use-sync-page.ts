@@ -69,7 +69,7 @@ export function useSyncPage() {
             info.user_email_address.toLowerCase() ===
             provider.user_email_address.toLowerCase(),
         );
-        //FIXME: recheck this condition
+
         if (syncInfo?.next_page_token ?? syncInfo?.full_sync_completed_on) {
           continue;
         }
