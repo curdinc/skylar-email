@@ -1,6 +1,8 @@
 import { setMostRecentlyAffectedThreads, setReplyMessage } from "@skylar/logic";
 
 import { Icons } from "~/components/icons";
+import { captureEvent } from "~/lib/analytics/capture-event";
+import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { getMostRecentMessageFromThread } from "~/lib/email";
 import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
 import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
@@ -33,6 +35,14 @@ export const getThreadActions = (
         getMostRecentMessageFromThread(thread)
           .then((message) => {
             if (!message) return;
+            captureEvent({
+              event: TrackingEvents.composeForwardMessage,
+              properties: {
+                isShortcut: false,
+                messageConversationLength:
+                  thread.email_provider_message_id.length,
+              },
+            });
             setReplyMessage({
               replyType: "forward",
               thread,
@@ -51,10 +61,20 @@ export const getThreadActions = (
       tooltipDescription: "Reply to sender",
       applyFn: async () => {
         const [thread] = await getThreads();
-        setReplyMessage({
-          thread,
-          replyType: "reply-sender",
-        });
+        if (thread) {
+          captureEvent({
+            event: TrackingEvents.composeReplySenderMessage,
+            properties: {
+              isShortcut: false,
+              messageConversationLength:
+                thread.email_provider_message_id.length,
+            },
+          });
+          setReplyMessage({
+            thread,
+            replyType: "reply-sender",
+          });
+        }
       },
     },
     replyAll: {
@@ -64,7 +84,17 @@ export const getThreadActions = (
       tooltipDescription: "Reply All in thread",
       applyFn: async () => {
         const [thread] = await getThreads();
-        setReplyMessage({ thread, replyType: "reply-all" });
+        if (thread) {
+          captureEvent({
+            event: TrackingEvents.composeReplyAllMessage,
+            properties: {
+              isShortcut: false,
+              messageConversationLength:
+                thread.email_provider_message_id.length,
+            },
+          });
+          setReplyMessage({ thread, replyType: "reply-all" });
+        }
       },
     },
     trashThread: {

@@ -185,6 +185,7 @@ const syncResponseSchema = object({
   messagesDeleted: optional(array(string())),
   labelsModified: optional(array(modifiedLabelSchema)),
   lastCheckedHistoryId: string(),
+  nextPageToken: optional(string()),
 });
 
 export const getAttachmentResponseSchema = object({

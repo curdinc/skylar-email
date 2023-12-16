@@ -11,6 +11,7 @@ import {
   getAllProviders,
   getEmailSyncInfo,
   updateEmailSyncInfo,
+  useAllSyncInfo,
 } from "@skylar/client-db";
 import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
 import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
@@ -20,12 +21,15 @@ import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
+import type { GmailBackgroundSyncWorker } from "./_web-workers/gmail-background-sync/types";
 import { useEmailPartialSync } from "./use-email-partial-sync";
 
+// HANDLES PARTIAL SYNCING OF EMAILS and continues incremental sync
 export const ClientLayout = () => {
   useInboxKeymaps();
   const router = useRouter();
   const { data: activeEmailAddress } = useActiveEmailAddress();
+  const { data: allSyncInfo } = useAllSyncInfo();
 
   useEffect(() => {
     if (activeEmailAddress) {
@@ -37,6 +41,38 @@ export const ClientLayout = () => {
 
   const { mutateAsync: emailPartialSync } = useEmailPartialSync();
 
+  // create workers for each email address
+  useEffect(() => {
+    if (!allSyncInfo) return;
+    console.log("allSyncInfo", allSyncInfo);
+
+    console.log("creating workers for unsynced email addresses");
+    const unsyncedEmailAddresses = allSyncInfo
+      .filter((syncInfo) => !syncInfo.full_sync_completed_on)
+      .map((syncInfo) => syncInfo.user_email_address);
+    console.log("unsyncedEmailAddresses", unsyncedEmailAddresses);
+
+    const createdWorkers = unsyncedEmailAddresses.map((emailAddress) => {
+      const newWorker: GmailBackgroundSyncWorker = new Worker(
+        new URL(
+          "./_web-workers/gmail-background-sync/worker.ts",
+          import.meta.url,
+        ),
+      );
+      newWorker.postMessage({
+        emailAddress,
+      });
+      return newWorker;
+    });
+
+    // close workers on unmount
+    return () => {
+      // close workers
+      createdWorkers.forEach((worker) => worker.terminate());
+    };
+  }, [allSyncInfo]);
+
+  // partial sync emails
   useQuery({
     queryKey: [],
     queryFn: async () => {

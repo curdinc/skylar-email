@@ -4,6 +4,7 @@ import type {
 } from "@skylar/parsers-and-types";
 
 import { clientDb } from "../db";
+import { ACCESS_TOKEN_EXPIRY_MILLIS } from "./constants";
 
 export async function putProvider({
   provider,
@@ -19,6 +20,7 @@ export async function putProvider({
     updated_at: Date.now(),
     created_at: Date.now(),
     provider_id: existingProvider?.provider_id,
+    access_token_expires_at: Date.now() + ACCESS_TOKEN_EXPIRY_MILLIS,
   };
 
   if (existingProvider) {

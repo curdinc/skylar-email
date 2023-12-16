@@ -12,6 +12,8 @@ import {
 import type { KeyBindingMap } from "@skylar/tinykeys";
 import { tinyKeys } from "@skylar/tinykeys";
 
+import { captureEvent } from "./analytics/capture-event";
+import { TrackingEvents } from "./analytics/tracking-events";
 import { getMostRecentMessageFromThread } from "./email";
 
 // ! Note that shortcuts should not overlap
@@ -62,6 +64,12 @@ export function useInboxKeymaps() {
         }
       },
       [shortcut.compose]: () => {
+        captureEvent({
+          event: TrackingEvents.composeNewMessage,
+          properties: {
+            isShortcut: true,
+          },
+        });
         setComposeMessage("new-email");
       },
       [shortcut.forward]: () => {
@@ -71,6 +79,14 @@ export function useInboxKeymaps() {
           getMostRecentMessageFromThread(activeThread)
             .then((message) => {
               if (!message) return;
+              captureEvent({
+                event: TrackingEvents.composeForwardMessage,
+                properties: {
+                  isShortcut: true,
+                  messageConversationLength:
+                    activeThread.email_provider_message_id.length,
+                },
+              });
               setReplyMessage({
                 replyType: "forward",
                 thread: activeThread,
@@ -86,6 +102,14 @@ export function useInboxKeymaps() {
         const activeThread =
           useGlobalStore.getState().EMAIL_CLIENT.activeThread;
         if (activeThread) {
+          captureEvent({
+            event: TrackingEvents.composeReplyAllMessage,
+            properties: {
+              isShortcut: true,
+              messageConversationLength:
+                activeThread.email_provider_message_id.length,
+            },
+          });
           setReplyMessage({
             replyType: "reply-all",
             thread: activeThread,
@@ -96,6 +120,14 @@ export function useInboxKeymaps() {
         const activeThread =
           useGlobalStore.getState().EMAIL_CLIENT.activeThread;
         if (activeThread) {
+          captureEvent({
+            event: TrackingEvents.composeReplySenderMessage,
+            properties: {
+              isShortcut: true,
+              messageConversationLength:
+                activeThread.email_provider_message_id.length,
+            },
+          });
           setReplyMessage({
             replyType: "reply-sender",
             thread: activeThread,
