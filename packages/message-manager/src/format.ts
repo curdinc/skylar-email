@@ -27,7 +27,7 @@ export const formatForwardMessage = ({
       formatName: (name) => formatNameWithHtml({ name, isBold: false }),
     }),
   );
-  return `<div dir="ltr">---------- Forwarded message ---------<br>
+  return `<br><br><div dir="ltr">---------- Forwarded message ---------<br>
   From: ${formattedFrom}<br>
   Date: ${format(new Date(dateSent), "ccc, MMM dd, yyyy 'at' K:mm a")}<br>
   Subject: ${subject}<br>

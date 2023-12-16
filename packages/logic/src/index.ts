@@ -168,8 +168,6 @@ export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"]
 
 export const setActiveThread: Actions["setActiveThread"] = (thread) => {
   useGlobalStore.setState((state) => {
-    console.log("state", state);
-    console.log("thread", thread);
     state.EMAIL_CLIENT.activeThread = thread;
   });
 };
