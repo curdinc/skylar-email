@@ -20,7 +20,7 @@ import {
   ROUTE_EMAIL_PROVIDER_INBOX,
   ROUTE_ONBOARDING_CONNECT,
 } from "~/lib/routes";
-import { useProviderInitialSync } from "./use-email-full-sync";
+import { useProviderInitialSync } from "./use-provider-initial-sync";
 
 export function useSyncPage() {
   const runOnceRef = useRef(false);
@@ -104,25 +104,32 @@ export function useSyncPage() {
       runOnceRef.current = true;
 
       captureEvent({
-        event: TrackingEvents.syncStarted,
+        event: TrackingEvents.initSyncStarted,
         properties: {},
       });
 
-      startSync().catch((e) => {
-        captureEvent({
-          event: TrackingEvents.syncFailed,
-          properties: {},
+      startSync()
+        .then(() => {
+          captureEvent({
+            event: TrackingEvents.initSyncCompleted,
+            properties: {},
+          });
+        })
+        .catch((e) => {
+          captureEvent({
+            event: TrackingEvents.initSyncFailed,
+            properties: {},
+          });
+          logger.error("Error performing initial sync for user gmail inbox", {
+            parserError: JSON.stringify(formatValidatorError(e), null, 2),
+            error: e,
+          });
+          toast({
+            variant: "destructive",
+            title: "Error syncing your inbox",
+            description: "Please try again later.",
+          });
         });
-        logger.error("Error performing initial sync for user gmail inbox", {
-          parserError: JSON.stringify(formatValidatorError(e), null, 2),
-          error: e,
-        });
-        toast({
-          variant: "destructive",
-          title: "Error syncing your inbox",
-          description: "Please try again later.",
-        });
-      });
     }
   }, [logger, router, startProviderInitialSync, toast]);
 
