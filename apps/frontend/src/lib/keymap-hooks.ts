@@ -62,7 +62,6 @@ export function useInboxKeymaps() {
         setComposeMessage("new-email");
       },
       [shortcut.forward]: () => {
-        console.log("calling forward");
         const activeThread =
           useGlobalStore.getState().EMAIL_CLIENT.activeThread;
         if (activeThread) {
@@ -70,7 +69,6 @@ export function useInboxKeymaps() {
         }
       },
       [shortcut.replyAll]: () => {
-        console.log("called reply");
         const activeThread =
           useGlobalStore.getState().EMAIL_CLIENT.activeThread;
         if (activeThread) {
