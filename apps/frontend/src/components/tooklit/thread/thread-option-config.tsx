@@ -1,6 +1,7 @@
 import { setMostRecentlyAffectedThreads, setReplyMessage } from "@skylar/logic";
 
 import { Icons } from "~/components/icons";
+import { getMostRecentMessageFromThread } from "~/lib/email";
 import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
 import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
 import { markUnreadThreads } from "~/lib/inbox-toolkit/thread/mark-unread-threads";
@@ -28,7 +29,19 @@ export const getThreadActions = (
       tooltipDescription: "Forward email",
       applyFn: async () => {
         const [thread] = await getThreads();
-        setReplyMessage(thread, "forward");
+        if (!thread) return;
+        getMostRecentMessageFromThread(thread)
+          .then((message) => {
+            if (!message) return;
+            setReplyMessage({
+              replyType: "forward",
+              thread,
+              messageToForward: message,
+            });
+          })
+          .catch((e) => {
+            console.error(e);
+          });
       },
     },
     replySender: {
@@ -38,7 +51,10 @@ export const getThreadActions = (
       tooltipDescription: "Reply to sender",
       applyFn: async () => {
         const [thread] = await getThreads();
-        setReplyMessage(thread, "reply-sender");
+        setReplyMessage({
+          thread,
+          replyType: "reply-sender",
+        });
       },
     },
     replyAll: {
@@ -48,7 +64,7 @@ export const getThreadActions = (
       tooltipDescription: "Reply All in thread",
       applyFn: async () => {
         const [thread] = await getThreads();
-        setReplyMessage(thread, "reply-all");
+        setReplyMessage({ thread, replyType: "reply-all" });
       },
     },
     trashThread: {

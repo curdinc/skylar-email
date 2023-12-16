@@ -12,6 +12,8 @@ import {
 import type { KeyBindingMap } from "@skylar/tinykeys";
 import { tinyKeys } from "@skylar/tinykeys";
 
+import { getMostRecentMessageFromThread } from "./email";
+
 // ! Note that shortcuts should not overlap
 // ! For example, if you have a shortcut for "Escape" in one component, you should not have a shortcut for "Escape" in another component.
 // ! This will result in both shortcuts being called when "Escape" is pressed. Probably not what you want.
@@ -69,21 +71,38 @@ export function useInboxKeymaps() {
         const activeThread =
           useGlobalStore.getState().EMAIL_CLIENT.activeThread;
         if (activeThread) {
-          setReplyMessage(activeThread, "forward");
+          getMostRecentMessageFromThread(activeThread)
+            .then((message) => {
+              if (!message) return;
+              setReplyMessage({
+                replyType: "forward",
+                thread: activeThread,
+                messageToForward: message,
+              });
+            })
+            .catch((e) => {
+              console.error(e);
+            });
         }
       },
       [shortcut.replyAll]: () => {
         const activeThread =
           useGlobalStore.getState().EMAIL_CLIENT.activeThread;
         if (activeThread) {
-          setReplyMessage(activeThread, "reply-all");
+          setReplyMessage({
+            replyType: "reply-all",
+            thread: activeThread,
+          });
         }
       },
       [shortcut.replySender]: () => {
         const activeThread =
           useGlobalStore.getState().EMAIL_CLIENT.activeThread;
         if (activeThread) {
-          setReplyMessage(activeThread, "reply-sender");
+          setReplyMessage({
+            replyType: "reply-sender",
+            thread: activeThread,
+          });
         }
       },
     };

@@ -492,9 +492,6 @@ importers:
 
   packages/logic:
     dependencies:
-      '@skylar/client-db':
-        specifier: ^0.1.0
-        version: link:../client-db
       '@skylar/message-manager':
         specifier: ^0.1.0
         version: link:../message-manager
@@ -508,6 +505,9 @@ importers:
       '@skylar/api':
         specifier: ^0.1.0
         version: link:../api
+      '@skylar/client-db':
+        specifier: ^0.1.0
+        version: link:../client-db
       '@skylar/db':
         specifier: ^0.1.0
         version: link:../db

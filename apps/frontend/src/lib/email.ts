@@ -1,9 +1,11 @@
+import { bulkGetMessages } from "@skylar/client-db";
 import type { State } from "@skylar/logic";
 import type {
   EmailSenderType,
   MessageType,
   SenderType,
   SyncResponseType,
+  ThreadType,
 } from "@skylar/parsers-and-types";
 
 export function convertGmailEmailToClientDbEmail(
@@ -125,4 +127,11 @@ export const isAttachmentSizeValid = (
     return prev + current.file.size;
   }, 0);
   return totalSize < ATTACHMENT_SIZE_LIMIT_IN_BYTES;
+};
+
+export const getMostRecentMessageFromThread = async (thread: ThreadType) => {
+  const messages = await bulkGetMessages({
+    providerMessageIds: [thread.email_provider_message_id.at(-1) ?? ""],
+  });
+  return messages[0];
 };
