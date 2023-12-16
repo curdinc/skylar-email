@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -11,6 +11,7 @@ import {
   getAllProviders,
   getEmailSyncInfo,
   updateEmailSyncInfo,
+  useAllSyncInfo,
 } from "@skylar/client-db";
 import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
 import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
@@ -21,11 +22,15 @@ import { useInboxKeymaps } from "~/lib/keymap-hooks";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 import { useEmailPartialSync } from "./use-email-partial-sync";
+import type { GmailBackgroundSyncWorker } from "./web-workers/gmail-background-sync/types";
 
+// HANDLES PARTIAL SYNCING OF EMAILS and continues full sync
 export const ClientLayout = () => {
   useInboxKeymaps();
   const router = useRouter();
   const { data: activeEmailAddress } = useActiveEmailAddress();
+  const runOnceRef = useRef(false);
+  const { data: allSyncInfo } = useAllSyncInfo();
 
   useEffect(() => {
     if (activeEmailAddress) {
@@ -37,6 +42,37 @@ export const ClientLayout = () => {
 
   const { mutateAsync: emailPartialSync } = useEmailPartialSync();
 
+  // create workers for each email address
+  useEffect(() => {
+    if (!allSyncInfo) return;
+    if (!runOnceRef.current) {
+      runOnceRef.current = true;
+      const unsyncedEmailAddresses = allSyncInfo
+        .filter((syncInfo) => !syncInfo.full_sync_completed_on)
+        .map((syncInfo) => syncInfo.user_email_address);
+
+      const createdWorkers = unsyncedEmailAddresses.map((emailAddress) => {
+        const newWorker: GmailBackgroundSyncWorker = new Worker(
+          new URL(
+            "./web-workers/gmail-background-sync/worker.ts",
+            import.meta.url,
+          ),
+        );
+        newWorker.postMessage({
+          emailAddress,
+        });
+        return newWorker;
+      });
+
+      // close workers on unmount
+      return () => {
+        // close workers
+        createdWorkers.forEach((worker) => worker.terminate());
+      };
+    }
+  }, [allSyncInfo]);
+
+  // partial sync emails
   useQuery({
     queryKey: [],
     queryFn: async () => {

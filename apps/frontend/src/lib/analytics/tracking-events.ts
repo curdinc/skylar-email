@@ -21,7 +21,8 @@ export type TrackingEventProperties = {
   };
   [TrackingEvents.syncStarted]: Record<string, never>;
   [TrackingEvents.syncCompleted]: {
-    secondsElapsed: number;
+    timestamp: number;
+    uuid: string;
   };
   [TrackingEvents.syncFailed]: Record<string, never>;
   [TrackingEvents.speedUpButtonClicked]: Record<string, never>;

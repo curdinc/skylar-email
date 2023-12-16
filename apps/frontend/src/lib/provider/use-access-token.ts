@@ -11,7 +11,7 @@ import { ACCESS_TOKEN } from "../query-key-constants";
 export function useAccessToken() {
   const { mutateAsync: fetchAccessToken } =
     api.gmail.getAccessToken.useMutation();
-  // TODO: speed this up (useMutation cannot be cached (https://github.com/TanStack/query/issues/5058)
+  // sped this up with db (useMutation cannot be cached (https://github.com/TanStack/query/issues/5058)
   return useMutation({
     mutationKey: [ACCESS_TOKEN],
     mutationFn: async ({ email }: { email: string }) => {
@@ -20,7 +20,8 @@ export function useAccessToken() {
           emailAddress: email,
         });
       const currentTime = Date.now();
-      // memoize access token
+
+      // "memoize" access token
       if (currentTime < access_token_expires_at) {
         return access_token;
       }
