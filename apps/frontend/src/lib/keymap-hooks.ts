@@ -9,14 +9,23 @@ import {
   useGlobalStore,
   useOptimizedGlobalStore,
 } from "@skylar/logic";
+import type { KeyBindingMap } from "@skylar/tinykeys";
 import { tinyKeys } from "@skylar/tinykeys";
 
 import { captureEvent } from "./analytics/capture-event";
 import { TrackingEvents } from "./analytics/tracking-events";
+import { getMostRecentMessageFromThread } from "./email";
 
 // ! Note that shortcuts should not overlap
 // ! For example, if you have a shortcut for "Escape" in one component, you should not have a shortcut for "Escape" in another component.
 // ! This will result in both shortcuts being called when "Escape" is pressed. Probably not what you want.
+
+const isEventTargetInputOrTextArea = (eventTarget: EventTarget | null) => {
+  if (eventTarget === null) return false;
+
+  const eventTargetTagName = (eventTarget as HTMLElement).tagName.toLowerCase();
+  return ["input", "textarea"].includes(eventTargetTagName);
+};
 
 export function useInboxKeymaps() {
   const shortcut = useOptimizedGlobalStore((state) => ({
@@ -30,10 +39,10 @@ export function useInboxKeymaps() {
     close: state.SHORTCUT.close,
   }));
   useEffect(() => {
-    const unsubscribe = tinyKeys(window, {
+    const ALWAYS_ON_KEYS = [shortcut.spotlight, shortcut.close];
+    const keyMap: KeyBindingMap = {
       [shortcut.spotlight]: (e) => {
-        e.preventDefault();
-        console.log("launch spotlight search", e.key, e.code);
+        console.warn("launch spotlight search", e.key, e.code);
       },
       [shortcut.close]: () => {
         const currentMessageType =
@@ -67,15 +76,26 @@ export function useInboxKeymaps() {
         const activeThread =
           useGlobalStore.getState().EMAIL_CLIENT.activeThread;
         if (activeThread) {
-          captureEvent({
-            event: TrackingEvents.composeForwardMessage,
-            properties: {
-              isShortcut: true,
-              messageConversationLength:
-                activeThread.email_provider_message_id.length,
-            },
-          });
-          setReplyMessage(activeThread, "forward");
+          getMostRecentMessageFromThread(activeThread)
+            .then((message) => {
+              if (!message) return;
+              captureEvent({
+                event: TrackingEvents.composeForwardMessage,
+                properties: {
+                  isShortcut: true,
+                  messageConversationLength:
+                    activeThread.email_provider_message_id.length,
+                },
+              });
+              setReplyMessage({
+                replyType: "forward",
+                thread: activeThread,
+                messageToForward: message,
+              });
+            })
+            .catch((e) => {
+              console.error(e);
+            });
         }
       },
       [shortcut.replyAll]: () => {
@@ -90,7 +110,10 @@ export function useInboxKeymaps() {
                 activeThread.email_provider_message_id.length,
             },
           });
-          setReplyMessage(activeThread, "reply-all");
+          setReplyMessage({
+            replyType: "reply-all",
+            thread: activeThread,
+          });
         }
       },
       [shortcut.replySender]: () => {
@@ -105,10 +128,28 @@ export function useInboxKeymaps() {
                 activeThread.email_provider_message_id.length,
             },
           });
-          setReplyMessage(activeThread, "reply-sender");
+          setReplyMessage({
+            replyType: "reply-sender",
+            thread: activeThread,
+          });
         }
       },
-    });
+    };
+    const wrappedBindings = Object.fromEntries(
+      Object.entries(keyMap).map(([key, handler]) => [
+        key,
+        (event: KeyboardEvent) => {
+          if (
+            !isEventTargetInputOrTextArea(event.target) ||
+            ALWAYS_ON_KEYS.includes(event.key)
+          ) {
+            handler(event);
+          }
+        },
+      ]),
+    );
+
+    const unsubscribe = tinyKeys(window, wrappedBindings);
     return unsubscribe;
   }, [
     shortcut.close,

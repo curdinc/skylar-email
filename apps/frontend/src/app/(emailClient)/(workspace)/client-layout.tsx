@@ -44,13 +44,9 @@ export const ClientLayout = () => {
   // create workers for each email address
   useEffect(() => {
     if (!allSyncInfo) return;
-    console.log("allSyncInfo", allSyncInfo);
-
-    console.log("creating workers for unsynced email addresses");
     const unsyncedEmailAddresses = allSyncInfo
       .filter((syncInfo) => !syncInfo.full_sync_completed_on)
       .map((syncInfo) => syncInfo.user_email_address);
-    console.log("unsyncedEmailAddresses", unsyncedEmailAddresses);
 
     const createdWorkers = unsyncedEmailAddresses.map((emailAddress) => {
       const newWorker: GmailBackgroundSyncWorker = new Worker(
@@ -115,7 +111,6 @@ export const ClientLayout = () => {
           return updatedEmails;
         }
 
-        console.log("emailData", emailData);
         if (emailData.newMessages.length) {
           const emailToSave = convertGmailEmailToClientDbEmail(
             provider.user_email_address,

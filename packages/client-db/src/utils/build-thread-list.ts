@@ -52,6 +52,7 @@ export async function buildThreadList(messages: MessageType[]) {
     }
   });
 
+  messages.sort((a, b) => a.created_at - b.created_at);
   const threads = await messages.reduce(
     async (threads, message) => {
       const { provider_thread_id } = message;

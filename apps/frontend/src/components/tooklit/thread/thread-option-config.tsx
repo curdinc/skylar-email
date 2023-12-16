@@ -3,6 +3,7 @@ import { setMostRecentlyAffectedThreads, setReplyMessage } from "@skylar/logic";
 import { Icons } from "~/components/icons";
 import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
+import { getMostRecentMessageFromThread } from "~/lib/email";
 import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
 import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
 import { markUnreadThreads } from "~/lib/inbox-toolkit/thread/mark-unread-threads";
@@ -30,17 +31,27 @@ export const getThreadActions = (
       tooltipDescription: "Forward email",
       applyFn: async () => {
         const [thread] = await getThreads();
-        if (thread) {
-          captureEvent({
-            event: TrackingEvents.composeForwardMessage,
-            properties: {
-              isShortcut: false,
-              messageConversationLength:
-                thread.email_provider_message_id.length,
-            },
+        if (!thread) return;
+        getMostRecentMessageFromThread(thread)
+          .then((message) => {
+            if (!message) return;
+            captureEvent({
+              event: TrackingEvents.composeForwardMessage,
+              properties: {
+                isShortcut: false,
+                messageConversationLength:
+                  thread.email_provider_message_id.length,
+              },
+            });
+            setReplyMessage({
+              replyType: "forward",
+              thread,
+              messageToForward: message,
+            });
+          })
+          .catch((e) => {
+            console.error(e);
           });
-          setReplyMessage(thread, "forward");
-        }
       },
     },
     replySender: {
@@ -59,7 +70,10 @@ export const getThreadActions = (
                 thread.email_provider_message_id.length,
             },
           });
-          setReplyMessage(thread, "reply-sender");
+          setReplyMessage({
+            thread,
+            replyType: "reply-sender",
+          });
         }
       },
     },
@@ -79,7 +93,7 @@ export const getThreadActions = (
                 thread.email_provider_message_id.length,
             },
           });
-          setReplyMessage(thread, "reply-all");
+          setReplyMessage({ thread, replyType: "reply-all" });
         }
       },
     },

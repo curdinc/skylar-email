@@ -47,7 +47,8 @@ app.use("/trpc/*", async (c, next) => {
   const envVars = getEnvVars(c);
   return await cors({
     origin: [envVars.FRONTEND_URL],
-    allowMethods: ["POST", "GET", "OPTIONS"],
+    allowHeaders: ["*"],
+    allowMethods: ["GET", "POST", "OPTIONS"],
   })(c, next);
 });
 

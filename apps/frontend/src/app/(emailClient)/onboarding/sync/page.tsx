@@ -37,8 +37,6 @@ export default function SyncProgress() {
               event: TrackingEvents.speedUpButtonClicked,
               properties: {},
             });
-
-            console.log("syncProgress", syncProgress);
           }}
         >
           Speed up

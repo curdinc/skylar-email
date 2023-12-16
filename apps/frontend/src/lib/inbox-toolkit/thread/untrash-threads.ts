@@ -23,7 +23,6 @@ export async function untrashThreads({
     labelsToRemove,
   });
 
-  console.log("UNTRASH updatedThreads", updatedThreads);
   for (const func of afterClientDbUpdate) {
     await func();
   }

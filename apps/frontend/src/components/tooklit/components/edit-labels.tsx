@@ -157,7 +157,6 @@ export function EditLabels({
             className="w-full"
             onClick={async () => {
               if (!labelData) return;
-              console.log("labelData", labelData);
               const selectedLabels = Object.keys(labels).filter(
                 (label) => labels[label],
               );

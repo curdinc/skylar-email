@@ -4,6 +4,7 @@ import "codemirror/keymap/sublime";
 import "easymde/dist/easymde.min.css";
 
 import { useCallback, useEffect, useRef } from "react";
+import { Letter } from "react-letter";
 import SimpleMdeReact from "react-simplemde-editor";
 
 import {
@@ -74,6 +75,7 @@ export const MessageComposer = () => {
     form,
     onSubmit,
     submitMutation: { isPending: isSendingEmail },
+    forwardContent,
   } = useMessageComposer();
 
   return (
@@ -205,6 +207,7 @@ export const MessageComposer = () => {
           </Button>
         </div>
         <AttachmentList />
+        {forwardContent && <Letter html={forwardContent} />}
       </form>
     </Form>
   );

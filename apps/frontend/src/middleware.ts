@@ -14,11 +14,11 @@ export function middleware(request: NextRequest) {
   url.pathname = url.pathname.replace(/^\/ingest/, "");
 
   requestHeaders.delete("cookie");
-  const cookie = requestHeaders.get("cookie");
+  // const cookie = requestHeaders.get("cookie");
 
-  if (cookie) {
-    console.log("Cookies sent to posthog:", parseCookie(cookie));
-  }
+  // if (cookie) {
+  //   console.log("Cookies sent to posthog:", parseCookie(cookie));
+  // }
 
   return NextResponse.rewrite(url, {
     headers: requestHeaders,
@@ -29,9 +29,9 @@ export const config = {
   matcher: "/ingest/:path*",
 };
 
-const parseCookie = (cookie: string) => {
-  return cookie
-    .split(";")
-    .map((chunk) => chunk.trim().split("=").map(decodeURIComponent))
-    .reduce((obj, [key, value]) => ({ ...obj, [key!]: value }), {});
-};
+// const parseCookie = (cookie: string) => {
+//   return cookie
+//     .split(";")
+//     .map((chunk) => chunk.trim().split("=").map(decodeURIComponent))
+//     .reduce((obj, [key, value]) => ({ ...obj, [key!]: value }), {});
+// };

@@ -1,4 +1,5 @@
 export * from "./src/message/bulk-delete-messages";
+export * from "./src/message/bulk-get-messages";
 export * from "./src/message/bulk-get-threads";
 export * from "./src/message/bulk-put-messages";
 export * from "./src/message/bulk-update-messages";

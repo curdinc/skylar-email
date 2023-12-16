@@ -23,20 +23,12 @@ export function useSendEmail() {
         email: emailAddress,
       });
       const composedEmail = await composeEmail(emailConfig);
-      const sendMessageResponse = await sendMail({
+      await sendMail({
         accessToken,
         emailId: emailAddress,
         rfc822Base64EncodedMessageData: composedEmail,
         replyToGmailThreadId: emailConfig.replyConfig?.providerThreadId,
       });
-
-      console.log("sendMessageResponse", sendMessageResponse);
-    },
-    onSuccess: () => {
-      console.log("email sent");
-    },
-    onError: (error) => {
-      console.log("error", error);
     },
   });
 

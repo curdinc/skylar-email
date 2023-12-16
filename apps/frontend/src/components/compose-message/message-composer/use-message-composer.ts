@@ -23,6 +23,9 @@ export const useMessageComposer = () => {
   const replyThread = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
+  const forwardContent = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.COMPOSING.composedMessage,
+  );
   const composeEmailType = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
   );
@@ -38,6 +41,7 @@ export const useMessageComposer = () => {
     (thread?: ThreadType) => {
       const replyTo: string[] = [];
       const cc: string[] = [];
+      const subject = thread?.subject ?? "";
       switch (composeEmailType) {
         case "forward": {
           break;
@@ -83,7 +87,7 @@ export const useMessageComposer = () => {
         to: replyTo,
         cc: cc,
         bcc: [],
-        subject: thread?.subject ?? "",
+        subject,
         composeString: "",
       };
     },
@@ -93,6 +97,7 @@ export const useMessageComposer = () => {
     resolver: valibotResolver(EmailComposeSchema),
     defaultValues: defaultFormValues(replyThread),
   });
+
   useEffect(() => {
     form.reset(defaultFormValues(replyThread));
   }, [defaultFormValues, form, replyThread]);
@@ -135,7 +140,9 @@ export const useMessageComposer = () => {
           cc: values.cc,
           bcc: values.bcc,
           attachments: formattedAttachments,
-          html: markdownToHtmlConverter.makeHtml(values.composeString),
+          html: `${markdownToHtmlConverter.makeHtml(
+            values.composeString,
+          )}${forwardContent}`,
           replyConfig: {
             inReplyToRfcMessageId: replyThread.rfc822_message_id[0] ?? "",
             references: replyThread.rfc822_message_id,
@@ -169,5 +176,6 @@ export const useMessageComposer = () => {
     onSubmit,
     submitMutation,
     replyThread,
+    forwardContent,
   };
 };

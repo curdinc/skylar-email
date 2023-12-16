@@ -22,13 +22,11 @@ export async function backgroundSync({
   const syncInfo = await getEmailSyncInfo({
     emailAddress: provider.user_email_address,
   });
-  console.log(syncInfo);
 
   const syncAction = async (nextPageToken?: string) => {
     if (!nextPageToken) {
       return;
     }
-    const startTime = performance.now();
     //FIXME: propagate errors to the main thread
     const syncResult = await incrementalSync({
       accessToken: provider.access_token, //FIXME: make sure this is fresh
@@ -53,8 +51,6 @@ export async function backgroundSync({
         next_page_token: syncResult.nextPageToken,
       },
     });
-    const endTime = performance.now();
-    console.log("single background sync took", endTime - startTime, "ms");
     // TODO: add perf to posthog?
 
     // schedule next sync
@@ -70,8 +66,6 @@ export async function backgroundSync({
       full_sync_completed_on: new Date().getTime(),
     },
   });
-
-  console.log("background sync completed");
 
   self.close();
 }

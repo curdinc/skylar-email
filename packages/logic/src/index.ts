@@ -3,10 +3,13 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
 
+import { formatForwardMessage } from "@skylar/message-manager";
 import type {
   AllComposeMessageOptionsType,
+  MessageType,
   ThreadType,
   ValidComposeMessageOptionsType,
+  ValidForwardMessageOptionsType,
   ValidReplyMessageOptionsType,
 } from "@skylar/parsers-and-types";
 
@@ -73,8 +76,16 @@ type Actions = {
   setActiveThread: (thread: State["EMAIL_CLIENT"]["activeThread"]) => void;
   resetActiveThread: () => void;
   setReplyMessage: (
-    thread: State["EMAIL_CLIENT"]["COMPOSING"]["respondingThread"],
-    replyType: ValidReplyMessageOptionsType,
+    args:
+      | {
+          thread: State["EMAIL_CLIENT"]["COMPOSING"]["respondingThread"];
+          replyType: ValidReplyMessageOptionsType;
+        }
+      | {
+          thread: State["EMAIL_CLIENT"]["COMPOSING"]["respondingThread"];
+          replyType: ValidForwardMessageOptionsType;
+          messageToForward: MessageType;
+        },
   ) => void;
   resetReplyMessage: () => void;
   setComposedEmail: (
@@ -140,9 +151,7 @@ export const useOptimizedGlobalStore = <T>(arg: (state: State) => T) => {
 
 // Computed states
 export const useAllShortcutNames = () =>
-  useOptimizedGlobalStore((state) =>
-    Object.keys(state.SHORTCUT).filter((key) => key !== "setShortcuts"),
-  );
+  useOptimizedGlobalStore((state) => Object.keys(state.SHORTCUT));
 
 // Actions
 export const setAlphaCode: Actions["setAlphaCode"] = (code) =>
@@ -184,13 +193,26 @@ export const setMostRecentlyAffectedThreads: Actions["setMostRecentlyAffectedThr
     });
   };
 
-export const setReplyMessage: Actions["setReplyMessage"] = (
-  thread,
-  replyType,
-) => {
+export const setReplyMessage: Actions["setReplyMessage"] = (args) => {
+  const { replyType, thread } = args;
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.respondingThread = thread;
     state.EMAIL_CLIENT.COMPOSING.messageType = replyType;
+    if (replyType === "forward") {
+      const { messageToForward } = args;
+      setComposedEmail(
+        formatForwardMessage({
+          dateSent: messageToForward.created_at,
+          forwardContent:
+            messageToForward.content_html ??
+            messageToForward.content_text ??
+            "",
+          from: messageToForward.from,
+          subject: messageToForward.subject,
+          to: messageToForward.to,
+        }),
+      );
+    }
   });
 };
 
