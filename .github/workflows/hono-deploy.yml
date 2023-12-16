@@ -1,0 +1,47 @@
+name: "Backend Deployment"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/backend"
+      - "packages/*"
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: 📥 Install Dependencies
+        uses: ./.github/actions/pnpm-install
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3.1.0
+        with:
+          wranglerVersion: "3.6.0"
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: "apps/backend"
+          command: deploy src/index.ts --minify
+          # secrets: |
+          #   APP_URL
+        env:
+          # APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+          CI: true
+          NO_D1_WARNING: true
