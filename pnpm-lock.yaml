@@ -495,6 +495,9 @@ importers:
       '@skylar/client-db':
         specifier: ^0.1.0
         version: link:../client-db
+      '@skylar/message-manager':
+        specifier: ^0.1.0
+        version: link:../message-manager
       immer:
         specifier: ^10.0.3
         version: 10.0.3
@@ -532,6 +535,31 @@ importers:
       react:
         specifier: 18.2.0
         version: 18.2.0
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
+  packages/message-manager:
+    dependencies:
+      '@skylar/parsers-and-types':
+        specifier: ^0.1.0
+        version: link:../parsers-and-types
+      date-fns:
+        specifier: ^2.30.0
+        version: 2.30.0
+    devDependencies:
+      '@skylar/eslint-config':
+        specifier: 0.2.0
+        version: link:../../tooling/eslint
+      '@skylar/prettier-config':
+        specifier: ^0.1.0
+        version: link:../../tooling/prettier
+      '@skylar/tsconfig':
+        specifier: ^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.48.0
+        version: 8.48.0
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -6524,7 +6552,6 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.22.11
-    dev: true
 
   /debounce-fn@4.0.0:
     resolution: {integrity: sha512-8pYCQiL9Xdcg0UPSD3d+0KMlOjp+KGU5EPwYddgzQ7DATsg4fuUDjQtsYLmWjnk2obnNHgV3vE2Y4jejSOJVBQ==}

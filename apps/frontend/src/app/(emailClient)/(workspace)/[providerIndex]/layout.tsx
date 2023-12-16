@@ -10,11 +10,9 @@ export default function EmailClientLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <div className="flex grow">
-        <EmailAccountNav className="p-5" />
-        <main className=" w-full">{children}</main>
-      </div>
-    </>
+    <div className="flex grow">
+      <EmailAccountNav className="p-5" />
+      <main className=" w-full">{children}</main>
+    </div>
   );
 }

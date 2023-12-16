@@ -4,6 +4,7 @@ import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
 
 import { bulkGetMessages } from "@skylar/client-db";
+import { formatForwardMessage } from "@skylar/message-manager";
 import type {
   AllComposeMessageOptionsType,
   ThreadType,
@@ -167,6 +168,8 @@ export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"]
 
 export const setActiveThread: Actions["setActiveThread"] = (thread) => {
   useGlobalStore.setState((state) => {
+    console.log("state", state);
+    console.log("thread", thread);
     state.EMAIL_CLIENT.activeThread = thread;
   });
 };
@@ -205,18 +208,14 @@ export const setReplyMessage: Actions["setReplyMessage"] = (
             return;
           }
           setComposedEmail(
-            `<br><br><p>---------- Forwarded message ---------</p>
-<p>From: ${
-              message.from.name
-                ? `${message.from.name}<${message.from.email_address}>`
-                : message.from.email_address
-            }</p> 
-<p>Date: ${new Date(message.created_at).toString()}</p>
-<p>Subject: ${message.subject}</p>
-<p>To: ${message.to
-              .map((email) => email.email_address)
-              .join(", ")}</p>            
-${message?.content_html ?? message?.content_text ?? ""}</p>`,
+            formatForwardMessage({
+              dateSent: message.created_at,
+              forwardContent:
+                message.content_html ?? message.content_text ?? "",
+              from: message.from,
+              subject: message.subject,
+              to: message.to,
+            }),
           );
         })
         .catch((e) => {
