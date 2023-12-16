@@ -31,6 +31,7 @@ const config = {
   plugins: ["@typescript-eslint", "import"],
   rules: {
     "turbo/no-undeclared-env-vars": "off",
+    "func-style": ["error", "declaration", { allowArrowFunctions: true }],
     "@typescript-eslint/no-unused-vars": [
       "error",
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
