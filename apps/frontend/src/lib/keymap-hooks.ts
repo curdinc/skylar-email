@@ -35,6 +35,7 @@ export function useInboxKeymaps() {
     close: state.SHORTCUT.close,
   }));
   useEffect(() => {
+    const ALWAYS_ON_KEYS = [shortcut.spotlight, shortcut.close];
     const keyMap: KeyBindingMap = {
       [shortcut.spotlight]: (e) => {
         console.log("launch spotlight search", e.key, e.code);
@@ -42,9 +43,11 @@ export function useInboxKeymaps() {
       [shortcut.close]: () => {
         const currentMessageType =
           useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.messageType;
+        console.log("currentMessageType", currentMessageType);
         if (currentMessageType !== "none") {
           const isMultiSelecting =
             useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.isSelecting;
+          console.log("isMultiSelecting", isMultiSelecting);
           if (isMultiSelecting) {
             setIsSelecting(false);
           } else {
@@ -53,6 +56,7 @@ export function useInboxKeymaps() {
         } else {
           const activeThread =
             useGlobalStore.getState().EMAIL_CLIENT.activeThread;
+          console.log("activeThread", activeThread);
           if (activeThread) {
             resetActiveThread();
           }
@@ -87,7 +91,10 @@ export function useInboxKeymaps() {
       Object.entries(keyMap).map(([key, handler]) => [
         key,
         (event: KeyboardEvent) => {
-          if (!isEventTargetInputOrTextArea(event.target)) {
+          if (
+            !isEventTargetInputOrTextArea(event.target) ||
+            ALWAYS_ON_KEYS.includes(event.key)
+          ) {
             handler(event);
           }
         },
