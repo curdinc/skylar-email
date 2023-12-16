@@ -21,8 +21,8 @@ import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useInboxKeymaps } from "~/lib/keymap-hooks";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
+import type { GmailBackgroundSyncWorker } from "./_web-workers/gmail-background-sync/types";
 import { useEmailPartialSync } from "./use-email-partial-sync";
-import type { GmailBackgroundSyncWorker } from "./web-workers/gmail-background-sync/types";
 
 // HANDLES PARTIAL SYNCING OF EMAILS and continues incremental sync
 export const ClientLayout = () => {
@@ -55,7 +55,7 @@ export const ClientLayout = () => {
     const createdWorkers = unsyncedEmailAddresses.map((emailAddress) => {
       const newWorker: GmailBackgroundSyncWorker = new Worker(
         new URL(
-          "./web-workers/gmail-background-sync/worker.ts",
+          "./_web-workers/gmail-background-sync/worker.ts",
           import.meta.url,
         ),
       );
