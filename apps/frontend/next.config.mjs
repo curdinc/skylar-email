@@ -14,7 +14,7 @@ const config = {
     return Promise.resolve([
       {
         // matching all routes. This is set to prevent site.webmanifest from throwing a CORS error
-        source: "/:path*",
+        source: "/site.webmanifest",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
           { key: "Access-Control-Allow-Origin", value: "*.curdinc.com" },
