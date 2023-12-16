@@ -15,5 +15,5 @@ export {
   untrashMessage,
   untrashThread,
 } from "./src/core-api";
-export { incrementalSync } from "./src/routines/full-sync";
+export { incrementalSync } from "./src/routines/incremental-sync";
 export { partialSync } from "./src/routines/partial-sync";
