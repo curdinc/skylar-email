@@ -15,10 +15,12 @@ export type ProviderType = ProviderIndexType & {
   inbox_name: string;
   image_uri: string;
   refresh_token: string;
+  access_token: string;
+  access_token_expires_at: number;
 };
 
 export type ProviderInfoType = Omit<ProviderType, "refresh_token">;
 export type ProviderInsertType = Omit<
   ProviderType,
-  "provider_id" | "created_at" | "updated_at"
+  "provider_id" | "created_at" | "updated_at" | "access_token_expires_at"
 >;

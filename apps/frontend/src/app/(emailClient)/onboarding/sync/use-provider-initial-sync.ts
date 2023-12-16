@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useLogger } from "next-axiom";
 
-import { fullSync } from "@skylar/gmail-api";
+import { incrementalSync } from "@skylar/gmail-api";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types/src/api/email-provider/oauth";
 
 import { useAccessToken } from "~/lib/provider/use-access-token";
+
+const INITIAL_MESSAGES_TO_FETCH = 150;
 
 // source: https://stackoverflow.com/questions/45735472/generate-a-random-number-between-2-values-to-2-decimals-places-in-javascript
 function genRand(min: number, max: number, decimalPlaces: number) {
@@ -26,7 +28,7 @@ const SYNC_STEPS = {
   SYNC_COMPLETED: "Sync completed",
 } as const;
 
-export const useEmailFullSync = () => {
+export const useProviderInitialSync = () => {
   const [isSyncingMap, setIsSyncingMap] = useState<Record<string, boolean>>({});
   const providersToSync = Object.keys(isSyncingMap);
   const providersSyncing = Object.keys(isSyncingMap).filter((email) => {
@@ -80,24 +82,25 @@ export const useEmailFullSync = () => {
 
   const logger = useLogger();
 
-  const { mutateAsync: startGmailFullSync } = useMutation({
+  const { mutateAsync: startGmailInitialSync } = useMutation({
     mutationFn: async (gmailToSync: string) => {
       const accessToken = await fetchGmailAccessToken({
         email: gmailToSync,
       });
 
-      const emailData = await fullSync({
+      const emailData = await incrementalSync({
         accessToken,
         emailId: gmailToSync,
         onError: (e) => {
           logger.error(e.message, e);
         },
+        numberOfMessagesToFetch: INITIAL_MESSAGES_TO_FETCH,
       });
       return emailData;
     },
   });
 
-  const emailFullSyncMutation = useMutation({
+  const providerInitialSyncMutation = useMutation({
     mutationFn: async ({
       emailProvider,
       emailToSync,
@@ -110,7 +113,7 @@ export const useEmailFullSync = () => {
       try {
         switch (emailProvider) {
           case "gmail": {
-            emailData = await startGmailFullSync(emailToSync);
+            emailData = await startGmailInitialSync(emailToSync);
             break;
           }
           default:
@@ -129,7 +132,7 @@ export const useEmailFullSync = () => {
     providersToSync,
     providersSyncing,
     completedProvidersSync,
-    emailFullSyncMutation,
+    providerInitialSyncMutation,
     syncProgress,
     syncStep,
   };

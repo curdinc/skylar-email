@@ -20,22 +20,22 @@ import {
   ROUTE_EMAIL_PROVIDER_INBOX,
   ROUTE_ONBOARDING_CONNECT,
 } from "~/lib/routes";
-import { useEmailFullSync } from "./use-email-full-sync";
+import { useProviderInitialSync } from "./use-provider-initial-sync";
 
 export function useSyncPage() {
   const runOnceRef = useRef(false);
   const {
     syncProgress,
     syncStep,
-    emailFullSyncMutation: { mutateAsync: startEmailFullSyncForAddress },
+    providerInitialSyncMutation: { mutateAsync: startProviderInitialSync },
     providersSyncing,
-  } = useEmailFullSync();
+  } = useProviderInitialSync();
   const router = useRouter();
   const logger = useLogger();
   const { toast } = useToast();
 
   useEffect(() => {
-    const startEmailFullSync = async () => {
+    const startSync = async () => {
       // get all connected providers
       const providers = await getAllProviders();
       if (!providers?.length) {
@@ -69,11 +69,12 @@ export function useSyncPage() {
             info.user_email_address.toLowerCase() ===
             provider.user_email_address.toLowerCase(),
         );
-        if (syncInfo?.full_sync_completed_on) {
+
+        if (syncInfo?.next_page_token ?? syncInfo?.full_sync_completed_on) {
           continue;
         }
 
-        const messageData = await startEmailFullSyncForAddress({
+        const messageData = await startProviderInitialSync({
           emailProvider: provider.type,
           emailToSync: provider.user_email_address,
         });
@@ -88,9 +89,9 @@ export function useSyncPage() {
         await upsertEmailSyncInfo({
           emailSyncInfo: {
             user_email_address: provider.user_email_address,
-            full_sync_completed_on: new Date().getTime(),
             last_sync_history_id: messageData.lastCheckedHistoryId,
             last_sync_history_id_updated_at: new Date().getTime(),
+            next_page_token: messageData.nextPageToken,
           },
         });
       }
@@ -101,27 +102,25 @@ export function useSyncPage() {
     };
     if (!runOnceRef.current) {
       runOnceRef.current = true;
+
       captureEvent({
-        event: TrackingEvents.syncStarted,
+        event: TrackingEvents.initSyncStarted,
         properties: {},
       });
-      const fullSyncStart = performance.now();
-      startEmailFullSync()
+
+      startSync()
         .then(() => {
-          const fullSyncEnd = performance.now();
           captureEvent({
-            event: TrackingEvents.syncCompleted,
-            properties: {
-              secondsElapsed: (fullSyncEnd - fullSyncStart) / 1000,
-            },
+            event: TrackingEvents.initSyncCompleted,
+            properties: {},
           });
         })
         .catch((e) => {
           captureEvent({
-            event: TrackingEvents.syncFailed,
+            event: TrackingEvents.initSyncFailed,
             properties: {},
           });
-          logger.error("Error performing full sync for user gmail inbox", {
+          logger.error("Error performing initial sync for user gmail inbox", {
             parserError: JSON.stringify(formatValidatorError(e), null, 2),
             error: e,
           });
@@ -132,7 +131,7 @@ export function useSyncPage() {
           });
         });
     }
-  }, [logger, router, startEmailFullSyncForAddress, toast]);
+  }, [logger, router, startProviderInitialSync, toast]);
 
   return {
     providersSyncing,

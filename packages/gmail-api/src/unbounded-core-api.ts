@@ -2,7 +2,11 @@ import { backOff } from "exponential-backoff";
 
 import type { HistoryObjectType } from "@skylar/parsers-and-types";
 
-import { GMAIL_MAX_BATCH_REQUEST_SIZE } from "./constants";
+import {
+  GMAIL_MAX_BATCH_REQUEST_SIZE,
+  GMAIL_MAX_FETCH_PER_SECOND,
+  ONE_SECOND_IN_MILLIS,
+} from "./constants";
 import {
   batchGetMessages,
   getAttachment,
@@ -23,17 +27,18 @@ export async function getMessageUnbounded({
   messageIds,
   accessToken,
   emailId,
+  chunkSize = GMAIL_MAX_BATCH_REQUEST_SIZE,
 }: {
   messageIds: string[];
   accessToken: string;
   emailId: string;
+  chunkSize?: number;
 }) {
   // create batches
-  const messageIdChunks = splitToNChunks(
-    messageIds,
-    GMAIL_MAX_BATCH_REQUEST_SIZE,
-  );
-  // iterate over slices of 100
+  const messageIdChunks = splitToNChunks(messageIds, chunkSize);
+  const delayBetweenBatches =
+    (chunkSize / GMAIL_MAX_FETCH_PER_SECOND) * ONE_SECOND_IN_MILLIS;
+  // Backoff is mainly used for retries and batch delay to adhere to Gmail API limits
   const messageIdBatchPromises = messageIdChunks.map((chunk, ind) =>
     backOff(
       () =>
@@ -43,9 +48,9 @@ export async function getMessageUnbounded({
           messageIds: chunk,
         }),
       {
-        startingDelay: ind * 2100,
-        timeMultiple: 1.5,
-        jitter: "none",
+        delayFirstAttempt: true,
+        startingDelay: ind * delayBetweenBatches, // 1 second
+        numOfAttempts: 5,
       },
     ),
   );
@@ -91,7 +96,21 @@ export async function getMessageListUnbounded({
     );
     pageTokenIterable = messageListResponse.nextPageToken;
   }
-  return messageListResponses;
+
+  const messageListResponse = await getMessageList({
+    accessToken,
+    emailId,
+    pageToken: pageTokenIterable,
+  });
+
+  messageListResponses = messageListResponses.concat(
+    messageListResponse.messages,
+  );
+
+  return {
+    messageListResponses,
+    nextPageToken: messageListResponse.nextPageToken,
+  };
 }
 
 export async function getHistoryListUnbounded({

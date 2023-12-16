@@ -5,7 +5,8 @@ export type EmailSyncInfoIndexType = {
 };
 
 export type EmailSyncInfoType = EmailSyncInfoIndexType & {
-  full_sync_completed_on: number;
+  full_sync_completed_on?: number;
+  next_page_token?: string;
 };
 
 export const EMAIL_SYNC_INFO_INDEX = `&user_email_address,
