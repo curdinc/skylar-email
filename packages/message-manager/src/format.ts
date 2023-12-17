@@ -2,7 +2,7 @@ import { format } from "date-fns";
 
 import type { SenderType } from "@skylar/parsers-and-types";
 
-export const formatForwardMessage = ({
+export const formatGmailForwardMessage = ({
   dateSent,
   forwardContent,
   from,
@@ -29,11 +29,42 @@ export const formatForwardMessage = ({
   );
   return `<br><br><div dir="ltr">---------- Forwarded message ---------<br>
   From: ${formattedFrom}<br>
-  Date: ${format(new Date(dateSent), "ccc, MMM dd, yyyy 'at' K:mm a")}<br>
+  Date: ${formatDateToGmailReadableString(dateSent)}<br>
   Subject: ${subject}<br>
   To: ${formattedTo.join(", ")}<br>
 </div><br><br>
 ${forwardContent}`;
+};
+
+export const formatGmailReplyMessage = ({
+  dateSent,
+  from,
+  replyContent,
+}: {
+  dateSent: number;
+  from: SenderType;
+  replyContent: string;
+}) => {
+  const formattedFrom = formatSender({
+    sender: from,
+    formatEmail: formatEmailWIthHtml,
+    formatName: (name) => formatNameWithHtml({ name, isBold: false }),
+  });
+
+  return `<br>
+  <div class="gmail_quote">
+     <div dir="ltr" class="gmail_attr">On ${formatDateToGmailReadableString(
+       dateSent,
+     )} ${formattedFrom} wrote:<br>
+     </div>
+     <blockquote class="gmail_quote" style="margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+        ${replyContent}
+     </blockquote>
+  </div>`;
+};
+
+const formatDateToGmailReadableString = (date: number) => {
+  return format(new Date(date), "ccc, MMM dd, yyyy 'at' K:mm a");
 };
 
 const formatEmailWIthHtml = (email: string) => {

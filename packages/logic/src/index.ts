@@ -3,7 +3,10 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
 
-import { formatForwardMessage } from "@skylar/message-manager";
+import {
+  formatGmailForwardMessage,
+  formatGmailReplyMessage,
+} from "@skylar/message-manager";
 import type {
   AllComposeMessageOptionsType,
   ThreadType,
@@ -50,7 +53,7 @@ export type State = {
       isSelecting: boolean;
       codeMirrorInstance?: Editor;
       respondingThread: ThreadType | undefined;
-      composedMessage: string;
+      respondingMessageString: string;
       attachments: { file: File; data: string; preview?: string }[];
     };
   };
@@ -78,8 +81,8 @@ type Actions = {
     replyType: ValidReplyMessageOptionsType;
   }) => void;
   resetReplyMessage: () => void;
-  setComposedMessage: (
-    composeString: State["EMAIL_CLIENT"]["COMPOSING"]["composedMessage"],
+  setRespondingMessageString: (
+    setRespondingMessageString: State["EMAIL_CLIENT"]["COMPOSING"]["respondingMessageString"],
   ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
   setMostRecentlyAffectedThreads: (affectedThreads: ThreadType[]) => void;
@@ -107,7 +110,7 @@ export const useGlobalStore = create(
       activeThread: undefined,
       COMPOSING: {
         messageType: "none",
-        composedMessage: "",
+        respondingMessageString: "",
         respondingThread: undefined,
         attachments: [],
         codeMirrorInstance: undefined,
@@ -195,14 +198,29 @@ export const setReplyMessageType: Actions["setReplyMessageType"] = (args) => {
     if (!from || !to) {
       return;
     }
-    const formattedForwardContent = formatForwardMessage({
+    const formattedForwardContent = formatGmailForwardMessage({
       dateSent: thread?.updated_at,
       subject: thread.subject,
       forwardContent,
       from: from,
       to: to,
     });
-    setComposedMessage(formattedForwardContent);
+    setRespondingMessageString(formattedForwardContent);
+  } else {
+    if (!thread) {
+      return;
+    }
+    const replyContent = thread.content.at(-1) ?? "";
+    const from = thread.from.at(-1)?.[0];
+    if (!from) {
+      return;
+    }
+    const formattedReplyMessage = formatGmailReplyMessage({
+      dateSent: thread?.updated_at,
+      replyContent,
+      from,
+    });
+    setRespondingMessageString(formattedReplyMessage);
   }
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.respondingThread = thread;
@@ -214,7 +232,7 @@ export const resetComposeMessage: Actions["resetReplyMessage"] = () => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.respondingThread = undefined;
     state.EMAIL_CLIENT.COMPOSING.messageType = "none";
-    state.EMAIL_CLIENT.COMPOSING.composedMessage = "";
+    state.EMAIL_CLIENT.COMPOSING.respondingMessageString = "";
     state.EMAIL_CLIENT.COMPOSING.attachments.forEach((attachment) => {
       if (attachment.preview) {
         URL.revokeObjectURL(attachment.preview);
@@ -226,13 +244,13 @@ export const resetComposeMessage: Actions["resetReplyMessage"] = () => {
   });
 };
 
-export const setComposedMessage: Actions["setComposedMessage"] = (
-  composeString,
-) => {
-  useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.COMPOSING.composedMessage = composeString;
-  });
-};
+export const setRespondingMessageString: Actions["setRespondingMessageString"] =
+  (respondingMessageString) => {
+    useGlobalStore.setState((state) => {
+      state.EMAIL_CLIENT.COMPOSING.respondingMessageString =
+        respondingMessageString;
+    });
+  };
 
 export const setAttachments: Actions["setAttachments"] = (updateFn) =>
   useGlobalStore.setState((state) => {

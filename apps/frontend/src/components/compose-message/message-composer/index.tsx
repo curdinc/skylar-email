@@ -75,7 +75,7 @@ export const MessageComposer = () => {
     form,
     onSubmit,
     submitMutation: { isPending: isSendingEmail },
-    forwardContent,
+    respondingMessageContent,
   } = useMessageComposer();
 
   return (
@@ -207,7 +207,7 @@ export const MessageComposer = () => {
           </Button>
         </div>
         <AttachmentList />
-        {forwardContent && <Letter html={forwardContent} />}
+        {respondingMessageContent && <Letter html={respondingMessageContent} />}
       </form>
     </Form>
   );
