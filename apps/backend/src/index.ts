@@ -41,9 +41,8 @@ function getEnvVars(
   }
 }
 
-// TRPC routes
-app.options("/trpc/*", (c) => {
-  // CORS is configured in the api gateway stack
+// Enable CORS
+app.options("/*", (c) => {
   return c.body(null, 204);
 });
 
