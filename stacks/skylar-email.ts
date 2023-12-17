@@ -96,7 +96,6 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
     openNextVersion: "2.3.3",
     dev: {
       url: "http://localhost:3000",
-      deploy: true,
     },
     customDomain: {
       domainName:
