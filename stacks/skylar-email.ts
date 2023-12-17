@@ -11,7 +11,7 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
   });
 
   const backendCustomDomain = `api.${BASE_CUSTOM_DOMAIN}`;
-  const backendPreviewCustomDomain = `${stack.stage}.${backendCustomDomain}`;
+  const backendPreviewCustomDomain = `${stack.stage}-${backendCustomDomain}`;
   const frontendCustomDomainAlias = `www.${BASE_CUSTOM_DOMAIN}`;
   const frontendPreviewCustomDomain = `${stack.stage}.${BASE_CUSTOM_DOMAIN}`;
   const frontendPreviewCustomDomainWithProtocol = `https://${frontendPreviewCustomDomain}`;
