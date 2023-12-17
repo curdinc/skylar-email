@@ -42,7 +42,6 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
     },
     cors: {
       allowMethods: ["GET", "POST", "OPTIONS"],
-      allowHeaders: ["*"],
       allowOrigins:
         stack.stage === "prod"
           ? [`https://${BASE_CUSTOM_DOMAIN}`]
