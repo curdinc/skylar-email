@@ -132,7 +132,9 @@ export async function buildThreadList(messages: MessageType[]) {
 
         thread.provider_message_ids.push(message.provider_message_id);
         thread.rfc822_message_ids.push(message.rfc822_message_id);
-        thread.content.push(message.content_html ?? message.content_text);
+        thread.content.push(
+          message.content_html ? message.content_html : message.content_text,
+        );
         thread.attachment_names = thread.attachment_names.concat(
           message.attachment_names,
         );
@@ -147,7 +149,9 @@ export async function buildThreadList(messages: MessageType[]) {
 
         thread.provider_message_ids.unshift(message.provider_message_id);
         thread.rfc822_message_ids.unshift(message.rfc822_message_id);
-        thread.content.unshift(message.content_html ?? message.content_text);
+        thread.content.unshift(
+          message.content_html ? message.content_html : message.content_text,
+        );
         thread.attachment_names = message.attachment_names.concat(
           thread.attachment_names,
         );
@@ -161,6 +165,9 @@ export async function buildThreadList(messages: MessageType[]) {
 
       resolvedThreads.set(provider_thread_id, {
         ...thread,
+        user_email_address: message.user_email_address,
+        provider_thread_id: message.provider_thread_id,
+        latest_snippet_html: message.snippet_html,
         subject: thread.subject ? thread.subject : message.subject,
         subject_search: thread.subject_search.length
           ? thread.subject_search

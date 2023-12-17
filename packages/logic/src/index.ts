@@ -6,10 +6,8 @@ import { useShallow } from "zustand/react/shallow";
 import { formatForwardMessage } from "@skylar/message-manager";
 import type {
   AllComposeMessageOptionsType,
-  MessageType,
   ThreadType,
   ValidComposeMessageOptionsType,
-  ValidForwardMessageOptionsType,
   ValidReplyMessageOptionsType,
 } from "@skylar/parsers-and-types";
 
@@ -75,20 +73,12 @@ type Actions = {
   ) => void;
   setActiveThread: (thread: State["EMAIL_CLIENT"]["activeThread"]) => void;
   resetActiveThread: () => void;
-  setReplyMessage: (
-    args:
-      | {
-          thread: State["EMAIL_CLIENT"]["COMPOSING"]["respondingThread"];
-          replyType: ValidReplyMessageOptionsType;
-        }
-      | {
-          thread: State["EMAIL_CLIENT"]["COMPOSING"]["respondingThread"];
-          replyType: ValidForwardMessageOptionsType;
-          messageToForward: MessageType;
-        },
-  ) => void;
+  setReplyMessageType: (args: {
+    thread: State["EMAIL_CLIENT"]["COMPOSING"]["respondingThread"];
+    replyType: ValidReplyMessageOptionsType;
+  }) => void;
   resetReplyMessage: () => void;
-  setComposedEmail: (
+  setComposedMessage: (
     composeString: State["EMAIL_CLIENT"]["COMPOSING"]["composedMessage"],
   ) => void;
   setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
@@ -104,7 +94,7 @@ type Actions = {
   setIsSelecting: (
     isSelecting: State["EMAIL_CLIENT"]["COMPOSING"]["isSelecting"],
   ) => void;
-  setComposeMessage: (emailType: ValidComposeMessageOptionsType) => void;
+  setComposeMessageType: (emailType: ValidComposeMessageOptionsType) => void;
 };
 
 // Core states
@@ -193,26 +183,30 @@ export const setMostRecentlyAffectedThreads: Actions["setMostRecentlyAffectedThr
     });
   };
 
-export const setReplyMessage: Actions["setReplyMessage"] = (args) => {
+export const setReplyMessageType: Actions["setReplyMessageType"] = (args) => {
   const { replyType, thread } = args;
+  if (replyType === "forward") {
+    if (!thread) {
+      return;
+    }
+    const forwardContent = thread.content.at(-1) ?? "";
+    const from = thread.from.at(-1)?.[0];
+    const to = thread.from.at(-1);
+    if (!from || !to) {
+      return;
+    }
+    const formattedForwardContent = formatForwardMessage({
+      dateSent: thread?.updated_at,
+      subject: thread.subject,
+      forwardContent,
+      from: from,
+      to: to,
+    });
+    setComposedMessage(formattedForwardContent);
+  }
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.respondingThread = thread;
     state.EMAIL_CLIENT.COMPOSING.messageType = replyType;
-    if (replyType === "forward") {
-      const { messageToForward } = args;
-      setComposedEmail(
-        formatForwardMessage({
-          dateSent: messageToForward.created_at,
-          forwardContent:
-            messageToForward.content_html ??
-            messageToForward.content_text ??
-            "",
-          from: messageToForward.from,
-          subject: messageToForward.subject,
-          to: messageToForward.to,
-        }),
-      );
-    }
   });
 };
 
@@ -232,7 +226,7 @@ export const resetComposeMessage: Actions["resetReplyMessage"] = () => {
   });
 };
 
-export const setComposedEmail: Actions["setComposedEmail"] = (
+export const setComposedMessage: Actions["setComposedMessage"] = (
   composeString,
 ) => {
   useGlobalStore.setState((state) => {
@@ -260,7 +254,7 @@ export const setIsSelecting: Actions["setIsSelecting"] = (isSelecting) => {
   });
 };
 
-export const setComposeMessage: Actions["setComposeMessage"] = (
+export const setComposeMessageType: Actions["setComposeMessageType"] = (
   messageType,
 ) => {
   useGlobalStore.setState((state) => {

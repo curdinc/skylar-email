@@ -1,9 +1,11 @@
-import { setMostRecentlyAffectedThreads, setReplyMessage } from "@skylar/logic";
+import {
+  setMostRecentlyAffectedThreads,
+  setReplyMessageType,
+} from "@skylar/logic";
 
 import { Icons } from "~/components/icons";
 import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
-import { getMostRecentMessageFromThread } from "~/lib/email";
 import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
 import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
 import { markUnreadThreads } from "~/lib/inbox-toolkit/thread/mark-unread-threads";
@@ -32,25 +34,18 @@ export const getThreadActions = (
       applyFn: async () => {
         const [thread] = await getThreads();
         if (!thread) return;
-        getMostRecentMessageFromThread(thread)
-          .then((message) => {
-            if (!message) return;
-            captureEvent({
-              event: TrackingEvents.composeForwardMessage,
-              properties: {
-                isShortcut: false,
-                messageConversationLength: thread.provider_message_ids.length,
-              },
-            });
-            setReplyMessage({
-              replyType: "forward",
-              thread,
-              messageToForward: message,
-            });
-          })
-          .catch((e) => {
-            console.error(e);
-          });
+        captureEvent({
+          event: TrackingEvents.composeForwardMessage,
+          properties: {
+            isShortcut: false,
+            messageConversationLength: thread.provider_message_ids.length,
+          },
+        });
+
+        setReplyMessageType({
+          replyType: "forward",
+          thread: thread,
+        });
       },
     },
     replySender: {
@@ -68,7 +63,7 @@ export const getThreadActions = (
               messageConversationLength: thread.provider_message_ids.length,
             },
           });
-          setReplyMessage({
+          setReplyMessageType({
             thread,
             replyType: "reply-sender",
           });
@@ -90,7 +85,7 @@ export const getThreadActions = (
               messageConversationLength: thread.provider_message_ids.length,
             },
           });
-          setReplyMessage({ thread, replyType: "reply-all" });
+          setReplyMessageType({ thread, replyType: "reply-all" });
         }
       },
     },
