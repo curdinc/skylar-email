@@ -61,8 +61,8 @@ export async function buildThreadList(messages: MessageType[]) {
         existingThreadMap.get(provider_thread_id) ?? {
           user_email_address: "",
           provider_thread_id: "",
-          email_provider_message_id: [],
-          rfc822_message_id: [],
+          provider_message_ids: [],
+          rfc822_message_ids: [],
           subject: "",
           subject_search: [],
           to: [],
@@ -80,57 +80,72 @@ export async function buildThreadList(messages: MessageType[]) {
           latest_snippet_html: "",
           content: [],
           content_search: [],
-          email_provider_labels: [],
+          provider_message_labels: [],
           attachment_names: [],
           created_at: 0,
           updated_at: 0,
         };
 
-      // need to get existing thread from cache
-      thread.from.push([message.from]);
-      thread.to.push(message.to);
-      thread.cc.push(message.cc[0]?.email_address ? message.cc : []);
-      thread.bcc.push(message.bcc?.email_address ? [message.bcc] : []);
-      thread.reply_to.push(message.reply_to);
-      thread.delivered_to.push(message.delivered_to);
+      if (message.created_at > thread.updated_at) {
+        // need to get existing thread from cache
+        thread.from.push([message.from]);
+        thread.to.push(message.to);
+        thread.cc.push(message.cc[0]?.email_address ? message.cc : []);
+        thread.bcc.push(message.bcc?.email_address ? [message.bcc] : []);
+        thread.reply_to.push(message.reply_to);
+        thread.delivered_to.push(message.delivered_to);
 
-      thread.from_search = thread.from_search
-        .concat(message.from.email_address)
-        .concat(message.from.name ?? "")
-        .filter((x) => !!x);
-      thread.to_search = thread.to_search
-        .concat(message.to.map((to) => to.email_address))
-        .concat(message.to.map((to) => to.name ?? "").filter((x) => !!x));
-      thread.cc_search = thread.cc_search
-        .concat(message.cc.map((cc) => cc.email_address))
-        .concat(message.cc.map((cc) => cc.name ?? ""))
-        .filter((x) => !!x);
-      thread.bcc_search = thread.bcc_search
-        .concat(message.bcc?.email_address ?? "")
-        .concat(message.bcc?.name ?? "")
-        .filter((x) => !!x);
-      thread.reply_to_search = thread.reply_to_search
-        .concat(message.reply_to.map((replyTo) => replyTo.email_address))
-        .concat(message.reply_to.map((replyTo) => replyTo.name ?? ""))
-        .filter((x) => !!x);
-      thread.delivered_to_search = thread.delivered_to_search
-        .concat(
-          message.delivered_to.map((deliveredTo) => deliveredTo.email_address),
+        thread.from_search = thread.from_search
+          .concat(message.from.email_address)
+          .concat(message.from.name ?? "")
+          .filter((x) => !!x);
+        thread.to_search = thread.to_search
+          .concat(message.to.map((to) => to.email_address))
+          .concat(message.to.map((to) => to.name ?? "").filter((x) => !!x));
+        thread.cc_search = thread.cc_search
+          .concat(message.cc.map((cc) => cc.email_address))
+          .concat(message.cc.map((cc) => cc.name ?? ""))
+          .filter((x) => !!x);
+        thread.bcc_search = thread.bcc_search
+          .concat(message.bcc?.email_address ?? "")
+          .concat(message.bcc?.name ?? "")
+          .filter((x) => !!x);
+        thread.reply_to_search = thread.reply_to_search
+          .concat(message.reply_to.map((replyTo) => replyTo.email_address))
+          .concat(message.reply_to.map((replyTo) => replyTo.name ?? ""))
+          .filter((x) => !!x);
+        thread.delivered_to_search = thread.delivered_to_search
+          .concat(
+            message.delivered_to.map(
+              (deliveredTo) => deliveredTo.email_address,
+            ),
+          )
+          .concat(
+            message.delivered_to.map((deliveredTo) => deliveredTo.name ?? ""),
+          )
+          .filter((x) => !!x);
+
+        thread.provider_message_ids =
+          thread.provider_message_ids.concat([
+            message.provider_message_id,
+          ]);
+        thread.rfc822_message_ids = thread.rfc822_message_ids.concat([
+          message.rfc822_message_id,
+        ]);
+        thread.content = thread.content.concat([message.content_text]);
+        thread.content_search = thread.content_search.concat(
+          buildSearchableString(message.content_text),
+        );
+        thread.attachment_names = thread.attachment_names.concat(
+          message.attachment_names,
         )
-        .concat(
-          message.delivered_to.map((deliveredTo) => deliveredTo.name ?? ""),
-        )
-        .filter((x) => !!x);
+      }
 
       resolvedThreads.set(provider_thread_id, {
         user_email_address: message.user_email_address,
         provider_thread_id: message.provider_thread_id,
-        email_provider_message_id: thread.email_provider_message_id.concat([
-          message.provider_message_id,
-        ]),
-        rfc822_message_id: thread.rfc822_message_id.concat([
-          message.rfc822_message_id,
-        ]),
+        provider_message_ids: thread.provider_message_ids,
+        rfc822_message_ids: thread.rfc822_message_ids,
         subject: thread.subject ? thread.subject : message.subject,
         subject_search: thread.subject_search.length
           ? thread.subject_search
@@ -148,15 +163,11 @@ export async function buildThreadList(messages: MessageType[]) {
         delivered_to: thread.delivered_to,
         delivered_to_search: thread.delivered_to_search,
         latest_snippet_html: message.snippet_html,
-        content: thread.content.concat([message.content_text]),
-        content_search: thread.content_search.concat(
-          buildSearchableString(message.content_text),
-        ),
+        content: thread.content,
+        content_search: thread.content_search,
         // we use the latest email labels as the source of truth
-        email_provider_labels: message.email_provider_labels,
-        attachment_names: thread.attachment_names.concat(
-          message.attachment_names,
-        ),
+        provider_message_labels: message.email_provider_labels,
+        attachment_names: ,
         created_at:
           thread.created_at === 0 ? message.created_at : thread.created_at,
         updated_at: message.created_at,

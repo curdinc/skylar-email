@@ -131,7 +131,7 @@ export const isAttachmentSizeValid = (
 
 export const getMostRecentMessageFromThread = async (thread: ThreadType) => {
   const messages = await bulkGetMessages({
-    providerMessageIds: [thread.email_provider_message_id.at(-1) ?? ""],
+    providerMessageIds: [thread.provider_message_ids.at(-1) ?? ""],
   });
   return messages[0];
 };

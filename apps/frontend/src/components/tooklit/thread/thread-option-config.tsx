@@ -39,8 +39,7 @@ export const getThreadActions = (
               event: TrackingEvents.composeForwardMessage,
               properties: {
                 isShortcut: false,
-                messageConversationLength:
-                  thread.email_provider_message_id.length,
+                messageConversationLength: thread.provider_message_ids.length,
               },
             });
             setReplyMessage({
@@ -66,8 +65,7 @@ export const getThreadActions = (
             event: TrackingEvents.composeReplySenderMessage,
             properties: {
               isShortcut: false,
-              messageConversationLength:
-                thread.email_provider_message_id.length,
+              messageConversationLength: thread.provider_message_ids.length,
             },
           });
           setReplyMessage({
@@ -89,8 +87,7 @@ export const getThreadActions = (
             event: TrackingEvents.composeReplyAllMessage,
             properties: {
               isShortcut: false,
-              messageConversationLength:
-                thread.email_provider_message_id.length,
+              messageConversationLength: thread.provider_message_ids.length,
             },
           });
           setReplyMessage({ thread, replyType: "reply-all" });
@@ -240,7 +237,7 @@ export const getThreadActions = (
         threads.map((thread) => {
           const { labelsToAdd: _labelsToAdd, labelsToRemove: _labelsToRemove } =
             getLabelModifications({
-              currentLabels: thread.email_provider_labels,
+              currentLabels: thread.provider_message_labels,
               newLabels,
             });
 

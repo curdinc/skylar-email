@@ -84,7 +84,7 @@ export function useInboxKeymaps() {
                 properties: {
                   isShortcut: true,
                   messageConversationLength:
-                    activeThread.email_provider_message_id.length,
+                    activeThread.provider_message_ids.length,
                 },
               });
               setReplyMessage({
@@ -107,7 +107,7 @@ export function useInboxKeymaps() {
             properties: {
               isShortcut: true,
               messageConversationLength:
-                activeThread.email_provider_message_id.length,
+                activeThread.provider_message_ids.length,
             },
           });
           setReplyMessage({
@@ -125,7 +125,7 @@ export function useInboxKeymaps() {
             properties: {
               isShortcut: true,
               messageConversationLength:
-                activeThread.email_provider_message_id.length,
+                activeThread.provider_message_ids.length,
             },
           });
           setReplyMessage({
