@@ -82,6 +82,7 @@ export async function buildThreadList(messages: MessageType[]) {
           content_search: [],
           provider_message_labels: [],
           attachment_names: [],
+          attachment_names_search: [],
           created_at: 0,
           updated_at: 0,
         };
@@ -125,10 +126,9 @@ export async function buildThreadList(messages: MessageType[]) {
           )
           .filter((x) => !!x);
 
-        thread.provider_message_ids =
-          thread.provider_message_ids.concat([
-            message.provider_message_id,
-          ]);
+        thread.provider_message_ids = thread.provider_message_ids.concat([
+          message.provider_message_id,
+        ]);
         thread.rfc822_message_ids = thread.rfc822_message_ids.concat([
           message.rfc822_message_id,
         ]);
@@ -138,36 +138,20 @@ export async function buildThreadList(messages: MessageType[]) {
         );
         thread.attachment_names = thread.attachment_names.concat(
           message.attachment_names,
-        )
+        );
+        thread.attachment_names_search = thread.attachment_names_search.concat(
+          message.attachment_names,
+        );
       }
 
       resolvedThreads.set(provider_thread_id, {
-        user_email_address: message.user_email_address,
-        provider_thread_id: message.provider_thread_id,
-        provider_message_ids: thread.provider_message_ids,
-        rfc822_message_ids: thread.rfc822_message_ids,
+        ...thread,
         subject: thread.subject ? thread.subject : message.subject,
         subject_search: thread.subject_search.length
           ? thread.subject_search
           : buildSearchableString(message.subject),
-        from: thread.from,
-        from_search: thread.from_search,
-        to: thread.to,
-        to_search: thread.to_search,
-        cc: thread.cc,
-        cc_search: thread.cc_search,
-        bcc: thread.bcc,
-        bcc_search: thread.bcc_search,
-        reply_to: thread.reply_to,
-        reply_to_search: thread.reply_to_search,
-        delivered_to: thread.delivered_to,
-        delivered_to_search: thread.delivered_to_search,
-        latest_snippet_html: message.snippet_html,
-        content: thread.content,
-        content_search: thread.content_search,
         // we use the latest email labels as the source of truth
         provider_message_labels: message.email_provider_labels,
-        attachment_names: ,
         created_at:
           thread.created_at === 0 ? message.created_at : thread.created_at,
         updated_at: message.created_at,
