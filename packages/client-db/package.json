@@ -1,0 +1,47 @@
+{
+  "name": "@skylar/client-db",
+  "private": true,
+  "version": "0.1.0",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./*"
+      ]
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint .",
+    "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@skylar/parsers-and-types": "^0.1.0",
+    "dexie": "^3.2.4"
+  },
+  "devDependencies": {
+    "@skylar/eslint-config": "0.2.0",
+    "@skylar/prettier-config": "^0.1.0",
+    "@skylar/tsconfig": "^0.1.0",
+    "@tanstack/react-query": "^5.0.0",
+    "eslint": "^8.48.0",
+    "react": "18.2.0",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "18.2.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@skylar/eslint-config/base",
+      "@skylar/eslint-config/react",
+      "@skylar/eslint-config/react-bonus"
+    ]
+  },
+  "prettier": "@skylar/prettier-config"
+}
