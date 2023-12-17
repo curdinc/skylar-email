@@ -23,8 +23,8 @@ export const useMessageComposer = () => {
   const replyThread = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
-  const forwardContent = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.COMPOSING.composedMessage,
+  const respondingMessageContent = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.COMPOSING.respondingMessageString,
   );
   const composeEmailType = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
@@ -142,7 +142,7 @@ export const useMessageComposer = () => {
           attachments: formattedAttachments,
           html: `${markdownToHtmlConverter.makeHtml(
             values.composeString,
-          )}${forwardContent}`,
+          )}${respondingMessageContent}`,
           replyConfig: {
             inReplyToRfcMessageId: replyThread.rfc822_message_ids[0] ?? "",
             references: replyThread.rfc822_message_ids,
@@ -176,6 +176,6 @@ export const useMessageComposer = () => {
     onSubmit,
     submitMutation,
     replyThread,
-    forwardContent,
+    respondingMessageContent,
   };
 };
