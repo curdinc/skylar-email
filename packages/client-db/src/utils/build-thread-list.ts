@@ -87,6 +87,40 @@ export async function buildThreadList(messages: MessageType[]) {
           updated_at: 0,
         };
 
+      thread.from_search = thread.from_search
+        .concat(message.from.email_address)
+        .concat(message.from.name ?? "")
+        .filter((x) => !!x);
+      thread.to_search = thread.to_search
+        .concat(message.to.map((to) => to.email_address))
+        .concat(message.to.map((to) => to.name ?? "").filter((x) => !!x));
+      thread.cc_search = thread.cc_search
+        .concat(message.cc.map((cc) => cc.email_address))
+        .concat(message.cc.map((cc) => cc.name ?? ""))
+        .filter((x) => !!x);
+      thread.bcc_search = thread.bcc_search
+        .concat(message.bcc?.email_address ?? "")
+        .concat(message.bcc?.name ?? "")
+        .filter((x) => !!x);
+      thread.reply_to_search = thread.reply_to_search
+        .concat(message.reply_to.map((replyTo) => replyTo.email_address))
+        .concat(message.reply_to.map((replyTo) => replyTo.name ?? ""))
+        .filter((x) => !!x);
+      thread.delivered_to_search = thread.delivered_to_search
+        .concat(
+          message.delivered_to.map((deliveredTo) => deliveredTo.email_address),
+        )
+        .concat(
+          message.delivered_to.map((deliveredTo) => deliveredTo.name ?? ""),
+        )
+        .filter((x) => !!x);
+      thread.attachment_names_search = thread.attachment_names_search.concat(
+        message.attachment_names,
+      );
+      thread.content_search = thread.content_search.concat(
+        buildSearchableString(message.content_text),
+      );
+
       if (message.created_at > thread.updated_at) {
         // need to get existing thread from cache
         thread.from.push([message.from]);
@@ -96,53 +130,34 @@ export async function buildThreadList(messages: MessageType[]) {
         thread.reply_to.push(message.reply_to);
         thread.delivered_to.push(message.delivered_to);
 
-        thread.from_search = thread.from_search
-          .concat(message.from.email_address)
-          .concat(message.from.name ?? "")
-          .filter((x) => !!x);
-        thread.to_search = thread.to_search
-          .concat(message.to.map((to) => to.email_address))
-          .concat(message.to.map((to) => to.name ?? "").filter((x) => !!x));
-        thread.cc_search = thread.cc_search
-          .concat(message.cc.map((cc) => cc.email_address))
-          .concat(message.cc.map((cc) => cc.name ?? ""))
-          .filter((x) => !!x);
-        thread.bcc_search = thread.bcc_search
-          .concat(message.bcc?.email_address ?? "")
-          .concat(message.bcc?.name ?? "")
-          .filter((x) => !!x);
-        thread.reply_to_search = thread.reply_to_search
-          .concat(message.reply_to.map((replyTo) => replyTo.email_address))
-          .concat(message.reply_to.map((replyTo) => replyTo.name ?? ""))
-          .filter((x) => !!x);
-        thread.delivered_to_search = thread.delivered_to_search
-          .concat(
-            message.delivered_to.map(
-              (deliveredTo) => deliveredTo.email_address,
-            ),
-          )
-          .concat(
-            message.delivered_to.map((deliveredTo) => deliveredTo.name ?? ""),
-          )
-          .filter((x) => !!x);
-
-        thread.provider_message_ids = thread.provider_message_ids.concat([
-          message.provider_message_id,
-        ]);
-        thread.rfc822_message_ids = thread.rfc822_message_ids.concat([
-          message.rfc822_message_id,
-        ]);
-        thread.content = thread.content.concat([message.content_text]);
-        thread.content_search = thread.content_search.concat(
-          buildSearchableString(message.content_text),
-        );
+        thread.provider_message_ids.push(message.provider_message_id);
+        thread.rfc822_message_ids.push(message.rfc822_message_id);
+        thread.content.push(message.content_html ?? message.content_text);
         thread.attachment_names = thread.attachment_names.concat(
           message.attachment_names,
         );
-        thread.attachment_names_search = thread.attachment_names_search.concat(
-          message.attachment_names,
+      } else if (message.created_at < thread.created_at) {
+        // need to get existing thread from cache
+        thread.from.unshift([message.from]);
+        thread.to.unshift(message.to);
+        thread.cc.unshift(message.cc[0]?.email_address ? message.cc : []);
+        thread.bcc.unshift(message.bcc?.email_address ? [message.bcc] : []);
+        thread.reply_to.unshift(message.reply_to);
+        thread.delivered_to.unshift(message.delivered_to);
+
+        thread.provider_message_ids.unshift(message.provider_message_id);
+        thread.rfc822_message_ids.unshift(message.rfc822_message_id);
+        thread.content.unshift(message.content_html ?? message.content_text);
+        thread.attachment_names = message.attachment_names.concat(
+          thread.attachment_names,
         );
       }
+
+      const updatedThreadAt = Math.max(message.created_at, thread.updated_at);
+      const createdThreadAt =
+        thread.created_at === 0
+          ? message.created_at
+          : Math.min(message.created_at, thread.created_at);
 
       resolvedThreads.set(provider_thread_id, {
         ...thread,
@@ -152,9 +167,8 @@ export async function buildThreadList(messages: MessageType[]) {
           : buildSearchableString(message.subject),
         // we use the latest email labels as the source of truth
         provider_message_labels: message.email_provider_labels,
-        created_at:
-          thread.created_at === 0 ? message.created_at : thread.created_at,
-        updated_at: message.created_at,
+        created_at: createdThreadAt,
+        updated_at: updatedThreadAt,
       });
 
       return resolvedThreads;
