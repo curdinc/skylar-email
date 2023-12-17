@@ -11,7 +11,7 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
   });
 
   const backendCustomDomain = `api.${BASE_CUSTOM_DOMAIN}`;
-  const backendPreviewCustomDomain = `${stack.stage}.${backendCustomDomain}`;
+  const backendPreviewCustomDomain = `${stack.stage}-${backendCustomDomain}`;
   const frontendCustomDomainAlias = `www.${BASE_CUSTOM_DOMAIN}`;
   const frontendPreviewCustomDomain = `${stack.stage}.${BASE_CUSTOM_DOMAIN}`;
   const frontendPreviewCustomDomainWithProtocol = `https://${frontendPreviewCustomDomain}`;
@@ -41,12 +41,49 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
       hostedZone: BASE_CUSTOM_DOMAIN,
     },
     cors: {
-      allowMethods: ["GET", "POST", "OPTIONS"],
-      allowHeaders: ["*"],
+      allowMethods: ["GET", "POST", "OPTIONS", "HEAD"],
       allowOrigins:
         stack.stage === "prod"
           ? [`https://${BASE_CUSTOM_DOMAIN}`]
           : [frontendPreviewCustomDomainWithProtocol, "http://localhost:3000"],
+      allowCredentials: true,
+      allowHeaders: [
+        "accept",
+        "cache-control",
+        "cloudfront-forwarded-proto",
+        "cloudfront-is-android-viewer",
+        "cloudfront-is-desktop-viewer",
+        "cloudfront-is-ios-viewer",
+        "cloudfront-is-mobile-viewer",
+        "cloudfront-is-smarttv-viewer",
+        "cloudfront-is-tablet-viewer",
+        "cloudfront-viewer-address",
+        "cloudfront-viewer-asn",
+        "cloudfront-viewer-city",
+        "cloudfront-viewer-country",
+        "cloudfront-viewer-country-name",
+        "cloudfront-viewer-country-region",
+        "cloudfront-viewer-country-region-name",
+        "cloudfront-viewer-http-version",
+        "cloudfront-viewer-latitude",
+        "cloudfront-viewer-longitude",
+        "cloudfront-viewer-postal-code",
+        "cloudfront-viewer-time-zone",
+        "cloudfront-viewer-tls",
+        "content-type",
+        "purpose",
+        "trpc-batch-mode",
+        "upgrade-insecure-requests",
+        "x-amz-cf-id",
+        "x-amzn-tls-cipher-suite",
+        "x-amzn-tls-version",
+        "x-amzn-trace-id",
+        "x-forwarded-for",
+        "x-forwarded-host",
+        "x-forwarded-port",
+        "x-forwarded-proto",
+        "x-trpc-source",
+      ],
     },
     routes: {
       "ANY /{proxy+}": "./apps/backend/src/index.handler",
@@ -56,6 +93,7 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
   const frontend = new NextjsSite(stack, "frontend", {
     path: "./apps/frontend",
     runtime: "nodejs20.x",
+    openNextVersion: "2.3.3",
     dev: {
       url: "http://localhost:3000",
     },

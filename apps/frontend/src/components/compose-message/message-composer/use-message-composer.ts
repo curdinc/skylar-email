@@ -144,8 +144,8 @@ export const useMessageComposer = () => {
             values.composeString,
           )}${forwardContent}`,
           replyConfig: {
-            inReplyToRfcMessageId: replyThread.rfc822_message_id[0] ?? "",
-            references: replyThread.rfc822_message_id,
+            inReplyToRfcMessageId: replyThread.rfc822_message_ids[0] ?? "",
+            references: replyThread.rfc822_message_ids,
             providerThreadId: replyThread.provider_thread_id,
             rootSubject: replyThread.subject,
           },
@@ -164,7 +164,7 @@ export const useMessageComposer = () => {
       properties: {
         isShortcut: false,
         messageConversationLength:
-          replyThread?.email_provider_message_id.length ?? 0,
+          replyThread?.provider_message_ids.length ?? 0,
         wordCount: values.composeString.length,
       },
     });

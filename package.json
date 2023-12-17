@@ -27,7 +27,7 @@
     "constructs": "10.3.0",
     "cross-env": "^7.0.3",
     "prettier": "^3.0.3",
-    "sst": "^2.38.4",
+    "sst": "^2.38.7",
     "turbo": "^1.10.13",
     "typescript": "^5.2.2"
   },

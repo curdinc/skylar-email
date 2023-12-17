@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import {
   resetActiveThread,
   resetComposeMessage,
-  setComposeMessage,
+  setComposeMessageType,
   setIsSelecting,
-  setReplyMessage,
+  setReplyMessageType,
   useGlobalStore,
   useOptimizedGlobalStore,
 } from "@skylar/logic";
@@ -14,7 +14,6 @@ import { tinyKeys } from "@skylar/tinykeys";
 
 import { captureEvent } from "./analytics/capture-event";
 import { TrackingEvents } from "./analytics/tracking-events";
-import { getMostRecentMessageFromThread } from "./email";
 
 // ! Note that shortcuts should not overlap
 // ! For example, if you have a shortcut for "Escape" in one component, you should not have a shortcut for "Escape" in another component.
@@ -70,32 +69,25 @@ export function useInboxKeymaps() {
             isShortcut: true,
           },
         });
-        setComposeMessage("new-email");
+        setComposeMessageType("new-email");
       },
       [shortcut.forward]: () => {
         const activeThread =
           useGlobalStore.getState().EMAIL_CLIENT.activeThread;
         if (activeThread) {
-          getMostRecentMessageFromThread(activeThread)
-            .then((message) => {
-              if (!message) return;
-              captureEvent({
-                event: TrackingEvents.composeForwardMessage,
-                properties: {
-                  isShortcut: true,
-                  messageConversationLength:
-                    activeThread.email_provider_message_id.length,
-                },
-              });
-              setReplyMessage({
-                replyType: "forward",
-                thread: activeThread,
-                messageToForward: message,
-              });
-            })
-            .catch((e) => {
-              console.error(e);
-            });
+          captureEvent({
+            event: TrackingEvents.composeForwardMessage,
+            properties: {
+              isShortcut: true,
+              messageConversationLength:
+                activeThread.provider_message_ids.length,
+            },
+          });
+
+          setReplyMessageType({
+            replyType: "forward",
+            thread: activeThread,
+          });
         }
       },
       [shortcut.replyAll]: () => {
@@ -107,10 +99,10 @@ export function useInboxKeymaps() {
             properties: {
               isShortcut: true,
               messageConversationLength:
-                activeThread.email_provider_message_id.length,
+                activeThread.provider_message_ids.length,
             },
           });
-          setReplyMessage({
+          setReplyMessageType({
             replyType: "reply-all",
             thread: activeThread,
           });
@@ -125,10 +117,10 @@ export function useInboxKeymaps() {
             properties: {
               isShortcut: true,
               messageConversationLength:
-                activeThread.email_provider_message_id.length,
+                activeThread.provider_message_ids.length,
             },
           });
-          setReplyMessage({
+          setReplyMessageType({
             replyType: "reply-sender",
             thread: activeThread,
           });

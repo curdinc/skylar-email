@@ -28,6 +28,8 @@ export const COMPOSE_MESSAGE_OPTIONS = [
 ] as const;
 export type AllComposeMessageOptionsType =
   (typeof COMPOSE_MESSAGE_OPTIONS)[number];
-export type ValidReplyMessageOptionsType = "reply-sender" | "reply-all";
-export type ValidForwardMessageOptionsType = "forward";
+export type ValidReplyMessageOptionsType =
+  | "reply-sender"
+  | "reply-all"
+  | "forward";
 export type ValidComposeMessageOptionsType = "new-email";

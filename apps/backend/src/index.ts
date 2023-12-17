@@ -3,7 +3,6 @@ import { Hono } from "hono";
 import { env } from "hono/adapter";
 import type { LambdaContext, LambdaEvent } from "hono/aws-lambda";
 import { handle } from "hono/aws-lambda";
-import { cors } from "hono/cors";
 
 import { appRouter, createTRPCContext } from "@skylar/api";
 import { getDb } from "@skylar/db";
@@ -43,13 +42,11 @@ function getEnvVars(
 }
 
 // TRPC routes
-app.use("/trpc/*", async (c, next) => {
-  const envVars = getEnvVars(c);
-  return await cors({
-    origin: [envVars.FRONTEND_URL],
-    allowHeaders: ["*"],
-    allowMethods: ["GET", "POST", "OPTIONS"],
-  })(c, next);
+app.options("/trpc/*", (c) => {
+  // CORS is configured in the api gateway stack
+  return c.json({
+    message: "OK",
+  });
 });
 
 app.use("/trpc/*", async (c, next) => {

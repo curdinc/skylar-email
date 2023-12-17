@@ -30,8 +30,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       sst:
-        specifier: ^2.38.4
-        version: 2.38.4(@types/react@18.2.21)
+        specifier: ^2.38.7
+        version: 2.38.7(@types/react@18.2.21)
       turbo:
         specifier: ^1.10.13
         version: 1.10.13
@@ -76,8 +76,8 @@ importers:
         specifier: ^8.48.0
         version: 8.48.0
       sst:
-        specifier: ^2.38.4
-        version: 2.38.4(@types/react@18.2.21)
+        specifier: ^2.38.7
+        version: 2.38.7(@types/react@18.2.21)
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -308,8 +308,8 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2
       sst:
-        specifier: ^2.38.4
-        version: 2.38.4(@types/react@18.2.21)
+        specifier: ^2.38.7
+        version: 2.38.7(@types/react@18.2.21)
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
@@ -10688,8 +10688,8 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
 
-  /sst@2.38.4(@types/react@18.2.21):
-    resolution: {integrity: sha512-tpJg/PXGGW80rD6DpdueFEXfEqF0kOBzD1NwrwrmhkPspYFcQoai48ijxQtTnO1x5JWjJs0oOGBeOuHXxuAp6Q==}
+  /sst@2.38.7(@types/react@18.2.21):
+    resolution: {integrity: sha512-1bwPv/8suQQ5qXybAN1C7oHB7gjA/daRCI0TY/jTjgQn7ebJRvCvsoYtoJsf7q3ToPf1xc5X+yo7p0vyeLvmSA==}
     hasBin: true
     peerDependencies:
       '@sls-next/lambda-at-edge': ^3.7.0

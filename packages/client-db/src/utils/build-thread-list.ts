@@ -61,8 +61,8 @@ export async function buildThreadList(messages: MessageType[]) {
         existingThreadMap.get(provider_thread_id) ?? {
           user_email_address: "",
           provider_thread_id: "",
-          email_provider_message_id: [],
-          rfc822_message_id: [],
+          provider_message_ids: [],
+          rfc822_message_ids: [],
           subject: "",
           subject_search: [],
           to: [],
@@ -80,19 +80,12 @@ export async function buildThreadList(messages: MessageType[]) {
           latest_snippet_html: "",
           content: [],
           content_search: [],
-          email_provider_labels: [],
+          provider_message_labels: [],
           attachment_names: [],
+          attachment_names_search: [],
           created_at: 0,
           updated_at: 0,
         };
-
-      // need to get existing thread from cache
-      thread.from.push([message.from]);
-      thread.to.push(message.to);
-      thread.cc.push(message.cc[0]?.email_address ? message.cc : []);
-      thread.bcc.push(message.bcc?.email_address ? [message.bcc] : []);
-      thread.reply_to.push(message.reply_to);
-      thread.delivered_to.push(message.delivered_to);
 
       thread.from_search = thread.from_search
         .concat(message.from.email_address)
@@ -121,45 +114,68 @@ export async function buildThreadList(messages: MessageType[]) {
           message.delivered_to.map((deliveredTo) => deliveredTo.name ?? ""),
         )
         .filter((x) => !!x);
+      thread.attachment_names_search = thread.attachment_names_search.concat(
+        message.attachment_names,
+      );
+      thread.content_search = thread.content_search.concat(
+        buildSearchableString(message.content_text),
+      );
+
+      if (message.created_at > thread.updated_at) {
+        // need to get existing thread from cache
+        thread.from.push([message.from]);
+        thread.to.push(message.to);
+        thread.cc.push(message.cc[0]?.email_address ? message.cc : []);
+        thread.bcc.push(message.bcc?.email_address ? [message.bcc] : []);
+        thread.reply_to.push(message.reply_to);
+        thread.delivered_to.push(message.delivered_to);
+
+        thread.provider_message_ids.push(message.provider_message_id);
+        thread.rfc822_message_ids.push(message.rfc822_message_id);
+        thread.content.push(
+          message.content_html ? message.content_html : message.content_text,
+        );
+        thread.attachment_names = thread.attachment_names.concat(
+          message.attachment_names,
+        );
+      } else if (message.created_at < thread.created_at) {
+        // need to get existing thread from cache
+        thread.from.unshift([message.from]);
+        thread.to.unshift(message.to);
+        thread.cc.unshift(message.cc[0]?.email_address ? message.cc : []);
+        thread.bcc.unshift(message.bcc?.email_address ? [message.bcc] : []);
+        thread.reply_to.unshift(message.reply_to);
+        thread.delivered_to.unshift(message.delivered_to);
+
+        thread.provider_message_ids.unshift(message.provider_message_id);
+        thread.rfc822_message_ids.unshift(message.rfc822_message_id);
+        thread.content.unshift(
+          message.content_html ? message.content_html : message.content_text,
+        );
+        thread.attachment_names = message.attachment_names.concat(
+          thread.attachment_names,
+        );
+      }
+
+      const updatedThreadAt = Math.max(message.created_at, thread.updated_at);
+      const createdThreadAt =
+        thread.created_at === 0
+          ? message.created_at
+          : Math.min(message.created_at, thread.created_at);
 
       resolvedThreads.set(provider_thread_id, {
+        ...thread,
         user_email_address: message.user_email_address,
         provider_thread_id: message.provider_thread_id,
-        email_provider_message_id: thread.email_provider_message_id.concat([
-          message.provider_message_id,
-        ]),
-        rfc822_message_id: thread.rfc822_message_id.concat([
-          message.rfc822_message_id,
-        ]),
+        latest_snippet_html: message.snippet_html,
         subject: thread.subject ? thread.subject : message.subject,
         subject_search: thread.subject_search.length
           ? thread.subject_search
           : buildSearchableString(message.subject),
-        from: thread.from,
-        from_search: thread.from_search,
-        to: thread.to,
-        to_search: thread.to_search,
-        cc: thread.cc,
-        cc_search: thread.cc_search,
-        bcc: thread.bcc,
-        bcc_search: thread.bcc_search,
-        reply_to: thread.reply_to,
-        reply_to_search: thread.reply_to_search,
-        delivered_to: thread.delivered_to,
-        delivered_to_search: thread.delivered_to_search,
-        latest_snippet_html: message.snippet_html,
-        content: thread.content.concat([message.content_text]),
-        content_search: thread.content_search.concat(
-          buildSearchableString(message.content_text),
-        ),
         // we use the latest email labels as the source of truth
-        email_provider_labels: message.email_provider_labels,
-        attachment_names: thread.attachment_names.concat(
-          message.attachment_names,
-        ),
-        created_at:
-          thread.created_at === 0 ? message.created_at : thread.created_at,
-        updated_at: message.created_at,
+        provider_message_labels: message.email_provider_labels,
+        created_at: createdThreadAt,
+        updated_at: updatedThreadAt,
       });
 
       return resolvedThreads;

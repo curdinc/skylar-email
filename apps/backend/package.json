@@ -23,7 +23,7 @@
     "@skylar/tsconfig": "^0.1.0",
     "concurrently": "^8.2.1",
     "eslint": "^8.48.0",
-    "sst": "^2.38.4",
+    "sst": "^2.38.7",
     "typescript": "^5.2.2"
   },
   "eslintConfig": {

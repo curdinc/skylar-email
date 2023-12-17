@@ -58,7 +58,7 @@ const updateLabels = ({
   add: string[];
   remove: string[];
 }) => {
-  const labels = thread.email_provider_labels;
+  const labels = thread.provider_message_labels;
   const updatedLabels = getNewLabels(labels, add, remove);
 
   return {

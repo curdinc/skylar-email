@@ -36,7 +36,7 @@ export function EditLabels({
   const { data: activeEmailAddress } = useActiveEmailAddress();
 
   const [labels, setLabels] = useState<Record<string, boolean>>(
-    thread.email_provider_labels.reduce(
+    thread.provider_message_labels.reduce(
       (acc, label) => {
         acc[label] = true;
         return acc;

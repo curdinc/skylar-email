@@ -5,8 +5,8 @@ export function filterForInbox(args: { invert: boolean } = { invert: false }) {
   return (thread: ThreadType) => {
     return [EMAIL_PROVIDER_LABELS.GMAIL.INBOX].every((label) =>
       args.invert
-        ? !thread.email_provider_labels.includes(label)
-        : thread.email_provider_labels.includes(label),
+        ? !thread.provider_message_labels.includes(label)
+        : thread.provider_message_labels.includes(label),
     );
   };
 }
@@ -14,8 +14,8 @@ export function filterForUnread(args: { invert: boolean } = { invert: false }) {
   return (thread: ThreadType) => {
     return [EMAIL_PROVIDER_LABELS.GMAIL.UNREAD].every((label) =>
       args.invert
-        ? !thread.email_provider_labels.includes(label)
-        : thread.email_provider_labels.includes(label),
+        ? !thread.provider_message_labels.includes(label)
+        : thread.provider_message_labels.includes(label),
     );
   };
 }
@@ -39,13 +39,13 @@ export function filterForEmails({
 export function filterForLabels(labels: string[]) {
   return (thread: ThreadType) => {
     return labels.every((label) =>
-      thread.email_provider_labels.includes(label),
+      thread.provider_message_labels.includes(label),
     );
   };
 }
 
 export const isThreadUnread = (thread: ThreadType) => {
-  return thread.email_provider_labels.includes(
+  return thread.provider_message_labels.includes(
     EMAIL_PROVIDER_LABELS.GMAIL.UNREAD,
   );
 };
