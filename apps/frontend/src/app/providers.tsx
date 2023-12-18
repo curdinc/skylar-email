@@ -51,9 +51,30 @@ export function ClientProvider(props: {
         }),
         unstable_httpBatchStreamLink({
           url: `${env.NEXT_PUBLIC_BACKEND_URL}/trpc`,
+          // fetch: (url, init) => {
+          //   // ! This mess is here to remove the purpose headers that is
+          //   const newHeaders: Record<string, string> = {};
+          //   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+          //   for (const header of Object.keys((init?.headers as any) ?? {})) {
+          //     if (header.toLowerCase() === "purpose") {
+          //       continue;
+          //     }
+          //     newHeaders[header] =
+          //       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+          //       ((init?.headers as any)?.[header] as string) ?? "";
+          //   }
+          //   return fetch(url, {
+          //     ...init,
+          //     headers: {
+          //       ...newHeaders,
+          //     },
+          //   });
+          // },
           headers() {
             const headers = new Map(props.headers);
             headers.set("x-trpc-source", "nextjs-react");
+            // ! We remove the purpose headers because it leads to stale network request in safari. For some reason... Only took us 48 hours to figure out
+            headers.delete("purpose");
             return Object.fromEntries(headers);
           },
         }),
