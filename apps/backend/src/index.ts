@@ -42,7 +42,7 @@ function getEnvVars(
 }
 
 // Enable CORS
-app.options("/trpc/*",  (c) => {
+app.options("/trpc/*", (c) => {
   return c.body(null, 204);
 });
 
