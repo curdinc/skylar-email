@@ -54,6 +54,8 @@ export function ClientProvider(props: {
           headers() {
             const headers = new Map(props.headers);
             headers.set("x-trpc-source", "nextjs-react");
+            // ! We remove the purpose headers because it leads to stale network request in safari. For some reason... Only took us 48 hours to figure out
+            headers.delete("purpose");
             return Object.fromEntries(headers);
           },
         }),

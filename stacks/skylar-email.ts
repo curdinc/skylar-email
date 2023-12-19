@@ -1,6 +1,6 @@
 import { Api, NextjsSite, StackContext } from "sst/constructs";
 
-const BASE_CUSTOM_DOMAIN = "curdinc.com";
+import { ALLOWED_HEADERS, BASE_CUSTOM_DOMAIN } from "./constants";
 
 export function SkylarEmailConstructs({ stack }: StackContext) {
   stack.addDefaultFunctionEnv({
@@ -45,45 +45,12 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
       allowOrigins:
         stack.stage === "prod"
           ? [`https://${BASE_CUSTOM_DOMAIN}`]
-          : [frontendPreviewCustomDomainWithProtocol, "http://localhost:3000"],
+          : [
+              frontendPreviewCustomDomainWithProtocol,
+              "http://localhost:3000"
+            ],
       allowCredentials: true,
-      allowHeaders: [
-        "accept",
-        "cache-control",
-        "cloudfront-forwarded-proto",
-        "cloudfront-is-android-viewer",
-        "cloudfront-is-desktop-viewer",
-        "cloudfront-is-ios-viewer",
-        "cloudfront-is-mobile-viewer",
-        "cloudfront-is-smarttv-viewer",
-        "cloudfront-is-tablet-viewer",
-        "cloudfront-viewer-address",
-        "cloudfront-viewer-asn",
-        "cloudfront-viewer-city",
-        "cloudfront-viewer-country",
-        "cloudfront-viewer-country-name",
-        "cloudfront-viewer-country-region",
-        "cloudfront-viewer-country-region-name",
-        "cloudfront-viewer-http-version",
-        "cloudfront-viewer-latitude",
-        "cloudfront-viewer-longitude",
-        "cloudfront-viewer-postal-code",
-        "cloudfront-viewer-time-zone",
-        "cloudfront-viewer-tls",
-        "content-type",
-        "purpose",
-        "trpc-batch-mode",
-        "upgrade-insecure-requests",
-        "x-amz-cf-id",
-        "x-amzn-tls-cipher-suite",
-        "x-amzn-tls-version",
-        "x-amzn-trace-id",
-        "x-forwarded-for",
-        "x-forwarded-host",
-        "x-forwarded-port",
-        "x-forwarded-proto",
-        "x-trpc-source",
-      ],
+      allowHeaders: ALLOWED_HEADERS,
     },
     routes: {
       "ANY /{proxy+}": "./apps/backend/src/index.handler",
