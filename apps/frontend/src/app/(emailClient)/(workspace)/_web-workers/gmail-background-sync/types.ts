@@ -3,5 +3,8 @@ export type GmailBackgroundSyncParams = {
 };
 
 export type GmailBackgroundSyncWorker = {
-  postMessage: (message: GmailBackgroundSyncParams) => void;
-} & Omit<Worker, "postMessage">;
+  port: {
+    postMessage: (params: GmailBackgroundSyncParams) => void;
+    start: () => void;
+  };
+} & Omit<SharedWorker, "port">;

@@ -48,24 +48,22 @@ export const ClientLayout = () => {
       .filter((syncInfo) => !syncInfo.full_sync_completed_on)
       .map((syncInfo) => syncInfo.user_email_address);
 
-    const createdWorkers = unsyncedEmailAddresses.map((emailAddress) => {
-      const newWorker: GmailBackgroundSyncWorker = new Worker(
+    // const createdWorkers =
+    unsyncedEmailAddresses.map((emailAddress) => {
+      // GmailBackgroundSyncWorker
+      const newWorker: GmailBackgroundSyncWorker = new SharedWorker(
         new URL(
           "./_web-workers/gmail-background-sync/worker.ts",
           import.meta.url,
         ),
       );
-      newWorker.postMessage({
+      newWorker.port.start();
+      newWorker.port.postMessage({
         emailAddress,
       });
       return newWorker;
     });
-
-    // close workers on unmount
-    return () => {
-      // close workers
-      createdWorkers.forEach((worker) => worker.terminate());
-    };
+    // shared workers close automatically when all ports are closed
   }, [allSyncInfo]);
 
   // partial sync emails
