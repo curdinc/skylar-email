@@ -47,8 +47,7 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
           ? [`https://${BASE_CUSTOM_DOMAIN}`]
           : [
               frontendPreviewCustomDomainWithProtocol,
-              "http://localhost:3000",
-              "https://skylar-frontend-winston.loca.lt",
+              "http://localhost:3000"
             ],
       allowCredentials: true,
       allowHeaders: ALLOWED_HEADERS,
