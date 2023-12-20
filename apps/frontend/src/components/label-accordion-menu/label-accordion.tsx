@@ -7,7 +7,7 @@ import { filterForLabels } from "@skylar/client-db";
 import { Icons } from "~/components/icons";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
-import { useListLabels } from "../../app/(emailClient)/(workspace)/use-list-labels";
+import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";
 import { MessageList } from "./message-list";
 
 /**

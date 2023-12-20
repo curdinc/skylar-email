@@ -2,7 +2,7 @@
 
 import "allotment/dist/style.css";
 
-import { EmailAccountNav } from "~/components/nav/email-account-nav";
+import { InboxSideNav } from "~/components/nav/inbox/side-nav";
 
 export default function EmailClientLayout({
   children,
@@ -11,7 +11,7 @@ export default function EmailClientLayout({
 }) {
   return (
     <div className="flex grow">
-      <EmailAccountNav className="p-5" />
+      <InboxSideNav className="p-5" />
       <main className=" w-full">{children}</main>
     </div>
   );
