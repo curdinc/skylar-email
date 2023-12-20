@@ -13,6 +13,7 @@ import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { cn } from "~/lib/ui";
+import { Button } from "../ui/button";
 
 /**
  *
@@ -54,7 +55,7 @@ export function MessageList({
     getScrollElement: () => parentRef.current,
     estimateSize: () => 40,
     overscan: 3,
-    paddingEnd: hasNextPage ? 50 : undefined,
+    paddingEnd: hasNextPage ? 40 : undefined,
   });
 
   const { ref: hasNextPageInViewRef, inView: hasNextPageInView } = useInView();
@@ -117,13 +118,14 @@ export function MessageList({
               );
             })}
             {hasNextPage && (
-              <button
+              <Button
                 ref={hasNextPageInViewRef}
                 onClick={onClickLoadMore}
-                className="absolute bottom-0 left-0 flex h-[50px] justify-start"
+                variant={"ghost"}
+                className="absolute bottom-0 left-0 flex h-10 w-full justify-center"
               >
                 Load more
-              </button>
+              </Button>
             )}
           </div>
         </div>
