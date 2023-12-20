@@ -85,6 +85,11 @@ export function EmailAccountSelect({ className, ...props }: ButtonProps) {
                   ALT {idx + 1}
                 </DropdownMenuShortcut>
               )}
+              {idx === 9 && (
+                <DropdownMenuShortcut className="whitespace-nowrap">
+                  ALT {0}
+                </DropdownMenuShortcut>
+              )}
             </Link>
           </DropdownMenuItem>
         ))}

@@ -66,6 +66,16 @@ export type State = {
     openSpotlightSearch: string;
     goNextThread: string;
     goPreviousThread: string;
+    inboxOne: string;
+    inboxTwo: string;
+    inboxThree: string;
+    inboxFour: string;
+    inboxFive: string;
+    inboxSix: string;
+    inboxSeven: string;
+    inboxEight: string;
+    inboxNine: string;
+    inboxTen: string;
   };
 };
 
@@ -134,6 +144,16 @@ export const useGlobalStore = create(
       openSpotlightSearch: "$mod+p",
       goNextThread: "ArrowRight",
       goPreviousThread: "ArrowLeft",
+      inboxOne: "Alt+1",
+      inboxTwo: "Alt+2",
+      inboxThree: "Alt+3",
+      inboxFour: "Alt+4",
+      inboxFive: "Alt+5",
+      inboxSix: "Alt+6",
+      inboxSeven: "Alt+7",
+      inboxEight: "Alt+8",
+      inboxNine: "Alt+9",
+      inboxTen: "Alt+0",
     },
   })),
 );
@@ -142,9 +162,12 @@ export const useOptimizedGlobalStore = <T>(arg: (state: State) => T) => {
   return useGlobalStore(useShallow(arg));
 };
 
-// Computed states
+// Computed / convenient hooks states
 export const useAllShortcutNames = () =>
   useOptimizedGlobalStore((state) => Object.keys(state.SHORTCUT));
+export const useShortcuts = () => {
+  return useOptimizedGlobalStore((state) => state.SHORTCUT);
+};
 
 // Actions
 export const setAlphaCode: Actions["setAlphaCode"] = (code) =>

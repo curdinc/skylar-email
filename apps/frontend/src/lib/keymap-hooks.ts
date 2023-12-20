@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import {
@@ -7,7 +8,7 @@ import {
   setIsSelecting,
   setReplyMessageType,
   useGlobalStore,
-  useOptimizedGlobalStore,
+  useShortcuts,
 } from "@skylar/logic";
 import type { KeyBindingMap } from "@skylar/tinykeys";
 import { tinyKeys } from "@skylar/tinykeys";
@@ -27,20 +28,28 @@ const isEventTargetInputOrTextArea = (eventTarget: EventTarget | null) => {
 };
 
 export function useInboxKeymaps() {
-  const shortcut = useOptimizedGlobalStore((state) => ({
-    spotlight: state.SHORTCUT.openSpotlightSearch,
-    compose: state.SHORTCUT.compose,
-    forward: state.SHORTCUT.forward,
-    replyAll: state.SHORTCUT.replyAll,
-    replySender: state.SHORTCUT.replySender,
-    goNextThread: state.SHORTCUT.goNextThread,
-    goPreviousThread: state.SHORTCUT.goPreviousThread,
-    close: state.SHORTCUT.close,
-  }));
+  const shortcut = useShortcuts();
+  const router = useRouter();
   useEffect(() => {
-    const ALWAYS_ON_KEYS = [shortcut.spotlight, shortcut.close];
+    const goToInbox = (key: string) => {
+      return () => router.push(`/${key}`);
+    };
+    const ALWAYS_ON_KEYS = [
+      shortcut.openSpotlightSearch,
+      shortcut.close,
+      shortcut.inboxOne,
+      shortcut.inboxTwo,
+      shortcut.inboxThree,
+      shortcut.inboxFour,
+      shortcut.inboxFive,
+      shortcut.inboxSix,
+      shortcut.inboxSeven,
+      shortcut.inboxEight,
+      shortcut.inboxNine,
+      shortcut.inboxTen,
+    ];
     const keyMap: KeyBindingMap = {
-      [shortcut.spotlight]: (e) => {
+      [shortcut.openSpotlightSearch]: (e) => {
         console.warn("launch spotlight search", e.key, e.code);
       },
       [shortcut.close]: () => {
@@ -126,6 +135,16 @@ export function useInboxKeymaps() {
           });
         }
       },
+      [shortcut.inboxOne]: goToInbox("1"),
+      [shortcut.inboxTwo]: goToInbox("2"),
+      [shortcut.inboxThree]: goToInbox("3"),
+      [shortcut.inboxFour]: goToInbox("4"),
+      [shortcut.inboxFive]: goToInbox("5"),
+      [shortcut.inboxSix]: goToInbox("6"),
+      [shortcut.inboxSeven]: goToInbox("7"),
+      [shortcut.inboxEight]: goToInbox("8"),
+      [shortcut.inboxNine]: goToInbox("9"),
+      [shortcut.inboxTen]: goToInbox("10"),
     };
     const wrappedBindings = Object.fromEntries(
       Object.entries(keyMap).map(([key, handler]) => [
@@ -144,11 +163,22 @@ export function useInboxKeymaps() {
     const unsubscribe = tinyKeys(window, wrappedBindings);
     return unsubscribe;
   }, [
+    router,
     shortcut.close,
     shortcut.compose,
     shortcut.forward,
+    shortcut.inboxEight,
+    shortcut.inboxFive,
+    shortcut.inboxFour,
+    shortcut.inboxNine,
+    shortcut.inboxOne,
+    shortcut.inboxSeven,
+    shortcut.inboxSix,
+    shortcut.inboxTen,
+    shortcut.inboxThree,
+    shortcut.inboxTwo,
+    shortcut.openSpotlightSearch,
     shortcut.replyAll,
     shortcut.replySender,
-    shortcut.spotlight,
   ]);
 }
