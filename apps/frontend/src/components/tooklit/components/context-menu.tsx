@@ -9,6 +9,7 @@ import {
   ContextMenuItem,
   ContextMenuPortal,
   ContextMenuSeparator,
+  ContextMenuShortcut,
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,
@@ -118,11 +119,14 @@ export function ThreadContextMenu({
 
   const displayContextOption = <T,>(option: ConfigOption<T>, ...args: T[]) => {
     return (
-      <ContextMenuItem inset onClick={runAction(option, ...args)}>
+      <ContextMenuItem onClick={runAction(option, ...args)}>
         <div className="flex items-center gap-2">
           <option.icon className="h-4 w-4" />
           <div>{option.name}</div>
         </div>
+        {option.shortcut && (
+          <ContextMenuShortcut>{option.shortcut}</ContextMenuShortcut>
+        )}
       </ContextMenuItem>
     );
   };

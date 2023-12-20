@@ -47,6 +47,7 @@ export const getThreadActions = (
           thread: thread,
         });
       },
+      shortcut: "f",
     },
     replySender: {
       type: "non-reversible-action",
@@ -69,6 +70,7 @@ export const getThreadActions = (
           });
         }
       },
+      shortcut: "r",
     },
     replyAll: {
       type: "non-reversible-action",
@@ -88,6 +90,7 @@ export const getThreadActions = (
           setReplyMessageType({ thread, replyType: "reply-all" });
         }
       },
+      shortcut: "Shift R",
     },
     trashThread: {
       type: "reversible-action",
