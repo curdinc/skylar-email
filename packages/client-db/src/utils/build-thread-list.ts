@@ -1,39 +1,7 @@
 import type { MessageType, ThreadType } from "@skylar/parsers-and-types";
 
 import { bulkGetThreads } from "../message/bulk-get-threads";
-
-const USELESS_WORDS = [
-  "",
-  " ",
-  "-",
-  "–",
-  "&",
-  "!",
-  "!!",
-  "*",
-  ":",
-  ">",
-  "<",
-  ",",
-  "(",
-  ")",
-];
-
-function buildSearchableString(text: string) {
-  const allWordsIncludingDuplicates = text.split(" ");
-  const wordSet = allWordsIncludingDuplicates.reduce(function (prev, current) {
-    if (USELESS_WORDS.includes(current)) {
-      return prev;
-    }
-    const firstAlphaIndex = current.search(/[a-z]/i);
-    // converts "\"This\"" to "this" so that we can search for "this" and find "\"This\"""
-    const firstAlpha = current.substring(firstAlphaIndex).toLowerCase();
-
-    prev.add(firstAlpha);
-    return prev;
-  }, new Set<string>());
-  return Array.from(wordSet);
-}
+import { buildSearchableString } from "./build-searchable-string";
 
 export async function buildThreadList(messages: MessageType[]) {
   const emailProviderThreadIds = messages.map(
