@@ -14,14 +14,14 @@ import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { cn } from "~/lib/ui";
 import { Button } from "../ui/button";
-import { DATA_LABEL, getThreadDataListItem } from "./utils";
+import { DATA_LABEL, getThreadDataListItem } from "./focus-label-accordion";
 
 /**
  *
  * @param {string} uniqueListId: The unique id of the list
  * @returns The component that renders all the messages of a user for a given set of filter
  */
-export function MessageList({
+export function ThreadList({
   filters,
   uniqueListId,
   dataListItemLabel,

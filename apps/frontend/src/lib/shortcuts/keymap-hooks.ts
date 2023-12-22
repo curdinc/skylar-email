@@ -15,7 +15,7 @@ import {
   goDownMessageList,
   goUpMessageList,
   openLabelOrGoToNextLabel,
-} from "~/components/label-accordion-menu/utils";
+} from "~/components/label-accordion-menu/focus-label-accordion";
 import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
 import { registerShortcuts } from "./register-shortcuts";

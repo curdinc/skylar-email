@@ -11,12 +11,12 @@ export function InboxSideNav({
 }: React.HTMLAttributes<HTMLElement>) {
   return (
     <nav className={cn("flex h-full flex-col gap-6", className)} {...props}>
-      <Button variant="ghost" size="icon-md">
-        <Icons.inbox />
+      <Button variant="secondary" size="icon-md">
+        <Icons.inbox className="h-5 w-5" />
       </Button>
-      <Button variant="ghost" size="icon-md">
+      {/* <Button variant="ghost" size="icon-md">
         <Icons.search />
-      </Button>
+      </Button> */}
 
       <div className="flex flex-grow items-end">
         <EmailAccountSelect />

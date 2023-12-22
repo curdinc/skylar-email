@@ -9,8 +9,8 @@ import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
 import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";
-import { MessageList } from "./message-list";
-import { getLabelDataListItem } from "./utils";
+import { getLabelDataListItem } from "./focus-label-accordion";
+import { ThreadList } from "./thread-list";
 
 /**
  * @returns The component that renders all the labels of a user and the corresponding messages
@@ -74,7 +74,7 @@ export const LabelAccordion = () => {
               {ButtonIcon} {label.name}
             </button>
             {visibleLabels[label.id] && (
-              <MessageList
+              <ThreadList
                 filters={[filterForLabels([label.id])]}
                 uniqueListId={label.id}
                 dataListItemLabel={label.id}
