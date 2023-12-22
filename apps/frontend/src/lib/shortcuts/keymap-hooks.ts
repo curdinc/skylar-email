@@ -154,7 +154,6 @@ export const useGlobalKeymap = () => {
         description: "Reply to everyone on the message",
         label: "message.reply-all",
         onKeyDown: () => {
-          console.log("key fired");
           const activeThread =
             useGlobalStore.getState().EMAIL_CLIENT.activeThread;
           if (activeThread) {
