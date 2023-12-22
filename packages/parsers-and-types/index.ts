@@ -30,5 +30,6 @@ export * from "./src/constants/email-providers";
 export * from "./src/client-db-schema/message";
 export * from "./src/client-db-schema/provider";
 export * from "./src/client-db-schema/shared";
+export * from "./src/client-db-schema/shortcut";
 export * from "./src/client-db-schema/sync";
 export * from "./src/client-db-schema/thread";
