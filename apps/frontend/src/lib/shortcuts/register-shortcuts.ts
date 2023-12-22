@@ -11,7 +11,9 @@ const isEventTargetInputOrTextArea = (eventTarget: EventTarget | null) => {
 };
 
 export const registerShortcuts = (
-  shortcuts: (ShortcutInsertType & { onKeyDown: () => void })[],
+  shortcuts: (ShortcutInsertType & {
+    onKeyDown: (event: KeyboardEvent) => void;
+  })[],
 ) => {
   bulkRegisterShortcut(shortcuts).catch((e) => {
     console.error("Something went wrong saving shortcuts to clientDb", e);
@@ -29,6 +31,8 @@ export const registerShortcuts = (
     Object.entries(keyMap).map(([key, handler]) => [
       key,
       (event: KeyboardEvent) => {
+        console.log("event.key", event.key);
+        console.log("event.altKey", event.altKey);
         if (
           !isEventTargetInputOrTextArea(event.target) ||
           activeDuringInput.includes(event.key)

@@ -125,7 +125,8 @@ const downMessageListWithoutNextSibling = (activeElement: Element) => {
   }
 };
 
-export const goUpMessageList = () => {
+export const goUpMessageList = (e: KeyboardEvent) => {
+  e.preventDefault();
   const active = document.activeElement;
   // If no message is focused, focus the first thing on the list
   if (!isActiveElementInLabelAccordion(active)) {
@@ -150,7 +151,8 @@ export const goUpMessageList = () => {
   }
 };
 
-export const goDownMessageList = () => {
+export const goDownMessageList = (e: KeyboardEvent) => {
+  e.preventDefault();
   const active = document.activeElement;
   if (!isActiveElementInLabelAccordion(active)) {
     return focusLabelAccordion();

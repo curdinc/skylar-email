@@ -49,7 +49,7 @@ export function EmailAccountSelect({ className, ...props }: ButtonProps) {
       className={className}
       {...props}
     >
-      <Skeleton className="h-10 w-10 rounded-full" />
+      <Skeleton className="h-7 w-7 rounded-full" />
     </Button>
   );
   if (!isLoading && activeProviderInfo) {
