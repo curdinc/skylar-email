@@ -14,19 +14,27 @@ export const registerShortcuts = (
   shortcuts: (ShortcutInsertType & {
     onKeyDown: (event: KeyboardEvent) => void;
   })[],
+  existingShortcuts?: ShortcutInsertType[],
 ) => {
   bulkRegisterShortcut(shortcuts).catch((e) => {
     console.error("Something went wrong saving shortcuts to clientDb", e);
   });
 
+  const existingKeyMap = Object.fromEntries(
+    existingShortcuts?.map((shortcut) => [shortcut.label, shortcut.combo]) ??
+      [],
+  );
+
   const keyMap: KeyBindingMap = {};
   const activeDuringInput: string[] = [];
   shortcuts.forEach((shortcut) => {
-    keyMap[shortcut.combo] = shortcut.onKeyDown;
+    const existingCombo = existingKeyMap[shortcut.label];
+    keyMap[existingCombo ?? shortcut.combo] = shortcut.onKeyDown;
     if (shortcut?.keepActiveDuringInput) {
       activeDuringInput.push(shortcut.combo);
     }
   });
+
   const wrappedBindings = Object.fromEntries(
     Object.entries(keyMap).map(([key, handler]) => [
       key,
