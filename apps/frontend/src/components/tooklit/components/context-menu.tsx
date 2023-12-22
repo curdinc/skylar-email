@@ -133,8 +133,7 @@ export function ThreadContextMenu({
 
   return (
     <ContextMenu>
-      {/*  className="flex h-[150px] w-[300px] items-center justify-center rounded-md border border-dashed text-sm" */}
-      <ContextMenuTrigger>{children}</ContextMenuTrigger>
+      <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-64">
         {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.replySender)}
         {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.replyAll)}
