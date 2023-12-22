@@ -14,28 +14,6 @@ import type {
   ValidReplyMessageOptionsType,
 } from "@skylar/parsers-and-types";
 
-export type EmailListData =
-  | {
-      meta: {
-        canMove: boolean;
-        canRename: boolean;
-        isFolder: boolean;
-        isVisible: boolean;
-      };
-      isLabel: true;
-      label: { name: string; id: string };
-    }
-  | {
-      meta: {
-        isVisible: boolean;
-        canMove: boolean;
-        canRename: boolean;
-        isFolder: boolean;
-      };
-      isLabel: false;
-      thread: ThreadType;
-    };
-
 export type State = {
   ONBOARDING: { alphaCode: string };
   SETTINGS: {
@@ -47,6 +25,9 @@ export type State = {
     CONTEXT_MENU: {
       mostRecentlyAffectedThreads: ThreadType[];
     };
+    MESSAGE_LIST: {
+      activeMessageIndexes: Record<string, number | undefined>;
+    };
     activeThread: ThreadType | undefined;
     COMPOSING: {
       messageType: AllComposeMessageOptionsType;
@@ -56,16 +37,6 @@ export type State = {
       respondingMessageString: string;
       attachments: { file: File; data: string; preview?: string }[];
     };
-  };
-  SHORTCUT: {
-    close: string;
-    compose: string;
-    replyAll: string;
-    replySender: string;
-    forward: string;
-    openSpotlightSearch: string;
-    goNextThread: string;
-    goPreviousThread: string;
   };
 };
 
@@ -84,7 +55,6 @@ type Actions = {
   setRespondingMessageString: (
     setRespondingMessageString: State["EMAIL_CLIENT"]["COMPOSING"]["respondingMessageString"],
   ) => void;
-  setShortcuts: (shortcuts: Partial<State["SHORTCUT"]>) => void;
   setMostRecentlyAffectedThreads: (affectedThreads: ThreadType[]) => void;
   setAttachments: (
     updateFn: (
@@ -98,6 +68,10 @@ type Actions = {
     isSelecting: State["EMAIL_CLIENT"]["COMPOSING"]["isSelecting"],
   ) => void;
   setComposeMessageType: (emailType: ValidComposeMessageOptionsType) => void;
+  setActiveMessageIndexes: (
+    label: string,
+    activeMessageIndex: State["EMAIL_CLIENT"]["MESSAGE_LIST"]["activeMessageIndexes"][keyof State["EMAIL_CLIENT"]["MESSAGE_LIST"]["activeMessageIndexes"]],
+  ) => void;
 };
 
 // Core states
@@ -108,6 +82,9 @@ export const useGlobalStore = create(
         mostRecentlyAffectedThreads: [],
       },
       activeThread: undefined,
+      MESSAGE_LIST: {
+        activeMessageIndexes: {},
+      },
       COMPOSING: {
         messageType: "none",
         respondingMessageString: "",
@@ -125,16 +102,6 @@ export const useGlobalStore = create(
     ONBOARDING: {
       alphaCode: "",
     },
-    SHORTCUT: {
-      close: "Escape",
-      compose: "c",
-      forward: "f",
-      replyAll: "r",
-      replySender: "Shift+R",
-      openSpotlightSearch: "$mod+p",
-      goNextThread: "ArrowRight",
-      goPreviousThread: "ArrowLeft",
-    },
   })),
 );
 
@@ -142,22 +109,12 @@ export const useOptimizedGlobalStore = <T>(arg: (state: State) => T) => {
   return useGlobalStore(useShallow(arg));
 };
 
-// Computed states
-export const useAllShortcutNames = () =>
-  useOptimizedGlobalStore((state) => Object.keys(state.SHORTCUT));
+// Computed / convenient hooks states
 
 // Actions
 export const setAlphaCode: Actions["setAlphaCode"] = (code) =>
   useGlobalStore.setState((state) => {
     state.ONBOARDING.alphaCode = code;
-  });
-
-export const setShortcuts: Actions["setShortcuts"] = (shortcuts) =>
-  useGlobalStore.setState((state) => {
-    state.SHORTCUT = {
-      ...state.SHORTCUT,
-      ...shortcuts,
-    };
   });
 
 export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"] =
@@ -167,6 +124,7 @@ export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"]
     });
 
 export const setActiveThread: Actions["setActiveThread"] = (thread) => {
+  window.location.hash = `#${thread?.provider_thread_id ?? ""}`;
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.activeThread = thread;
   });
@@ -277,5 +235,15 @@ export const setComposeMessageType: Actions["setComposeMessageType"] = (
 ) => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.messageType = messageType;
+  });
+};
+
+export const setActiveMessageIndexes: Actions["setActiveMessageIndexes"] = (
+  label,
+  activeMessageIndex,
+) => {
+  useGlobalStore.setState((state) => {
+    state.EMAIL_CLIENT.MESSAGE_LIST.activeMessageIndexes[label] =
+      activeMessageIndex;
   });
 };

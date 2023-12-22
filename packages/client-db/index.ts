@@ -18,6 +18,12 @@ export * from "./src/provider/get-refresh-token-info-by-email-address";
 export * from "./src/provider/put-provider";
 export * from "./src/provider/update-access-token-by-email-address";
 
+export * from "./src/shortcut/bulk-put-shortcuts";
+export * from "./src/shortcut/bulk-register-shortcut";
+export * from "./src/shortcut/register-shortcut";
+export * from "./src/shortcut/update-shortcut";
+
+export * from "./src/hooks/use-all-shortcut";
 export * from "./src/hooks/use-all-sync-info";
 export * from "./src/hooks/use-connected-providers";
 export * from "./src/hooks/use-email-address-by-id";

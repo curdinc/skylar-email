@@ -18,6 +18,7 @@ export type ConfigOption<T> =
       undoToastConfig: {
         title: string;
       };
+      shortcut?: string;
     }
   | {
       type: "non-reversible-action";
@@ -26,6 +27,7 @@ export type ConfigOption<T> =
       tooltipDescription: string;
       // Does not return a function that will undo the action
       applyFn: (accessToken: string, ...args: T[]) => Promise<void>;
+      shortcut?: string;
     };
 
 export type GetThreads = () => Promise<ThreadType[]>;

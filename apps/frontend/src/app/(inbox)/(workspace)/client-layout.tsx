@@ -18,15 +18,15 @@ import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
-import { useInboxKeymaps } from "~/lib/keymap-hooks";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
+import { useGlobalKeymap } from "~/lib/shortcuts/keymap-hooks";
 import type { GmailBackgroundSyncWorker } from "./_web-workers/gmail-background-sync/types";
 import { useEmailPartialSync } from "./use-email-partial-sync";
 
 // HANDLES PARTIAL SYNCING OF EMAILS and continues incremental sync
 export const ClientLayout = () => {
-  useInboxKeymaps();
+  useGlobalKeymap();
   const router = useRouter();
   const { data: activeEmailAddress } = useActiveEmailAddress();
   const { data: allSyncInfo } = useAllSyncInfo();

@@ -6,7 +6,7 @@ import { Check } from "lucide-react";
 
 import type { ThreadType } from "@skylar/parsers-and-types";
 
-import { useListLabels } from "~/app/(emailClient)/(workspace)/use-list-labels";
+import { useListLabels } from "~/app/(inbox)/(workspace)/use-list-labels";
 import { Button } from "~/components/ui/button";
 import {
   Command,

@@ -7,17 +7,19 @@ import { filterForLabels } from "@skylar/client-db";
 import { Icons } from "~/components/icons";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
-import { useListLabels } from "../../app/(emailClient)/(workspace)/use-list-labels";
-import { MessageList } from "./message-list";
+import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
+import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";
+import { getLabelDataListItem } from "./focus-label-accordion";
+import { ThreadList } from "./thread-list";
 
 /**
  * @returns The component that renders all the labels of a user and the corresponding messages
  */
 export const LabelAccordion = () => {
   const logger = useLogger();
+  useNavigateMessagesKeymap();
   const { data: labels, isLoading } = useListLabels();
   const { data: activeEmailAddress } = useActiveEmailAddress();
-
   const [activeLabels, setActiveLabels] = useState<
     { name: string; id: string }[]
   >([]);
@@ -52,7 +54,7 @@ export const LabelAccordion = () => {
 
   if (!labels) {
     logger.warn("Done loading but no labels found");
-    return;
+    return <div>No labels found</div>;
   }
 
   return (
@@ -65,15 +67,17 @@ export const LabelAccordion = () => {
         return (
           <Fragment key={label.id}>
             <button
+              data-list-item={getLabelDataListItem(label.id)}
               className="sticky top-0 z-10 flex w-full items-center gap-1 bg-secondary px-2 py-1 text-sm"
               onClick={onClickLabel(label.id)}
             >
               {ButtonIcon} {label.name}
             </button>
             {visibleLabels[label.id] && (
-              <MessageList
+              <ThreadList
                 filters={[filterForLabels([label.id])]}
                 uniqueListId={label.id}
+                dataListItemLabel={label.id}
               />
             )}
           </Fragment>
