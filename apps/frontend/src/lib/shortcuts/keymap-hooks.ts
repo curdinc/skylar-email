@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import {
   resetActiveThread,
   resetComposeMessage,
-  setActiveMessageIndexes,
   setComposeMessageType,
   setIsSelecting,
   setReplyMessageType,
@@ -12,8 +11,10 @@ import {
 } from "@skylar/logic";
 
 import {
+  closeCurrentOrGoToPreviousLabel,
   goDownMessageList,
   goUpMessageList,
+  openLabelOrGoToNextLabel,
 } from "~/components/label-accordion-menu/utils";
 import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
@@ -22,86 +23,7 @@ import { registerShortcuts } from "./register-shortcuts";
 // ! Note that shortcuts should not overlap
 // ! For example, if you have a shortcut for "Escape" in one component, you should not have a shortcut for "Escape" in another component.
 // ! This will result in both shortcuts being called when "Escape" is pressed. Probably not what you want.
-export const useNavigateMessagesKeymap = (
-  labelRef: Record<string, HTMLButtonElement>,
-) => {
-  const [activeLabelIndex, setActiveLabelIndex] = useState(0);
-  const activeMessageIndexes = useGlobalStore((state) => {
-    return state.EMAIL_CLIENT.MESSAGE_LIST.activeMessageIndexes;
-  });
-
-  const getActiveMessageIndex = () => {
-    const activeLabel = getActiveLabel();
-    if (!activeLabel) {
-      return;
-    }
-    return activeMessageIndexes[activeLabel];
-  };
-  const getActiveLabel = () => {
-    return Object.keys(labelRef)[activeLabelIndex];
-  };
-  const getActiveLabelRef = () => {
-    const activeLabel = getActiveLabel();
-    if (!activeLabel) {
-      return;
-    }
-    return labelRef[activeLabel];
-  };
-
-  const closeCurrentOrGoToPreviousLabel = () => {
-    const activeMessageIndex = getActiveMessageIndex();
-    if (typeof activeMessageIndex === "number") {
-      const activeLabelRef = getActiveLabelRef();
-      if (activeLabelRef) {
-        activeLabelRef.click();
-        const activeLabel = getActiveLabel();
-        if (activeLabel) {
-          setActiveMessageIndexes(activeLabel, undefined);
-        }
-      }
-    } else {
-      let previousLabelIndex = activeLabelIndex - 1;
-      if (previousLabelIndex < 0) {
-        previousLabelIndex = Object.keys(labelRef).length - 1;
-      }
-      const previousLabel = Object.keys(labelRef)[previousLabelIndex];
-      if (!previousLabel) {
-        return;
-      }
-      const previousLabelRef = labelRef[previousLabel];
-      if (previousLabelRef) {
-        previousLabelRef.focus();
-      }
-      setActiveLabelIndex(previousLabelIndex);
-    }
-  };
-  const openLabelOrGoToNextLabel = () => {
-    const activeMessageIndex = getActiveMessageIndex();
-    if (typeof activeMessageIndex === "undefined") {
-      const activeLabelRef = getActiveLabelRef();
-      if (activeLabelRef) {
-        activeLabelRef.click();
-        const activeLabel = getActiveLabel();
-        if (activeLabel) {
-          setActiveMessageIndexes(activeLabel, 0);
-        }
-      }
-    } else {
-      let nextLabelIndex = activeLabelIndex + 1;
-      if (nextLabelIndex === Object.keys(labelRef).length) {
-        nextLabelIndex = 0;
-      }
-      const nextLabel = Object.keys(labelRef)[nextLabelIndex];
-      if (!nextLabel) {
-        return;
-      }
-      const nextLabelRef = labelRef[nextLabel];
-      if (nextLabelRef) {
-        nextLabelRef.focus();
-      }
-      setActiveLabelIndex(nextLabelIndex);
-    }
-  };
+export const useNavigateMessagesKeymap = () => {
   useEffect(() => {
     const unsubscribe = registerShortcuts([
       {
@@ -130,14 +52,26 @@ export const useNavigateMessagesKeymap = (
       },
       {
         combo: "h",
-        description: "Close current label folder or go previous folder",
+        description: "Close current label or go previous label",
         label: "message.previous-label",
         onKeyDown: closeCurrentOrGoToPreviousLabel,
       },
       {
+        combo: "ArrowLeft",
+        description: "Close current label or go previous label",
+        label: "message.previous-label-alt",
+        onKeyDown: closeCurrentOrGoToPreviousLabel,
+      },
+      {
         combo: "l",
-        description: "Open current label folder or go next folder",
-        label: "message.down-alt",
+        description: "Open current label or go next label",
+        label: "message.next-label",
+        onKeyDown: openLabelOrGoToNextLabel,
+      },
+      {
+        combo: "ArrowRight",
+        description: "Open current label or go next label",
+        label: "message.next-label-alt",
         onKeyDown: openLabelOrGoToNextLabel,
       },
     ]);

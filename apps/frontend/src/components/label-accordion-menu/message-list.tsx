@@ -83,35 +83,14 @@ export function MessageList({
   }, [fetchNextPage, hasNextPageInView]);
 
   if (status === "pending") {
-    return (
-      <div
-        className="px-2 py-1"
-        data-list-item={getThreadDataListItem(dataListItemLabel, 0)}
-      >
-        Loading...
-      </div>
-    );
+    return <div className="px-2 py-1">Loading...</div>;
   }
   if (status === "error") {
-    return (
-      <div
-        className="px-2 py-1"
-        data-list-item={getThreadDataListItem(dataListItemLabel, 0)}
-      >
-        Error: {error.message}
-      </div>
-    );
+    return <div className="px-2 py-1">Error: {error.message}</div>;
   }
 
   if (!allRows.length) {
-    return (
-      <div
-        className="px-2 py-1"
-        data-list-item={getThreadDataListItem(dataListItemLabel, 0)}
-      >
-        No messages yet.
-      </div>
-    );
+    return <div className="px-2 py-1">No messages yet.</div>;
   }
 
   return (

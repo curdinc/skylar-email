@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 import { filterForLabels } from "@skylar/client-db";
 
@@ -17,16 +17,15 @@ import { getLabelDataListItem } from "./utils";
  */
 export const LabelAccordion = () => {
   const logger = useLogger();
+  useNavigateMessagesKeymap();
   const { data: labels, isLoading } = useListLabels();
   const { data: activeEmailAddress } = useActiveEmailAddress();
-  const labelRefs = useRef<Record<string, HTMLButtonElement>>({});
   const [activeLabels, setActiveLabels] = useState<
     { name: string; id: string }[]
   >([]);
   const [visibleLabels, setVisibleLabels] = useState<Record<string, boolean>>(
     {},
   );
-  useNavigateMessagesKeymap(labelRefs.current);
 
   const onClickLabel = (labelId: string) => {
     return () => {
@@ -34,14 +33,6 @@ export const LabelAccordion = () => {
         ...prev,
         [labelId]: !prev[labelId],
       }));
-    };
-  };
-  const assignLabelRef = (label: string) => {
-    return (labelEl: HTMLButtonElement) => {
-      if (!labelEl) {
-        return;
-      }
-      labelRefs.current[label] = labelEl;
     };
   };
 
@@ -79,7 +70,6 @@ export const LabelAccordion = () => {
               data-list-item={getLabelDataListItem(label.id)}
               className="sticky top-0 z-10 flex w-full items-center gap-1 bg-secondary px-2 py-1 text-sm"
               onClick={onClickLabel(label.id)}
-              ref={assignLabelRef(label.id)}
             >
               {ButtonIcon} {label.name}
             </button>
