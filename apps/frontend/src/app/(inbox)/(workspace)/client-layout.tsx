@@ -108,7 +108,6 @@ export const ClientLayout = () => {
         if (!emailData) {
           return updatedEmails;
         }
-        console.log("emailData", emailData);
 
         if (emailData.newMessages.length) {
           const emailToSave = convertGmailEmailToClientDbEmail(
