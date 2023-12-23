@@ -8,6 +8,7 @@ import { useLogger } from "../logger";
 import {
   ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX,
   ROUTE_EMAIL_PROVIDER_INBOX,
+  ROUTE_ONBOARDING_CONNECT,
 } from "../routes";
 
 export const useActiveEmailAddress = () => {
@@ -23,9 +24,19 @@ export const useActiveEmailAddress = () => {
   useEffect(() => {
     const checkValidProviderId = async () => {
       const provider = await getProviderById({ id: providerId });
-      if (!provider && providerId !== ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX) {
+      if (provider) {
+        return;
+      }
+
+      if (providerId !== ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX) {
         router.push(
           ROUTE_EMAIL_PROVIDER_INBOX(ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX),
+        );
+      } else if (providerId === ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX) {
+        router.push(
+          ROUTE_ONBOARDING_CONNECT({
+            type: "initialConnection",
+          }),
         );
       }
     };
