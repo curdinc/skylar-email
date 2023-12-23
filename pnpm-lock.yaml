@@ -93,6 +93,9 @@ importers:
       '@icons-pack/react-simple-icons':
         specifier: ^9.1.0
         version: 9.1.0(react@18.2.0)
+      '@open-draft/deferred-promise':
+        specifier: ^2.2.0
+        version: 2.2.0
       '@radix-ui/react-accordion':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
@@ -159,6 +162,9 @@ importers:
       '@skylar/tinykeys':
         specifier: ^0.1.0
         version: link:../../packages/tinykeys
+      '@skylar/trpc-web-workers':
+        specifier: ^0.1.0
+        version: link:../../packages/trpc-web-workers
       '@stripe/react-stripe-js':
         specifier: ^2.3.0
         version: 2.3.0(@stripe/stripe-js@2.1.5)(react-dom@18.2.0)(react@18.2.0)
@@ -597,6 +603,34 @@ importers:
       '@skylar/tsconfig':
         specifier: ^0.1.0
         version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.48.0
+        version: 8.48.0
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
+  packages/trpc-web-workers:
+    dependencies:
+      '@open-draft/deferred-promise':
+        specifier: ^2.2.0
+        version: 2.2.0
+    devDependencies:
+      '@skylar/eslint-config':
+        specifier: 0.2.0
+        version: link:../../tooling/eslint
+      '@skylar/prettier-config':
+        specifier: ^0.1.0
+        version: link:../../tooling/prettier
+      '@skylar/tsconfig':
+        specifier: ^0.1.0
+        version: link:../../tooling/typescript
+      '@trpc/client':
+        specifier: 10.7.1-alpha-next-2023-10-20-20-37-31.88
+        version: 10.7.1-alpha-next-2023-10-20-20-37-31.88(@trpc/server@10.7.1-alpha-next-2023-10-20-20-37-31.88)
+      '@trpc/server':
+        specifier: 10.7.1-alpha-next-2023-10-20-20-37-31.88
+        version: 10.7.1-alpha-next-2023-10-20-20-37-31.88
       eslint:
         specifier: ^8.48.0
         version: 8.48.0
@@ -3116,6 +3150,10 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
+  /@open-draft/deferred-promise@2.2.0:
+    resolution: {integrity: sha512-CecwLWx3rhxVQF6V4bAgPS5t+So2sTbPgAzafKkVizyi7tlwpcFpdFqq+wqF2OwNBmqFuu6tOyouTuxgpMfzmA==}
+    dev: false
+
   /@peculiar/asn1-schema@2.3.8:
     resolution: {integrity: sha512-ULB1XqHKx1WBU/tTFIA+uARuRoBVZ4pNdOA878RDrRbBfBGcSzi5HBkdScC6ZbHn8z7L8gmKCgPC1LHRrP46tA==}
     dependencies:
@@ -5080,7 +5118,6 @@ packages:
       '@trpc/server': 10.7.1-alpha-next-2023-10-20-20-37-31.88+7387cdea
     dependencies:
       '@trpc/server': 10.7.1-alpha-next-2023-10-20-20-37-31.88
-    dev: false
 
   /@trpc/next@10.7.1-alpha-next-2023-10-20-20-37-31.88(@tanstack/react-query@5.0.0)(@trpc/client@10.7.1-alpha-next-2023-10-20-20-37-31.88)(@trpc/react-query@10.7.1-alpha-next-2023-10-20-20-37-31.88)(@trpc/server@10.7.1-alpha-next-2023-10-20-20-37-31.88)(next@13.5.4)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-eC3ovs16N1i383NJ2AfRHBJrc0hwpdbjm6tcNZf93bJB/zbFF/kXnwqOvmcxDqSfmtuJArb/rzkjrawqNmyp9Q==}
@@ -5121,7 +5158,6 @@ packages:
 
   /@trpc/server@10.7.1-alpha-next-2023-10-20-20-37-31.88:
     resolution: {integrity: sha512-HX2INKvt+qZRmGSB8VO3n0A5CVnuU5BadoN/OEHGEtnxi1xYw1OeVDOrzimRM27zXbC5DZolilsZHoXsvxOuvw==}
-    dev: false
 
   /@trpc/server@9.16.0:
     resolution: {integrity: sha512-IENsJs41ZR4oeFUJhsNNTSgEOtuRN0m9u7ec4u3eG/qOc7bIoo1nDoYtx4bl6OJJSQYEytG9tlcVz9G8OAaHbg==}
