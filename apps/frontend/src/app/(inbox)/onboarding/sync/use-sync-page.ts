@@ -40,7 +40,7 @@ export function useSyncPage() {
       const providers = await getAllProviders();
       if (!providers?.length) {
         // nothing connected, go connect first
-        router.push(ROUTE_ONBOARDING_CONNECT);
+        router.push(ROUTE_ONBOARDING_CONNECT({ type: "initialConnection" }));
         return;
       }
 

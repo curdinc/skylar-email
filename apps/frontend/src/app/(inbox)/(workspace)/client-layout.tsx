@@ -74,7 +74,7 @@ export const ClientLayout = () => {
 
       const connectedProviders = await getAllProviders();
       if (!connectedProviders.length) {
-        router.push(ROUTE_ONBOARDING_CONNECT);
+        router.push(ROUTE_ONBOARDING_CONNECT({ type: "initialConnection" }));
         return updatedEmails;
       }
 

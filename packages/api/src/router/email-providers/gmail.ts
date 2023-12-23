@@ -19,6 +19,11 @@ export const gmailRouter = createTRPCRouter({
         refreshToken: input.refreshToken,
       });
 
-      return accessTokenResponse.access_token;
+      return {
+        accessToken: accessTokenResponse.access_token,
+        expiresIn: accessTokenResponse.expires_in,
+        scope: accessTokenResponse.scope,
+        tokenType: accessTokenResponse.token_type,
+      };
     }),
 });

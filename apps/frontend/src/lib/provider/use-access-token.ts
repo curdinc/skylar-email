@@ -26,7 +26,7 @@ export function useAccessToken() {
         return access_token;
       }
 
-      const accessToken = await fetchAccessToken({
+      const { accessToken } = await fetchAccessToken({
         email: email,
         refreshToken: refresh_token,
       });

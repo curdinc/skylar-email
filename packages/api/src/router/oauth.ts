@@ -40,6 +40,7 @@ export const oauthRouter = createTRPCRouter({
         idToken: parsedResponse.id_token,
         accessToken: parsedResponse.access_token,
         tokenType: parsedResponse.token_type,
+        expiresIn: parsedResponse.expires_in,
         scope: parsedResponse.scope,
         providerType: input.provider,
         providerInfo: {

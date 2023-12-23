@@ -95,7 +95,7 @@ export function EmailAccountSelect({ className, ...props }: ButtonProps) {
         ))}
         <DropdownMenuItem>
           <Link
-            href={ROUTE_ONBOARDING_CONNECT}
+            href={ROUTE_ONBOARDING_CONNECT({ type: "initialConnection" })}
             className="flex w-full items-center gap-2"
           >
             <Icons.add className="h-6 w-6" />
