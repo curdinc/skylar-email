@@ -1,7 +1,7 @@
 <a href="https://curdinc.com/" target="_blank" rel="noopener">
   <picture>
     <source media="(prefers-color-scheme: dark)" alt="Skylar" srcset="https://github.com/curdinc/skylar-email/assets/44563205/96db0564-f2f7-4041-a68b-05a90630aae2" />
-    <img alt="Excalidraw" src="https://excalidraw.nyc3.cdn.digitaloceanspaces.com/github/excalidraw_github_cover_2.png" />
+    <img alt="Skylar" src="https://github.com/curdinc/skylar-email/assets/44563205/96db0564-f2f7-4041-a68b-05a90630aae2" />
   </picture>
 </a>
 
