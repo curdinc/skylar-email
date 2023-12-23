@@ -74,7 +74,7 @@ export const ClientLayout = () => {
 
       const connectedProviders = await getAllProviders();
       if (!connectedProviders.length) {
-        router.push(ROUTE_ONBOARDING_CONNECT);
+        router.push(ROUTE_ONBOARDING_CONNECT({ type: "initialConnection" }));
         return updatedEmails;
       }
 
@@ -108,6 +108,7 @@ export const ClientLayout = () => {
         if (!emailData) {
           return updatedEmails;
         }
+        console.log("emailData", emailData);
 
         if (emailData.newMessages.length) {
           const emailToSave = convertGmailEmailToClientDbEmail(

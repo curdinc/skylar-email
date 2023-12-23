@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
 
@@ -15,12 +15,28 @@ import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { api } from "~/lib/api";
 import { GMAIL_SCOPES } from "~/lib/config";
 import { useLogger } from "~/lib/logger";
+import { hasRequiredGmailScopes } from "~/lib/provider/hasGmailScopes";
+import type { ROUTE_ONBOARDING_CONNECT } from "~/lib/routes";
 import { ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 
 export function useConnectEmailProviderPage() {
   const router = useRouter();
   const logger = useLogger();
   const { toast } = useToast();
+  const queryParams = useSearchParams();
+  let connectToEmailDescription = "Connect to your email to get started.";
+  if (
+    "type" in queryParams &&
+    queryParams.type ===
+      ("missingScopes" satisfies Parameters<
+        typeof ROUTE_ONBOARDING_CONNECT
+      >[0]["type"]) &&
+    "email" in queryParams &&
+    typeof queryParams.email === "string"
+  ) {
+    const email = queryParams.email;
+    connectToEmailDescription = `${email} is missing some required scopes. Please connect it again to grant the required scopes.`;
+  }
 
   const [providerType, setProviderType] =
     useState<SupportedEmailProviderType>("gmail");
@@ -56,6 +72,19 @@ export function useConnectEmailProviderPage() {
 
   const { mutate: exchangeCode } = api.oauth.googleCodeExchange.useMutation({
     onSuccess(emailProviderInfo) {
+      const hasGrantedRequiredGmailScopes =
+        hasRequiredGmailScopes(emailProviderInfo);
+
+      if (!hasGrantedRequiredGmailScopes) {
+        toast({
+          title: "Error connecting to email provider",
+          description: "Please make sure to enable the requested scopes",
+          variant: "destructive",
+        });
+
+        setIsConnectingToProvider(false);
+        return;
+      }
       addProvider({
         type: emailProviderInfo.providerType,
         user_email_address: emailProviderInfo.providerInfo.email,
@@ -111,6 +140,7 @@ export function useConnectEmailProviderPage() {
   }, []);
 
   return {
+    connectToEmailDescription,
     onSelectEmailProvider,
     providerType,
     providerTypeDisplayName:

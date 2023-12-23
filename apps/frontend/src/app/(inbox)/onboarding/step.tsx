@@ -29,7 +29,7 @@ export function Step() {
               "flex h-5 w-5 items-center justify-center rounded-full bg-muted text-xs font-semibold text-muted-foreground",
               "bg-primary text-primary-foreground",
             )}
-            href={ROUTE_ONBOARDING_CONNECT}
+            href={ROUTE_ONBOARDING_CONNECT({ type: "initialConnection" })}
           >
             1
           </a>
