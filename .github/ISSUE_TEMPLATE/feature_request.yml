@@ -24,6 +24,11 @@ body:
       required: true
   - type: textarea
     attributes:
+      label: Describe how you are currently  working around the issue
+      description: Please describe any workarounds that you currently have to mitigate the current issue.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
       label: Additional information
-      description: Add any other information related to the feature here. If your feature request is related to any issues or discussions, link them here.
-      
+      description: Add any other information related to the feature here. If your feature request is related to any issues or discussions, link them here. Feel free to add screenshots and mocks if you think that'll be helpful too.
