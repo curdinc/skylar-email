@@ -37,11 +37,9 @@ Once it's filed:
 - Once we are able to reproduce the issue, it will be marked `needs-fix`, and potentially other tags.
 - We welcome [contributions](#your-first-code-contribution)!
 
-## Suggesting Enhancements
+## Suggesting Features
 
 This section guides you through submitting feature requests and suggestion for Skylar,
-
-### Before Submitting an Enhancement
 
 - [Search](https://github.com/curdinc/skylar-email/issues) to see if this feature has already been requested in some shape or form. If it has, add to the existing issue instead of opening a new one.
 - [File a new feature request](https://github.com/curdinc/skylar-email/issues/new/choose). As always, more information and detail makes it easier to convince us this should be prioritized over anything else!
@@ -80,7 +78,7 @@ packages
   |   └─ tRPC v10 router definition.
   ├─ client-db
   |   └─ CRUD operation for managing local messages cache
-  ├─ gamil-api
+  ├─ gmail-api
   |   └─ Typesafe wrapper to all the REST calls to the Gmail API
   ├─ message-manager
   |   └─ Collection of functions to compose or extract info reply or forwarded messages so
