@@ -1,5 +1,5 @@
 {
-  "name": "@skylar/parsers-and-types",
+  "name": "@skylar/web-worker-logic",
   "private": true,
   "version": "0.1.0",
   "exports": {
@@ -20,6 +20,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@skylar/client-db": "^0.1.0",
+    "@skylar/gmail-api": "^0.1.0",
+    "@skylar/parsers-and-types": "^0.1.0",
+    "@skylar/trpc-web-workers": "^0.1.0",
+    "superjson": "1.13.1",
     "valibot": "^0.24.1"
   },
   "devDependencies": {

@@ -6,7 +6,7 @@ import {
 } from "@skylar/client-db";
 import { incrementalSync } from "@skylar/gmail-api";
 
-import { convertGmailEmailToClientDbEmail } from "~/lib/email";
+import { convertGmailEmailToClientDbEmail } from "./utils";
 
 const MESSAGES_PER_SYNC = 50;
 
@@ -15,6 +15,7 @@ export async function backgroundSync({
 }: {
   emailAddress: string;
 }) {
+  console.log("syncing in the background");
   const provider = await getProviderByEmailAddress({ emailAddress });
   if (!provider) {
     return;

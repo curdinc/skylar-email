@@ -40,6 +40,7 @@
     "@skylar/parsers-and-types": "^0.1.0",
     "@skylar/tinykeys": "^0.1.0",
     "@skylar/trpc-web-workers": "^0.1.0",
+    "@skylar/web-worker-logic": "^0.1.0",
     "@stripe/react-stripe-js": "^2.3.0",
     "@stripe/stripe-js": "^2.1.5",
     "@tanstack/react-query": "^5.0.0",

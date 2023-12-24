@@ -1,10 +1,9 @@
 import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 
-import type { createTRPCContext } from "@skylar/api";
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
-const t = initTRPC.context<typeof createTRPCContext>().create({
+const t = initTRPC.context().create({
   isServer: false,
   allowOutsideOfServer: true,
   transformer: superjson,
@@ -20,9 +19,12 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 });
 export const gmailWorkerRouter = t.router({
   health: t.procedure.query(() => "OK"),
+  // sendMail: t.procedure.input(validatorTrpcWrapper).mutation(({ input}) => {
+
+  // })
 });
 
-export type GmailWorkerRouterRouter = typeof gmailWorkerRouter;
+export type GmailWorkerRouterType = typeof gmailWorkerRouter;
 
 // async function getAccessToken(emailAddress: string) {
 //   const token = accessTokens.get(emailAddress);
