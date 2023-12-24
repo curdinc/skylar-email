@@ -1,3 +1,5 @@
+export { emailSchema } from "./src/core-parsers";
+
 // GENERAL
 export * from "./src/utils/format";
 export * from "./src/utils/valibot-wrappers";
