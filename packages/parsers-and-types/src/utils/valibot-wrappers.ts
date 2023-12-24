@@ -7,7 +7,6 @@ export function validatorTrpcWrapper<
   T extends BaseSchema<TInput, TOutput>,
 >(schema: T) {
   return (raw: unknown) => {
-    console.log(raw, JSON.stringify(raw, null, 2));
     return valiParse(schema, raw);
   };
 }
