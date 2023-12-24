@@ -22,7 +22,7 @@ import type {
 
 export const getThreadActions = (
   getThreads: GetThreads,
-  activeEmail: string,
+  activeEmailAddress: string,
   afterClientDbUpdate: (() => Promise<void>)[],
 ) => {
   return {
@@ -101,14 +101,13 @@ export const getThreadActions = (
         const threads = await getThreads();
         await trashThreads({
           accessToken,
-          email: activeEmail,
+          email: activeEmailAddress,
           threads: threads,
           afterClientDbUpdate,
         });
         return async () => {
           await untrashThreads({
-            accessToken,
-            email: activeEmail,
+            emailAddress: activeEmailAddress,
             threads: threads,
             afterClientDbUpdate,
           });
@@ -126,16 +125,14 @@ export const getThreadActions = (
       applyFn: async (accessToken: string) => {
         const threads = await getThreads();
         await archiveThreads({
-          accessToken,
           afterClientDbUpdate,
-          email: activeEmail,
+          emailAddress: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await unarchiveThreads({
-            accessToken,
             afterClientDbUpdate,
-            email: activeEmail,
+            emailAddress: activeEmailAddress,
             threads: threads,
           });
         };
@@ -152,16 +149,14 @@ export const getThreadActions = (
       applyFn: async (accessToken: string) => {
         const threads = await getThreads();
         await unarchiveThreads({
-          accessToken,
           afterClientDbUpdate,
-          email: activeEmail,
+          emailAddress: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await archiveThreads({
-            accessToken,
             afterClientDbUpdate,
-            email: activeEmail,
+            emailAddress: activeEmailAddress,
             threads: threads,
           });
         };
@@ -178,16 +173,15 @@ export const getThreadActions = (
       applyFn: async (accessToken: string) => {
         const threads = await getThreads();
         await markReadThreads({
-          accessToken,
           afterClientDbUpdate,
-          email: activeEmail,
+          email: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await markUnreadThreads({
             accessToken,
             afterClientDbUpdate,
-            email: activeEmail,
+            email: activeEmailAddress,
             threads: threads,
           });
         };
@@ -207,14 +201,13 @@ export const getThreadActions = (
         await markUnreadThreads({
           accessToken,
           afterClientDbUpdate,
-          email: activeEmail,
+          email: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await markReadThreads({
-            accessToken,
             afterClientDbUpdate,
-            email: activeEmail,
+            email: activeEmailAddress,
             threads: threads,
           });
         };
@@ -244,18 +237,16 @@ export const getThreadActions = (
         });
 
         await moveThreads({
-          accessToken,
           afterClientDbUpdate,
-          email: activeEmail,
+          emailAddress: activeEmailAddress,
           threads: threads,
           labelsToAdd,
           labelsToRemove,
         });
         return async () => {
           await moveThreads({
-            accessToken,
             afterClientDbUpdate,
-            email: activeEmail,
+            emailAddress: activeEmailAddress,
             threads: threads,
             labelsToAdd: labelsToRemove,
             labelsToRemove: labelsToAdd,

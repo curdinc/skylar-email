@@ -1,5 +1,5 @@
-import { batchModifyLabels } from "@skylar/gmail-api";
 import type { ThreadType } from "@skylar/parsers-and-types";
+import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { updateAndSaveLabels } from "../utils";
 
@@ -27,11 +27,10 @@ export async function markUnreadThreads({
     await func();
   }
 
-  await batchModifyLabels({
-    accessToken,
-    addLabels: labelsToAdd,
-    deleteLabels: labelsToRemove,
-    emailId: email,
+  await gmailApiWorker.label.modify.mutate({
+    addLabelsIds: labelsToAdd,
+    deleteLabelsIds: labelsToRemove,
+    emailAddress: email,
     threadIds: updatedThreads.map((t) => t.provider_thread_id),
   });
 }

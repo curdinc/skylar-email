@@ -20,8 +20,7 @@ export async function untrashAll({
 
   await untrashThreads({
     threads,
-    email,
-    accessToken,
+    emailAddress: email,
     afterClientDbUpdate,
   });
 }

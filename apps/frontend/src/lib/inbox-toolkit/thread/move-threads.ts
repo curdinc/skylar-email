@@ -1,5 +1,5 @@
-import { batchModifyLabels } from "@skylar/gmail-api";
 import type { ThreadType } from "@skylar/parsers-and-types";
+import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { updateAndSaveLabels } from "../utils";
 
@@ -7,15 +7,13 @@ export async function moveThreads({
   threads,
   labelsToAdd,
   labelsToRemove,
-  email,
-  accessToken,
+  emailAddress,
   afterClientDbUpdate,
 }: {
   threads: ThreadType[];
   labelsToAdd: string[][];
   labelsToRemove: string[][];
-  email: string;
-  accessToken: string;
+  emailAddress: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
   const updatedThreads = await updateAndSaveLabels({
@@ -28,11 +26,10 @@ export async function moveThreads({
     await func();
   }
 
-  await batchModifyLabels({
-    accessToken,
-    addLabels: labelsToAdd,
-    deleteLabels: labelsToRemove,
-    emailId: email,
+  await gmailApiWorker.label.modify.mutate({
+    addLabelsIds: labelsToAdd,
+    deleteLabelsIds: labelsToRemove,
+    emailAddress,
     threadIds: updatedThreads.map((t) => t.provider_thread_id),
   });
 }
