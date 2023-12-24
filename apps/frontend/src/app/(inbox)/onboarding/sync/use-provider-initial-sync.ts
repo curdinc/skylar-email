@@ -34,7 +34,7 @@ export const useProviderInitialSync = () => {
   const providersSyncing = Object.keys(isSyncingMap).filter((email) => {
     return isSyncingMap[email];
   });
-  const completedProvidersSync = Object.keys(isSyncingMap).filter((email) => {
+  const providersSyncCompleted = Object.keys(isSyncingMap).filter((email) => {
     return !isSyncingMap[email];
   });
 
@@ -92,11 +92,14 @@ export const useProviderInitialSync = () => {
         accessToken,
         emailId: gmailToSync,
         onError: (e) => {
-          logger.error(e.message, e);
+          logger.error("Error performing incremental sync", { error: e });
         },
         numberOfMessagesToFetch: INITIAL_MESSAGES_TO_FETCH,
       });
       return emailData;
+    },
+    onError: (e) => {
+      logger.error("Error performing incremental sync", { error: e });
     },
   });
 
@@ -131,7 +134,7 @@ export const useProviderInitialSync = () => {
   return {
     providersToSync,
     providersSyncing,
-    completedProvidersSync,
+    providersSyncCompleted,
     providerInitialSyncMutation,
     syncProgress,
     syncStep,

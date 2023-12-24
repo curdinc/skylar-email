@@ -1,9 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
+import { useLogger } from "next-axiom";
 
 import { partialSync } from "@skylar/gmail-api";
-import { formatValidatorError } from "@skylar/parsers-and-types";
 
-import { useLogger } from "~/lib/logger";
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export const useEmailPartialSync = () => {
@@ -30,7 +29,7 @@ export const useEmailPartialSync = () => {
         });
         return emailData;
       } catch (e) {
-        logger.info(JSON.stringify(formatValidatorError(e), null, 2));
+        logger.error("Error performing partial sync", { error: e });
         throw e;
       }
     },

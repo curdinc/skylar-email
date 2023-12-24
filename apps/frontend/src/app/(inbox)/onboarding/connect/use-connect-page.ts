@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
+import { useLogger } from "next-axiom";
 
 import { putProvider } from "@skylar/client-db";
 import type {
@@ -14,7 +15,6 @@ import { captureEvent, identifyUser } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { api } from "~/lib/api";
 import { GMAIL_SCOPES } from "~/lib/config";
-import { useLogger } from "~/lib/logger";
 import { hasRequiredGmailScopes } from "~/lib/provider/hasGmailScopes";
 import type { ROUTE_ONBOARDING_CONNECT } from "~/lib/routes";
 import { ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
@@ -104,6 +104,17 @@ export function useConnectEmailProviderPage() {
         },
       });
     },
+    onError: (error) => {
+      logger.error("Error exchanging google oauth code", {
+        error,
+      });
+      toast({
+        title: "Error connecting to email provider",
+        description: `${error.message} Please try again later`,
+        variant: "destructive",
+      });
+      setIsConnectingToProvider(false);
+    },
   });
 
   const initiateConnectToGmail = useGoogleLogin({
@@ -117,14 +128,19 @@ export function useConnectEmailProviderPage() {
     },
     onError: (errorResponse) => {
       setIsConnectingToProvider(false);
+      toast({
+        title: "Error connecting to email provider",
+        description: `${errorResponse.error_description}. Please try again later`,
+        variant: "destructive",
+      });
       logger.error("User encounter error connecting to Google", {
-        ...errorResponse,
+        error: errorResponse,
       });
     },
     onNonOAuthError(nonOAuthError) {
       setIsConnectingToProvider(false);
       logger.info("User encounter non oauth error connecting to google", {
-        ...nonOAuthError,
+        error: nonOAuthError,
       });
     },
     select_account: true,

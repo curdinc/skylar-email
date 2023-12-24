@@ -49,7 +49,9 @@ export type TrackingEventProperties = {
     emailAddress: string;
   };
   [TrackingEvents.initSyncStarted]: Record<string, never>;
-  [TrackingEvents.initSyncCompleted]: Record<string, never>;
+  [TrackingEvents.initSyncCompleted]: {
+    timeTakenInSeconds: number;
+  };
   [TrackingEvents.initSyncFailed]: Record<string, never>;
   [TrackingEvents.speedUpButtonClicked]: Record<string, never>;
   [TrackingEvents.threadOpened]: Record<string, never>;

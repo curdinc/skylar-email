@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useLogger } from "next-axiom";
 
 import {
   bulkPutMessages,
@@ -14,7 +15,6 @@ import { useToast } from "~/components/ui/use-toast";
 import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
-import { useLogger } from "~/lib/logger";
 import {
   ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX,
   ROUTE_EMAIL_PROVIDER_INBOX,
@@ -102,19 +102,28 @@ export function useSyncPage() {
     if (!runOnceRef.current) {
       runOnceRef.current = true;
 
+      performance.mark("initSyncStarted");
       captureEvent({
         event: TrackingEvents.initSyncStarted,
         properties: {},
       });
-
       startSync()
         .then(() => {
+          performance.mark("initSyncCompleted");
+          const measure = performance.measure(
+            "initSync",
+            "initSyncStarted",
+            "initSyncCompleted",
+          );
+          const timeTakenInSeconds = measure.duration / 1000;
           captureEvent({
             event: TrackingEvents.initSyncCompleted,
-            properties: {},
+            properties: {
+              timeTakenInSeconds,
+            },
           });
         })
-        .catch((e) => {
+        .catch((e: unknown) => {
           captureEvent({
             event: TrackingEvents.initSyncFailed,
             properties: {},

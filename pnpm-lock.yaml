@@ -147,9 +147,6 @@ importers:
       '@skylar/gmail-api':
         specifier: ^0.1.0
         version: link:../../packages/gmail-api
-      '@skylar/logger':
-        specifier: ^0.1.0
-        version: link:../../packages/logger
       '@skylar/logic':
         specifier: ^0.1.0
         version: link:../../packages/logic
