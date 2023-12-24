@@ -7,7 +7,7 @@ import {
   validatorTrpcWrapper,
 } from "@skylar/parsers-and-types";
 
-import { backgroundSync } from "./background-sync";
+import { backgroundSync } from "./lib/background-sync";
 
 const t = initTRPC.context().create({
   isServer: false,

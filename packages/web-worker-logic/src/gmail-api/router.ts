@@ -1,27 +1,14 @@
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
+import { labelRouter } from "./lib/sub-routers/label";
+import { messageRouter } from "./lib/sub-routers/message";
+import {
+  createGmailApiRouter,
+  gmailApiRouterProcedure,
+} from "./lib/trpc-factory";
 
-import { formatValidatorError } from "@skylar/parsers-and-types";
-
-const t = initTRPC.context().create({
-  isServer: false,
-  allowOutsideOfServer: true,
-  transformer: superjson,
-  errorFormatter({ shape, error }) {
-    return {
-      ...shape,
-      data: {
-        ...shape.data,
-        parserError: formatValidatorError(error.cause),
-      },
-    };
-  },
-});
-export const gmailWorkerRouter = t.router({
-  health: t.procedure.query(() => "OK"),
-  // sendMail: t.procedure.input(validatorTrpcWrapper).mutation(({ input}) => {
-
-  // })
+export const gmailWorkerRouter = createGmailApiRouter({
+  health: gmailApiRouterProcedure.query(() => "OK"),
+  label: labelRouter,
+  message: messageRouter,
 });
 
 export type GmailWorkerRouterType = typeof gmailWorkerRouter;
