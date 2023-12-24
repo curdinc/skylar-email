@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useMutation } from "@tanstack/react-query";
+import { useLogger } from "next-axiom";
 import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
@@ -20,6 +21,7 @@ import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useSendEmail } from "./use-send-mail";
 
 export const useMessageComposer = () => {
+  const logger = useLogger();
   const replyThread = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
@@ -155,6 +157,14 @@ export const useMessageComposer = () => {
         title: "Email sent!",
       });
       resetComposeMessage();
+    },
+    onError: (error) => {
+      logger.error("Error sending email", { error });
+      toast({
+        title: "Error sending email",
+        description: "Please try again later",
+        variant: "destructive",
+      });
     },
   });
 

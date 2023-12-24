@@ -21,17 +21,15 @@ export const useEmailPartialSync = () => {
         email: emailAddressToSync,
       });
 
-      try {
-        const emailData = await partialSync({
-          accessToken,
-          emailId: emailAddressToSync,
-          startHistoryId,
-        });
-        return emailData;
-      } catch (e) {
-        logger.error("Error performing partial sync", { error: e });
-        throw e;
-      }
+      const emailData = await partialSync({
+        accessToken,
+        emailId: emailAddressToSync,
+        startHistoryId,
+      });
+      return emailData;
+    },
+    onError: (error) => {
+      logger.error("Error performing partial sync", { error });
     },
   });
 };

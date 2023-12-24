@@ -1,11 +1,11 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useLogger } from "next-axiom";
 
 import { filterForLabels } from "@skylar/client-db";
 
 import { Icons } from "~/components/icons";
-import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
 import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";
@@ -65,7 +65,7 @@ export const LabelAccordion = () => {
           ButtonIcon = <Icons.chevronDown className="w-4" />;
         }
         return (
-          <Fragment key={label.id}>
+          <div key={label.id}>
             <button
               data-list-item={getLabelDataListItem(label.id)}
               className="sticky top-0 z-10 flex w-full items-center gap-1 bg-secondary px-2 py-1 text-sm"
@@ -80,7 +80,7 @@ export const LabelAccordion = () => {
                 dataListItemLabel={label.id}
               />
             )}
-          </Fragment>
+          </div>
         );
       })}
     </div>

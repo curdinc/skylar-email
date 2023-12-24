@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useLogger } from "next-axiom";
 
 import { getProviderById, useEmailAddressById } from "@skylar/client-db";
-import { formatErrors } from "@skylar/parsers-and-types";
 
-import { useLogger } from "../logger";
 import {
   ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX,
   ROUTE_EMAIL_PROVIDER_INBOX,
@@ -40,8 +39,10 @@ export const useActiveEmailAddress = () => {
         );
       }
     };
-    checkValidProviderId().catch((e) => {
-      logger.error(formatErrors(e));
+    checkValidProviderId().catch((e: unknown) => {
+      logger.error("Error in getting active email address", {
+        error: e,
+      });
     });
   });
   return useEmailAddressById(providerId);

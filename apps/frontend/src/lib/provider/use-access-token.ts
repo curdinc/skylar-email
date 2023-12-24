@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { useLogger } from "next-axiom";
 
 import {
   getRefreshTokenDetailsByEmailAddress,
@@ -9,6 +10,7 @@ import { api } from "../api";
 import { ACCESS_TOKEN } from "../query-key-constants";
 
 export function useAccessToken() {
+  const logger = useLogger();
   const { mutateAsync: fetchAccessToken } =
     api.gmail.getAccessToken.useMutation();
   // sped this up with db (useMutation cannot be cached (https://github.com/TanStack/query/issues/5058)
@@ -37,6 +39,9 @@ export function useAccessToken() {
       });
 
       return accessToken;
+    },
+    onError: (error) => {
+      logger.error("Error fetching access token", { error });
     },
   });
 }

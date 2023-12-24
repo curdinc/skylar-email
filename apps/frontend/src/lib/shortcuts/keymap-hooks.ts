@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLogger } from "next-axiom";
 
 import { useAllShortcuts } from "@skylar/client-db";
 import {
@@ -27,12 +28,13 @@ import { registerShortcuts } from "./register-shortcuts";
 export const useNavigateMessagesKeymap = () => {
   const { data: existingShortcuts, isLoading: isLoadingExistingShortcuts } =
     useAllShortcuts();
+  const logger = useLogger();
   useEffect(() => {
     if (isLoadingExistingShortcuts) {
       return;
     }
-    const unsubscribe = registerShortcuts(
-      [
+    const unsubscribe = registerShortcuts({
+      shortcuts: [
         {
           combo: "j",
           description: "Go down the message list",
@@ -83,15 +85,21 @@ export const useNavigateMessagesKeymap = () => {
         },
       ],
       existingShortcuts,
-    );
+      onError: (error) => {
+        logger.error("Error in register navigating message shortcuts", {
+          error,
+        });
+      },
+    });
     return unsubscribe;
-  }, [existingShortcuts, isLoadingExistingShortcuts]);
+  }, [existingShortcuts, isLoadingExistingShortcuts, logger]);
 };
 
 export const useGlobalKeymap = () => {
   const router = useRouter();
   const { data: existingShortcuts, isLoading: isLoadingExistingShortcuts } =
     useAllShortcuts();
+  const logger = useLogger();
   useEffect(() => {
     if (isLoadingExistingShortcuts) {
       return;
@@ -99,8 +107,8 @@ export const useGlobalKeymap = () => {
     const goToInbox = (key: string) => {
       return () => router.push(`/${key}`);
     };
-    const unsubscribe = registerShortcuts(
-      [
+    const unsubscribe = registerShortcuts({
+      shortcuts: [
         {
           combo: "Escape",
           description: "Default key to close things",
@@ -272,8 +280,13 @@ export const useGlobalKeymap = () => {
         },
       ],
       existingShortcuts,
-    );
+      onError: (error) => {
+        logger.error("Error in registering global shortcuts", {
+          error,
+        });
+      },
+    });
 
     return unsubscribe;
-  }, [existingShortcuts, isLoadingExistingShortcuts, router]);
+  }, [existingShortcuts, isLoadingExistingShortcuts, logger, router]);
 };

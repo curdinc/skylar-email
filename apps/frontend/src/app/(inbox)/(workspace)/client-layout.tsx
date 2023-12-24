@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { useLogger } from "next-axiom";
 
 import {
   bulkDeleteMessages,
@@ -67,7 +68,7 @@ export const ClientLayout = () => {
   }, [allSyncInfo]);
 
   // partial sync emails
-  useQuery({
+  const { error } = useQuery({
     queryKey: [],
     queryFn: async () => {
       let updatedEmails = false;
@@ -152,6 +153,10 @@ export const ClientLayout = () => {
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
+  const logger = useLogger();
+  useEffect(() => {
+    logger.error("Error in client layout", { error });
+  }, [error, logger]);
 
   return <></>;
 };
