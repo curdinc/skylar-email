@@ -110,9 +110,6 @@ export const useProviderInitialSync = () => {
       emailProvider: SupportedEmailProviderType;
     }) => {
       let emailData: SyncResponseType;
-      await new Promise((_, rej) =>
-        setTimeout(() => rej("Something went wrong"), 4_000),
-      );
       switch (emailProvider) {
         case "gmail": {
           emailData = await startGmailInitialSync(emailToSync);
