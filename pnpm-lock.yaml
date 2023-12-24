@@ -147,9 +147,6 @@ importers:
       '@skylar/client-db':
         specifier: ^0.1.0
         version: link:../../packages/client-db
-      '@skylar/gmail-api':
-        specifier: ^0.1.0
-        version: link:../../packages/gmail-api
       '@skylar/logger':
         specifier: ^0.1.0
         version: link:../../packages/logger
@@ -162,9 +159,6 @@ importers:
       '@skylar/tinykeys':
         specifier: ^0.1.0
         version: link:../../packages/tinykeys
-      '@skylar/trpc-web-workers':
-        specifier: ^0.1.0
-        version: link:../../packages/trpc-web-workers
       '@skylar/web-worker-logic':
         specifier: ^0.1.0
         version: link:../../packages/web-worker-logic
@@ -343,9 +337,6 @@ importers:
       '@tsndr/cloudflare-worker-jwt':
         specifier: ^2.2.2
         version: 2.2.2
-      mimetext:
-        specifier: ^3.0.16
-        version: 3.0.16
       stripe:
         specifier: ^13.5.0
         version: 13.5.0
@@ -556,6 +547,9 @@ importers:
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
+      mimetext:
+        specifier: ^3.0.16
+        version: 3.0.16
     devDependencies:
       '@skylar/eslint-config':
         specifier: 0.2.0
@@ -649,6 +643,9 @@ importers:
       '@skylar/gmail-api':
         specifier: ^0.1.0
         version: link:../gmail-api
+      '@skylar/message-manager':
+        specifier: ^0.1.0
+        version: link:../message-manager
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../parsers-and-types
