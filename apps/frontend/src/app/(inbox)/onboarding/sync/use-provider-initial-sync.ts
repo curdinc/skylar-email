@@ -21,6 +21,7 @@ function genRand(min: number, max: number, decimalPlaces: number) {
 }
 
 const SYNC_STEPS = {
+  ERROR_SYNCING_INBOX: "Error syncing inbox",
   GETTING_ACCESS_TO_INBOX: "Getting access to inbox",
   FETCHING_EMAIL_LIST: "Fetching email list",
   FETCHING_EMAILS: "Fetching emails",
@@ -52,22 +53,19 @@ export const useProviderInitialSync = () => {
             if (prev >= 90) {
               return prev;
             }
-            return prev + 1;
+            return prev + genRand(1, 4, 0);
           });
         },
         genRand(400, 600, 0),
       );
       return () => clearInterval(interval);
-    } else if (
-      Object.values(isSyncingMap).every((arg) => !arg) &&
-      syncProgress > 0
-    ) {
-      setSyncProgress(100);
     }
   }, [isSyncingMap, syncProgress]);
 
   useEffect(() => {
-    if (syncProgress < 11) {
+    if (syncProgress === -1) {
+      setSyncStep(SYNC_STEPS.ERROR_SYNCING_INBOX);
+    } else if (syncProgress < 11) {
       setSyncStep(SYNC_STEPS.GETTING_ACCESS_TO_INBOX);
     } else if (syncProgress < 37) {
       setSyncStep(SYNC_STEPS.FETCHING_EMAIL_LIST);
@@ -111,23 +109,31 @@ export const useProviderInitialSync = () => {
       emailToSync: string;
       emailProvider: SupportedEmailProviderType;
     }) => {
-      setIsSyncingMap((prev) => ({ ...prev, [emailToSync]: true }));
       let emailData: SyncResponseType;
-      try {
-        switch (emailProvider) {
-          case "gmail": {
-            emailData = await startGmailInitialSync(emailToSync);
-            break;
-          }
-          default:
-            throw new Error(`unsupported email provider ${emailProvider}`);
+      await new Promise((_, rej) =>
+        setTimeout(() => rej("Something went wrong"), 4_000),
+      );
+      switch (emailProvider) {
+        case "gmail": {
+          emailData = await startGmailInitialSync(emailToSync);
+          break;
         }
-        setIsSyncingMap((prev) => ({ ...prev, [emailToSync]: false }));
-        return emailData;
-      } catch (e) {
-        setIsSyncingMap((prev) => ({ ...prev, [emailToSync]: false }));
-        throw e;
+        default:
+          throw new Error(`unsupported email provider ${emailProvider}`);
       }
+      return emailData;
+    },
+    onMutate: (variables) => {
+      setIsSyncingMap((prev) => ({ ...prev, [variables.emailToSync]: true }));
+    },
+    onSettled: (_, __, variables) => {
+      setIsSyncingMap((prev) => ({ ...prev, [variables.emailToSync]: false }));
+    },
+    onError: () => {
+      setSyncProgress(-1);
+    },
+    onSuccess: () => {
+      setSyncProgress(100);
     },
   });
 
