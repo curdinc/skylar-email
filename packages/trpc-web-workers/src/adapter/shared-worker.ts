@@ -32,7 +32,9 @@ export const sharedWorkerAdapter = <TRouter extends AnyRouter>(opts: {
       ) as AnyProcedure;
 
       try {
-        const result = await procedureFn(params.input as any);
+        const result = await procedureFn(
+          transformer.input.deserialize(params.input),
+        );
         const res: workerMessageResponse = {
           trpc: {
             id,
