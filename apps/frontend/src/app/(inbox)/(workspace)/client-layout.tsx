@@ -15,13 +15,13 @@ import {
 } from "@skylar/client-db";
 import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
 import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
+import { gmailBackgroundSyncWorker } from "@skylar/web-worker-logic";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 import { useGlobalKeymap } from "~/lib/shortcuts/keymap-hooks";
-import type { GmailBackgroundSyncWorker } from "./_web-workers/gmail-background-sync/types";
 import { useEmailPartialSync } from "./use-email-partial-sync";
 
 // HANDLES PARTIAL SYNCING OF EMAILS and continues incremental sync
@@ -51,17 +51,13 @@ export const ClientLayout = () => {
     // const createdWorkers =
     unsyncedEmailAddresses.map((emailAddress) => {
       // GmailBackgroundSyncWorker
-      const newWorker: GmailBackgroundSyncWorker = new SharedWorker(
-        new URL(
-          "./_web-workers/gmail-background-sync/worker.ts",
-          import.meta.url,
-        ),
-      );
-      newWorker.port.start();
-      newWorker.port.postMessage({
-        emailAddress,
-      });
-      return newWorker;
+      gmailBackgroundSyncWorker(emailAddress)
+        .syncProvider.mutate({
+          emailAddress,
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     });
     // shared workers close automatically when all ports are closed
   }, [allSyncInfo]);
