@@ -51,13 +51,13 @@ export const sharedWorkerAdapter = <TRouter extends AnyRouter>(opts: {
         const res: workerMessageResponse = {
           trpc: {
             id,
-            error: {
+            error: transformer.output.serialize({
               code: TRPC_ERROR_CODES_BY_KEY[error.code],
               message: error.message,
               data: {
                 ...error,
               },
-            },
+            }),
           },
         };
         port.postMessage(res);

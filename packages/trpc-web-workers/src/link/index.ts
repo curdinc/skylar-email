@@ -12,6 +12,7 @@ import type {
   workerMessageRequest,
   workerMessageResponse,
 } from "../types";
+import { getErrorFromUnknown } from "../utils/error";
 
 export const workerLink = <TRouter extends AnyRouter>(
   opts: workerLinkOptions,
@@ -63,7 +64,11 @@ export const workerLink = <TRouter extends AnyRouter>(
             const transformed = transformResult(res.trpc, runtime);
             if (!transformed.ok) {
               // if an error is returned from the server, it comes here
-              observer.error(TRPCClientError.from(transformed.error));
+              observer.error(
+                TRPCClientError.from(transformed.error, {
+                  meta: transformed.error,
+                }),
+              );
               return;
             }
             observer.next({
@@ -72,9 +77,11 @@ export const workerLink = <TRouter extends AnyRouter>(
             observer.complete();
           })
           .catch((cause) => {
-            observer.error(TRPCClientError.from(cause, {}));
+            observer.error(
+              TRPCClientError.from(getErrorFromUnknown(cause), {}),
+            );
           });
-        return () => {};
+        return;
       });
     };
   };
