@@ -41,5 +41,5 @@ export type MessageType = MessageIndexType & {
 export const MESSAGE_INDEX = `&provider_message_id,
 provider_thread_id,
 user_email_address,
-&rfc822_message_id,
+rfc822_message_id,
 created_at` as const;
