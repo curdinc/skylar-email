@@ -165,6 +165,9 @@ importers:
       '@skylar/trpc-web-workers':
         specifier: ^0.1.0
         version: link:../../packages/trpc-web-workers
+      '@skylar/web-worker-logic':
+        specifier: ^0.1.0
+        version: link:../../packages/web-worker-logic
       '@stripe/react-stripe-js':
         specifier: ^2.3.0
         version: 2.3.0(@stripe/stripe-js@2.1.5)(react-dom@18.2.0)(react@18.2.0)
@@ -573,8 +576,8 @@ importers:
   packages/parsers-and-types:
     dependencies:
       valibot:
-        specifier: ^0.13.1
-        version: 0.13.1
+        specifier: ^0.24.1
+        version: 0.24.1
     devDependencies:
       '@skylar/eslint-config':
         specifier: 0.2.0
@@ -631,6 +634,43 @@ importers:
       '@trpc/server':
         specifier: 10.7.1-alpha-next-2023-10-20-20-37-31.88
         version: 10.7.1-alpha-next-2023-10-20-20-37-31.88
+      eslint:
+        specifier: ^8.48.0
+        version: 8.48.0
+      typescript:
+        specifier: ^5.2.2
+        version: 5.2.2
+
+  packages/web-worker-logic:
+    dependencies:
+      '@skylar/client-db':
+        specifier: ^0.1.0
+        version: link:../client-db
+      '@skylar/gmail-api':
+        specifier: ^0.1.0
+        version: link:../gmail-api
+      '@skylar/parsers-and-types':
+        specifier: ^0.1.0
+        version: link:../parsers-and-types
+      '@skylar/trpc-web-workers':
+        specifier: ^0.1.0
+        version: link:../trpc-web-workers
+      superjson:
+        specifier: 1.13.1
+        version: 1.13.1
+      valibot:
+        specifier: ^0.24.1
+        version: 0.24.1
+    devDependencies:
+      '@skylar/eslint-config':
+        specifier: 0.2.0
+        version: link:../../tooling/eslint
+      '@skylar/prettier-config':
+        specifier: ^0.1.0
+        version: link:../../tooling/prettier
+      '@skylar/tsconfig':
+        specifier: ^0.1.0
+        version: link:../../tooling/typescript
       eslint:
         specifier: ^8.48.0
         version: 8.48.0
@@ -11554,8 +11594,8 @@ packages:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
     dev: false
 
-  /valibot@0.13.1:
-    resolution: {integrity: sha512-SG2W1RHqE2LShl3p6tyERt6I+G6PQa9ZFVfkyNKXz01HBzL+tBeH5kXw/5AQeAzPJSjI3djVGBl1CyozA1kyBQ==}
+  /valibot@0.24.1:
+    resolution: {integrity: sha512-Toclbuy20XsECZiueh2dkQ63he2AGaBIj/FJRDAFti2kueFldm9bjJzSYvPaL5CE1HXDMRhq7olak8at7xCz5A==}
     dev: false
 
   /validate-npm-package-name@3.0.0:
