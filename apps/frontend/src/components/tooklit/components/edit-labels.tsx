@@ -17,7 +17,6 @@ import {
 } from "~/components/ui/command";
 import { useToast } from "~/components/ui/use-toast";
 import { GMAIL_IMMUTABLE_LABELS } from "~/lib/inbox-toolkit/constants";
-import { useAccessToken } from "~/lib/provider/use-access-token";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { cn } from "~/lib/ui";
 import type { ConfigOption, MoveThreadArgs } from "../config-option-type";
@@ -83,9 +82,8 @@ export function EditLabels({
 
   const runAction = <T,>(action: ConfigOption<T>, ...args: T[]) => {
     return async () => {
-      const accessToken = await fetchGmailAccessToken();
       try {
-        const undoFn = await action.applyFn(accessToken, ...args);
+        const undoFn = await action.applyFn(...args);
         if (undoFn) {
           showUndoToast(action, undoFn);
         }
@@ -93,16 +91,6 @@ export function EditLabels({
         // Show error here
       }
     };
-  };
-
-  const { mutateAsync: fetchGmailAccessTokenMutation } = useAccessToken();
-
-  const fetchGmailAccessToken = async () => {
-    const token = await fetchGmailAccessTokenMutation({
-      email: activeEmailAddress,
-    });
-    if (!token) throw new Error("Error fetching access token.");
-    return token;
   };
 
   const inputRef = useRef<HTMLInputElement>(null);

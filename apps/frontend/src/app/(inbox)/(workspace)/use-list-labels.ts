@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { useConnectedProviders } from "@skylar/client-db";
-import type { listLabels } from "@skylar/gmail-api";
 import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 export const LIST_LABEL_QUERY_KEY = "listLabels";
@@ -28,7 +27,7 @@ export function useListLabels() {
         })
         .filter((label) => !!label) as Record<
         string,
-        Awaited<ReturnType<typeof listLabels>>
+        Awaited<ReturnType<typeof gmailApiWorker.label.list.query>>
       >[];
 
       const labelsMap = labels.reduce((acc, label) => {

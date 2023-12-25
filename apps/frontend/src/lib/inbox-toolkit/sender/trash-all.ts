@@ -4,12 +4,10 @@ import { trashThreads } from "../thread/trash-threads";
 
 export async function trashAll({
   email,
-  accessToken,
   afterClientDbUpdate,
   senderEmail,
 }: {
   email: string;
-  accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
   senderEmail: string;
 }) {
@@ -21,7 +19,6 @@ export async function trashAll({
   await trashThreads({
     threads,
     email,
-    accessToken,
     afterClientDbUpdate,
   });
 }

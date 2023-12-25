@@ -6,12 +6,10 @@ import { updateAndSaveLabels } from "../utils";
 export async function markUnreadThreads({
   threads,
   email,
-  accessToken,
   afterClientDbUpdate,
 }: {
   threads: ThreadType[];
   email: string;
-  accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
   const labelsToRemove = Array<string[]>(threads.length).fill([]);

@@ -4,12 +4,10 @@ import { untrashThreads } from "../thread/untrash-threads";
 
 export async function untrashAll({
   email,
-  accessToken,
   afterClientDbUpdate,
   senderEmail,
 }: {
   email: string;
-  accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
   senderEmail: string;
 }) {

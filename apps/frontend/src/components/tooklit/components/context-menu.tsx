@@ -16,7 +16,6 @@ import {
   ContextMenuTrigger,
 } from "~/components/ui/context-menu";
 import { useToast } from "~/components/ui/use-toast";
-import { useAccessToken } from "~/lib/provider/use-access-token";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import type { ConfigOption } from "../config-option-type";
 import { getSenderActions } from "../sender/sender-option-config";
@@ -57,16 +56,6 @@ export function ThreadContextMenu({
 
   const { toast, dismiss } = useToast();
 
-  const { mutateAsync: fetchGmailAccessTokenMutation } = useAccessToken();
-
-  const fetchGmailAccessToken = async () => {
-    const token = await fetchGmailAccessTokenMutation({
-      email: activeEmailAddress,
-    });
-    if (!token) throw new Error("Error fetching access token.");
-    return token;
-  };
-
   const showUndoSuccessToast = () => {
     toast({
       title: "Action Undone",
@@ -103,10 +92,9 @@ export function ThreadContextMenu({
   };
 
   const runAction = <T,>(action: ConfigOption<T>, ...args: T[]) => {
-    return async () => {
-      const accessToken = await fetchGmailAccessToken();
+    return () => {
       action
-        .applyFn(accessToken, ...args)
+        .applyFn(...args)
         .then((undoFn) => {
           if (typeof undoFn !== "function") {
             return;

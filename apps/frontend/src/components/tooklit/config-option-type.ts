@@ -11,10 +11,7 @@ export type ConfigOption<T> =
       name: string;
       tooltipDescription: string;
       // return a function that will undo the action
-      applyFn: (
-        accessToken: string,
-        ...args: T[]
-      ) => Promise<() => Promise<void>>;
+      applyFn: (...args: T[]) => Promise<() => Promise<void>>;
       undoToastConfig: {
         title: string;
       };
@@ -26,7 +23,7 @@ export type ConfigOption<T> =
       name: string;
       tooltipDescription: string;
       // Does not return a function that will undo the action
-      applyFn: (accessToken: string, ...args: T[]) => Promise<void>;
+      applyFn: (...args: T[]) => Promise<void>;
       shortcut?: string;
     };
 
