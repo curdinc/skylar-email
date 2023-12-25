@@ -5,7 +5,7 @@ import {
   updateEmailSyncInfo,
 } from "@skylar/client-db";
 
-import { gmailApiWorker } from "../../client";
+import { gmailApiWorker } from "../../basic-client/gmail-api-worker";
 import { MESSAGES_PER_SYNC } from "./constants";
 import { convertGmailEmailToClientDbEmail } from "./utils";
 

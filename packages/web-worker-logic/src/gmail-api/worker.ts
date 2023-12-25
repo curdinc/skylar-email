@@ -21,7 +21,6 @@ sharedWorkerAdapter({
           // return cached token
           return token.at;
         }
-        console.log("tokenStore", tokenStore);
         const refreshToken = await getRefreshTokenByEmailAddress({
           emailAddress,
         });
