@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
 
+import { putProvider } from "@skylar/client-db";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types";
 import { gmailApiWorker } from "@skylar/web-worker-logic";
 
@@ -37,21 +38,33 @@ export function useConnectEmailProviderPage() {
       code: string;
       provider: SupportedEmailProviderType;
     }) => {
-      const emailAddress =
+      const providerInfo =
         await gmailApiWorker.provider.addOauthProvider.mutate({
           code: code,
           provider,
         });
-      return emailAddress;
+
+      // add to client db
+      await putProvider({
+        provider: {
+          type: provider,
+          user_email_address: providerInfo.emailAddress,
+          image_uri: providerInfo.imageUri,
+          inbox_name: providerInfo.name,
+          refresh_token: providerInfo.refreshToken,
+        },
+      });
+
+      return providerInfo;
     },
-    onSuccess(emailAddress) {
-      identifyUser(emailAddress);
+    onSuccess(providerInfo) {
+      identifyUser(providerInfo.emailAddress);
 
       captureEvent({
         event: TrackingEvents.connectedProvider,
         properties: {
           providerType,
-          emailAddress,
+          emailAddress: providerInfo.emailAddress,
         },
       });
 

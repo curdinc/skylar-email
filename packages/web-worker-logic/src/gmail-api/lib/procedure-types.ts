@@ -99,7 +99,12 @@ export const PROVIDER_PROCEDURES = {
       code: string(),
       provider: supportedEmailProvidersSchema,
     }),
-    output: emailSchema,
+    output: object({
+      emailAddress: emailSchema,
+      name: string(),
+      imageUri: string(),
+      refreshToken: string(),
+    }),
   }),
 };
 

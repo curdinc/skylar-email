@@ -1,5 +1,3 @@
-import { putProvider } from "@skylar/client-db";
-
 import { ACCESS_TOKEN_REFRESH_INTERVAL_MILLIS } from "../constants";
 import { PROVIDER_PROCEDURES } from "../procedure-types";
 import { skylarBackendClient } from "../skylar-backend-connector";
@@ -15,24 +13,16 @@ export const providerRouter = createGmailApiRouter({
       const emailProviderInfo =
         await skylarBackendClient.oauth.googleCodeExchange.mutate(input);
 
-      // add to clientDb
-      await putProvider({
-        provider: {
-          type: emailProviderInfo.providerType,
-          user_email_address: emailProviderInfo.providerInfo.email,
-          image_uri: emailProviderInfo.providerInfo.imageUri,
-          inbox_name: emailProviderInfo.providerInfo.name,
-          refresh_token: emailProviderInfo.providerInfo.refreshToken,
-          access_token: emailProviderInfo.accessToken,
-        },
-      });
-
+      // cache
       ctx.tokenStore.set(emailProviderInfo.providerInfo.email, {
         at: emailProviderInfo.accessToken,
         exp: Date.now() + ACCESS_TOKEN_REFRESH_INTERVAL_MILLIS,
       });
 
-      return emailProviderInfo.providerInfo.email;
+      return {
+        ...emailProviderInfo.providerInfo,
+        emailAddress: emailProviderInfo.providerInfo.email,
+      };
     },
   ),
 });
