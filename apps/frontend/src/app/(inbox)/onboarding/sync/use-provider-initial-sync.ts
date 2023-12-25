@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useLogger } from "next-axiom";
 
-import { incrementalSync } from "@skylar/gmail-api";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types/src/api/email-provider/oauth";
-
-import { useAccessToken } from "~/lib/provider/use-access-token";
+import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 const INITIAL_MESSAGES_TO_FETCH = 150;
 
@@ -42,7 +39,6 @@ export const useProviderInitialSync = () => {
   const [syncStep, setSyncStep] = useState<
     (typeof SYNC_STEPS)[keyof typeof SYNC_STEPS]
   >("Getting access to inbox");
-  const { mutateAsync: fetchGmailAccessToken } = useAccessToken();
 
   useEffect(() => {
     if (Object.values(isSyncingMap).some((arg) => arg)) {
@@ -80,23 +76,14 @@ export const useProviderInitialSync = () => {
     }
   }, [syncProgress]);
 
-  const logger = useLogger();
-
   const { mutateAsync: startGmailInitialSync } = useMutation({
     mutationFn: async (gmailToSync: string) => {
-      const accessToken = await fetchGmailAccessToken({
-        email: gmailToSync,
-      });
-
-      const emailData = await incrementalSync({
-        accessToken,
-        emailId: gmailToSync,
-        onError: (e) => {
-          logger.error(e.message, e);
-        },
+      const syncResponse = await gmailApiWorker.sync.incrementalSync.mutate({
+        emailAddress: gmailToSync,
         numberOfMessagesToFetch: INITIAL_MESSAGES_TO_FETCH,
       });
-      return emailData;
+
+      return syncResponse;
     },
   });
 
