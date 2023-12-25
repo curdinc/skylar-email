@@ -33,8 +33,10 @@ export function ThreadContextMenu({
   refetch: () => Promise<void>;
 }) {
   const { data: activeEmailAddress } = useActiveEmailAddress();
+  const { toast, dismiss } = useToast();
+  const { mutateAsync: fetchGmailAccessTokenMutation } = useAccessToken();
 
-  if (!activeEmailAddress) throw new Error("No active email address");
+  if (!activeEmailAddress) return children;
 
   const INBOX_TOOLKIT_THREAD_ACTIONS = getThreadActions(
     async () => {
@@ -54,10 +56,6 @@ export function ThreadContextMenu({
       });
     },
   });
-
-  const { toast, dismiss } = useToast();
-
-  const { mutateAsync: fetchGmailAccessTokenMutation } = useAccessToken();
 
   const fetchGmailAccessToken = async () => {
     const token = await fetchGmailAccessTokenMutation({
@@ -132,7 +130,7 @@ export function ThreadContextMenu({
   };
 
   return (
-    <ContextMenu>
+    <ContextMenu >
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-64">
         {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.replySender)}
