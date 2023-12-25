@@ -31,7 +31,6 @@ export const openLabelOrGoToNextLabel = () => {
     const isOpen = !!document.querySelector(
       `[${DATA_THREAD_WRAPPER}=${activeLabelDetail}]`,
     );
-    console.log("isOpen", isOpen);
     if (!isOpen) {
       (active as HTMLElement).click();
       (active as HTMLElement).focus();
