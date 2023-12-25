@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import type { SyncResponseType } from "@skylar/parsers-and-types";
-import type { SupportedEmailProviderType } from "@skylar/parsers-and-types/src/api/email-provider/oauth";
+import type {
+  SupportedEmailProviderType,
+  SyncResponseType,
+} from "@skylar/parsers-and-types";
 import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { useLogger } from "~/lib/logger";
