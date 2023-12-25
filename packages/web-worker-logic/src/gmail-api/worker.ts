@@ -32,17 +32,18 @@ sharedWorkerAdapter({
           });
         }
 
-        const accessToken =
+        const accessTokenInfo =
           await skylarBackendClient.gmail.getAccessToken.mutate({
             email: emailAddress,
             refreshToken,
           });
+
         tokenStore.set(emailAddress, {
-          at: accessToken,
+          at: accessTokenInfo.accessToken,
           exp: Date.now() + ACCESS_TOKEN_REFRESH_INTERVAL_MILLIS,
         });
 
-        return accessToken;
+        return accessTokenInfo.accessToken;
       },
       tokenStore,
     };
