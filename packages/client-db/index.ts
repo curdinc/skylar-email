@@ -15,7 +15,6 @@ export * from "./src/provider/get-all-providers";
 export * from "./src/provider/get-provider-by-email-address";
 export * from "./src/provider/get-provider-by-id";
 export * from "./src/provider/get-refresh-token-by-email-address";
-export * from "./src/provider/get-refresh-token-info-by-email-address";
 
 export * from "./src/provider/put-provider";
 export * from "./src/provider/update-access-token-by-email-address";
