@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLogger } from "next-axiom";
 
 import { filterForLabels } from "@skylar/client-db";
 
 import { Icons } from "~/components/icons";
+import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
 import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";

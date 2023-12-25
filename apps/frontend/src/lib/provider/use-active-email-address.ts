@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useLogger } from "next-axiom";
 
 import { getProviderById, useEmailAddressById } from "@skylar/client-db";
 
+import { useLogger } from "../logger";
 import {
   ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX,
   ROUTE_EMAIL_PROVIDER_INBOX,

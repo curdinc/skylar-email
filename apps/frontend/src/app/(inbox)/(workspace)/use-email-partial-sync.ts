@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { useLogger } from "next-axiom";
 
 import { partialSync } from "@skylar/gmail-api";
 
+import { useLogger } from "~/lib/logger";
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export const useEmailPartialSync = () => {

@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useLogger } from "next-axiom";
 
 import {
   bulkDeleteMessages,
@@ -19,6 +18,7 @@ import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
+import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 import { useGlobalKeymap } from "~/lib/shortcuts/keymap-hooks";

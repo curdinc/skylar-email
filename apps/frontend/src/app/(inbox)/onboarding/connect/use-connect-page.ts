@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
-import { useLogger } from "next-axiom";
 
 import { putProvider } from "@skylar/client-db";
 import type {
@@ -15,6 +14,7 @@ import { captureEvent, identifyUser } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { api } from "~/lib/api";
 import { GMAIL_SCOPES } from "~/lib/config";
+import { useLogger } from "~/lib/logger";
 import { hasRequiredGmailScopes } from "~/lib/provider/hasGmailScopes";
 import type { ROUTE_ONBOARDING_CONNECT } from "~/lib/routes";
 import { ROUTE_ONBOARDING_SYNC } from "~/lib/routes";

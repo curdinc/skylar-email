@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { useLogger } from "next-axiom";
 
 import {
   getRefreshTokenDetailsByEmailAddress,
@@ -7,6 +6,7 @@ import {
 } from "@skylar/client-db";
 
 import { api } from "../api";
+import { useLogger } from "../logger";
 import { ACCESS_TOKEN } from "../query-key-constants";
 
 export function useAccessToken() {

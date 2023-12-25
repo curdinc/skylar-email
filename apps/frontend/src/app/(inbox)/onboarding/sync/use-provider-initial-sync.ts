@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useLogger } from "next-axiom";
 
 import { incrementalSync } from "@skylar/gmail-api";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types/src/api/email-provider/oauth";
 
+import { useLogger } from "~/lib/logger";
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
 const INITIAL_MESSAGES_TO_FETCH = 150;

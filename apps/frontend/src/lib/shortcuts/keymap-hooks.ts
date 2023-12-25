@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useLogger } from "next-axiom";
 
 import { useAllShortcuts } from "@skylar/client-db";
 import {
@@ -18,6 +17,7 @@ import { goUpLabelList } from "~/components/label-accordion-menu/label-accordion
 import { openLabelOrGoToNextLabel } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/open-label";
 import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
+import { useLogger } from "../logger";
 import { registerShortcuts } from "./register-shortcuts";
 
 // ! Note that shortcuts should not overlap

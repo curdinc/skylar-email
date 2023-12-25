@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useLogger } from "next-axiom";
 
 import {
   bulkPutMessages,
@@ -15,6 +14,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
+import { useLogger } from "~/lib/logger";
 import {
   ROUTE_EMAIL_PROVIDER_DEFAULT_INBOX,
   ROUTE_EMAIL_PROVIDER_INBOX,

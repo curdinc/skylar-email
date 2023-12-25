@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useMutation } from "@tanstack/react-query";
-import { useLogger } from "next-axiom";
 import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
@@ -17,6 +16,7 @@ import {
   getSenderReplyToEmailAddresses,
   isAttachmentSizeValid,
 } from "~/lib/email";
+import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useSendEmail } from "./use-send-mail";
 
