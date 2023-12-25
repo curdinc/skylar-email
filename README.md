@@ -81,7 +81,7 @@ Finally, many of these things are still works in progress and we are not at the 
 1. Modern - Looks are subjective, but as much of a keyboard warrior I am, I enjoy nice looking UIs and have bias for today's design languages. Also tabs are nice, but not having native split screen support like vs code makes it less useful.
 1. Socialize the inbox management - This is still some ways off as we build a solid foundation, but eventually, you'll be able to make plugins and filters for your email and easily share that.
 
-   This way we can push recommendation to you and inbox management becomes passive. For example, otps, verification etc. can be handled via a separate tab where you can simply click to copy the codes // open the links and they automatically go away when they expire etc.
+   This way we can push recommendation to you and inbox management becomes passive. For example, one time passwords, verification etc. can be handled via a separate tab where you can simply click to copy the codes // open the links and they automatically go away when they expire etc.
 
 ## Contributing
 
