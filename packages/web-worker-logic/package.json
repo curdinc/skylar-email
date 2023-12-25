@@ -20,6 +20,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@skylar/api": "^0.1.0",
     "@skylar/client-db": "^0.1.0",
     "@skylar/gmail-api": "^0.1.0",
     "@skylar/message-manager": "^0.1.0",

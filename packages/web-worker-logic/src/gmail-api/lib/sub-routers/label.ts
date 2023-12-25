@@ -1,6 +1,5 @@
 import { batchModifyLabels, listLabels } from "@skylar/gmail-api";
 
-import { getAccessToken } from "../get-access-token";
 import { LABEL_PROCEDURES } from "../procedure-types";
 import { createGmailApiRouter, gmailApiRouterProcedure } from "../trpc-factory";
 
@@ -8,8 +7,8 @@ export const labelRouter = createGmailApiRouter({
   // make sure router is connected
   health: gmailApiRouterProcedure.query(() => "OK"),
   // Lists all labels in the user's mailbox.
-  list: LABEL_PROCEDURES.list.query(async ({ input }) => {
-    const accessToken = await getAccessToken(input.emailAddress);
+  list: LABEL_PROCEDURES.list.query(async ({ input, ctx }) => {
+    const accessToken = await ctx.getAccessToken(input.emailAddress);
     const labels = await listLabels({
       accessToken,
       emailId: input.emailAddress,
@@ -20,8 +19,8 @@ export const labelRouter = createGmailApiRouter({
     }));
   }),
   // modifies the specified labels on the specified threads.
-  modify: LABEL_PROCEDURES.modify.mutation(async ({ input }) => {
-    const accessToken = await getAccessToken(input.emailAddress);
+  modify: LABEL_PROCEDURES.modify.mutation(async ({ input, ctx }) => {
+    const accessToken = await ctx.getAccessToken(input.emailAddress);
     await batchModifyLabels({
       accessToken,
       emailId: input.emailAddress,

@@ -3,7 +3,13 @@ import superjson from "superjson";
 
 import { formatValidatorError } from "@skylar/parsers-and-types";
 
-const t = initTRPC.create({
+export type TokenStore = Map<string, { at: string; exp: number }>;
+type GmailApiRouterContext = {
+  getAccessToken: (emailAddress: string) => Promise<string>;
+  tokenStore: TokenStore;
+};
+
+const t = initTRPC.context<GmailApiRouterContext>().create({
   isServer: false,
   allowOutsideOfServer: true,
   transformer: superjson,

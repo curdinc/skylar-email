@@ -13,6 +13,7 @@ import {
 import {
   emailConfigSchema,
   emailSchema,
+  supportedEmailProvidersSchema,
   validatorTrpcWrapper,
 } from "@skylar/parsers-and-types";
 
@@ -85,5 +86,15 @@ export const MESSAGE_PROCEDURES = {
       object({ replyToGmailThreadId: optional(string()) }),
     ]),
     output: void_("Error: unable to modify labels."),
+  }),
+};
+
+export const PROVIDER_PROCEDURES = {
+  addOauthProvider: buildGmailApiRouterProcedure({
+    input: object({
+      code: string(),
+      provider: supportedEmailProvidersSchema,
+    }),
+    output: emailSchema,
   }),
 };
