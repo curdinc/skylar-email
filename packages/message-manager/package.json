@@ -21,8 +21,7 @@
   },
   "dependencies": {
     "@skylar/parsers-and-types": "^0.1.0",
-    "date-fns": "^2.30.0",
-    "mimetext": "^3.0.16"
+    "date-fns": "^2.30.0"
   },
   "devDependencies": {
     "@skylar/eslint-config": "0.2.0",

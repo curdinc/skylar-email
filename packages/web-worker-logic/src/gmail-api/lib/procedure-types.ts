@@ -14,7 +14,6 @@ import {
 } from "valibot";
 
 import {
-  emailConfigSchema,
   emailSchema,
   supportedEmailProvidersSchema,
   syncResponseSchema,
@@ -85,7 +84,7 @@ export const MESSAGE_PROCEDURES = {
     input: intersect([
       object({
         emailAddress: emailSchema,
-        emailConfig: emailConfigSchema,
+        rfc822Base64EncodedMessageData: string(),
       }),
       object({ replyToGmailThreadId: optional(string()) }),
     ]),

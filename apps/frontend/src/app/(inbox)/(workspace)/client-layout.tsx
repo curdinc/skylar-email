@@ -16,12 +16,12 @@ import {
 import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
 import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
 import {
+  convertGmailEmailToClientDbEmail,
   gmailApiWorker,
   gmailBackgroundSyncWorker,
 } from "@skylar/web-worker-logic";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
-import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
