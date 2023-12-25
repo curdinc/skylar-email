@@ -98,3 +98,13 @@ export const PROVIDER_PROCEDURES = {
     output: emailSchema,
   }),
 };
+
+export const THREAD_PROCEDURES = {
+  delete: buildGmailApiRouterProcedure({
+    input: object({
+      emailAddress: emailSchema,
+      threadIds: array(string()),
+    }),
+    output: void_("Error: unable to delete thread."),
+  }),
+};
