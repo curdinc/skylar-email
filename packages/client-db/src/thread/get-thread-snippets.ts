@@ -35,7 +35,7 @@ export async function getThreadSnippets({
           .toArray()
       : clientDb.thread
           .where(orderBy)
-          .below(lastEntry[orderBy])
+          .above(lastEntry[orderBy])
           .and((thread) => actualFilters.every((f) => f(thread)))
           .limit(limit)
           .toArray();
