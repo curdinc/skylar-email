@@ -16,10 +16,12 @@ import {
   getSenderReplyToEmailAddresses,
   isAttachmentSizeValid,
 } from "~/lib/email";
+import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useSendEmail } from "./use-send-mail";
 
 export const useMessageComposer = () => {
+  const logger = useLogger();
   const replyThread = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
   );
@@ -155,6 +157,14 @@ export const useMessageComposer = () => {
         title: "Email sent!",
       });
       resetComposeMessage();
+    },
+    onError: (error) => {
+      logger.error("Error sending email", { error });
+      toast({
+        title: "Error sending email",
+        description: "Please try again later",
+        variant: "destructive",
+      });
     },
   });
 

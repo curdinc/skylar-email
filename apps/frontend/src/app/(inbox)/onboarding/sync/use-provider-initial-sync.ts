@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useLogger } from "next-axiom";
 
 import { incrementalSync } from "@skylar/gmail-api";
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types/src/api/email-provider/oauth";
 
+import { useLogger } from "~/lib/logger";
 import { useAccessToken } from "~/lib/provider/use-access-token";
 
 const INITIAL_MESSAGES_TO_FETCH = 150;
@@ -21,6 +21,7 @@ function genRand(min: number, max: number, decimalPlaces: number) {
 }
 
 const SYNC_STEPS = {
+  ERROR_SYNCING_INBOX: "Error syncing inbox",
   GETTING_ACCESS_TO_INBOX: "Getting access to inbox",
   FETCHING_EMAIL_LIST: "Fetching email list",
   FETCHING_EMAILS: "Fetching emails",
@@ -34,7 +35,7 @@ export const useProviderInitialSync = () => {
   const providersSyncing = Object.keys(isSyncingMap).filter((email) => {
     return isSyncingMap[email];
   });
-  const completedProvidersSync = Object.keys(isSyncingMap).filter((email) => {
+  const providersSyncCompleted = Object.keys(isSyncingMap).filter((email) => {
     return !isSyncingMap[email];
   });
 
@@ -52,22 +53,19 @@ export const useProviderInitialSync = () => {
             if (prev >= 90) {
               return prev;
             }
-            return prev + 1;
+            return prev + genRand(1, 4, 0);
           });
         },
         genRand(400, 600, 0),
       );
       return () => clearInterval(interval);
-    } else if (
-      Object.values(isSyncingMap).every((arg) => !arg) &&
-      syncProgress > 0
-    ) {
-      setSyncProgress(100);
     }
   }, [isSyncingMap, syncProgress]);
 
   useEffect(() => {
-    if (syncProgress < 11) {
+    if (syncProgress === -1) {
+      setSyncStep(SYNC_STEPS.ERROR_SYNCING_INBOX);
+    } else if (syncProgress < 11) {
       setSyncStep(SYNC_STEPS.GETTING_ACCESS_TO_INBOX);
     } else if (syncProgress < 37) {
       setSyncStep(SYNC_STEPS.FETCHING_EMAIL_LIST);
@@ -92,11 +90,14 @@ export const useProviderInitialSync = () => {
         accessToken,
         emailId: gmailToSync,
         onError: (e) => {
-          logger.error(e.message, e);
+          logger.error("Error performing incremental sync", { error: e });
         },
         numberOfMessagesToFetch: INITIAL_MESSAGES_TO_FETCH,
       });
       return emailData;
+    },
+    onError: (e) => {
+      logger.error("Error performing incremental sync", { error: e });
     },
   });
 
@@ -108,30 +109,35 @@ export const useProviderInitialSync = () => {
       emailToSync: string;
       emailProvider: SupportedEmailProviderType;
     }) => {
-      setIsSyncingMap((prev) => ({ ...prev, [emailToSync]: true }));
       let emailData: SyncResponseType;
-      try {
-        switch (emailProvider) {
-          case "gmail": {
-            emailData = await startGmailInitialSync(emailToSync);
-            break;
-          }
-          default:
-            throw new Error(`unsupported email provider ${emailProvider}`);
+      switch (emailProvider) {
+        case "gmail": {
+          emailData = await startGmailInitialSync(emailToSync);
+          break;
         }
-        setIsSyncingMap((prev) => ({ ...prev, [emailToSync]: false }));
-        return emailData;
-      } catch (e) {
-        setIsSyncingMap((prev) => ({ ...prev, [emailToSync]: false }));
-        throw e;
+        default:
+          throw new Error(`unsupported email provider ${emailProvider}`);
       }
+      return emailData;
+    },
+    onMutate: (variables) => {
+      setIsSyncingMap((prev) => ({ ...prev, [variables.emailToSync]: true }));
+    },
+    onSettled: (_, __, variables) => {
+      setIsSyncingMap((prev) => ({ ...prev, [variables.emailToSync]: false }));
+    },
+    onError: () => {
+      setSyncProgress(-1);
+    },
+    onSuccess: () => {
+      setSyncProgress(100);
     },
   });
 
   return {
     providersToSync,
     providersSyncing,
-    completedProvidersSync,
+    providersSyncCompleted,
     providerInitialSyncMutation,
     syncProgress,
     syncStep,

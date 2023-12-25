@@ -10,14 +10,19 @@ const isEventTargetInputOrTextArea = (eventTarget: EventTarget | null) => {
   return ["input", "textarea"].includes(eventTargetTagName);
 };
 
-export const registerShortcuts = (
+export const registerShortcuts = ({
+  shortcuts,
+  existingShortcuts,
+  onError,
+}: {
   shortcuts: (ShortcutInsertType & {
     onKeyDown: (event: KeyboardEvent) => void;
-  })[],
-  existingShortcuts?: ShortcutInsertType[],
-) => {
+  })[];
+  existingShortcuts?: ShortcutInsertType[];
+  onError?: (error: unknown) => void;
+}) => {
   bulkRegisterShortcut(shortcuts).catch((e) => {
-    console.error("Something went wrong saving shortcuts to clientDb", e);
+    onError?.(e);
   });
 
   const existingKeyMap = Object.fromEntries(

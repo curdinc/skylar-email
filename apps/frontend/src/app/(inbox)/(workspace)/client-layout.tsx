@@ -18,6 +18,7 @@ import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
 import { convertGmailEmailToClientDbEmail } from "~/lib/email";
+import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 import { useGlobalKeymap } from "~/lib/shortcuts/keymap-hooks";
@@ -67,7 +68,7 @@ export const ClientLayout = () => {
   }, [allSyncInfo]);
 
   // partial sync emails
-  useQuery({
+  const { error } = useQuery({
     queryKey: [],
     queryFn: async () => {
       let updatedEmails = false;
@@ -152,6 +153,10 @@ export const ClientLayout = () => {
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
+  const logger = useLogger();
+  useEffect(() => {
+    logger.error("Error in client layout", { error });
+  }, [error, logger]);
 
   return <></>;
 };

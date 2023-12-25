@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
 import { partialSync } from "@skylar/gmail-api";
-import { formatValidatorError } from "@skylar/parsers-and-types";
 
 import { useLogger } from "~/lib/logger";
 import { useAccessToken } from "~/lib/provider/use-access-token";
@@ -22,17 +21,15 @@ export const useEmailPartialSync = () => {
         email: emailAddressToSync,
       });
 
-      try {
-        const emailData = await partialSync({
-          accessToken,
-          emailId: emailAddressToSync,
-          startHistoryId,
-        });
-        return emailData;
-      } catch (e) {
-        logger.info(JSON.stringify(formatValidatorError(e), null, 2));
-        throw e;
-      }
+      const emailData = await partialSync({
+        accessToken,
+        emailId: emailAddressToSync,
+        startHistoryId,
+      });
+      return emailData;
+    },
+    onError: (error) => {
+      logger.error("Error performing partial sync", { error });
     },
   });
 };

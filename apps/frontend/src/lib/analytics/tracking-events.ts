@@ -11,6 +11,7 @@ export const TrackingEvents = {
   connectedProvider: "connected_provider",
   initSyncStarted: "init_sync_started",
   initSyncCompleted: "init_sync_completed",
+  initSyncRetry: "init_sync_retry",
   initSyncFailed: "init_sync_failed",
   speedUpButtonClicked: "speed_up_button_clicked",
   threadOpened: "thread_opened",
@@ -49,7 +50,10 @@ export type TrackingEventProperties = {
     emailAddress: string;
   };
   [TrackingEvents.initSyncStarted]: Record<string, never>;
-  [TrackingEvents.initSyncCompleted]: Record<string, never>;
+  [TrackingEvents.initSyncCompleted]: {
+    timeTakenInSeconds: number;
+  };
+  [TrackingEvents.initSyncRetry]: Record<string, never>;
   [TrackingEvents.initSyncFailed]: Record<string, never>;
   [TrackingEvents.speedUpButtonClicked]: Record<string, never>;
   [TrackingEvents.threadOpened]: Record<string, never>;

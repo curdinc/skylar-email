@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { filterForLabels } from "@skylar/client-db";
 
@@ -9,8 +9,7 @@ import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
 import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";
-import { getLabelDataListItem } from "./focus-label-accordion";
-import { ThreadList } from "./thread-list";
+import { LabelList } from "./label-list";
 
 /**
  * @returns The component that renders all the labels of a user and the corresponding messages
@@ -65,22 +64,22 @@ export const LabelAccordion = () => {
           ButtonIcon = <Icons.chevronDown className="w-4" />;
         }
         return (
-          <Fragment key={label.id}>
+          <div key={label.id}>
             <button
-              data-list-item={getLabelDataListItem(label.id)}
+              data-label-item={label.id}
               className="sticky top-0 z-10 flex w-full items-center gap-1 bg-secondary px-2 py-1 text-sm"
               onClick={onClickLabel(label.id)}
             >
               {ButtonIcon} {label.name}
             </button>
             {visibleLabels[label.id] && (
-              <ThreadList
+              <LabelList
                 filters={[filterForLabels([label.id])]}
                 uniqueListId={label.id}
-                dataListItemLabel={label.id}
+                dataItemLabel={label.id}
               />
             )}
-          </Fragment>
+          </div>
         );
       })}
     </div>

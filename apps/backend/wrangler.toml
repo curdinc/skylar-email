@@ -1,7 +1,0 @@
-name = "backend"
-compatibility_date = "2023-08-07"
-send_metrics = false
-node_compat = true
-
-[vars]
-AXIOM_URL = "https://api.axiom.co"

@@ -7,7 +7,6 @@ const config = {
   transpilePackages: [
     "@skylar/client-db",
     "@skylar/logic",
-    "@skylar/logger",
     "@skylar/parsers-and-types",
     "@skylar/tinykeys",
   ],

@@ -15,8 +15,38 @@ import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { useSyncPage } from "./use-sync-page";
 
 export default function SyncProgress() {
-  const { providersSyncing, syncProgress, syncStep } = useSyncPage();
+  const { providersSyncing, syncProgress, syncStep, isError, retrySync } =
+    useSyncPage();
 
+  let ctaButton = (
+    <Button
+      onClick={() => {
+        captureEvent({
+          event: TrackingEvents.speedUpButtonClicked,
+          properties: {},
+        });
+      }}
+      variant={"secondary"}
+    >
+      Speed up
+    </Button>
+  );
+
+  if (isError) {
+    ctaButton = (
+      <Button
+        onClick={() => {
+          captureEvent({
+            event: TrackingEvents.initSyncRetry,
+            properties: {},
+          });
+          retrySync();
+        }}
+      >
+        Retry
+      </Button>
+    );
+  }
   return (
     <Card>
       <CardHeader>
@@ -30,18 +60,7 @@ export default function SyncProgress() {
         <div className="text-sm text-muted-foreground">{syncStep}</div>
         <Progress value={syncProgress} />
       </CardContent>
-      <CardFooter className="justify-end">
-        <Button
-          onClick={() => {
-            captureEvent({
-              event: TrackingEvents.speedUpButtonClicked,
-              properties: {},
-            });
-          }}
-        >
-          Speed up
-        </Button>
-      </CardFooter>
+      <CardFooter className="justify-end">{ctaButton}</CardFooter>
     </Card>
   );
 }

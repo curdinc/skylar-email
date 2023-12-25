@@ -1,8 +1,7 @@
 "use client";
 
-import { startTransition, useEffect, useRef } from "react";
+import { startTransition, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useInView } from "react-intersection-observer";
 
 import { isThreadUnread, useThreadSnippetsInfinite } from "@skylar/client-db";
 import { setActiveThread } from "@skylar/logic";
@@ -14,20 +13,23 @@ import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { cn } from "~/lib/ui";
 import { Button } from "../ui/button";
-import { DATA_LABEL, getThreadDataListItem } from "./focus-label-accordion";
+import {
+  DATA_THREAD_ITEM,
+  getDataThreadItem,
+} from "./label-accordion-keyboard-navigation/helpers";
 
 /**
  *
  * @param {string} uniqueListId: The unique id of the list
  * @returns The component that renders all the messages of a user for a given set of filter
  */
-export function ThreadList({
+export function LabelList({
   filters,
   uniqueListId,
-  dataListItemLabel,
+  dataItemLabel,
 }: Pick<Parameters<typeof useThreadSnippetsInfinite>[0], "filters"> & {
   uniqueListId: string;
-  dataListItemLabel: string;
+  dataItemLabel: string;
 }) {
   const { data: activeEmailAddress } = useActiveEmailAddress();
 
@@ -35,7 +37,7 @@ export function ThreadList({
     useThreadSnippetsInfinite({
       userEmails: activeEmailAddress ? [activeEmailAddress] : [],
       filters,
-      limit: 15,
+      limit: 25,
       uid: uniqueListId,
     });
   const allRows = data ? data.pages.flat() : [];
@@ -61,11 +63,10 @@ export function ThreadList({
     paddingEnd: hasNextPage ? 40 : undefined,
   });
 
-  const { ref: hasNextPageInViewRef, inView: hasNextPageInView } = useInView();
   const onClickLoadMore = () => {
     const keepCurrentFocus = document.querySelector(
-      `[${DATA_LABEL}=${getThreadDataListItem(
-        dataListItemLabel,
+      `[${DATA_THREAD_ITEM}=${getDataThreadItem(
+        dataItemLabel,
         allRows.length - 1,
       )}]`,
     );
@@ -74,23 +75,28 @@ export function ThreadList({
       console.error("Something went wrong fetching emails", e);
     });
   };
-  useEffect(() => {
-    if (hasNextPageInView) {
-      fetchNextPage().catch((e) => {
-        console.error("Something went wrong fetching emails", e);
-      });
-    }
-  }, [fetchNextPage, hasNextPageInView]);
 
   if (status === "pending") {
-    return <div className="px-2 py-1">Loading...</div>;
+    return (
+      <div className="px-2 py-1" data-thread-wrapper={dataItemLabel}>
+        Loading...
+      </div>
+    );
   }
   if (status === "error") {
-    return <div className="px-2 py-1">Error: {error.message}</div>;
+    return (
+      <div className="px-2 py-1" data-thread-wrapper={dataItemLabel}>
+        Error: {error.message}
+      </div>
+    );
   }
 
   if (!allRows.length) {
-    return <div className="px-2 py-1">No messages yet.</div>;
+    return (
+      <div className="px-2 py-1" data-thread-wrapper={dataItemLabel}>
+        No messages yet.
+      </div>
+    );
   }
 
   return (
@@ -100,6 +106,7 @@ export function ThreadList({
         height: rowVirtualizer.getTotalSize(),
       }}
       className="relative h-full w-full"
+      data-thread-wrapper={dataItemLabel}
     >
       {rowVirtualizer.getVirtualItems().map((virtualRow) => {
         const thread = allRows[virtualRow.index];
@@ -115,8 +122,8 @@ export function ThreadList({
             }}
           >
             <button
-              data-list-item={getThreadDataListItem(
-                dataListItemLabel,
+              data-thread-item={getDataThreadItem(
+                dataItemLabel,
                 virtualRow.index,
               )}
               key={virtualRow.index}
@@ -127,7 +134,7 @@ export function ThreadList({
               }}
               onClick={onClickThread(thread)}
               className={cn(
-                "absolute left-0 top-0 flex w-full items-center justify-start px-2",
+                "absolute left-1 top-0 flex w-full items-center justify-start px-2",
                 "min-w-0 truncate hover:bg-secondary",
                 isThreadUnread(thread) && "font-bold",
               )}
@@ -143,11 +150,7 @@ export function ThreadList({
       })}
       {hasNextPage && (
         <Button
-          data-list-item={getThreadDataListItem(
-            dataListItemLabel,
-            allRows.length,
-          )}
-          ref={hasNextPageInViewRef}
+          data-thread-item={getDataThreadItem(dataItemLabel, allRows.length)}
           onClick={onClickLoadMore}
           variant={"ghost"}
           className="absolute bottom-0 left-0 flex h-10 w-full justify-center"
