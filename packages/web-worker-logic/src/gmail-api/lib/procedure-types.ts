@@ -2,7 +2,10 @@ import type { BaseSchema } from "valibot";
 import {
   array,
   custom,
+  integer,
   intersect,
+  minValue,
+  number,
   object,
   optional,
   picklist,
@@ -14,6 +17,7 @@ import {
   emailConfigSchema,
   emailSchema,
   supportedEmailProvidersSchema,
+  syncResponseSchema,
   validatorTrpcWrapper,
 } from "@skylar/parsers-and-types";
 
@@ -106,5 +110,27 @@ export const THREAD_PROCEDURES = {
       threadIds: array(string()),
     }),
     output: void_("Error: unable to delete thread."),
+  }),
+};
+
+export const SYNC_PROCEDURES = {
+  incrementalSync: buildGmailApiRouterProcedure({
+    input: intersect([
+      object({
+        emailAddress: emailSchema,
+        numberOfMessagesToFetch: number([integer(), minValue(1)]),
+      }),
+      object({ pageToken: optional(string()) }),
+    ]),
+    output: syncResponseSchema,
+  }),
+  partialSync: buildGmailApiRouterProcedure({
+    input: intersect([
+      object({
+        emailAddress: emailSchema,
+      }),
+      object({ startHistoryId: string() }),
+    ]),
+    output: syncResponseSchema,
   }),
 };

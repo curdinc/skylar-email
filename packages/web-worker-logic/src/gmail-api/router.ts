@@ -1,6 +1,7 @@
 import { labelRouter } from "./lib/sub-routers/label";
 import { messageRouter } from "./lib/sub-routers/message";
 import { providerRouter } from "./lib/sub-routers/provider";
+import { syncRouter } from "./lib/sub-routers/sync";
 import { threadRouter } from "./lib/sub-routers/thread";
 import {
   createGmailApiRouter,
@@ -13,6 +14,7 @@ export const gmailWorkerRouter = createGmailApiRouter({
   message: messageRouter,
   provider: providerRouter,
   thread: threadRouter,
+  sync: syncRouter,
 });
 
 export type GmailWorkerRouterType = typeof gmailWorkerRouter;
