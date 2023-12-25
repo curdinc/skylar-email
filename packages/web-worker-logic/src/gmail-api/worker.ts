@@ -17,9 +17,11 @@ sharedWorkerAdapter({
       getAccessToken: async (emailAddress: string) => {
         const token = tokenStore.get(emailAddress);
 
-        if (token && token.exp < Date.now()) {
+        if (token && Date.now() < token.exp) {
+          // return cached token
           return token.at;
         }
+        console.log("tokenStore", tokenStore);
         const refreshToken = await getRefreshTokenByEmailAddress({
           emailAddress,
         });
