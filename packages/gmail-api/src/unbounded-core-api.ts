@@ -28,11 +28,13 @@ export async function getMessageUnbounded({
   accessToken,
   emailId,
   chunkSize = GMAIL_MAX_BATCH_REQUEST_SIZE,
+  onError,
 }: {
   messageIds: string[];
   accessToken: string;
   emailId: string;
   chunkSize?: number;
+  onError?: (error: unknown) => void;
 }) {
   // create batches
   const messageIdChunks = splitToNChunks(messageIds, chunkSize);
@@ -62,7 +64,7 @@ export async function getMessageUnbounded({
     if (m.status === "fulfilled") {
       return m.value;
     }
-    console.error(`Failed to retrieve message batch. Error: ${m.reason} `);
+    onError?.(m.reason);
     return [];
   });
   return parseMessageDataBatches.flat();

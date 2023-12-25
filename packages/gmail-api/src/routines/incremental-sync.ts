@@ -14,7 +14,7 @@ export async function incrementalSync({
   accessToken: string;
   emailId: string;
   pageToken?: string;
-  onError?: (error: Error) => void;
+  onError?: (error: unknown) => void;
   numberOfMessagesToFetch: number;
 }): Promise<SyncResponseType> {
   // get all messages

@@ -11,14 +11,13 @@ import {
   useGlobalStore,
 } from "@skylar/logic";
 
-import {
-  closeCurrentOrGoToPreviousLabel,
-  goDownMessageList,
-  goUpMessageList,
-  openLabelOrGoToNextLabel,
-} from "~/components/label-accordion-menu/focus-label-accordion";
+import { closeCurrentOrGoToPreviousLabel } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/close-label";
+import { goDownLabelList } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/go-down";
+import { goUpLabelList } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/go-up";
+import { openLabelOrGoToNextLabel } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/open-label";
 import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
+import { useLogger } from "../logger";
 import { registerShortcuts } from "./register-shortcuts";
 
 // ! Note that shortcuts should not overlap
@@ -27,35 +26,36 @@ import { registerShortcuts } from "./register-shortcuts";
 export const useNavigateMessagesKeymap = () => {
   const { data: existingShortcuts, isLoading: isLoadingExistingShortcuts } =
     useAllShortcuts();
+  const logger = useLogger();
   useEffect(() => {
     if (isLoadingExistingShortcuts) {
       return;
     }
-    const unsubscribe = registerShortcuts(
-      [
+    const unsubscribe = registerShortcuts({
+      shortcuts: [
         {
           combo: "j",
           description: "Go down the message list",
           label: "message.down",
-          onKeyDown: goDownMessageList,
+          onKeyDown: goDownLabelList,
         },
         {
           combo: "ArrowDown",
           description: "Go down the next message list",
           label: "message.down-alt",
-          onKeyDown: goDownMessageList,
+          onKeyDown: goDownLabelList,
         },
         {
           combo: "k",
           description: "Go to up the message list",
           label: "message.up",
-          onKeyDown: goUpMessageList,
+          onKeyDown: goUpLabelList,
         },
         {
           combo: "ArrowUp",
           description: "Go to up the message list",
           label: "message.up-alt",
-          onKeyDown: goUpMessageList,
+          onKeyDown: goUpLabelList,
         },
         {
           combo: "h",
@@ -83,15 +83,21 @@ export const useNavigateMessagesKeymap = () => {
         },
       ],
       existingShortcuts,
-    );
+      onError: (error) => {
+        logger.error("Error in register navigating message shortcuts", {
+          error,
+        });
+      },
+    });
     return unsubscribe;
-  }, [existingShortcuts, isLoadingExistingShortcuts]);
+  }, [existingShortcuts, isLoadingExistingShortcuts, logger]);
 };
 
 export const useGlobalKeymap = () => {
   const router = useRouter();
   const { data: existingShortcuts, isLoading: isLoadingExistingShortcuts } =
     useAllShortcuts();
+  const logger = useLogger();
   useEffect(() => {
     if (isLoadingExistingShortcuts) {
       return;
@@ -99,8 +105,8 @@ export const useGlobalKeymap = () => {
     const goToInbox = (key: string) => {
       return () => router.push(`/${key}`);
     };
-    const unsubscribe = registerShortcuts(
-      [
+    const unsubscribe = registerShortcuts({
+      shortcuts: [
         {
           combo: "Escape",
           description: "Default key to close things",
@@ -272,8 +278,13 @@ export const useGlobalKeymap = () => {
         },
       ],
       existingShortcuts,
-    );
+      onError: (error) => {
+        logger.error("Error in registering global shortcuts", {
+          error,
+        });
+      },
+    });
 
     return unsubscribe;
-  }, [existingShortcuts, isLoadingExistingShortcuts, router]);
+  }, [existingShortcuts, isLoadingExistingShortcuts, logger, router]);
 };

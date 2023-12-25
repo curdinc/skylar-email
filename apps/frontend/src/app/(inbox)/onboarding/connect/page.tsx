@@ -24,6 +24,7 @@ export default function ConnectEmailOnboardingForm() {
     connectToGmail,
     connectToOutlook,
     isConnectingToProvider,
+    connectToEmailDescription,
   } = useConnectEmailProviderPage();
 
   const onInitiateConnect = () => {
@@ -40,7 +41,7 @@ export default function ConnectEmailOnboardingForm() {
     <Card>
       <CardHeader>
         <CardTitle>Email Provider</CardTitle>
-        <CardDescription>Connect to your email to get started.</CardDescription>
+        <CardDescription>{connectToEmailDescription}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
         <RadioGroup

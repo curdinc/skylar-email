@@ -1,7 +1,7 @@
-import { useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useState } from "react";
 
 import { putProvider } from "@skylar/client-db";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types";
@@ -12,12 +12,27 @@ import { captureEvent, identifyUser } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { GMAIL_SCOPES } from "~/lib/config";
 import { useLogger } from "~/lib/logger";
+import type { ROUTE_ONBOARDING_CONNECT } from "~/lib/routes";
 import { ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 
 export function useConnectEmailProviderPage() {
   const router = useRouter();
   const logger = useLogger();
   const { toast } = useToast();
+  const queryParams = useSearchParams();
+  let connectToEmailDescription = "Connect to your email to get started.";
+  if (
+    "type" in queryParams &&
+    queryParams.type ===
+      ("missingScopes" satisfies Parameters<
+        typeof ROUTE_ONBOARDING_CONNECT
+      >[0]["type"]) &&
+    "email" in queryParams &&
+    typeof queryParams.email === "string"
+  ) {
+    const email = queryParams.email;
+    connectToEmailDescription = `${email} is missing some required scopes. Please connect it again to grant the required scopes.`;
+  }
 
   const [providerType, setProviderType] =
     useState<SupportedEmailProviderType>("gmail");
@@ -95,14 +110,19 @@ export function useConnectEmailProviderPage() {
     },
     onError: (errorResponse) => {
       setIsConnectingToProvider(false);
+      toast({
+        title: "Error connecting to email provider",
+        description: `${errorResponse.error_description}. Please try again later`,
+        variant: "destructive",
+      });
       logger.error("User encounter error connecting to Google", {
-        ...errorResponse,
+        error: errorResponse,
       });
     },
     onNonOAuthError(nonOAuthError) {
       setIsConnectingToProvider(false);
       logger.info("User encounter non oauth error connecting to google", {
-        ...nonOAuthError,
+        error: nonOAuthError,
       });
     },
     select_account: true,
@@ -118,6 +138,7 @@ export function useConnectEmailProviderPage() {
   }, []);
 
   return {
+    connectToEmailDescription,
     onSelectEmailProvider,
     providerType,
     providerTypeDisplayName:

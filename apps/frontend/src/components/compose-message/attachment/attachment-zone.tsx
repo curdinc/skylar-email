@@ -16,8 +16,8 @@ export const AttachmentZone = ({ children }: { children: React.ReactNode }) => {
     [handleAcceptedFiles],
   );
 
-  const replyingTo = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.COMPOSING.respondingThread,
+  const messageType = useGlobalStore(
+    (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -27,7 +27,7 @@ export const AttachmentZone = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      {isDragActive && replyingTo && (
+      {isDragActive && messageType !== "none" && (
         <div
           className={
             "pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-background/70 font-heading text-4xl font-medium text-foreground backdrop-blur-sm"

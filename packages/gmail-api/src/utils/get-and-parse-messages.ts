@@ -14,7 +14,7 @@ export async function getAndParseMessages({
   messageIds: string[];
   accessToken: string;
   emailId: string;
-  onError?: (error: Error) => void;
+  onError?: (error: unknown) => void;
   fetchMessageChunkSize?: number;
 }): Promise<messageDetailsType[]> {
   const rawMessages = await getMessageUnbounded({
@@ -22,6 +22,7 @@ export async function getAndParseMessages({
     accessToken,
     emailId,
     chunkSize: fetchMessageChunkSize,
+    onError,
   });
 
   const parsedMessages = rawMessages.map((msg) => {
