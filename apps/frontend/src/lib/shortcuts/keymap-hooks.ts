@@ -12,12 +12,10 @@ import {
   useGlobalStore,
 } from "@skylar/logic";
 
-import {
-  closeCurrentOrGoToPreviousLabel,
-  goDownMessageList,
-  goUpMessageList,
-  openLabelOrGoToNextLabel,
-} from "~/components/label-accordion-menu/focus-label-accordion";
+import { closeCurrentOrGoToPreviousLabel } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/close-label";
+import { goDownLabelList } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/go-down";
+import { goUpLabelList } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/go-up";
+import { openLabelOrGoToNextLabel } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/open-label";
 import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
 import { registerShortcuts } from "./register-shortcuts";
@@ -39,25 +37,25 @@ export const useNavigateMessagesKeymap = () => {
           combo: "j",
           description: "Go down the message list",
           label: "message.down",
-          onKeyDown: goDownMessageList,
+          onKeyDown: goDownLabelList,
         },
         {
           combo: "ArrowDown",
           description: "Go down the next message list",
           label: "message.down-alt",
-          onKeyDown: goDownMessageList,
+          onKeyDown: goDownLabelList,
         },
         {
           combo: "k",
           description: "Go to up the message list",
           label: "message.up",
-          onKeyDown: goUpMessageList,
+          onKeyDown: goUpLabelList,
         },
         {
           combo: "ArrowUp",
           description: "Go to up the message list",
           label: "message.up-alt",
-          onKeyDown: goUpMessageList,
+          onKeyDown: goUpLabelList,
         },
         {
           combo: "h",
