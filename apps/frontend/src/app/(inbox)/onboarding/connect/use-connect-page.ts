@@ -1,7 +1,7 @@
+import { useCallback, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
 
 import { putProvider } from "@skylar/client-db";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types";

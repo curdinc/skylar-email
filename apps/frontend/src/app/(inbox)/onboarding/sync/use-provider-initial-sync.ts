@@ -1,11 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 import type { SyncResponseType } from "@skylar/parsers-and-types";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types/src/api/email-provider/oauth";
 import { gmailApiWorker } from "@skylar/web-worker-logic";
-import { useLogger } from "~/lib/logger";
 
+import { useLogger } from "~/lib/logger";
 
 const INITIAL_MESSAGES_TO_FETCH = 150;
 
