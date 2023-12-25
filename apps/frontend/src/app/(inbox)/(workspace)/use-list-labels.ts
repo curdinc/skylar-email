@@ -7,13 +7,13 @@ import { useAccessToken } from "~/lib/provider/use-access-token";
 
 export const LIST_LABEL_QUERY_KEY = "listLabels";
 export function useListLabels() {
-  const { data: allEmailProviders } = useConnectedProviders();
+  const { data: connectedProviders } = useConnectedProviders();
   const { mutateAsync: fetchAccessToken } = useAccessToken();
 
   return useQuery({
-    queryKey: [LIST_LABEL_QUERY_KEY, allEmailProviders],
+    queryKey: [LIST_LABEL_QUERY_KEY, connectedProviders],
     queryFn: async () => {
-      const labelPromise = (allEmailProviders ?? []).map(async (provider) => {
+      const labelPromise = (connectedProviders ?? []).map(async (provider) => {
         const accessToken = await fetchAccessToken({
           email: provider.user_email_address,
         });
@@ -46,5 +46,6 @@ export function useListLabels() {
       }, {});
       return labelsMap;
     },
+    enabled: !!connectedProviders,
   });
 }
