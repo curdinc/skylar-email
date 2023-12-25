@@ -28,14 +28,14 @@ export async function getThreadSnippets({
     return sort === "DESC"
       ? clientDb.thread
           .where(orderBy)
-          .below(lastEntry.updated_at)
+          .below(lastEntry[orderBy])
           .reverse()
           .and((thread) => actualFilters.every((f) => f(thread)))
           .limit(limit)
           .toArray()
       : clientDb.thread
           .where(orderBy)
-          .below(lastEntry.updated_at)
+          .below(lastEntry[orderBy])
           .and((thread) => actualFilters.every((f) => f(thread)))
           .limit(limit)
           .toArray();

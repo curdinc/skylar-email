@@ -34,7 +34,7 @@ export function useThreadSnippetsInfinite(
       return threadSnippets;
     },
     getNextPageParam: (lastPage, _pages) => {
-      if (lastPage.length === 0) {
+      if (lastPage.length < (args?.limit ?? 1)) {
         return undefined;
       }
       return { lastThread: lastPage.at(-1) };
