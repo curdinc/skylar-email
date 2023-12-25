@@ -27,7 +27,7 @@ export async function incrementalSync({
 
   if (messages.length === 0) {
     throw new Error("No messages found", {
-      cause: "full-sync",
+      cause: "incremental-sync",
     });
   }
 
@@ -45,7 +45,7 @@ export async function incrementalSync({
 
   if (!lastCheckedHistoryId) {
     throw new Error(`Error in lastCheckedHistoryId: undefined.`, {
-      cause: "full-sync",
+      cause: "incremental-sync",
     });
   }
 
