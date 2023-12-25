@@ -9,7 +9,7 @@ import {
 
 import { backgroundSync } from "./lib/background-sync";
 
-const t = initTRPC.context().create({
+const t = initTRPC.create({
   isServer: false,
   allowOutsideOfServer: true,
   transformer: superjson,

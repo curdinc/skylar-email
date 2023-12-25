@@ -4,7 +4,7 @@ import { SYNC_PROCEDURES } from "../procedure-types";
 import { createGmailApiRouter, gmailApiRouterProcedure } from "../trpc-factory";
 
 export const syncRouter = createGmailApiRouter({
-    // make sure router is connected
+  // make sure router is connected
   health: gmailApiRouterProcedure.query(() => "OK"),
   // fetches batches of messages (used upto full synchronization)
   incrementalSync: SYNC_PROCEDURES.incrementalSync.mutation(
