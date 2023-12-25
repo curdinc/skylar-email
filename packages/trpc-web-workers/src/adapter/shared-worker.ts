@@ -4,7 +4,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-import type { AnyProcedure, AnyRouter } from "@trpc/server";
+import type {
+  AnyProcedure,
+  AnyRouter,
+  inferRouterContext,
+  MaybePromise,
+} from "@trpc/server";
 import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/rpc";
 
 import type { workerMessageRequest, workerMessageResponse } from "../types";
@@ -13,6 +18,7 @@ import { getErrorFromUnknown } from "../utils/error";
 // THIS INITIALIZES THE WORKER
 export const sharedWorkerAdapter = <TRouter extends AnyRouter>(opts: {
   router: TRouter;
+  createContext: () => MaybePromise<inferRouterContext<TRouter>>;
 }) => {
   const router = opts.router;
   const transformer = router._def._config.transformer;
@@ -24,7 +30,8 @@ export const sharedWorkerAdapter = <TRouter extends AnyRouter>(opts: {
     port.onmessage = async (event: MessageEvent<workerMessageRequest>) => {
       const { id, params } = event.data.trpc;
 
-      const caller = router.createCaller({}); //TODO: No context for now
+      const context = await opts.createContext();
+      const caller = router.createCaller(context);
       const segments = params.path.split(".");
       const procedureFn = segments.reduce(
         (acc, segment) => acc[segment],
