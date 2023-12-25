@@ -14,6 +14,7 @@ export * from "./src/api/email-provider/gmail-provider";
 export {
   SUPPORTED_EMAIL_PROVIDER_LIST,
   oauthOnboardingSchema,
+  supportedEmailProvidersSchema,
   type Oauth2InitialTokenResponse,
   type Oauth2TokenFromRefreshTokenResponse,
   type SupportedEmailProviderType,
