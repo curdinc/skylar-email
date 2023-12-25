@@ -1,3 +1,5 @@
+export { syncResponseSchema } from "./src/api/email-provider/gmail-provider";
+
 export { emailSchema } from "./src/core-parsers";
 
 // GENERAL
