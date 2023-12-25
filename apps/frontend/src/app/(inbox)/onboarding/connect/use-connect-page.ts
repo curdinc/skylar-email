@@ -3,16 +3,12 @@ import { useRouter } from "next/navigation";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
 
-import { putProvider } from "@skylar/client-db";
-import type {
-  ProviderInsertType,
-  SupportedEmailProviderType,
-} from "@skylar/parsers-and-types";
+import type { SupportedEmailProviderType } from "@skylar/parsers-and-types";
+import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { captureEvent, identifyUser } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
-import { api } from "~/lib/api";
 import { GMAIL_SCOPES } from "~/lib/config";
 import { useLogger } from "~/lib/logger";
 import { ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
@@ -33,9 +29,33 @@ export function useConnectEmailProviderPage() {
 
   const [isConnectingToProvider, setIsConnectingToProvider] = useState(false);
 
-  const { mutate: addProvider } = useMutation({
-    mutationFn: async (provider: ProviderInsertType) => {
-      await putProvider({ provider });
+  const { mutate: exchangeCode } = useMutation({
+    mutationFn: async ({
+      code,
+      provider,
+    }: {
+      code: string;
+      provider: SupportedEmailProviderType;
+    }) => {
+      const emailAddress =
+        await gmailApiWorker.provider.addOauthProvider.mutate({
+          code: code,
+          provider,
+        });
+      return emailAddress;
+    },
+    onSuccess(emailAddress) {
+      identifyUser(emailAddress);
+
+      captureEvent({
+        event: TrackingEvents.connectedProvider,
+        properties: {
+          providerType,
+          emailAddress,
+        },
+      });
+
+      router.push(ROUTE_ONBOARDING_SYNC);
     },
     onError(error, variables) {
       toast({
@@ -49,32 +69,6 @@ export function useConnectEmailProviderPage() {
       });
       setIsConnectingToProvider(false);
     },
-    onSuccess: () => {
-      router.push(ROUTE_ONBOARDING_SYNC);
-    },
-  });
-
-  const { mutate: exchangeCode } = api.oauth.googleCodeExchange.useMutation({
-    onSuccess(emailProviderInfo) {
-      addProvider({
-        type: emailProviderInfo.providerType,
-        user_email_address: emailProviderInfo.providerInfo.email,
-        image_uri: emailProviderInfo.providerInfo.imageUri,
-        inbox_name: emailProviderInfo.providerInfo.name,
-        refresh_token: emailProviderInfo.providerInfo.refreshToken,
-        access_token: emailProviderInfo.accessToken,
-      });
-
-      identifyUser(emailProviderInfo.providerInfo.email);
-
-      captureEvent({
-        event: TrackingEvents.connectedProvider,
-        properties: {
-          providerType,
-          emailAddress: emailProviderInfo.providerInfo.email,
-        },
-      });
-    },
   });
 
   const initiateConnectToGmail = useGoogleLogin({
@@ -82,8 +76,8 @@ export function useConnectEmailProviderPage() {
     scope: GMAIL_SCOPES,
     onSuccess: (codeResponse) => {
       exchangeCode({
-        provider: "gmail",
         code: codeResponse.code,
+        provider: "gmail",
       });
     },
     onError: (errorResponse) => {
