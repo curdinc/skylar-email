@@ -9,7 +9,7 @@ const config = {
     "@skylar/logic",
     "@skylar/parsers-and-types",
     "@skylar/tinykeys",
-    "@skylar/trpc-web-workers",
+    "@skylar/web-worker-logic",
   ],
   /** We already do linting and typechecking as separate tasks in CI */
   eslint: { ignoreDuringBuilds: true },

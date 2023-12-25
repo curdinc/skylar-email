@@ -93,9 +93,6 @@ importers:
       '@icons-pack/react-simple-icons':
         specifier: ^9.1.0
         version: 9.1.0(react@18.2.0)
-      '@open-draft/deferred-promise':
-        specifier: ^2.2.0
-        version: 2.2.0
       '@radix-ui/react-accordion':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)
@@ -147,9 +144,6 @@ importers:
       '@skylar/client-db':
         specifier: ^0.1.0
         version: link:../../packages/client-db
-      '@skylar/logger':
-        specifier: ^0.1.0
-        version: link:../../packages/logger
       '@skylar/logic':
         specifier: ^0.1.0
         version: link:../../packages/logic
