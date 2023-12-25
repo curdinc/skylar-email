@@ -4,11 +4,10 @@ import {
   getProviderByEmailAddress,
   updateEmailSyncInfo,
 } from "@skylar/client-db";
-import { incrementalSync } from "@skylar/gmail-api";
 
+import { gmailApiWorker } from "../../client";
+import { MESSAGES_PER_SYNC } from "./constants";
 import { convertGmailEmailToClientDbEmail } from "./utils";
-
-const MESSAGES_PER_SYNC = 50;
 
 export async function backgroundSync({
   emailAddress,
@@ -28,12 +27,10 @@ export async function backgroundSync({
     if (!nextPageToken) {
       return;
     }
-    //FIXME: propagate errors to the main thread
-    const syncResult = await incrementalSync({
-      accessToken: provider.access_token, //FIXME: make sure this is fresh
-      emailId: provider.user_email_address,
+
+    const syncResult = await gmailApiWorker.sync.incrementalSync.mutate({
+      emailAddress: provider.user_email_address,
       pageToken: nextPageToken,
-      onError: (error) => console.error("error", error),
       numberOfMessagesToFetch: MESSAGES_PER_SYNC,
     });
 
