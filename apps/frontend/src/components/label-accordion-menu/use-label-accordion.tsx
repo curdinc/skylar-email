@@ -73,8 +73,6 @@ const fetchLiveThreadData = (
                 children: [NO_MESSAGES_LIST_ITEM],
               };
             }
-            console.log("label.children", label);
-            console.log("threadData", threadData);
             const isSameList =
               (label.children.length === threadData.length ||
                 // -1 to account for the view more button
@@ -97,7 +95,6 @@ const fetchLiveThreadData = (
                 }
                 throw new Error("Unknown type");
               }, true);
-            console.log("isSameList", isSameList);
             if (isSameList) {
               return label;
             }
@@ -156,7 +153,6 @@ export const useLabelAccordion = () => {
   }, [activeEmailAddress, labels]);
 
   useEffect(() => {
-    console.log("running subscription to mesages");
     const subscriptions = labelListData
       ?.filter((label) => {
         return label.state === "open";
@@ -169,7 +165,6 @@ export const useLabelAccordion = () => {
         );
       });
     return () => {
-      console.log("unsubbing from subscriptions");
       subscriptions?.forEach((subscription) => {
         subscription.unsubscribe();
       });

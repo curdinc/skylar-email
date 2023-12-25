@@ -130,7 +130,7 @@ export function ThreadContextMenu({
   };
 
   return (
-    <ContextMenu >
+    <ContextMenu>
       <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
       <ContextMenuContent className="w-64">
         {displayContextOption(INBOX_TOOLKIT_THREAD_ACTIONS.replySender)}
