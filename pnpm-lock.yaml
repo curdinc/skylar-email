@@ -637,6 +637,9 @@ importers:
 
   packages/web-worker-logic:
     dependencies:
+      '@skylar/api':
+        specifier: ^0.1.0
+        version: link:../api
       '@skylar/client-db':
         specifier: ^0.1.0
         version: link:../client-db
