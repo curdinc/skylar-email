@@ -1,9 +1,12 @@
 "use client";
 
-import { startTransition, useRef } from "react";
-import { useVirtualizer } from "@tanstack/react-virtual";
+import { startTransition } from "react";
 
-import { isThreadUnread, useThreadSnippetsInfinite } from "@skylar/client-db";
+import {
+  filterForLabels,
+  isThreadUnread,
+  useThreadSnippetsInfinite,
+} from "@skylar/client-db";
 import { setActiveThread } from "@skylar/logic";
 import type { ThreadType } from "@skylar/parsers-and-types";
 
@@ -23,22 +26,15 @@ import {
  * @param {string} uniqueListId: The unique id of the list
  * @returns The component that renders all the messages of a user for a given set of filter
  */
-export function LabelList({
-  filters,
-  uniqueListId,
-  dataItemLabel,
-}: Pick<Parameters<typeof useThreadSnippetsInfinite>[0], "filters"> & {
-  uniqueListId: string;
-  dataItemLabel: string;
-}) {
+export function LabelList({ labelId }: { labelId: string }) {
   const { data: activeEmailAddress } = useActiveEmailAddress();
 
   const { status, data, error, fetchNextPage, hasNextPage, refetch } =
     useThreadSnippetsInfinite({
       userEmails: activeEmailAddress ? [activeEmailAddress] : [],
-      filters,
+      filters: [filterForLabels([labelId])],
       limit: 25,
-      uid: uniqueListId,
+      uid: labelId,
     });
   const allRows = data ? data.pages.flat() : [];
 
@@ -53,22 +49,9 @@ export function LabelList({
     };
   };
 
-  const parentRef = useRef(null);
-
-  const rowVirtualizer = useVirtualizer({
-    count: allRows.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 40,
-    overscan: 3,
-    paddingEnd: hasNextPage ? 40 : undefined,
-  });
-
   const onClickLoadMore = () => {
     const keepCurrentFocus = document.querySelector(
-      `[${DATA_THREAD_ITEM}=${getDataThreadItem(
-        dataItemLabel,
-        allRows.length - 1,
-      )}]`,
+      `[${DATA_THREAD_ITEM}=${getDataThreadItem(labelId, allRows.length - 1)}]`,
     );
     (keepCurrentFocus as HTMLElement | undefined)?.focus();
     fetchNextPage().catch((e) => {
@@ -78,14 +61,14 @@ export function LabelList({
 
   if (status === "pending") {
     return (
-      <div className="px-2 py-1" data-thread-wrapper={dataItemLabel}>
+      <div className="px-2 py-1" data-thread-wrapper={labelId}>
         Loading...
       </div>
     );
   }
   if (status === "error") {
     return (
-      <div className="px-2 py-1" data-thread-wrapper={dataItemLabel}>
+      <div className="px-2 py-1" data-thread-wrapper={labelId}>
         Error: {error.message}
       </div>
     );
@@ -93,26 +76,15 @@ export function LabelList({
 
   if (!allRows.length) {
     return (
-      <div className="px-2 py-1" data-thread-wrapper={dataItemLabel}>
+      <div className="px-2 py-1" data-thread-wrapper={labelId}>
         No messages yet.
       </div>
     );
   }
 
   return (
-    <div
-      ref={parentRef}
-      style={{
-        height: rowVirtualizer.getTotalSize(),
-      }}
-      className="relative h-full w-full"
-      data-thread-wrapper={dataItemLabel}
-    >
-      {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-        const thread = allRows[virtualRow.index];
-        if (!thread) {
-          return null;
-        }
+    <div className="w-full" data-thread-wrapper={labelId}>
+      {allRows.map((thread, index) => {
         return (
           <ThreadContextMenu
             key={JSON.stringify(thread)}
@@ -122,11 +94,7 @@ export function LabelList({
             }}
           >
             <button
-              data-thread-item={getDataThreadItem(
-                dataItemLabel,
-                virtualRow.index,
-              )}
-              key={virtualRow.index}
+              data-thread-item={getDataThreadItem(labelId, index)}
               onFocus={() => {
                 startTransition(() => {
                   setActiveThread(thread);
@@ -134,14 +102,10 @@ export function LabelList({
               }}
               onClick={onClickThread(thread)}
               className={cn(
-                "absolute left-1 top-0 flex w-full items-center justify-start px-2",
-                "min-w-0 truncate hover:bg-secondary",
+                "flex h-9 w-full items-center px-2",
+                "truncate hover:bg-secondary",
                 isThreadUnread(thread) && "font-bold",
               )}
-              style={{
-                height: `${virtualRow.size}px`,
-                transform: `translateY(${virtualRow.start}px)`,
-              }}
             >
               {thread?.subject}
             </button>
@@ -150,10 +114,10 @@ export function LabelList({
       })}
       {hasNextPage && (
         <Button
-          data-thread-item={getDataThreadItem(dataItemLabel, allRows.length)}
+          data-thread-item={getDataThreadItem(labelId, allRows.length)}
           onClick={onClickLoadMore}
           variant={"ghost"}
-          className="absolute bottom-0 left-0 flex h-10 w-full justify-center"
+          className="flex h-10 w-full justify-center"
         >
           Load more
         </Button>

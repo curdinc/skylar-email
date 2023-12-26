@@ -11,10 +11,10 @@ import {
   useGlobalStore,
 } from "@skylar/logic";
 
-import { closeCurrentOrGoToPreviousLabel } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/close-label";
-import { goDownLabelList } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/go-down";
-import { goUpLabelList } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/go-up";
-import { openLabelOrGoToNextLabel } from "~/components/label-accordion-menu/label-accordion-keyboard-navigation/open-label";
+import { closeCurrentOrGoToPreviousLabel } from "~/components/labels-tree-viewer/label-accordion-keyboard-navigation/close-label";
+import { goDownLabelList } from "~/components/labels-tree-viewer/label-accordion-keyboard-navigation/go-down";
+import { goUpLabelList } from "~/components/labels-tree-viewer/label-accordion-keyboard-navigation/go-up";
+import { openLabelOrGoToNextLabel } from "~/components/labels-tree-viewer/label-accordion-keyboard-navigation/open-label";
 import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
 import { useLogger } from "../logger";

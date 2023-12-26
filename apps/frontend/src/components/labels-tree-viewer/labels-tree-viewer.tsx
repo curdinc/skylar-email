@@ -1,27 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import { filterForLabels } from "@skylar/client-db";
+import { useState } from "react";
 
 import { Icons } from "~/components/icons";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
+import { cn } from "~/lib/ui";
 import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";
 import { LabelList } from "./label-list";
 
 /**
  * @returns The component that renders all the labels of a user and the corresponding messages
  */
-export const LabelAccordion = () => {
+export const LabelsTreeViewer = () => {
   const logger = useLogger();
   useNavigateMessagesKeymap();
-  const { data: labels, isLoading } = useListLabels();
+  const { data: labels } = useListLabels();
   const { data: activeEmailAddress } = useActiveEmailAddress();
-  const [activeLabels, setActiveLabels] = useState<
-    { name: string; id: string }[]
-  >([]);
+  const activeLabels = labels?.[activeEmailAddress ?? ""];
   const [visibleLabels, setVisibleLabels] = useState<Record<string, boolean>>(
     {},
   );
@@ -35,23 +32,11 @@ export const LabelAccordion = () => {
     };
   };
 
-  useEffect(() => {
-    if (!labels || !activeEmailAddress) {
-      return;
-    }
-    const activeLabels = labels[activeEmailAddress];
-    if (!activeLabels) {
-      return;
-    }
-
-    setActiveLabels(activeLabels);
-  }, [activeEmailAddress, labels]);
-
-  if (isLoading) {
+  if (!activeLabels) {
     return <div>Loading ...</div>;
   }
 
-  if (!labels) {
+  if (activeLabels.length === 0) {
     logger.warn("Done loading but no labels found");
     return <div>No labels found</div>;
   }
@@ -59,26 +44,25 @@ export const LabelAccordion = () => {
   return (
     <div className="relative h-full w-full overflow-auto">
       {activeLabels.map((label) => {
-        let ButtonIcon = <Icons.chevronRight className="w-4" />;
-        if (visibleLabels[label.id]) {
-          ButtonIcon = <Icons.chevronDown className="w-4" />;
-        }
         return (
           <div key={label.id}>
             <button
               data-label-item={label.id}
-              className="sticky top-0 z-10 flex w-full items-center gap-1 bg-secondary px-2 py-1 text-sm"
+              className={cn(
+                "sticky top-0 z-10 flex h-8 w-full items-center gap-1 bg-background px-2 text-sm shadow-md",
+                visibleLabels[label.id] && "bg-secondary",
+              )}
               onClick={onClickLabel(label.id)}
             >
-              {ButtonIcon} {label.name}
+              <Icons.chevronRight
+                className={cn(
+                  "w-4 transition-transform",
+                  visibleLabels[label.id] && "rotate-90 transform ",
+                )}
+              />{" "}
+              {label.name}
             </button>
-            {visibleLabels[label.id] && (
-              <LabelList
-                filters={[filterForLabels([label.id])]}
-                uniqueListId={label.id}
-                dataItemLabel={label.id}
-              />
-            )}
+            {visibleLabels[label.id] && <LabelList labelId={label.id} />}
           </div>
         );
       })}
