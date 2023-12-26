@@ -1,18 +1,15 @@
 "use client";
 
-import { startTransition, useRef } from "react";
-import { useVirtualizer } from "@tanstack/react-virtual";
+import { useEffect, useState } from "react";
 
-import { isThreadUnread } from "@skylar/client-db";
-import { setActiveThread, useGlobalStore } from "@skylar/logic";
+import { filterForLabels } from "@skylar/client-db";
 
+import { Icons } from "~/components/icons";
 import { useLogger } from "~/lib/logger";
+import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
-import { cn } from "~/lib/ui";
-import { Icons } from "../icons";
-import { ThreadContextMenu } from "../tooklit/components/context-menu";
-import { getDataThreadItem } from "./label-accordion-keyboard-navigation/helpers";
-import { useLabelAccordion } from "./use-label-accordion";
+import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";
+import { LabelList } from "./label-list";
 
 /**
  * @returns The component that renders all the labels of a user and the corresponding messages
@@ -20,147 +17,71 @@ import { useLabelAccordion } from "./use-label-accordion";
 export const LabelAccordion = () => {
   const logger = useLogger();
   useNavigateMessagesKeymap();
-  const {
-    listItemCount,
-    labelListRenderData,
-    onClickThread,
-    onClickLabel,
-    onClickViewMore,
-  } = useLabelAccordion();
-  const activeThread = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.activeThread,
+  const { data: labels, isLoading } = useListLabels();
+  const { data: activeEmailAddress } = useActiveEmailAddress();
+  const [activeLabels, setActiveLabels] = useState<
+    { name: string; id: string }[]
+  >([]);
+  const [visibleLabels, setVisibleLabels] = useState<Record<string, boolean>>(
+    {},
   );
-  const parentRef = useRef<HTMLDivElement>(null);
-  const virtualizer = useVirtualizer({
-    count: listItemCount,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 35,
-    overscan: 8,
-  });
 
-  if (!labelListRenderData) {
+  const onClickLabel = (labelId: string) => {
+    return () => {
+      setVisibleLabels((prev) => ({
+        ...prev,
+        [labelId]: !prev[labelId],
+      }));
+    };
+  };
+
+  useEffect(() => {
+    if (!labels || !activeEmailAddress) {
+      return;
+    }
+    const activeLabels = labels[activeEmailAddress];
+    if (!activeLabels) {
+      return;
+    }
+
+    setActiveLabels(activeLabels);
+  }, [activeEmailAddress, labels]);
+
+  if (isLoading) {
     return <div>Loading ...</div>;
   }
 
-  if (!labelListRenderData.length) {
+  if (!labels) {
     logger.warn("Done loading but no labels found");
     return <div>No labels found</div>;
   }
 
   return (
-    <div
-      ref={parentRef}
-      style={{
-        contain: "strict",
-      }}
-      className=" h-full w-full overflow-y-auto"
-    >
-      <div
-        style={{
-          height: virtualizer.getTotalSize(),
-        }}
-        className="relative w-full"
-      >
-        {virtualizer.getVirtualItems().map((virtualRow) => {
-          const data = labelListRenderData?.[virtualRow.index];
-
-          if (data?.type === "label") {
-            return (
-              <button
-                key={virtualRow.key}
-                data-index={virtualRow.index}
-                data-label-item={data.id}
-                className={cn(
-                  "absolute inset-0 flex items-center gap-1 px-2  transition-colors",
-                  data.state === "open" && "bg-secondary",
-                )}
-                style={{
-                  height: `${virtualRow.size}px`,
-                  transform: `translateY(${virtualRow.start}px)`,
-                }}
-                onClick={onClickLabel(data.id)}
-              >
-                <Icons.chevronRight
-                  className={cn(
-                    "w-4 shrink-0 transition-transform",
-                    data.state === "open" && "rotate-90",
-                  )}
-                />
-                <div className="flex-grow truncate text-start text-sm">
-                  {data.displayValue}
-                </div>
-              </button>
-            );
-          } else if (data?.type === "labelItemInfo") {
-            return (
-              <div
-                key={virtualRow.key}
-                data-index={virtualRow.index}
-                ref={virtualizer.measureElement}
-                className={"absolute inset-0"}
-                style={{
-                  height: `${virtualRow.size}px`,
-                  transform: `translateY(${virtualRow.start}px)`,
-                }}
-              >
-                {data?.displayValue}
-              </div>
-            );
-          } else if (data?.type === "labelItemViewMore") {
-            return (
-              <button
-                key={virtualRow.key}
-                data-index={virtualRow.index}
-                ref={virtualizer.measureElement}
-                className={"absolute inset-0"}
-                style={{
-                  height: `${virtualRow.size}px`,
-                  transform: `translateY(${virtualRow.start}px)`,
-                }}
-                onClick={onClickViewMore(data.id)}
-              >
-                Load More
-              </button>
-            );
-          } else if (data?.type === "labelItem") {
-            const { thread } = data;
-            return (
-              <ThreadContextMenu
-                key={virtualRow.key}
-                thread={thread}
-                refetch={async () => {
-                  // await refetch();
-                }}
-              >
-                <button
-                  data-index={virtualRow.index}
-                  data-thread-item={getDataThreadItem("", virtualRow.index)}
-                  onFocus={() => {
-                    startTransition(() => {
-                      setActiveThread(thread);
-                    });
-                  }}
-                  onClick={onClickThread(thread)}
-                  className={cn(
-                    "absolute inset-0 flex items-center justify-start pl-6 pr-2",
-                    "hover:bg-secondary",
-                    isThreadUnread(thread) && "font-bold",
-                    activeThread?.provider_thread_id ===
-                      thread.provider_thread_id && "bg-secondary",
-                  )}
-                  style={{
-                    height: `${virtualRow.size}px`,
-                    transform: `translateY(${virtualRow.start}px)`,
-                  }}
-                >
-                  <span className="truncate">{thread?.subject}</span>
-                </button>
-              </ThreadContextMenu>
-            );
-          }
-          throw new Error("Unknown data type");
-        })}
-      </div>
+    <div className="relative h-full w-full overflow-auto">
+      {activeLabels.map((label) => {
+        let ButtonIcon = <Icons.chevronRight className="w-4" />;
+        if (visibleLabels[label.id]) {
+          ButtonIcon = <Icons.chevronDown className="w-4" />;
+        }
+        return (
+          <div key={label.id}>
+            <button
+              data-label-item={label.id}
+              className="sticky top-0 z-10 flex w-full items-center gap-1 bg-secondary px-2 py-1 text-sm"
+              onClick={onClickLabel(label.id)}
+            >
+              {ButtonIcon} {label.name}
+            </button>
+            {visibleLabels[label.id] && (
+              <LabelList
+                filters={[filterForLabels([label.id])]}
+                uniqueListId={label.id}
+                dataItemLabel={label.id}
+              />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };

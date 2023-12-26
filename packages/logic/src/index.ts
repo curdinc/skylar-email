@@ -1,5 +1,4 @@
 import type { Editor } from "codemirror";
-import { original } from "immer";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { useShallow } from "zustand/react/shallow";
@@ -15,27 +14,6 @@ import type {
   ValidReplyMessageOptionsType,
 } from "@skylar/parsers-and-types";
 
-export type LabelListViewerType = {
-  id: string;
-  displayValue: string;
-  type: "label";
-  state: "closed" | "open";
-  children: (
-    | {
-        id: string;
-        displayValue: string;
-        type: "labelItemViewMore" | "labelItemInfo";
-      }
-    | {
-        id: string;
-        displayValue: string;
-        type: "labelItem";
-        state: "beingViewed" | "viewable";
-        thread: ThreadType;
-      }
-  )[];
-};
-
 export type State = {
   ONBOARDING: { alphaCode: string };
   SETTINGS: {
@@ -47,9 +25,8 @@ export type State = {
     CONTEXT_MENU: {
       mostRecentlyAffectedThreads: ThreadType[];
     };
-    LABEL_LIST: {
-      activeIndexes: number[];
-      labelListData?: LabelListViewerType[];
+    MESSAGE_LIST: {
+      activeMessageIndexes: Record<string, number | undefined>;
     };
     activeThread: ThreadType | undefined;
     COMPOSING: {
@@ -91,15 +68,9 @@ type Actions = {
     isSelecting: State["EMAIL_CLIENT"]["COMPOSING"]["isSelecting"],
   ) => void;
   setComposeMessageType: (emailType: ValidComposeMessageOptionsType) => void;
-  setActiveLabelItemIndexes: (
-    activeMessageIndex: State["EMAIL_CLIENT"]["LABEL_LIST"]["activeIndexes"],
-  ) => void;
-  setLabelListDataMutable: (
-    labelListDataUpdater:
-      | ((
-          prev: State["EMAIL_CLIENT"]["LABEL_LIST"]["labelListData"],
-        ) => State["EMAIL_CLIENT"]["LABEL_LIST"]["labelListData"])
-      | State["EMAIL_CLIENT"]["LABEL_LIST"]["labelListData"],
+  setActiveMessageIndexes: (
+    label: string,
+    activeMessageIndex: State["EMAIL_CLIENT"]["MESSAGE_LIST"]["activeMessageIndexes"][keyof State["EMAIL_CLIENT"]["MESSAGE_LIST"]["activeMessageIndexes"]],
   ) => void;
 };
 
@@ -111,9 +82,8 @@ export const useGlobalStore = create(
         mostRecentlyAffectedThreads: [],
       },
       activeThread: undefined,
-      LABEL_LIST: {
-        activeIndexes: [],
-        labelListData: undefined,
+      MESSAGE_LIST: {
+        activeMessageIndexes: {},
       },
       COMPOSING: {
         messageType: "none",
@@ -268,26 +238,12 @@ export const setComposeMessageType: Actions["setComposeMessageType"] = (
   });
 };
 
-export const setActiveLabelItemIndexes: Actions["setActiveLabelItemIndexes"] = (
-  activeIndexes,
+export const setActiveMessageIndexes: Actions["setActiveMessageIndexes"] = (
+  label,
+  activeMessageIndex,
 ) => {
   useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.LABEL_LIST.activeIndexes = activeIndexes;
+    state.EMAIL_CLIENT.MESSAGE_LIST.activeMessageIndexes[label] =
+      activeMessageIndex;
   });
-};
-
-export const setLabelListDataMutable: Actions["setLabelListDataMutable"] = (
-  labelListData,
-) => {
-  if (typeof labelListData === "function") {
-    useGlobalStore.setState((state) => {
-      state.EMAIL_CLIENT.LABEL_LIST.labelListData = labelListData(
-        original(state.EMAIL_CLIENT.LABEL_LIST.labelListData),
-      );
-    });
-  } else {
-    useGlobalStore.setState((state) => {
-      state.EMAIL_CLIENT.LABEL_LIST.labelListData = labelListData;
-    });
-  }
 };
