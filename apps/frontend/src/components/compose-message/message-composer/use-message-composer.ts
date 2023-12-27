@@ -1,6 +1,6 @@
-import { useCallback, useEffect } from "react";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useMutation } from "@tanstack/react-query";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
@@ -106,9 +106,6 @@ export const useMessageComposer = () => {
 
   const submitMutation = useMutation({
     mutationFn: async (values: EmailComposeType) => {
-      if (!replyThread) {
-        return;
-      }
       const isValidAttachmentSize = isAttachmentSizeValid(attachments);
       if (!isValidAttachmentSize) {
         toast({
@@ -145,12 +142,12 @@ export const useMessageComposer = () => {
           html: `${markdownToHtmlConverter.makeHtml(
             values.composeString,
           )}${respondingMessageContent}`,
-          replyConfig: {
+          replyConfig: replyThread ? {
             inReplyToRfcMessageId: replyThread.rfc822_message_ids[0] ?? "",
             references: replyThread.rfc822_message_ids,
             providerThreadId: replyThread.provider_thread_id,
             rootSubject: replyThread.subject,
-          },
+          } : undefined,
         },
       });
       toast({
