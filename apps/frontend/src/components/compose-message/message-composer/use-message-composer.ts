@@ -1,12 +1,13 @@
+import { useCallback, useEffect } from "react";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { useMutation } from "@tanstack/react-query";
-import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
 import { resetComposeMessage, useGlobalStore } from "@skylar/logic";
 import type { EmailComposeType, ThreadType } from "@skylar/parsers-and-types";
 import { EmailComposeSchema } from "@skylar/parsers-and-types";
+import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { captureEvent } from "~/lib/analytics/capture-event";
@@ -18,7 +19,6 @@ import {
 } from "~/lib/email";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
-import { useSendEmail } from "./use-send-mail";
 
 export const useMessageComposer = () => {
   const logger = useLogger();
@@ -35,7 +35,6 @@ export const useMessageComposer = () => {
   const attachments = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.attachments,
   );
-  const { sendEmail } = useSendEmail();
 
   const { toast } = useToast();
 
@@ -128,7 +127,7 @@ export const useMessageComposer = () => {
       });
 
       const markdownToHtmlConverter = new showdown.Converter();
-      await sendEmail({
+      await gmailApiWorker.message.send.mutate({
         emailAddress: values.from,
         emailConfig: {
           from: {
@@ -142,12 +141,14 @@ export const useMessageComposer = () => {
           html: `${markdownToHtmlConverter.makeHtml(
             values.composeString,
           )}${respondingMessageContent}`,
-          replyConfig: replyThread ? {
-            inReplyToRfcMessageId: replyThread.rfc822_message_ids[0] ?? "",
-            references: replyThread.rfc822_message_ids,
-            providerThreadId: replyThread.provider_thread_id,
-            rootSubject: replyThread.subject,
-          } : undefined,
+          replyConfig: replyThread
+            ? {
+                inReplyToRfcMessageId: replyThread.rfc822_message_ids[0] ?? "",
+                references: replyThread.rfc822_message_ids,
+                providerThreadId: replyThread.provider_thread_id,
+                rootSubject: replyThread.subject,
+              }
+            : undefined,
         },
       });
       toast({
