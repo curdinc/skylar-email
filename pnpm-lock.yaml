@@ -147,15 +147,9 @@ importers:
       '@skylar/logic':
         specifier: ^0.1.0
         version: link:../../packages/logic
-      '@skylar/message-manager':
-        specifier: ^0.1.0
-        version: link:../../packages/message-manager
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../../packages/parsers-and-types
-      '@skylar/rfc2822-message-composer':
-        specifier: ^0.1.0
-        version: link:../../packages/rfc2822-message-composer
       '@skylar/tinykeys':
         specifier: ^0.1.0
         version: link:../../packages/tinykeys
@@ -544,6 +538,9 @@ importers:
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../parsers-and-types
+      '@skylar/rfc2822-message-composer':
+        specifier: ^0.1.0
+        version: link:../rfc2822-message-composer
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
