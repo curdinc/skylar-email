@@ -13,7 +13,7 @@ const envctx = {
       .replace(/\//g, "_")
       .replace(/=+$/, "");
   },
-  eol: "/r/n",
+  eol: "\n",
   validateContentType: (v: string): string | false => {
     return mime.contentType(v);
   },

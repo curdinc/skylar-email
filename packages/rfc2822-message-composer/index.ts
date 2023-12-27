@@ -48,5 +48,6 @@ export function composeRfc822Message(emailConfig: EmailConfigType) {
       ...a,
     });
   });
+
   return msg.asEncoded();
 }
