@@ -5,7 +5,11 @@ import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
 import { resetComposeMessage, useGlobalStore } from "@skylar/logic";
-import type { EmailComposeType, ThreadType } from "@skylar/parsers-and-types";
+import type {
+  EmailComposeType,
+  MessageConfigType,
+  ThreadType,
+} from "@skylar/parsers-and-types";
 import { EmailComposeSchema } from "@skylar/parsers-and-types";
 import { gmailApiWorker } from "@skylar/web-worker-logic";
 
@@ -127,29 +131,32 @@ export const useMessageComposer = () => {
       });
 
       const markdownToHtmlConverter = new showdown.Converter();
+
+      const messageConfig: MessageConfigType = {
+        from: {
+          emailAddress: values.from,
+        },
+        subject: values.subject,
+        to: values.to,
+        cc: values.cc,
+        bcc: values.bcc,
+        attachments: formattedAttachments,
+        html: `${markdownToHtmlConverter.makeHtml(
+          values.composeString,
+        )}${respondingMessageContent}`,
+        replyConfig: replyThread
+          ? {
+              inReplyToRfcMessageId: replyThread.rfc822_message_ids[0] ?? "",
+              references: replyThread.rfc822_message_ids,
+              providerThreadId: replyThread.provider_thread_id,
+              rootSubject: replyThread.subject,
+            }
+          : undefined,
+      };
+
       await gmailApiWorker.message.send.mutate({
         emailAddress: values.from,
-        emailConfig: {
-          from: {
-            emailAddress: values.from,
-          },
-          subject: values.subject,
-          to: values.to,
-          cc: values.cc,
-          bcc: values.bcc,
-          attachments: formattedAttachments,
-          html: `${markdownToHtmlConverter.makeHtml(
-            values.composeString,
-          )}${respondingMessageContent}`,
-          replyConfig: replyThread
-            ? {
-                inReplyToRfcMessageId: replyThread.rfc822_message_ids[0] ?? "",
-                references: replyThread.rfc822_message_ids,
-                providerThreadId: replyThread.provider_thread_id,
-                rootSubject: replyThread.subject,
-              }
-            : undefined,
-        },
+        messageConfig,
       });
       toast({
         title: "Email sent!",

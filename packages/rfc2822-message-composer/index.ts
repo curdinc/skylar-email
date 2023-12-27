@@ -1,9 +1,9 @@
-import type { EmailConfigType } from "@skylar/parsers-and-types";
+import type { MessageConfigType } from "@skylar/parsers-and-types";
 
 import { createMimeMessage } from "./src";
 
 /* This package is a fork of https://github.com/muratgozel/MIMEText */
-export function composeRfc822Message(emailConfig: EmailConfigType) {
+export function composeRfc822Message(emailConfig: MessageConfigType) {
   if (
     emailConfig.replyConfig &&
     emailConfig.replyConfig.rootSubject !== emailConfig.subject
