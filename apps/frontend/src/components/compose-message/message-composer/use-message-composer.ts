@@ -129,7 +129,7 @@ export const useMessageComposer = () => {
       const markdownToHtmlConverter = new showdown.Converter();
       await gmailApiWorker.message.send.mutate({
         emailAddress: values.from,
-        emailConfig: {
+        messageConfig: {
           from: {
             emailAddress: values.from,
           },

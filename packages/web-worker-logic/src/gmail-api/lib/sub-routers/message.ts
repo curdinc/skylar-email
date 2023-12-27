@@ -11,7 +11,7 @@ export const messageRouter = createGmailApiRouter({
   send: MESSAGE_PROCEDURES.send.mutation(async ({ input, ctx }) => {
     const accessToken = await ctx.getAccessToken(input.emailAddress);
     const rfc822Base64EncodedMessageData = composeRfc822Message(
-      input.emailConfig,
+      input.messageConfig,
     );
 
     await sendMail({
