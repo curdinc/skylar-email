@@ -11,10 +11,10 @@ import {
   useGlobalStore,
 } from "@skylar/logic";
 
-import { closeCurrentOrGoToPreviousLabel } from "~/components/labels-tree-viewer/label-accordion-keyboard-navigation/close-label";
-import { goDownLabelList } from "~/components/labels-tree-viewer/label-accordion-keyboard-navigation/go-down";
-import { goUpLabelList } from "~/components/labels-tree-viewer/label-accordion-keyboard-navigation/go-up";
-import { openLabelOrGoToNextLabel } from "~/components/labels-tree-viewer/label-accordion-keyboard-navigation/open-label";
+import { closeCurrentOrGoToPreviousLabel } from "~/components/label-tree-viewer/label-accordion-keyboard-navigation/close-label";
+import { goDownLabelTree } from "~/components/label-tree-viewer/label-accordion-keyboard-navigation/go-down";
+import { goUpLabelTree } from "~/components/label-tree-viewer/label-accordion-keyboard-navigation/go-up";
+import { openLabelOrGoToNextLabel } from "~/components/label-tree-viewer/label-accordion-keyboard-navigation/open-label";
 import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
 import { useLogger } from "../logger";
@@ -37,25 +37,25 @@ export const useNavigateMessagesKeymap = () => {
           combo: "j",
           description: "Go down the message list",
           label: "message.down",
-          onKeyDown: goDownLabelList,
+          onKeyDown: goDownLabelTree,
         },
         {
           combo: "ArrowDown",
           description: "Go down the next message list",
           label: "message.down-alt",
-          onKeyDown: goDownLabelList,
+          onKeyDown: goDownLabelTree,
         },
         {
           combo: "k",
           description: "Go to up the message list",
           label: "message.up",
-          onKeyDown: goUpLabelList,
+          onKeyDown: goUpLabelTree,
         },
         {
           combo: "ArrowUp",
           description: "Go to up the message list",
           label: "message.up-alt",
-          onKeyDown: goUpLabelList,
+          onKeyDown: goUpLabelTree,
         },
         {
           combo: "h",

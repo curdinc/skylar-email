@@ -7,12 +7,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
+import { Provider } from "jotai";
 import { PostHogProvider } from "posthog-js/react";
 import superjson from "superjson";
 
 import { env } from "~/env";
 import { posthogInstance } from "~/lib/analytics/posthog-instance";
 import { api } from "~/lib/api";
+import { SkylarClientStore } from "~/lib/store/index,";
 
 /**
  * This wraps the entire app with the client providers needed.
@@ -67,12 +69,14 @@ export function ClientProvider(props: {
     <PostHogProvider client={posthogInstance()}>
       <GoogleOAuthProvider clientId={props.googleProviderClientId}>
         <api.Provider client={trpcClient} queryClient={queryClient}>
-          <QueryClientProvider client={queryClient}>
-            <ReactQueryStreamedHydration transformer={superjson}>
-              {props.children}
-            </ReactQueryStreamedHydration>
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
+          <Provider store={SkylarClientStore}>
+            <QueryClientProvider client={queryClient}>
+              <ReactQueryStreamedHydration transformer={superjson}>
+                {props.children}
+              </ReactQueryStreamedHydration>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          </Provider>
         </api.Provider>
       </GoogleOAuthProvider>
     </PostHogProvider>

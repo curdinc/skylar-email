@@ -1,4 +1,4 @@
-import { startTransition } from "react";
+import { memo, startTransition, useEffect } from "react";
 
 import { isThreadUnread } from "@skylar/client-db";
 import { setActiveThread } from "@skylar/logic";
@@ -18,14 +18,16 @@ import { ThreadContextMenu } from "../tooklit/components/context-menu";
 import { Button } from "../ui/button";
 import { getDataThreadItem } from "./label-accordion-keyboard-navigation/helpers";
 
-export const LabelTreeRow = ({
+const LabelTreeRowBase = ({
   row,
   index,
   translateY,
+  rowState,
 }: {
   row?: LabelTreeViewerRowType;
   index: number;
   translateY: number;
+  rowState: "active" | "selective" | "inactive";
 }) => {
   const { data: activeEmailAddress } = useActiveEmailAddress();
   const toggleLabel = useToggleLabel();
@@ -42,6 +44,33 @@ export const LabelTreeRow = ({
     };
   };
 
+  useEffect(() => {
+    if (rowState === "active") {
+      if (row?.type === "label") {
+        const element = document.querySelector<HTMLElement>(
+          `[data-label-item="${row.id}"]`,
+        );
+        if (element) {
+          element.focus();
+        }
+      } else if (row?.type !== "labelItem") {
+        const element = document.querySelector<HTMLElement>(
+          `[data-thread-wrapper="${row?.parentId}"]`,
+        );
+        if (element) {
+          element.focus();
+        }
+      } else {
+        const element = document.querySelector<HTMLElement>(
+          `[data-thread-item="${row?.parentId}-${index}"]`,
+        );
+        if (element) {
+          element.focus();
+        }
+      }
+    }
+  });
+
   if (!row || !activeEmailAddress) {
     return;
   }
@@ -50,9 +79,10 @@ export const LabelTreeRow = ({
       <button
         data-label-item={row.id}
         className={cn(
-          "flex h-8 items-center gap-1 border-b bg-background px-2 shadow-md",
+          "flex h-8 items-center gap-1 border-t bg-background px-2 shadow-md",
           "absolute inset-0",
           row.state === "open" && "bg-secondary",
+          rowState === "active" && "bg-secondary",
         )}
         onClick={() => {
           toggleLabel({
@@ -77,7 +107,11 @@ export const LabelTreeRow = ({
   if (row.type === "labelItemInfo") {
     return (
       <div
-        className={cn("h-9 py-1 text-center text-sm", "absolute inset-0")}
+        className={cn(
+          "h-9 py-1 text-center text-sm",
+          "absolute inset-0",
+          rowState === "active" && "bg-secondary",
+        )}
         style={{
           transform: `translateY(${translateY}px)`,
         }}
@@ -91,7 +125,11 @@ export const LabelTreeRow = ({
     return (
       <Button
         variant={"ghost"}
-        className={cn("h-9 py-1 text-center text-sm", "absolute inset-0")}
+        className={cn(
+          "h-9 py-1 text-center text-sm",
+          "absolute inset-0",
+          rowState === "active" && "bg-secondary",
+        )}
         style={{
           transform: `translateY(${translateY}px)`,
         }}
@@ -128,6 +166,7 @@ export const LabelTreeRow = ({
             "flex h-9 items-center pl-6",
             "hover:bg-secondary",
             "absolute inset-0",
+            rowState === "active" && "bg-secondary",
           )}
           style={{
             transform: `translateY(${translateY}px)`,
@@ -143,3 +182,5 @@ export const LabelTreeRow = ({
     );
   }
 };
+
+export const LabelTreeRow = memo(LabelTreeRowBase);

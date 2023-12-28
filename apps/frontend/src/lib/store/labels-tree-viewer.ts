@@ -55,13 +55,13 @@ export type LabelTreeViewerRowType =
   | LabelTreeViewerParentType
   | LabelTreeViewerLeafType;
 
-const labelsTreeViewerMappingAtom = atom<
+export const labelTreeViewerMappingAtom = atom<
   Map<string, LabelTreeViewerParentType>
 >(new Map());
 export const useLabelsTreeViewerMapping = () =>
-  useAtom(labelsTreeViewerMappingAtom);
-const labelsTreeViewerRowsAtom = atom<LabelTreeViewerRowType[]>((get) => {
-  const labels = get(labelsTreeViewerMappingAtom);
+  useAtom(labelTreeViewerMappingAtom);
+export const labelTreeViewerRowsAtom = atom<LabelTreeViewerRowType[]>((get) => {
+  const labels = get(labelTreeViewerMappingAtom);
   return Array.from(labels.values()).reduce((prev, currentLabel) => {
     return [
       ...prev,
@@ -72,14 +72,14 @@ const labelsTreeViewerRowsAtom = atom<LabelTreeViewerRowType[]>((get) => {
     ];
   }, [] as LabelTreeViewerRowType[]);
 });
-export const useLabelsTreeViewerRows = () => useAtom(labelsTreeViewerRowsAtom);
+export const useLabelsTreeViewerRows = () => useAtom(labelTreeViewerRowsAtom);
 
-const toggleLabelAtom = atom<
+export const toggleLabelAtom = atom<
   null,
   [{ labelIdToToggle: string; userEmailAddress: string }],
   void
 >(null, (get, set, { labelIdToToggle, userEmailAddress }) => {
-  const labelMapping = get(labelsTreeViewerMappingAtom);
+  const labelMapping = get(labelTreeViewerMappingAtom);
   const labelToggled = labelMapping.get(labelIdToToggle);
   const labelLoadingItemId = LOADING_LABEL_ITEM(labelIdToToggle).id;
 
@@ -92,14 +92,14 @@ const toggleLabelAtom = atom<
       ...labelToggled,
       state: "closed",
     });
-    set(labelsTreeViewerMappingAtom, newMapping);
+    set(labelTreeViewerMappingAtom, newMapping);
   } else if (labelToggled.state === "closed") {
     const newMapping = new Map(labelMapping);
     newMapping.set(labelIdToToggle, {
       ...labelToggled,
       state: "open",
     });
-    set(labelsTreeViewerMappingAtom, newMapping);
+    set(labelTreeViewerMappingAtom, newMapping);
 
     // if no initial items yet, fetch item
     if (
@@ -142,7 +142,7 @@ const toggleLabelAtom = atom<
             state: "open",
             children: labelToggled.children,
           });
-          set(labelsTreeViewerMappingAtom, newMapping);
+          set(labelTreeViewerMappingAtom, newMapping);
         })
         .catch((e) => {
           console.error("Error fetching initial thread data", e);
@@ -152,12 +152,12 @@ const toggleLabelAtom = atom<
 });
 export const useToggleLabel = () => useAtom(toggleLabelAtom)[1];
 
-const viewMoreLabelItemAtom = atom<
+export const viewMoreLabelItemAtom = atom<
   null,
   [{ labelIdToViewMore: string; userEmailAddress: string }],
   void
 >(null, (get, set, { labelIdToViewMore, userEmailAddress }) => {
-  const labelMapping = get(labelsTreeViewerMappingAtom);
+  const labelMapping = get(labelTreeViewerMappingAtom);
   const labelToggled = labelMapping.get(labelIdToViewMore);
   if (!labelToggled) {
     return;
@@ -175,7 +175,7 @@ const viewMoreLabelItemAtom = atom<
     ...labelToggled,
     children: labelToggled.children,
   });
-  set(labelsTreeViewerMappingAtom, newLabelMapping);
+  set(labelTreeViewerMappingAtom, newLabelMapping);
 
   const lastLabelItem = Array.from(labelToggled.children.values()).at(-2);
   getThreadSnippets({
@@ -215,7 +215,7 @@ const viewMoreLabelItemAtom = atom<
         ...labelToggled,
         children: labelToggled.children,
       });
-      set(labelsTreeViewerMappingAtom, newLabelMapping);
+      set(labelTreeViewerMappingAtom, newLabelMapping);
     })
     .catch((e) => {
       console.error("Error fetching more thread data", e);

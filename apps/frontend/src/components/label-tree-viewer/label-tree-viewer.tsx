@@ -6,6 +6,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
+import { useActiveItemIndex } from "~/lib/store/label-tree-navigator";
 import type { LabelTreeViewerParentType } from "~/lib/store/labels-tree-viewer";
 import {
   LOADING_LABEL_ITEM,
@@ -18,13 +19,15 @@ import { LabelTreeRow } from "./label-tree-row";
 /**
  * @returns The component that renders all the labels of a user and the corresponding messages
  */
-export const LabelsTreeViewer = () => {
+export const LabelTreeViewer = () => {
   const logger = useLogger();
   useNavigateMessagesKeymap();
   const { data: labels } = useListLabels();
   const { data: activeEmailAddress } = useActiveEmailAddress();
+  const [activeItemIndex] = useActiveItemIndex();
   const [rows] = useLabelsTreeViewerRows();
   const [, setLabelTreeViewerMapping] = useLabelsTreeViewerMapping();
+  console.log("activeItemIndex", activeItemIndex);
   const parentRef = useRef<HTMLDivElement>(null);
   const activeLabels = labels?.[activeEmailAddress ?? ""];
 
@@ -55,7 +58,7 @@ export const LabelsTreeViewer = () => {
     count: rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: (idx) => (rows[idx]?.type === "label" ? 32 : 36),
-    overscan: 5,
+    overscan: 3,
   });
 
   if (!activeLabels) {
@@ -77,12 +80,18 @@ export const LabelsTreeViewer = () => {
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
           const rowData = rows[virtualRow.index];
+          let rowState: Parameters<typeof LabelTreeRow>[0]["rowState"] =
+            "inactive";
+          if (virtualRow.index === activeItemIndex) {
+            rowState = "active";
+          }
           return (
             <LabelTreeRow
               key={virtualRow.index}
               index={virtualRow.index}
               row={rowData}
               translateY={virtualRow.start}
+              rowState={rowState}
             />
           );
         })}
