@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
-import { Icons } from "~/components/icons";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
-import { cn } from "~/lib/ui";
+import type { LabelTreeViewerParentType } from "~/lib/store/labels-tree-viewer";
+import {
+  LOADING_LABEL_ITEM,
+  useLabelsTreeViewerMapping,
+  useLabelsTreeViewerRows,
+} from "~/lib/store/labels-tree-viewer";
 import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";
-import { LabelList } from "./label-list";
+import { LabelTreeRow } from "./label-tree-row";
 
 /**
  * @returns The component that renders all the labels of a user and the corresponding messages
@@ -18,19 +23,40 @@ export const LabelsTreeViewer = () => {
   useNavigateMessagesKeymap();
   const { data: labels } = useListLabels();
   const { data: activeEmailAddress } = useActiveEmailAddress();
+  const [rows] = useLabelsTreeViewerRows();
+  const [, setLabelTreeViewerMapping] = useLabelsTreeViewerMapping();
+  const parentRef = useRef<HTMLDivElement>(null);
   const activeLabels = labels?.[activeEmailAddress ?? ""];
-  const [visibleLabels, setVisibleLabels] = useState<Record<string, boolean>>(
-    {},
-  );
 
-  const onClickLabel = (labelId: string) => {
-    return () => {
-      setVisibleLabels((prev) => ({
-        ...prev,
-        [labelId]: !prev[labelId],
-      }));
-    };
-  };
+  useEffect(() => {
+    if (!labels || !activeEmailAddress) {
+      return;
+    }
+
+    const activeLabels = labels[activeEmailAddress];
+    if (!activeLabels) {
+      return;
+    }
+    const labelMapping = new Map<string, LabelTreeViewerParentType>();
+    activeLabels.forEach((label) => {
+      const loadingLabelItem = LOADING_LABEL_ITEM(label.id);
+      labelMapping.set(label.id, {
+        ...label,
+        displayValue: label.name,
+        type: "label",
+        state: "closed",
+        children: new Map([[loadingLabelItem.id, loadingLabelItem]]),
+      } satisfies LabelTreeViewerParentType);
+    });
+    setLabelTreeViewerMapping(labelMapping);
+  }, [activeEmailAddress, labels, setLabelTreeViewerMapping]);
+
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: (idx) => (rows[idx]?.type === "label" ? 32 : 36),
+    overscan: 5,
+  });
 
   if (!activeLabels) {
     return <div>Loading ...</div>;
@@ -42,30 +68,25 @@ export const LabelsTreeViewer = () => {
   }
 
   return (
-    <div className="relative h-full w-full overflow-auto">
-      {activeLabels.map((label) => {
-        return (
-          <div key={label.id}>
-            <button
-              data-label-item={label.id}
-              className={cn(
-                "sticky top-0 z-10 flex h-8 w-full items-center gap-1 bg-background px-2 text-sm shadow-md",
-                visibleLabels[label.id] && "bg-secondary",
-              )}
-              onClick={onClickLabel(label.id)}
-            >
-              <Icons.chevronRight
-                className={cn(
-                  "w-4 transition-transform",
-                  visibleLabels[label.id] && "rotate-90 transform ",
-                )}
-              />{" "}
-              {label.name}
-            </button>
-            {visibleLabels[label.id] && <LabelList labelId={label.id} />}
-          </div>
-        );
-      })}
+    <div ref={parentRef} className="h-full w-full overflow-auto">
+      <div
+        style={{
+          height: `${rowVirtualizer.getTotalSize()}px`,
+        }}
+        className="relative w-full"
+      >
+        {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+          const rowData = rows[virtualRow.index];
+          return (
+            <LabelTreeRow
+              key={virtualRow.index}
+              index={virtualRow.index}
+              row={rowData}
+              translateY={virtualRow.start}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };

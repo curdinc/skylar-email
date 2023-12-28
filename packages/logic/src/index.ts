@@ -25,9 +25,6 @@ export type State = {
     CONTEXT_MENU: {
       mostRecentlyAffectedThreads: ThreadType[];
     };
-    MESSAGE_LIST: {
-      activeMessageIndexes: Record<string, number | undefined>;
-    };
     activeThread: ThreadType | undefined;
     COMPOSING: {
       messageType: AllComposeMessageOptionsType;
@@ -68,10 +65,6 @@ type Actions = {
     isSelecting: State["EMAIL_CLIENT"]["COMPOSING"]["isSelecting"],
   ) => void;
   setComposeMessageType: (emailType: ValidComposeMessageOptionsType) => void;
-  setActiveMessageIndexes: (
-    label: string,
-    activeMessageIndex: State["EMAIL_CLIENT"]["MESSAGE_LIST"]["activeMessageIndexes"][keyof State["EMAIL_CLIENT"]["MESSAGE_LIST"]["activeMessageIndexes"]],
-  ) => void;
 };
 
 // Core states
@@ -235,15 +228,5 @@ export const setComposeMessageType: Actions["setComposeMessageType"] = (
 ) => {
   useGlobalStore.setState((state) => {
     state.EMAIL_CLIENT.COMPOSING.messageType = messageType;
-  });
-};
-
-export const setActiveMessageIndexes: Actions["setActiveMessageIndexes"] = (
-  label,
-  activeMessageIndex,
-) => {
-  useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.MESSAGE_LIST.activeMessageIndexes[label] =
-      activeMessageIndex;
   });
 };
