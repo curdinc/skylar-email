@@ -2,13 +2,17 @@ import {
   setMostRecentlyAffectedThreads,
   setReplyMessageType,
 } from "@skylar/logic";
-import { EMAIL_PROVIDER_LABELS } from "@skylar/parsers-and-types";
 
 import { Icons } from "~/components/icons";
 import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
-import { modifyThreadLabels } from "~/lib/inbox-toolkit/thread/modify-thread-labels";
+import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
+import { markAsRead } from "~/lib/inbox-toolkit/thread/mark-as-read";
+import { markAsUnread } from "~/lib/inbox-toolkit/thread/mark-as-unread";
 import { moveThreads } from "~/lib/inbox-toolkit/thread/move-threads";
+import { trashThreads } from "~/lib/inbox-toolkit/thread/trash-threads";
+import { unarchiveThreads } from "~/lib/inbox-toolkit/thread/unarchive-threads";
+import { untrashThreads } from "~/lib/inbox-toolkit/thread/untrash-threads";
 import { getLabelModifications } from "~/lib/inbox-toolkit/utils";
 import type {
   ConfigOption,
@@ -95,26 +99,14 @@ export const getThreadActions = (
       tooltipDescription: "Trash thread",
       applyFn: async () => {
         const threads = await getThreads();
-        await modifyThreadLabels({
+        await trashThreads({
           emailAddress: activeEmailAddress,
           threads: threads,
-          labelsToAdd: Array(threads.length).fill([
-            EMAIL_PROVIDER_LABELS.GMAIL.TRASH,
-          ]),
-          labelsToRemove: Array(threads.length).fill([
-            EMAIL_PROVIDER_LABELS.GMAIL.INBOX,
-          ]),
         });
         return async () => {
-          await modifyThreadLabels({
+          await untrashThreads({
             emailAddress: activeEmailAddress,
             threads: threads,
-            labelsToRemove: Array(threads.length).fill([
-              EMAIL_PROVIDER_LABELS.GMAIL.TRASH,
-            ]),
-            labelsToAdd: Array(threads.length).fill([
-              EMAIL_PROVIDER_LABELS.GMAIL.INBOX,
-            ]),
           });
         };
       },
@@ -129,20 +121,14 @@ export const getThreadActions = (
       tooltipDescription: "Archive thread",
       applyFn: async () => {
         const threads = await getThreads();
-        await modifyThreadLabels({
+        await archiveThreads({
           emailAddress: activeEmailAddress,
           threads: threads,
-          labelsToRemove: Array(threads.length).fill([
-            EMAIL_PROVIDER_LABELS.GMAIL.INBOX,
-          ]),
         });
         return async () => {
-          await modifyThreadLabels({
+          await unarchiveThreads({
             emailAddress: activeEmailAddress,
             threads: threads,
-            labelsToAdd: Array(threads.length).fill([
-              EMAIL_PROVIDER_LABELS.GMAIL.INBOX,
-            ]),
           });
         };
       },
@@ -157,20 +143,14 @@ export const getThreadActions = (
       tooltipDescription: "Unarchive thread",
       applyFn: async () => {
         const threads = await getThreads();
-        await modifyThreadLabels({
+        await unarchiveThreads({
           emailAddress: activeEmailAddress,
           threads: threads,
-          labelsToAdd: Array(threads.length).fill([
-            EMAIL_PROVIDER_LABELS.GMAIL.INBOX,
-          ]),
         });
         return async () => {
-          await modifyThreadLabels({
+          await archiveThreads({
             emailAddress: activeEmailAddress,
             threads: threads,
-            labelsToRemove: Array(threads.length).fill([
-              EMAIL_PROVIDER_LABELS.GMAIL.INBOX,
-            ]),
           });
         };
       },
@@ -185,20 +165,14 @@ export const getThreadActions = (
       tooltipDescription: "Mark as read",
       applyFn: async () => {
         const threads = await getThreads();
-        await modifyThreadLabels({
+        await markAsRead({
           emailAddress: activeEmailAddress,
           threads: threads,
-          labelsToRemove: Array(threads.length).fill([
-            EMAIL_PROVIDER_LABELS.GMAIL.UNREAD,
-          ]),
         });
         return async () => {
-          await modifyThreadLabels({
+          await markAsUnread({
             emailAddress: activeEmailAddress,
             threads: threads,
-            labelsToAdd: Array(threads.length).fill([
-              EMAIL_PROVIDER_LABELS.GMAIL.UNREAD,
-            ]),
           });
         };
       },
@@ -214,20 +188,14 @@ export const getThreadActions = (
       applyFn: async () => {
         const threads = await getThreads();
         setMostRecentlyAffectedThreads(threads);
-        await modifyThreadLabels({
+        await markAsUnread({
           emailAddress: activeEmailAddress,
           threads: threads,
-          labelsToAdd: Array(threads.length).fill([
-            EMAIL_PROVIDER_LABELS.GMAIL.UNREAD,
-          ]),
         });
         return async () => {
-          await modifyThreadLabels({
+          await markAsRead({
             emailAddress: activeEmailAddress,
             threads: threads,
-            labelsToRemove: Array(threads.length).fill([
-              EMAIL_PROVIDER_LABELS.GMAIL.UNREAD,
-            ]),
           });
         };
       },

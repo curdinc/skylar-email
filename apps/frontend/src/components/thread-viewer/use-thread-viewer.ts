@@ -2,9 +2,8 @@ import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import { useThread } from "@skylar/client-db";
-import { EMAIL_PROVIDER_LABELS } from "@skylar/parsers-and-types";
 
-import { modifyThreadLabels } from "~/lib/inbox-toolkit/thread/modify-thread-labels";
+import { markAsRead } from "~/lib/inbox-toolkit/thread/mark-as-read";
 import { useActiveItemRow } from "~/lib/store/label-tree-viewer/active-item";
 
 export function useThreadViewer() {
@@ -16,25 +15,24 @@ export function useThreadViewer() {
         : "",
   });
 
-  const { mutate: markAsRead } = useMutation({
+  const { mutate: markThreadAsRead } = useMutation({
     mutationFn: async () => {
       if (activeItemRow?.type !== "labelItem") {
         return undefined;
       }
 
-      await modifyThreadLabels({
+      await markAsRead({
         threads: [activeItemRow.thread],
         emailAddress: activeItemRow.thread.user_email_address,
-        labelsToRemove: [[EMAIL_PROVIDER_LABELS.GMAIL.UNREAD]],
       });
     },
   });
 
   useEffect(() => {
     if (!isLoadingThread && messagesInThread?.length) {
-      markAsRead();
+      markThreadAsRead();
     }
-  }, [messagesInThread, isLoadingThread, markAsRead]);
+  }, [messagesInThread, isLoadingThread, markThreadAsRead]);
 
   return { isLoadingThread, thread: messagesInThread };
 }

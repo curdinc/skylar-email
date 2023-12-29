@@ -19,6 +19,10 @@ import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
 import { useLogger } from "../logger";
 import { useActiveEmailAddress } from "../provider/use-active-email-address";
+import {
+  markCurrentListItemAsRead,
+  markCurrentListItemAsUnread,
+} from "../store/label-tree-viewer/update-current-list-item";
 import { registerShortcuts } from "./register-shortcuts";
 
 // ! Note that shortcuts should not overlap
@@ -36,6 +40,24 @@ export const useNavigateMessagesKeymap = () => {
     }
     const unsubscribe = registerShortcuts({
       shortcuts: [
+        {
+          combo: "e",
+          description: "Mark a given item in the list as done",
+          label: "message.mark-as-done",
+          onKeyDown: goDownLabelTree(startTransition),
+        },
+        {
+          combo: "Shift+U",
+          description: "Mark a given item in the list as read",
+          label: "message.mark-as-read",
+          onKeyDown: () => markCurrentListItemAsRead(activeEmailAddress),
+        },
+        {
+          combo: "u",
+          description: "Mark a given item in the list as unread",
+          label: "message.mark-as-unread",
+          onKeyDown: () => markCurrentListItemAsUnread(activeEmailAddress),
+        },
         {
           combo: "j",
           description: "Go down the message list",
