@@ -1,3 +1,7 @@
+export { syncResponseSchema } from "./src/api/email-provider/gmail-provider";
+
+export { emailSchema } from "./src/core-parsers";
+
 // GENERAL
 export * from "./src/utils/format";
 export * from "./src/utils/valibot-wrappers";
@@ -12,6 +16,7 @@ export * from "./src/api/email-provider/gmail-provider";
 export {
   SUPPORTED_EMAIL_PROVIDER_LIST,
   oauthOnboardingSchema,
+  supportedEmailProvidersSchema,
   type Oauth2InitialTokenResponse,
   type Oauth2TokenFromRefreshTokenResponse,
   type SupportedEmailProviderType,

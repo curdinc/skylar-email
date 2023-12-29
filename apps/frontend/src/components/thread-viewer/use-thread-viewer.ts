@@ -1,80 +1,40 @@
 import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import { bulkUpdateMessages, useThread } from "@skylar/client-db";
-import { modifyLabels } from "@skylar/gmail-api";
-import type { MessageType } from "@skylar/parsers-and-types";
+import { useThread } from "@skylar/client-db";
 
-import { useAccessToken } from "~/lib/provider/use-access-token";
+import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
 import { useActiveItemRow } from "~/lib/store/labels-tree-viewer";
 
 export function useThreadViewer() {
   const [activeItemRow] = useActiveItemRow();
 
-  const { thread, isLoading: isLoadingThread } = useThread({
+  const { thread: messagesInThread, isLoading: isLoadingThread } = useThread({
     emailProviderThreadId:
       activeItemRow?.type === "labelItem"
         ? activeItemRow.thread.provider_thread_id
         : "",
   });
 
-  const { mutateAsync: fetchGmailAccessToken } = useAccessToken();
-
   const { mutate: markAsRead } = useMutation({
-    mutationFn: async ({
-      addLabels,
-      deleteLabels,
-      message,
-      emailAddress,
-    }: {
-      emailAddress: string;
-      message: MessageType;
-      addLabels: string[];
-      deleteLabels: string[];
-    }) => {
-      if (message.email_provider_labels.includes("UNREAD")) {
-        const accessToken = await fetchGmailAccessToken({
-          email: emailAddress,
-        });
+    mutationFn: async () => {
+      if (activeItemRow?.type !== "labelItem") {
+        return undefined;
+      }
 
-        const labelData = await modifyLabels({
-          accessToken,
-          emailId: emailAddress,
-          addLabels,
-          deleteLabels,
-          messageId: message.provider_message_id,
-        });
-        return labelData;
-      }
-    },
-    onSuccess: async (labelData) => {
-      if (!labelData) {
-        return;
-      }
-      await bulkUpdateMessages({
-        messages: [
-          {
-            provider_message_id: labelData.id,
-            email_provider_labels: labelData.labelIds,
-            provider_thread_id: labelData.threadId,
-          },
-        ],
+      await markReadThreads({
+        threads: [activeItemRow.thread],
+        email: activeItemRow.thread.user_email_address,
+        afterClientDbUpdate: [], //FIXME: add refetch
       });
     },
   });
 
   useEffect(() => {
-    if (!isLoadingThread && thread?.length) {
-      thread.map((message) => {
-        markAsRead({
-          message,
-          emailAddress: message.user_email_address,
-          addLabels: [],
-          deleteLabels: ["UNREAD"],
-        });
-      });
+    if (!isLoadingThread && messagesInThread?.length) {
+      markAsRead();
     }
-  }, [thread, isLoadingThread, markAsRead]);
+  }, [messagesInThread, isLoadingThread, markAsRead]);
 
-  return { isLoadingThread, thread };
+  return { isLoadingThread, thread: messagesInThread };
 }

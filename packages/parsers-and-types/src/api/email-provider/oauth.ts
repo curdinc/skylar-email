@@ -1,5 +1,5 @@
 import type { Output } from "valibot";
-import { enumType, merge, number, object, string } from "valibot";
+import { merge, number, object, picklist, string } from "valibot";
 
 const baseAuthTokenResponseSchema = object({
   expires_in: number(),
@@ -26,7 +26,9 @@ const oauth2TokenFromRefreshTokenResponseSchema = merge([
 export const SUPPORTED_EMAIL_PROVIDER_LIST = ["gmail", "outlook"] as const;
 export type SupportedEmailProviderType =
   (typeof SUPPORTED_EMAIL_PROVIDER_LIST)[number];
-const supportedEmailProvidersSchema = enumType(SUPPORTED_EMAIL_PROVIDER_LIST);
+export const supportedEmailProvidersSchema = picklist(
+  SUPPORTED_EMAIL_PROVIDER_LIST,
+);
 
 export const oauthOnboardingSchema = object({
   code: string(),

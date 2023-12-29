@@ -5,8 +5,13 @@ import { useForm } from "react-hook-form";
 import showdown from "showdown";
 
 import { resetComposeMessage, useGlobalStore } from "@skylar/logic";
-import type { EmailComposeType, ThreadType } from "@skylar/parsers-and-types";
+import type {
+  EmailComposeType,
+  MessageConfigType,
+  ThreadType,
+} from "@skylar/parsers-and-types";
 import { EmailComposeSchema } from "@skylar/parsers-and-types";
+import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { captureEvent } from "~/lib/analytics/capture-event";
@@ -18,7 +23,6 @@ import {
 } from "~/lib/email";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
-import { useSendEmail } from "./use-send-mail";
 
 export const useMessageComposer = () => {
   const logger = useLogger();
@@ -35,7 +39,6 @@ export const useMessageComposer = () => {
   const attachments = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.attachments,
   );
-  const { sendEmail } = useSendEmail();
 
   const { toast } = useToast();
 
@@ -106,9 +109,6 @@ export const useMessageComposer = () => {
 
   const submitMutation = useMutation({
     mutationFn: async (values: EmailComposeType) => {
-      if (!replyThread) {
-        return;
-      }
       const isValidAttachmentSize = isAttachmentSizeValid(attachments);
       if (!isValidAttachmentSize) {
         toast({
@@ -131,27 +131,32 @@ export const useMessageComposer = () => {
       });
 
       const markdownToHtmlConverter = new showdown.Converter();
-      await sendEmail({
-        emailAddress: values.from,
-        emailConfig: {
-          from: {
-            emailAddress: values.from,
-          },
-          subject: values.subject,
-          to: values.to,
-          cc: values.cc,
-          bcc: values.bcc,
-          attachments: formattedAttachments,
-          html: `${markdownToHtmlConverter.makeHtml(
-            values.composeString,
-          )}${respondingMessageContent}`,
-          replyConfig: {
-            inReplyToRfcMessageId: replyThread.rfc822_message_ids[0] ?? "",
-            references: replyThread.rfc822_message_ids,
-            providerThreadId: replyThread.provider_thread_id,
-            rootSubject: replyThread.subject,
-          },
+
+      const messageConfig: MessageConfigType = {
+        from: {
+          emailAddress: values.from,
         },
+        subject: values.subject,
+        to: values.to,
+        cc: values.cc,
+        bcc: values.bcc,
+        attachments: formattedAttachments,
+        html: `${markdownToHtmlConverter.makeHtml(
+          values.composeString,
+        )}${respondingMessageContent}`,
+        replyConfig: replyThread
+          ? {
+              inReplyToRfcMessageId: replyThread.rfc822_message_ids[0] ?? "",
+              references: replyThread.rfc822_message_ids,
+              providerThreadId: replyThread.provider_thread_id,
+              rootSubject: replyThread.subject,
+            }
+          : undefined,
+      };
+
+      await gmailApiWorker.message.send.mutate({
+        emailAddress: values.from,
+        messageConfig,
       });
       toast({
         title: "Email sent!",

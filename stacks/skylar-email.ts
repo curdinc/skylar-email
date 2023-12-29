@@ -45,10 +45,7 @@ export function SkylarEmailConstructs({ stack }: StackContext) {
       allowOrigins:
         stack.stage === "prod"
           ? [`https://${BASE_CUSTOM_DOMAIN}`]
-          : [
-              frontendPreviewCustomDomainWithProtocol,
-              "http://localhost:3000"
-            ],
+          : [frontendPreviewCustomDomainWithProtocol, "http://localhost:3000"],
       allowCredentials: true,
       allowHeaders: ALLOWED_HEADERS,
     },

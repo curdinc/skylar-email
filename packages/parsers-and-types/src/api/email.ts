@@ -21,7 +21,7 @@ export const SUPPORTED_EMAIL_CATEGORIES = [
 
 export const emailSenderSchema = object({
   name: optional(string()),
-  emailAddress: emailSchema,
+  emailAddress: string(), // TODO: check by email - can be empty or an rfc email id
 });
 
 export const attachmentSchema = object({
@@ -34,7 +34,7 @@ export const attachmentSchema = object({
   ),
   inline: boolean(),
 });
-export const emailConfigSchema = object({
+export const messageConfigSchema = object({
   to: array(emailSchema),
   from: emailSenderSchema,
   cc: optional(array(emailSchema)),
@@ -63,5 +63,5 @@ export const EmailComposeSchema = object({
 });
 
 export type EmailSenderType = Output<typeof emailSenderSchema>;
-export type EmailConfigType = Output<typeof emailConfigSchema>;
+export type MessageConfigType = Output<typeof messageConfigSchema>;
 export type EmailComposeType = Output<typeof EmailComposeSchema>;

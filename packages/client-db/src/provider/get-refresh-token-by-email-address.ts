@@ -1,6 +1,6 @@
 import { clientDb } from "../db";
 
-export async function getRefreshTokenDetailsByEmailAddress({
+export async function getRefreshTokenByEmailAddress({
   emailAddress,
 }: {
   emailAddress: string;
@@ -10,10 +10,6 @@ export async function getRefreshTokenDetailsByEmailAddress({
   });
   if (!providerInfo) throw new Error(`Provider ${emailAddress} not found`);
 
-  const { refresh_token, access_token, access_token_expires_at } = providerInfo;
-  return {
-    refresh_token,
-    access_token,
-    access_token_expires_at,
-  };
+  const { refresh_token } = providerInfo;
+  return refresh_token;
 }

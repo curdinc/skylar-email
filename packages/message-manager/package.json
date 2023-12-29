@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@skylar/parsers-and-types": "^0.1.0",
+    "@skylar/rfc2822-message-composer": "^0.1.0",
     "date-fns": "^2.30.0"
   },
   "devDependencies": {

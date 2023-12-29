@@ -1,17 +1,15 @@
-import { batchTrashThreads } from "@skylar/gmail-api";
 import type { ThreadType } from "@skylar/parsers-and-types";
+import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { updateAndSaveLabels } from "../utils";
 
 export async function trashThreads({
   threads,
   email,
-  accessToken,
   afterClientDbUpdate,
 }: {
   threads: ThreadType[];
   email: string;
-  accessToken: string;
   afterClientDbUpdate: (() => Promise<unknown>)[];
 }) {
   const labelsToAdd = Array<string[]>(threads.length).fill(["TRASH"]);
@@ -27,9 +25,8 @@ export async function trashThreads({
     await func();
   }
 
-  await batchTrashThreads({
-    accessToken,
-    emailId: email,
+  await gmailApiWorker.thread.delete.mutate({
+    emailAddress: email,
     threadIds: updatedThreads.map((t) => t.provider_thread_id),
   });
 }

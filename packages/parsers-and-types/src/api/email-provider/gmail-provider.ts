@@ -180,7 +180,7 @@ const messageDetailsSchema = object({
   emailProviderThreadId: string(),
 });
 
-const syncResponseSchema = object({
+export const syncResponseSchema = object({
   newMessages: array(messageDetailsSchema),
   messagesDeleted: optional(array(string())),
   labelsModified: optional(array(modifiedLabelSchema)),
