@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
-import { useActiveItemIndex } from "~/lib/store/label-tree-navigator";
 import type { LabelTreeViewerParentType } from "~/lib/store/labels-tree-viewer";
 import {
   LOADING_LABEL_ITEM,
+  useActiveItemIndex,
   useLabelsTreeViewerMapping,
   useLabelsTreeViewerRows,
 } from "~/lib/store/labels-tree-viewer";
@@ -53,14 +53,25 @@ export const LabelTreeViewer = () => {
     });
     setLabelTreeViewerMapping(labelMapping);
   }, [activeEmailAddress, labels, setLabelTreeViewerMapping]);
-
+  const estimateSize = useCallback(
+    (idx: number) => {
+      const rowData = rows[idx];
+      if (!rowData) {
+        return 0;
+      }
+      if (rowData.type === "label") {
+        return 32;
+      }
+      return 36;
+    },
+    [rows],
+  );
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: (idx) => (rows[idx]?.type === "label" ? 32 : 36),
+    getScrollElement: useCallback(() => parentRef.current, []),
+    estimateSize,
     overscan: 3,
   });
-
   useEffect(() => {
     if (activeItemIndex) {
       rowVirtualizer.scrollToIndex(activeItemIndex, {

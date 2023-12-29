@@ -1,5 +1,5 @@
 import { SkylarClientStore } from "~/lib/store/index,";
-import { activeItemIndexAtom } from "~/lib/store/label-tree-navigator";
+import { activeItemIndexAtom } from "~/lib/store/labels-tree-viewer";
 
 export const goUpLabelTree = (e: KeyboardEvent) => {
   e.preventDefault();

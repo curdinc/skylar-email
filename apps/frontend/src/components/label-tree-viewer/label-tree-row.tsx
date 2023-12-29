@@ -1,14 +1,13 @@
 import { memo, startTransition } from "react";
 
 import { isThreadUnread } from "@skylar/client-db";
-import { setActiveThread } from "@skylar/logic";
-import type { ThreadType } from "@skylar/parsers-and-types";
 
 import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import type { LabelTreeViewerRowType } from "~/lib/store/labels-tree-viewer";
 import {
+  useActiveItemIndex,
   useToggleLabel,
   useViewMoreLabelItem,
 } from "~/lib/store/labels-tree-viewer";
@@ -32,16 +31,15 @@ const LabelTreeRowBase = ({
   const { data: activeEmailAddress } = useActiveEmailAddress();
   const toggleLabel = useToggleLabel();
   const viewMoreLabelItem = useViewMoreLabelItem();
+  const [, setActiveItemIndex] = useActiveItemIndex();
 
-  const onClickThread = (thread: ThreadType) => {
-    return () => {
-      captureEvent({
-        event: TrackingEvents.threadOpened,
-        properties: {},
-      });
+  const onClickThread = () => {
+    captureEvent({
+      event: TrackingEvents.threadOpened,
+      properties: {},
+    });
 
-      setActiveThread(thread);
-    };
+    startTransition(() => setActiveItemIndex(index));
   };
 
   if (!row || !activeEmailAddress) {
@@ -129,12 +127,7 @@ const LabelTreeRowBase = ({
       >
         <button
           data-thread-item={getDataThreadItem(row.parentId, index)}
-          onFocus={() => {
-            startTransition(() => {
-              setActiveThread(thread);
-            });
-          }}
-          onClick={onClickThread(thread)}
+          onClick={onClickThread}
           className={cn(
             "flex h-9 items-center pl-6",
             "hover:bg-secondary",

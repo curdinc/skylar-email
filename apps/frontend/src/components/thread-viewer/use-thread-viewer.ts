@@ -3,18 +3,19 @@ import { useMutation } from "@tanstack/react-query";
 
 import { bulkUpdateMessages, useThread } from "@skylar/client-db";
 import { modifyLabels } from "@skylar/gmail-api";
-import { useGlobalStore } from "@skylar/logic";
 import type { MessageType } from "@skylar/parsers-and-types";
 
 import { useAccessToken } from "~/lib/provider/use-access-token";
+import { useActiveItemRow } from "~/lib/store/labels-tree-viewer";
 
 export function useThreadViewer() {
-  const threadId = useGlobalStore(
-    (state) => state.EMAIL_CLIENT.activeThread?.provider_thread_id,
-  );
+  const [activeItemRow] = useActiveItemRow();
 
   const { thread, isLoading: isLoadingThread } = useThread({
-    emailProviderThreadId: threadId ?? "",
+    emailProviderThreadId:
+      activeItemRow?.type === "labelItem"
+        ? activeItemRow.thread.provider_thread_id
+        : "",
   });
 
   const { mutateAsync: fetchGmailAccessToken } = useAccessToken();

@@ -2,7 +2,7 @@ import { SkylarClientStore } from "~/lib/store/index,";
 import {
   activeItemIndexAtom,
   labelTreeViewerRowsLengthAtom,
-} from "~/lib/store/label-tree-navigator";
+} from "~/lib/store/labels-tree-viewer";
 
 export const goDownLabelTree = (e: KeyboardEvent) => {
   e.preventDefault();

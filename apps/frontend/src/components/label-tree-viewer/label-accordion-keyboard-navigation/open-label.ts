@@ -2,13 +2,16 @@ import { SkylarClientStore } from "~/lib/store/index,";
 import {
   activeItemRowAtom,
   labelListAtom,
-} from "~/lib/store/label-tree-navigator";
-import { toggleLabelAtom } from "~/lib/store/labels-tree-viewer";
+  toggleLabelAtom,
+} from "~/lib/store/labels-tree-viewer";
 
 export const openLabelOrGoToNextLabel = (activeEmailAddress: string) => {
   return () => {
     const activeRow = SkylarClientStore.get(activeItemRowAtom);
-    if (activeRow?.type === "label") {
+    if (!activeRow) {
+      return;
+    }
+    if (activeRow.type === "label" && activeRow.state === "closed") {
       SkylarClientStore.set(toggleLabelAtom, {
         labelIdToToggle: activeRow.id,
         userEmailAddress: activeEmailAddress,
@@ -17,7 +20,10 @@ export const openLabelOrGoToNextLabel = (activeEmailAddress: string) => {
       const labels = SkylarClientStore.get(labelListAtom);
       for (let i = 0; i < labels.length; ++i) {
         const label = labels[i];
-        if (label === activeRow?.parentId) {
+        if (
+          label === activeRow.id ||
+          ("parentId" in activeRow && label === activeRow?.parentId)
+        ) {
           const nextLabel = labels[i + 1];
           if (nextLabel) {
             SkylarClientStore.set(activeItemRowAtom, {
