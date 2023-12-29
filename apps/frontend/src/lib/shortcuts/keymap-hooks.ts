@@ -20,6 +20,8 @@ import { TrackingEvents } from "../analytics/tracking-events";
 import { useLogger } from "../logger";
 import { useActiveEmailAddress } from "../provider/use-active-email-address";
 import {
+  deleteCurrentListItem,
+  markCurrentListItemAsDone,
   markCurrentListItemAsRead,
   markCurrentListItemAsUnread,
 } from "../store/label-tree-viewer/update-current-list-item";
@@ -41,10 +43,16 @@ export const useNavigateMessagesKeymap = () => {
     const unsubscribe = registerShortcuts({
       shortcuts: [
         {
+          combo: "Delete",
+          description: "Delete a given item in the list",
+          label: "message.delete",
+          onKeyDown: () => deleteCurrentListItem(activeEmailAddress),
+        },
+        {
           combo: "e",
           description: "Mark a given item in the list as done",
           label: "message.mark-as-done",
-          onKeyDown: goDownLabelTree(startTransition),
+          onKeyDown: () => markCurrentListItemAsDone(activeEmailAddress),
         },
         {
           combo: "Shift+U",
