@@ -3,11 +3,9 @@ import { useRouter } from "next/navigation";
 
 import { useAllShortcuts } from "@skylar/client-db";
 import {
-  resetActiveThread,
   resetComposeMessage,
   setComposeMessageType,
   setIsSelecting,
-  setReplyMessageType,
   useGlobalStore,
 } from "@skylar/logic";
 
@@ -19,6 +17,7 @@ import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
 import { useLogger } from "../logger";
 import { useActiveEmailAddress } from "../provider/use-active-email-address";
+import { startResponseToCurrentItem } from "../store/compose/respond-to-current-item";
 import {
   deleteCurrentListItem,
   markCurrentListItemAsDone,
@@ -135,6 +134,8 @@ export const useGlobalKeymap = () => {
   const router = useRouter();
   const { data: existingShortcuts, isLoading: isLoadingExistingShortcuts } =
     useAllShortcuts();
+  const { data: activeEmailAddress } = useActiveEmailAddress();
+
   const logger = useLogger();
   useEffect(() => {
     if (isLoadingExistingShortcuts) {
@@ -162,10 +163,8 @@ export const useGlobalKeymap = () => {
                 resetComposeMessage();
               }
             } else {
-              const activeThread =
-                useGlobalStore.getState().EMAIL_CLIENT.activeThread;
-              if (activeThread) {
-                resetActiveThread();
+              if (activeEmailAddress) {
+                closeLabelOrGoToPreviousLabel(activeEmailAddress)();
               }
             }
           },
@@ -188,71 +187,19 @@ export const useGlobalKeymap = () => {
           combo: "f",
           description: "Forward message",
           label: "message.forward",
-          onKeyDown: () => {
-            const activeThread =
-              useGlobalStore.getState().EMAIL_CLIENT.activeThread;
-            if (activeThread) {
-              captureEvent({
-                event: TrackingEvents.composeForwardMessage,
-                properties: {
-                  isShortcut: true,
-                  messageConversationLength:
-                    activeThread.provider_message_ids.length,
-                },
-              });
-
-              setReplyMessageType({
-                replyType: "forward",
-                thread: activeThread,
-              });
-            }
-          },
+          onKeyDown: startResponseToCurrentItem("forward"),
         },
         {
           combo: "r",
           description: "Reply to everyone on the message",
           label: "message.reply-all",
-          onKeyDown: () => {
-            const activeThread =
-              useGlobalStore.getState().EMAIL_CLIENT.activeThread;
-            if (activeThread) {
-              captureEvent({
-                event: TrackingEvents.composeReplyAllMessage,
-                properties: {
-                  isShortcut: true,
-                  messageConversationLength:
-                    activeThread.provider_message_ids.length,
-                },
-              });
-              setReplyMessageType({
-                replyType: "reply-all",
-                thread: activeThread,
-              });
-            }
-          },
+          onKeyDown: startResponseToCurrentItem("reply-all"),
         },
         {
           combo: "Shift+R",
           description: "Reply to the sender of the message",
           label: "message.reply-sender",
-          onKeyDown: () => {
-            const activeThread =
-              useGlobalStore.getState().EMAIL_CLIENT.activeThread;
-            if (activeThread) {
-              captureEvent({
-                event: TrackingEvents.composeReplySenderMessage,
-                properties: {
-                  isShortcut: true,
-                  messageConversationLength:
-                    activeThread.provider_message_ids.length,
-                },
-              });
-              setReplyMessageType({
-                replyType: "reply-sender",
-                thread: activeThread,
-              });
-            }
-          },
+          onKeyDown: startResponseToCurrentItem("reply-sender"),
         },
         {
           combo: "Alt+1",
