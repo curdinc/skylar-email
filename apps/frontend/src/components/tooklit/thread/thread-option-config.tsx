@@ -14,6 +14,9 @@ import { trashThreads } from "~/lib/inbox-toolkit/thread/trash-threads";
 import { unarchiveThreads } from "~/lib/inbox-toolkit/thread/unarchive-threads";
 import { untrashThreads } from "~/lib/inbox-toolkit/thread/untrash-threads";
 import { getLabelModifications } from "~/lib/inbox-toolkit/utils";
+import { SkylarClientStore } from "~/lib/store/index,";
+import { markInMemoryThreadAsReadAtom } from "~/lib/store/label-tree-viewer/mark-in-memory-thread-as-read";
+import { markInMemoryThreadAsUnreadAtom } from "~/lib/store/label-tree-viewer/mark-in-memory-thread-as-unread";
 import type {
   ConfigOption,
   GetThreads,
@@ -172,13 +175,27 @@ export const getThreadActions = (
       applyFn: async () => {
         const threads = await getThreads();
         await markReadThreads({
-          afterClientDbUpdate,
+          beforeClientDbUpdate: [
+            () =>
+              threads.forEach((thread) =>
+                SkylarClientStore.set(markInMemoryThreadAsReadAtom, {
+                  thread,
+                }),
+              ),
+          ],
           email: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await markUnreadThreads({
-            afterClientDbUpdate,
+            beforeClientDbUpdate: [
+              () =>
+                threads.forEach((thread) =>
+                  SkylarClientStore.set(markInMemoryThreadAsUnreadAtom, {
+                    thread,
+                  }),
+                ),
+            ],
             email: activeEmailAddress,
             threads: threads,
           });
@@ -197,13 +214,27 @@ export const getThreadActions = (
         const threads = await getThreads();
         setMostRecentlyAffectedThreads(threads);
         await markUnreadThreads({
-          afterClientDbUpdate,
+          beforeClientDbUpdate: [
+            () =>
+              threads.forEach((thread) =>
+                SkylarClientStore.set(markInMemoryThreadAsUnreadAtom, {
+                  thread,
+                }),
+              ),
+          ],
           email: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await markReadThreads({
-            afterClientDbUpdate,
+            beforeClientDbUpdate: [
+              () =>
+                threads.forEach((thread) =>
+                  SkylarClientStore.set(markInMemoryThreadAsReadAtom, {
+                    thread,
+                  }),
+                ),
+            ],
             email: activeEmailAddress,
             threads: threads,
           });

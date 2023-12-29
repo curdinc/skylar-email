@@ -5,10 +5,11 @@ import { useThread } from "@skylar/client-db";
 
 import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
 import { useActiveItemRow } from "~/lib/store/label-tree-viewer/active-item";
+import { useMarkInMemoryThreadAsRead } from "~/lib/store/label-tree-viewer/mark-in-memory-thread-as-read";
 
 export function useThreadViewer() {
   const [activeItemRow] = useActiveItemRow();
-
+  const markInMemoryThreadAsRead = useMarkInMemoryThreadAsRead();
   const { thread: messagesInThread, isLoading: isLoadingThread } = useThread({
     emailProviderThreadId:
       activeItemRow?.type === "labelItem"
@@ -25,7 +26,9 @@ export function useThreadViewer() {
       await markReadThreads({
         threads: [activeItemRow.thread],
         email: activeItemRow.thread.user_email_address,
-        afterClientDbUpdate: [], //FIXME: add refetch
+        beforeClientDbUpdate: [
+          () => markInMemoryThreadAsRead({ thread: activeItemRow.thread }),
+        ],
       });
     },
   });

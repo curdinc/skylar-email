@@ -6,13 +6,13 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { useNavigateMessagesKeymap } from "~/lib/shortcuts/keymap-hooks";
-import type { LabelTreeViewerParentType } from "~/lib/store/labels-tree-viewer";
+import type { LabelTreeViewerParentType } from "~/lib/store/label-tree-viewer";
 import {
   LOADING_LABEL_ITEM,
-  useActiveItemIndex,
   useLabelsTreeViewerMapping,
   useLabelsTreeViewerRows,
-} from "~/lib/store/labels-tree-viewer";
+} from "~/lib/store/label-tree-viewer";
+import { useActiveItemIndex } from "~/lib/store/label-tree-viewer/active-item";
 import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";
 import { LabelTreeRow } from "./label-tree-row";
 
