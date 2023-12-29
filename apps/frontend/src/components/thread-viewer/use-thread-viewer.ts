@@ -2,14 +2,13 @@ import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import { useThread } from "@skylar/client-db";
+import { EMAIL_PROVIDER_LABELS } from "@skylar/parsers-and-types";
 
-import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
+import { modifyThreadLabels } from "~/lib/inbox-toolkit/thread/modify-thread-labels";
 import { useActiveItemRow } from "~/lib/store/label-tree-viewer/active-item";
-import { useMarkInMemoryThreadAsRead } from "~/lib/store/label-tree-viewer/mark-in-memory-thread-as-read";
 
 export function useThreadViewer() {
   const [activeItemRow] = useActiveItemRow();
-  const markInMemoryThreadAsRead = useMarkInMemoryThreadAsRead();
   const { thread: messagesInThread, isLoading: isLoadingThread } = useThread({
     emailProviderThreadId:
       activeItemRow?.type === "labelItem"
@@ -23,12 +22,10 @@ export function useThreadViewer() {
         return undefined;
       }
 
-      await markReadThreads({
+      await modifyThreadLabels({
         threads: [activeItemRow.thread],
-        email: activeItemRow.thread.user_email_address,
-        beforeClientDbUpdate: [
-          () => markInMemoryThreadAsRead({ thread: activeItemRow.thread }),
-        ],
+        emailAddress: activeItemRow.thread.user_email_address,
+        labelsToRemove: [[EMAIL_PROVIDER_LABELS.GMAIL.UNREAD]],
       });
     },
   });

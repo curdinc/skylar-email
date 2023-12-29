@@ -40,7 +40,7 @@ type LabelTreeViewerLeafType =
       parentId: string;
       displayValue: string;
       type: "labelItem";
-      state: "beingViewed" | "viewable";
+      state: "beingViewed" | "viewable" | "hidden";
       thread: ThreadType;
     };
 export type LabelTreeViewerParentType = {
@@ -68,7 +68,9 @@ export const labelTreeViewerRowsAtom = atom<LabelTreeViewerRowType[]>((get) => {
       ...prev,
       currentLabel,
       ...(currentLabel.state === "open"
-        ? Array.from(currentLabel.children.values())
+        ? Array.from(currentLabel.children.values()).filter(
+            (item) => item.type !== "labelItem" || item.state !== "hidden",
+          )
         : []),
     ];
   }, [] as LabelTreeViewerRowType[]);
