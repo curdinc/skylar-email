@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import { useAllShortcuts } from "@skylar/client-db";
@@ -19,17 +19,16 @@ import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
 import { useLogger } from "../logger";
 import { useActiveEmailAddress } from "../provider/use-active-email-address";
-import { debounce } from "../store/index,";
 import { registerShortcuts } from "./register-shortcuts";
 
 // ! Note that shortcuts should not overlap
 // ! For example, if you have a shortcut for "Escape" in one component, you should not have a shortcut for "Escape" in another component.
 // ! This will result in both shortcuts being called when "Escape" is pressed. Probably not what you want.
-const DEBOUNCE_TIME_IN_MS = 130;
 export const useNavigateMessagesKeymap = () => {
   const { data: existingShortcuts, isLoading: isLoadingExistingShortcuts } =
     useAllShortcuts();
   const { data: activeEmailAddress } = useActiveEmailAddress();
+  const [, startTransition] = useTransition();
   const logger = useLogger();
   useEffect(() => {
     if (isLoadingExistingShortcuts || !activeEmailAddress) {
@@ -41,31 +40,25 @@ export const useNavigateMessagesKeymap = () => {
           combo: "j",
           description: "Go down the message list",
           label: "message.down",
-          onKeyDown: debounce(goDownLabelTree, DEBOUNCE_TIME_IN_MS),
+          onKeyDown: goDownLabelTree(startTransition),
         },
         {
           combo: "ArrowDown",
           description: "Go down the next message list",
           label: "message.down-alt",
-          onKeyDown: debounce(goDownLabelTree, DEBOUNCE_TIME_IN_MS),
+          onKeyDown: goDownLabelTree(startTransition),
         },
         {
           combo: "k",
           description: "Go to up the message list",
           label: "message.up",
-          onKeyDown: debounce(goUpLabelTree, DEBOUNCE_TIME_IN_MS),
-        },
-        {
-          combo: "k k",
-          description: "Go to up the message list",
-          label: "message.up",
-          onKeyDown: debounce(goUpLabelTree, DEBOUNCE_TIME_IN_MS),
+          onKeyDown: goUpLabelTree(startTransition),
         },
         {
           combo: "ArrowUp",
           description: "Go to up the message list",
           label: "message.up-alt",
-          onKeyDown: debounce(goUpLabelTree, DEBOUNCE_TIME_IN_MS),
+          onKeyDown: goUpLabelTree(startTransition),
         },
         {
           combo: "h",

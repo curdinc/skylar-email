@@ -1,4 +1,4 @@
-import { memo, startTransition } from "react";
+import { memo, useTransition } from "react";
 
 import { isThreadUnread } from "@skylar/client-db";
 
@@ -31,6 +31,7 @@ const LabelTreeRowBase = ({
   const { data: activeEmailAddress } = useActiveEmailAddress();
   const toggleLabel = useToggleLabel();
   const viewMoreLabelItem = useViewMoreLabelItem();
+  const [, startTransition] = useTransition();
   const [, setActiveItemIndex] = useActiveItemIndex();
 
   const onClickThread = () => {
