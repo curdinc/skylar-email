@@ -5,17 +5,14 @@ import { isThreadUnread } from "@skylar/client-db";
 import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
-import type { LabelTreeViewerRowType } from "~/lib/store/labels-tree-viewer";
-import {
-  useActiveItemIndex,
-  useToggleLabel,
-  useViewMoreLabelItem,
-} from "~/lib/store/labels-tree-viewer";
+import type { LabelTreeViewerRowType } from "~/lib/store/label-tree-viewer";
+import { useActiveItemIndex } from "~/lib/store/label-tree-viewer/active-item";
+import { useToggleLabel } from "~/lib/store/label-tree-viewer/toggle-label";
+import { useViewMoreLabelItem } from "~/lib/store/label-tree-viewer/view-more-label-item";
 import { cn } from "~/lib/ui";
 import { Icons } from "../icons";
 import { ThreadContextMenu } from "../tooklit/components/context-menu";
 import { Button } from "../ui/button";
-import { getDataThreadItem } from "./label-accordion-keyboard-navigation/helpers";
 
 const LabelTreeRowBase = ({
   row,
@@ -127,7 +124,7 @@ const LabelTreeRowBase = ({
         }}
       >
         <button
-          data-thread-item={getDataThreadItem(row.parentId, index)}
+          data-thread-item={`${row.parentId}-${index}`}
           onClick={onClickThread}
           className={cn(
             "flex h-9 items-center pl-6",

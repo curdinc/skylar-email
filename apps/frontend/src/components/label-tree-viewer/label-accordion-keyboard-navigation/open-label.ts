@@ -1,9 +1,7 @@
 import { SkylarClientStore } from "~/lib/store/index,";
-import {
-  activeItemRowAtom,
-  labelListAtom,
-  toggleLabelAtom,
-} from "~/lib/store/labels-tree-viewer";
+import { labelListAtom } from "~/lib/store/label-tree-viewer";
+import { activeItemRowAtom } from "~/lib/store/label-tree-viewer/active-item";
+import { toggleLabelAtom } from "~/lib/store/label-tree-viewer/toggle-label";
 
 export const openLabelOrGoToNextLabel = (activeEmailAddress: string) => {
   return () => {

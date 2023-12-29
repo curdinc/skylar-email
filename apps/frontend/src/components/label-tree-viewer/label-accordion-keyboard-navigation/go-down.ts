@@ -1,10 +1,8 @@
 import type { TransitionStartFunction } from "react";
 
 import { SkylarClientStore } from "~/lib/store/index,";
-import {
-  activeItemIndexAtom,
-  labelTreeViewerRowsLengthAtom,
-} from "~/lib/store/labels-tree-viewer";
+import { labelTreeViewerRowsLengthAtom } from "~/lib/store/label-tree-viewer";
+import { activeItemIndexAtom } from "~/lib/store/label-tree-viewer/active-item";
 
 export const goDownLabelTree =
   (startTransition: TransitionStartFunction) => (e: KeyboardEvent) => {

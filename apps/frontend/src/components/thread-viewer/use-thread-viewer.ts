@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useThread } from "@skylar/client-db";
 
 import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
-import { useActiveItemRow } from "~/lib/store/labels-tree-viewer";
+import { useActiveItemRow } from "~/lib/store/label-tree-viewer/active-item";
 
 export function useThreadViewer() {
   const [activeItemRow] = useActiveItemRow();

@@ -6,14 +6,20 @@ import { updateAndSaveLabels } from "../utils";
 export async function markReadThreads({
   threads,
   email,
+  beforeClientDbUpdate,
   afterClientDbUpdate,
 }: {
   threads: ThreadType[];
   email: string;
-  afterClientDbUpdate: (() => Promise<void>)[];
+  beforeClientDbUpdate?: (() => Promise<void>)[];
+  afterClientDbUpdate?: (() => Promise<void>)[];
 }) {
   const labelsToAdd = Array<string[]>(threads.length).fill([]);
   const labelsToRemove = Array<string[]>(threads.length).fill(["UNREAD"]);
+
+  for (const func of beforeClientDbUpdate ?? []) {
+    await func();
+  }
 
   const updatedThreads = await updateAndSaveLabels({
     threads,
@@ -21,7 +27,7 @@ export async function markReadThreads({
     labelsToRemove,
   });
 
-  for (const func of afterClientDbUpdate) {
+  for (const func of afterClientDbUpdate ?? []) {
     await func();
   }
 
