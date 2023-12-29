@@ -113,6 +113,7 @@ export const getThreadActions = (
       undoToastConfig: {
         title: "Thread deleted.",
       },
+      shortcut: "Del",
     },
     archiveThread: {
       type: "reversible-action",
@@ -135,6 +136,7 @@ export const getThreadActions = (
       undoToastConfig: {
         title: "Thread archived.",
       },
+      shortcut: "e",
     },
     unarchiveThread: {
       type: "reversible-action",
@@ -179,6 +181,7 @@ export const getThreadActions = (
       undoToastConfig: {
         title: "Thread marked as read.",
       },
+      shortcut: "Shift U",
     },
     markUnreadThread: {
       type: "reversible-action",
@@ -202,6 +205,7 @@ export const getThreadActions = (
       undoToastConfig: {
         title: "Thread marked as unread.",
       },
+      shortcut: "u",
     },
     modifyThreadLabels: {
       type: "reversible-action",

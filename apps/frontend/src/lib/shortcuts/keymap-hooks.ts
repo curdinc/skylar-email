@@ -271,5 +271,11 @@ export const useGlobalKeymap = () => {
     });
 
     return unsubscribe;
-  }, [existingShortcuts, isLoadingExistingShortcuts, logger, router]);
+  }, [
+    activeEmailAddress,
+    existingShortcuts,
+    isLoadingExistingShortcuts,
+    logger,
+    router,
+  ]);
 };
