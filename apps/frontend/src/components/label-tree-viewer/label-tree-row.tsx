@@ -1,4 +1,4 @@
-import { memo, startTransition, useEffect } from "react";
+import { memo, startTransition } from "react";
 
 import { isThreadUnread } from "@skylar/client-db";
 import { setActiveThread } from "@skylar/logic";
@@ -43,33 +43,6 @@ const LabelTreeRowBase = ({
       setActiveThread(thread);
     };
   };
-
-  useEffect(() => {
-    if (rowState === "active") {
-      if (row?.type === "label") {
-        const element = document.querySelector<HTMLElement>(
-          `[data-label-item="${row.id}"]`,
-        );
-        if (element) {
-          element.focus();
-        }
-      } else if (row?.type !== "labelItem") {
-        const element = document.querySelector<HTMLElement>(
-          `[data-thread-wrapper="${row?.parentId}"]`,
-        );
-        if (element) {
-          element.focus();
-        }
-      } else {
-        const element = document.querySelector<HTMLElement>(
-          `[data-thread-item="${row?.parentId}-${index}"]`,
-        );
-        if (element) {
-          element.focus();
-        }
-      }
-    }
-  });
 
   if (!row || !activeEmailAddress) {
     return;

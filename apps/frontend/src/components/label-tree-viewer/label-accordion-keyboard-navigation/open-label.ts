@@ -1,46 +1,32 @@
+import { SkylarClientStore } from "~/lib/store/index,";
 import {
-  DATA_LABEL_ITEM,
-  DATA_THREAD_ITEM,
-  DATA_THREAD_WRAPPER,
-  focusLabelAccordion,
-  getLabelFromDataThreadItem,
-  goDownToNextLabel,
-  isActiveElementInLabelAccordion,
-} from "./helpers";
+  activeItemRowAtom,
+  labelListAtom,
+} from "~/lib/store/label-tree-navigator";
+import { toggleLabelAtom } from "~/lib/store/labels-tree-viewer";
 
-export const openLabelOrGoToNextLabel = () => {
-  const active = document.activeElement;
-
-  if (!isActiveElementInLabelAccordion(active)) {
-    return focusLabelAccordion();
-  }
-
-  const activeThreadDetail = active.getAttribute(DATA_THREAD_ITEM);
-  const activeLabelDetail = active.getAttribute(DATA_LABEL_ITEM);
-
-  if (activeThreadDetail) {
-    // go to the next label
-    const threadLabel = getLabelFromDataThreadItem(activeThreadDetail);
-    if (!threadLabel) {
-      return;
-    }
-    goDownToNextLabel({
-      currentLabel: threadLabel,
-    });
-  } else if (activeLabelDetail) {
-    const isOpen = !!document.querySelector(
-      `[${DATA_THREAD_WRAPPER}=${activeLabelDetail}]`,
-    );
-    if (!isOpen) {
-      (active as HTMLElement).click();
-      (active as HTMLElement).focus();
-    } else {
-      // go to the next label
-      goDownToNextLabel({
-        currentLabel: activeLabelDetail,
+export const openLabelOrGoToNextLabel = (activeEmailAddress: string) => {
+  return () => {
+    const activeRow = SkylarClientStore.get(activeItemRowAtom);
+    if (activeRow?.type === "label") {
+      SkylarClientStore.set(toggleLabelAtom, {
+        labelIdToToggle: activeRow.id,
+        userEmailAddress: activeEmailAddress,
       });
+    } else {
+      const labels = SkylarClientStore.get(labelListAtom);
+      for (let i = 0; i < labels.length; ++i) {
+        const label = labels[i];
+        if (label === activeRow?.parentId) {
+          const nextLabel = labels[i + 1];
+          if (nextLabel) {
+            SkylarClientStore.set(activeItemRowAtom, {
+              id: nextLabel,
+            });
+            return;
+          }
+        }
+      }
     }
-  } else {
-    console.warn("openLabelOrGoToNextLabel: unknown item type");
-  }
+  };
 };

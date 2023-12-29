@@ -11,13 +11,14 @@ import {
   useGlobalStore,
 } from "@skylar/logic";
 
-import { closeCurrentOrGoToPreviousLabel } from "~/components/label-tree-viewer/label-accordion-keyboard-navigation/close-label";
+import { closeLabelOrGoToPreviousLabel } from "~/components/label-tree-viewer/label-accordion-keyboard-navigation/close-label";
 import { goDownLabelTree } from "~/components/label-tree-viewer/label-accordion-keyboard-navigation/go-down";
 import { goUpLabelTree } from "~/components/label-tree-viewer/label-accordion-keyboard-navigation/go-up";
 import { openLabelOrGoToNextLabel } from "~/components/label-tree-viewer/label-accordion-keyboard-navigation/open-label";
 import { captureEvent } from "../analytics/capture-event";
 import { TrackingEvents } from "../analytics/tracking-events";
 import { useLogger } from "../logger";
+import { useActiveEmailAddress } from "../provider/use-active-email-address";
 import { registerShortcuts } from "./register-shortcuts";
 
 // ! Note that shortcuts should not overlap
@@ -26,9 +27,10 @@ import { registerShortcuts } from "./register-shortcuts";
 export const useNavigateMessagesKeymap = () => {
   const { data: existingShortcuts, isLoading: isLoadingExistingShortcuts } =
     useAllShortcuts();
+  const { data: activeEmailAddress } = useActiveEmailAddress();
   const logger = useLogger();
   useEffect(() => {
-    if (isLoadingExistingShortcuts) {
+    if (isLoadingExistingShortcuts || !activeEmailAddress) {
       return;
     }
     const unsubscribe = registerShortcuts({
@@ -61,25 +63,25 @@ export const useNavigateMessagesKeymap = () => {
           combo: "h",
           description: "Close current label or go previous label",
           label: "message.previous-label",
-          onKeyDown: closeCurrentOrGoToPreviousLabel,
+          onKeyDown: closeLabelOrGoToPreviousLabel(activeEmailAddress),
         },
         {
           combo: "ArrowLeft",
           description: "Close current label or go previous label",
           label: "message.previous-label-alt",
-          onKeyDown: closeCurrentOrGoToPreviousLabel,
+          onKeyDown: closeLabelOrGoToPreviousLabel(activeEmailAddress),
         },
         {
           combo: "l",
           description: "Open current label or go next label",
           label: "message.next-label",
-          onKeyDown: openLabelOrGoToNextLabel,
+          onKeyDown: openLabelOrGoToNextLabel(activeEmailAddress),
         },
         {
           combo: "ArrowRight",
           description: "Open current label or go next label",
           label: "message.next-label-alt",
-          onKeyDown: openLabelOrGoToNextLabel,
+          onKeyDown: openLabelOrGoToNextLabel(activeEmailAddress),
         },
       ],
       existingShortcuts,
@@ -90,7 +92,12 @@ export const useNavigateMessagesKeymap = () => {
       },
     });
     return unsubscribe;
-  }, [existingShortcuts, isLoadingExistingShortcuts, logger]);
+  }, [
+    activeEmailAddress,
+    existingShortcuts,
+    isLoadingExistingShortcuts,
+    logger,
+  ]);
 };
 
 export const useGlobalKeymap = () => {

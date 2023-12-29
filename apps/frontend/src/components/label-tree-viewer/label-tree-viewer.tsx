@@ -27,8 +27,8 @@ export const LabelTreeViewer = () => {
   const [activeItemIndex] = useActiveItemIndex();
   const [rows] = useLabelsTreeViewerRows();
   const [, setLabelTreeViewerMapping] = useLabelsTreeViewerMapping();
-  console.log("activeItemIndex", activeItemIndex);
   const parentRef = useRef<HTMLDivElement>(null);
+
   const activeLabels = labels?.[activeEmailAddress ?? ""];
 
   useEffect(() => {
@@ -60,6 +60,15 @@ export const LabelTreeViewer = () => {
     estimateSize: (idx) => (rows[idx]?.type === "label" ? 32 : 36),
     overscan: 3,
   });
+
+  useEffect(() => {
+    if (activeItemIndex) {
+      rowVirtualizer.scrollToIndex(activeItemIndex, {
+        align: "center",
+        behavior: "smooth",
+      });
+    }
+  }, [activeItemIndex, rowVirtualizer]);
 
   if (!activeLabels) {
     return <div>Loading ...</div>;

@@ -1,47 +1,19 @@
-import {
-  DATA_LABEL_ITEM,
-  DATA_THREAD_ITEM,
-  DATA_THREAD_WRAPPER,
-  focusLabelAccordion,
-  getLabelFromDataThreadItem,
-  getPreviousLabel,
-  isActiveElementInLabelAccordion,
-} from "./helpers";
+import { SkylarClientStore } from "~/lib/store/index,";
+import { activeItemRowAtom } from "~/lib/store/label-tree-navigator";
+import { toggleLabelAtom } from "~/lib/store/labels-tree-viewer";
 
-export const closeCurrentOrGoToPreviousLabel = () => {
-  const active = document.activeElement;
-
-  if (!isActiveElementInLabelAccordion(active)) {
-    return focusLabelAccordion();
-  }
-
-  const activeThreadDetail = active.getAttribute(DATA_THREAD_ITEM);
-  const activeLabelDetail = active.getAttribute(DATA_LABEL_ITEM);
-
-  if (activeThreadDetail) {
-    // Close the label
-    const labelRef = document.querySelector<HTMLElement>(
-      `[${DATA_LABEL_ITEM}="${getLabelFromDataThreadItem(
-        activeThreadDetail,
-      )}"]`,
-    );
-    labelRef?.click();
-    labelRef?.focus();
-  } else if (activeLabelDetail) {
-    // GO to the previous label
-    const isOpen =
-      !!active.nextElementSibling?.getAttribute(DATA_THREAD_WRAPPER);
-    if (isOpen) {
-      (active as HTMLElement).click();
-      (active as HTMLElement).focus();
-    } else {
-      // go to the previous label
-      const previousLabelDetail = getPreviousLabel({
-        currentLabel: activeLabelDetail,
+export const closeLabelOrGoToPreviousLabel = (activeEmailAddress: string) => {
+  return () => {
+    const activeRow = SkylarClientStore.get(activeItemRowAtom);
+    if (activeRow?.type === "label") {
+      SkylarClientStore.set(toggleLabelAtom, {
+        labelIdToToggle: activeRow.id,
+        userEmailAddress: activeEmailAddress,
       });
-      previousLabelDetail?.previousLabelRef?.focus();
+    } else if (activeRow?.parentId) {
+      SkylarClientStore.set(activeItemRowAtom, {
+        id: activeRow.parentId,
+      });
     }
-  } else {
-    console.warn("openLabelOrGoToNextLabel: unknown item type");
-  }
+  };
 };
