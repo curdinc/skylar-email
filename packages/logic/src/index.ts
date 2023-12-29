@@ -25,7 +25,6 @@ export type State = {
     CONTEXT_MENU: {
       mostRecentlyAffectedThreads: ThreadType[];
     };
-    activeThread: ThreadType | undefined;
     COMPOSING: {
       messageType: AllComposeMessageOptionsType;
       isSelecting: boolean;
@@ -42,8 +41,6 @@ type Actions = {
   setInviteCodeIdBeingDeleted: (
     inviteCodeId: State["SETTINGS"]["INVITE_CODE"]["inviteCodeIdBeingDeleted"],
   ) => void;
-  setActiveThread: (thread: State["EMAIL_CLIENT"]["activeThread"]) => void;
-  resetActiveThread: () => void;
   setReplyMessageType: (args: {
     thread: State["EMAIL_CLIENT"]["COMPOSING"]["respondingThread"];
     replyType: ValidReplyMessageOptionsType;
@@ -115,18 +112,6 @@ export const setInviteCodeIdBeingDeleted: Actions["setInviteCodeIdBeingDeleted"]
     useGlobalStore.setState((state) => {
       state.SETTINGS.INVITE_CODE.inviteCodeIdBeingDeleted = inviteCodeId;
     });
-
-export const setActiveThread: Actions["setActiveThread"] = (thread) => {
-  window.location.hash = `#${thread?.provider_thread_id ?? ""}`;
-  useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.activeThread = thread;
-  });
-};
-export const resetActiveThread: Actions["resetActiveThread"] = () => {
-  useGlobalStore.setState((state) => {
-    state.EMAIL_CLIENT.activeThread = undefined;
-  });
-};
 
 export const setMostRecentlyAffectedThreads: Actions["setMostRecentlyAffectedThreads"] =
   (affectedThreads) => {

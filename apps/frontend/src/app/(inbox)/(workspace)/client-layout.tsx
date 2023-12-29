@@ -13,7 +13,7 @@ import {
   updateEmailSyncInfo,
   useAllSyncInfo,
 } from "@skylar/client-db";
-import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
+import { resetComposeMessage } from "@skylar/logic";
 import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
 import {
   convertGmailEmailToClientDbEmail,
@@ -26,6 +26,7 @@ import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 import { useGlobalKeymap } from "~/lib/shortcuts/keymap-hooks";
+import { useActiveItemIndex } from "~/lib/store/label-tree-viewer/active-item";
 
 // HANDLES PARTIAL SYNCING OF EMAILS and continues incremental sync
 export const ClientLayout = () => {
@@ -33,14 +34,15 @@ export const ClientLayout = () => {
   const router = useRouter();
   const { data: activeEmailAddress } = useActiveEmailAddress();
   const { data: allSyncInfo } = useAllSyncInfo();
+  const [, setActiveItemIndex] = useActiveItemIndex();
 
   useEffect(() => {
     if (activeEmailAddress) {
       identifyUser(activeEmailAddress);
     }
-    resetActiveThread();
+    setActiveItemIndex(undefined);
     resetComposeMessage();
-  }, [activeEmailAddress]);
+  }, [activeEmailAddress, setActiveItemIndex]);
 
   // create workers for each email address
   useEffect(() => {
