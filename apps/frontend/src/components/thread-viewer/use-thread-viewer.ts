@@ -7,7 +7,7 @@ import { markAsRead } from "~/lib/inbox-toolkit/thread/mark-as-read";
 import { useLogger } from "~/lib/logger";
 import { useActiveItemRow } from "~/lib/store/label-tree-viewer/active-item";
 
-const THREAD_VIEWER_MARK_AS_READ_TIMEOUT = 400;
+const THREAD_VIEWER_MARK_AS_READ_TIMEOUT = 250;
 export function useThreadViewer() {
   const [activeItemRow] = useActiveItemRow();
   const timeOutRef = useRef<NodeJS.Timeout | null>(null);
