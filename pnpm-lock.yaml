@@ -144,6 +144,9 @@ importers:
       '@skylar/logic':
         specifier: ^0.1.0
         version: link:../../packages/logic
+      '@skylar/message-manager':
+        specifier: ^0.1.0
+        version: link:../../packages/message-manager
       '@skylar/parsers-and-types':
         specifier: ^0.1.0
         version: link:../../packages/parsers-and-types
