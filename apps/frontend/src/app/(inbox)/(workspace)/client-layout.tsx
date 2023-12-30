@@ -53,7 +53,7 @@ export const ClientLayout = () => {
     unsyncedEmailAddresses.map((emailAddress) => {
       // GmailBackgroundSyncWorker
       gmailBackgroundSyncWorker(emailAddress)
-        .syncProvider.mutate({
+        .sync.backgroundSync.mutate({
           emailAddress,
         })
         .catch((err) => {

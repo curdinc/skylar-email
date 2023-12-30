@@ -28,24 +28,25 @@ let isInitiatedSyncGuard = false;
 
 export const gmailBackgroundSyncRouter = t.router({
   health: t.procedure.query(() => "OK"),
-  syncProvider: t.procedure
-    .input(
-      validatorTrpcWrapper(
-        object({
-          emailAddress: string(),
-        }),
-      ),
-    )
-    .mutation(async ({ input }) => {
-      console.log("input", input);
-      if (!isInitiatedSyncGuard) {
-        isInitiatedSyncGuard = true;
-        await backgroundSync({
-          emailAddress: input.emailAddress,
-        });
-      }
-      return "OK";
-    }),
+  sync: t.router({
+    backgroundSync: t.procedure
+      .input(
+        validatorTrpcWrapper(
+          object({
+            emailAddress: string(),
+          }),
+        ),
+      )
+      .mutation(async ({ input }) => {
+        if (!isInitiatedSyncGuard) {
+          isInitiatedSyncGuard = true;
+          await backgroundSync({
+            emailAddress: input.emailAddress,
+          });
+        }
+        return "OK";
+      }),
+  }),
 });
 
 export type GmailBackgroundSyncRouterType = typeof gmailBackgroundSyncRouter;
