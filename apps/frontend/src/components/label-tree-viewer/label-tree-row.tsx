@@ -40,7 +40,7 @@ const LabelTreeRowBase = ({
     startTransition(() => setActiveItemIndex(index));
   };
   const onClickLabel = () => {
-    setActiveItemIndex(index);
+    startTransition(() => setActiveItemIndex(index));
     toggleLabel({
       labelIdToToggle: row?.id ?? "",
       userEmailAddress: activeEmailAddress ?? "",
