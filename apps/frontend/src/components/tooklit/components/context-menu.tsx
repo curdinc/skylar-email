@@ -9,12 +9,12 @@ import {
   ContextMenuItem,
   ContextMenuPortal,
   ContextMenuSeparator,
-  ContextMenuShortcut,
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "~/components/ui/context-menu";
+import { Kbd } from "~/components/ui/kbd";
 import { useToast } from "~/components/ui/use-toast";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import type { ConfigOption } from "../config-option-type";
@@ -113,7 +113,9 @@ export function ThreadContextMenu({
           <div>{option.name}</div>
         </div>
         {option.shortcut && (
-          <ContextMenuShortcut>{option.shortcut}</ContextMenuShortcut>
+          <Kbd className="ml-auto" size={"md"}>
+            {option.shortcut}
+          </Kbd>
         )}
       </ContextMenuItem>
     );
