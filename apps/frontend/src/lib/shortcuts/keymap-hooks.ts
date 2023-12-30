@@ -24,6 +24,7 @@ import {
   markCurrentListItemAsRead,
   markCurrentListItemAsUnread,
 } from "../store/label-tree-viewer/update-current-list-item";
+import { SHORTCUT_KEYMAP_INFO } from "./kepmap-info";
 import { registerShortcuts } from "./register-shortcuts";
 
 // ! Note that shortcuts should not overlap
@@ -42,75 +43,51 @@ export const useNavigateMessagesKeymap = () => {
     const unsubscribe = registerShortcuts({
       shortcuts: [
         {
-          combo: "Delete",
-          description: "Delete a given item in the list",
-          label: "message.delete",
+          ...SHORTCUT_KEYMAP_INFO["message.delete"],
           onKeyDown: () => deleteCurrentListItem(activeEmailAddress),
         },
         {
-          combo: "e",
-          description: "Mark a given item in the list as done",
-          label: "message.mark-as-done",
+          ...SHORTCUT_KEYMAP_INFO["message.mark-as-done"],
           onKeyDown: () => markCurrentListItemAsDone(activeEmailAddress),
         },
         {
-          combo: "Shift+U",
-          description: "Mark a given item in the list as read",
-          label: "message.mark-as-read",
+          ...SHORTCUT_KEYMAP_INFO["message.mark-as-read"],
           onKeyDown: () => markCurrentListItemAsRead(activeEmailAddress),
         },
         {
-          combo: "u",
-          description: "Mark a given item in the list as unread",
-          label: "message.mark-as-unread",
+          ...SHORTCUT_KEYMAP_INFO["message.mark-as-unread"],
           onKeyDown: () => markCurrentListItemAsUnread(activeEmailAddress),
         },
         {
-          combo: "j",
-          description: "Go down the message list",
-          label: "message.down",
+          ...SHORTCUT_KEYMAP_INFO["message.down"],
           onKeyDown: goDownLabelTree(startTransition),
         },
         {
-          combo: "ArrowDown",
-          description: "Go down the next message list",
-          label: "message.down-alt",
+          ...SHORTCUT_KEYMAP_INFO["message.down-alt"],
           onKeyDown: goDownLabelTree(startTransition),
         },
         {
-          combo: "k",
-          description: "Go to up the message list",
-          label: "message.up",
+          ...SHORTCUT_KEYMAP_INFO["message.up"],
           onKeyDown: goUpLabelTree(startTransition),
         },
         {
-          combo: "ArrowUp",
-          description: "Go to up the message list",
-          label: "message.up-alt",
+          ...SHORTCUT_KEYMAP_INFO["message.up-alt"],
           onKeyDown: goUpLabelTree(startTransition),
         },
         {
-          combo: "h",
-          description: "Close current label or go previous label",
-          label: "message.previous-label",
+          ...SHORTCUT_KEYMAP_INFO["message.previous-label"],
           onKeyDown: closeLabelOrGoToPreviousLabel(activeEmailAddress),
         },
         {
-          combo: "ArrowLeft",
-          description: "Close current label or go previous label",
-          label: "message.previous-label-alt",
+          ...SHORTCUT_KEYMAP_INFO["message.previous-label-alt"],
           onKeyDown: closeLabelOrGoToPreviousLabel(activeEmailAddress),
         },
         {
-          combo: "l",
-          description: "Open current label or go next label",
-          label: "message.next-label",
+          ...SHORTCUT_KEYMAP_INFO["message.next-label"],
           onKeyDown: openLabelOrGoToNextLabel(activeEmailAddress),
         },
         {
-          combo: "ArrowRight",
-          description: "Open current label or go next label",
-          label: "message.next-label-alt",
+          ...SHORTCUT_KEYMAP_INFO["message.next-label-alt"],
           onKeyDown: openLabelOrGoToNextLabel(activeEmailAddress),
         },
       ],
@@ -170,9 +147,7 @@ export const useGlobalKeymap = () => {
           },
         },
         {
-          combo: "c",
-          description: "Compose new message",
-          label: "message.compose",
+          ...SHORTCUT_KEYMAP_INFO["message.compose"],
           onKeyDown: () => {
             captureEvent({
               event: TrackingEvents.composeNewMessage,
@@ -184,21 +159,15 @@ export const useGlobalKeymap = () => {
           },
         },
         {
-          combo: "f",
-          description: "Forward message",
-          label: "message.forward",
+          ...SHORTCUT_KEYMAP_INFO["message.forward"],
           onKeyDown: startResponseToCurrentItem("forward"),
         },
         {
-          combo: "r",
-          description: "Reply to everyone on the message",
-          label: "message.reply-all",
+          ...SHORTCUT_KEYMAP_INFO["message.reply-all"],
           onKeyDown: startResponseToCurrentItem("reply-all"),
         },
         {
-          combo: "Shift+R",
-          description: "Reply to the sender of the message",
-          label: "message.reply-sender",
+          ...SHORTCUT_KEYMAP_INFO["message.reply-sender"],
           onKeyDown: startResponseToCurrentItem("reply-sender"),
         },
         {
