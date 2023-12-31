@@ -10,8 +10,9 @@ import { useToast } from "../ui/use-toast";
 
 export const CopyToClipboard = ({
   valueToCopy,
+  tooltipOverride,
   ...props
-}: { valueToCopy: string } & ButtonProps) => {
+}: { valueToCopy: string; tooltipOverride?: string } & ButtonProps) => {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
   const onClickCopy = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -52,7 +53,11 @@ export const CopyToClipboard = ({
         </Button>
       </TooltipTrigger>
       <TooltipContent>
-        <p>{copied ? "Copied!" : `Copy ${valueToCopy} to clipboard`}</p>
+        <p>
+          {copied
+            ? "Copied!"
+            : tooltipOverride ?? `Click to copy ${valueToCopy}`}
+        </p>
       </TooltipContent>
     </Tooltip>
   );

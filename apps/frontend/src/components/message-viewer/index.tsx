@@ -6,7 +6,7 @@ import type { MessageType } from "@skylar/parsers-and-types";
 import { cn } from "~/lib/ui";
 import { SenderDisplay } from "../sender-display";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { MessageInfoPopover } from "./message-info-poopover";
+import { MessageInfoPopover } from "./message-info-popover";
 
 export function MessageViewer({ message }: { message: MessageType }) {
   const dateUpdated = formatUnixTimestampToGmailReadableString(
@@ -16,21 +16,24 @@ export function MessageViewer({ message }: { message: MessageType }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="@md:flex-row @md:items-center flex flex-col gap-1">
-          <SenderDisplay
-            className="@lg:text-base font-heading text-sm font-semibold tracking-tighter"
-            senderInfo={message.from}
-          />
-          <MessageInfoPopover message={message} />
-          <div className="@md:ml-auto @md:text-sm text-xs text-muted-foreground">
+        <CardTitle className="flex flex-col items-start @lg:flex-row @lg:items-center">
+          <div className="flex items-center gap-1">
+            <SenderDisplay
+              displayType="just-email-address"
+              className="font-heading text-xs font-semibold tracking-tighter @md:text-sm @lg:text-base"
+              senderInfo={message.from}
+            />
+            <MessageInfoPopover message={message} />
+          </div>
+          <div className="text-xs text-muted-foreground @md:text-sm @lg:ml-auto">
             {dateUpdated}
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="w-full overflow-x-auto">
         <Letter
           className={cn(
-            "w-full overflow-x-auto",
+            "overflow-x-auto",
             !message.content_html && "whitespace-pre-wrap",
           )}
           html={message.content_html ?? ""}
