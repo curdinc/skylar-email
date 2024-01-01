@@ -5,7 +5,14 @@ import type { MessageType } from "@skylar/parsers-and-types";
 
 import { cn } from "~/lib/ui";
 import { SenderDisplay } from "../sender-display";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { AttachmentList } from "./attachment-list";
 import { MessageInfoPopover } from "./message-info-popover";
 
 export function MessageViewer({ message }: { message: MessageType }) {
@@ -50,6 +57,11 @@ export function MessageViewer({ message }: { message: MessageType }) {
           // }}
         />
       </CardContent>
+      {!!message.attachment_names.length && (
+        <CardFooter>
+          <AttachmentList attachments={Object.values(message.attachments)} />
+        </CardFooter>
+      )}
     </Card>
   );
 }
