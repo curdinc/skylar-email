@@ -1,4 +1,3 @@
-import { formatUnixTimestampToGmailReadableString } from "@skylar/message-manager";
 import type { MessageType, SenderType } from "@skylar/parsers-and-types";
 
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
@@ -82,14 +81,6 @@ export const MessageInfoPopover = ({ message }: { message: MessageType }) => {
                 />
               </div>
             )}
-            <div className="flex items-center">
-              <div className="w-20 text-sm text-muted-foreground">
-                Date Sent:{" "}
-              </div>
-              <div className="text-sm text-muted-foreground">
-                {formatUnixTimestampToGmailReadableString(message.created_at)}
-              </div>
-            </div>
           </div>
         </div>
       </PopoverContent>
