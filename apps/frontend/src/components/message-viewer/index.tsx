@@ -3,7 +3,11 @@ import { Letter } from "react-letter";
 import { formatUnixTimestampToGmailReadableString } from "@skylar/message-manager";
 import type { MessageType } from "@skylar/parsers-and-types";
 
+import type { AttachmentListType } from "~/lib/store/attachment-list";
 import { cn } from "~/lib/ui";
+import { AttachmentList } from "../attachment/attachment-list/attachment-list";
+import { AttachmentListFileSize } from "../attachment/attachment-list/attachment-list-file-size";
+import { AttachmentListProvider } from "../attachment/attachment-list/attachment-list-provider";
 import { SenderDisplay } from "../sender-display";
 import {
   Card,
@@ -12,13 +16,20 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { AttachmentList } from "./attachment-list";
 import { MessageInfoPopover } from "./message-info-popover";
 
 export function MessageViewer({ message }: { message: MessageType }) {
   const dateUpdated = formatUnixTimestampToGmailReadableString(
     message.created_at,
   );
+  const attachments = Object.values(message.attachments).map((attachment) => {
+    return {
+      fileName: attachment.filename,
+      mimeType: attachment.mimeType,
+      sizeInBytes: attachment.body.size,
+      data: attachment.body.data,
+    } satisfies AttachmentListType;
+  });
 
   return (
     <Card>
@@ -59,7 +70,18 @@ export function MessageViewer({ message }: { message: MessageType }) {
       </CardContent>
       {!!message.attachment_names.length && (
         <CardFooter>
-          <AttachmentList attachments={Object.values(message.attachments)} />
+          <AttachmentListProvider attachments={attachments}>
+            <div className="grid w-full gap-1">
+              <AttachmentList
+                onClickAttachment={({ attachment, index }) => {
+                  return () => {
+                    console.log("attachments", attachment, index);
+                  };
+                }}
+              />
+              <AttachmentListFileSize />
+            </div>
+          </AttachmentListProvider>
         </CardFooter>
       )}
     </Card>

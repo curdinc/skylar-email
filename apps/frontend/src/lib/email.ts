@@ -1,4 +1,3 @@
-import type { State } from "@skylar/logic";
 import type { SenderType } from "@skylar/parsers-and-types";
 
 export const getSenderReplyToEmailAddresses = (
@@ -32,11 +31,6 @@ export const formatEmailSenderTypeAndRemoveUserEmail = (
 };
 
 export const ATTACHMENT_SIZE_LIMIT_IN_BYTES = 25_000_000;
-export const isAttachmentSizeValid = (
-  attachments: State["EMAIL_CLIENT"]["COMPOSING"]["attachments"],
-): boolean => {
-  const totalSize = attachments.reduce((prev, current) => {
-    return prev + current.file.size;
-  }, 0);
-  return totalSize < ATTACHMENT_SIZE_LIMIT_IN_BYTES;
+export const isAttachmentSizeValid = (sizeInBytes: number): boolean => {
+  return sizeInBytes < ATTACHMENT_SIZE_LIMIT_IN_BYTES;
 };

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { AttachmentZone } from "~/components/compose-message/attachment";
+import { AttachmentZone } from "~/components/attachment";
 import { SiteFooter } from "~/components/nav/site-footer";
 import { ClientLayout } from "./client-layout";
 
