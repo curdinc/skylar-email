@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export const MessageInfoPopover = ({ message }: { message: MessageType }) => {
   const { data: activeEmailAddress } = useActiveEmailAddress();
-  console.log("message", message);
+
   if (!activeEmailAddress) {
     return null;
   }
