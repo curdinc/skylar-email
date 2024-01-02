@@ -1,0 +1,27 @@
+{
+  "name": "@skylar/stacks",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "sst": "^2.38.4"
+  },
+  "devDependencies": {
+    "@skylar/eslint-config": "^0.2.0",
+    "@skylar/prettier-config": "^0.1.0",
+    "@skylar/tsconfig": "^0.1.0",
+    "eslint": "^8.48.0",
+    "typescript": "^5.2.2"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@skylar/eslint-config/base"
+    ]
+  },
+  "prettier": "@skylar/prettier-config"
+}

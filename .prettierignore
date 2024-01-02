@@ -1,0 +1,8 @@
+*.hbs
+.next
+node_modules
+.turbo
+migrations
+.sst
+.open-next
+.vercel
