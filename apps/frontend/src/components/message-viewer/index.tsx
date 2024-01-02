@@ -2,11 +2,24 @@ import { Letter } from "react-letter";
 
 import type { MessageType } from "@skylar/parsers-and-types";
 
+import type { AttachmentListType } from "~/lib/store/attachment-list";
 import { cn } from "~/lib/ui";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { AttachmentList } from "../attachment/attachment-list/attachment-list";
+import { AttachmentListFileSize } from "../attachment/attachment-list/attachment-list-file-size";
+import { AttachmentListProvider } from "../attachment/attachment-list/attachment-list-provider";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { MessageInfoCollapsible } from "./message-info-collapsible";
 
 export function MessageViewer({ message }: { message: MessageType }) {
+  const attachments = Object.values(message.attachments).map((attachment) => {
+    return {
+      fileName: attachment.filename,
+      mimeType: attachment.mimeType,
+      sizeInBytes: attachment.body.size,
+      data: attachment.body.data,
+    } satisfies AttachmentListType;
+  });
+
   return (
     <Card>
       <CardHeader>
@@ -32,6 +45,22 @@ export function MessageViewer({ message }: { message: MessageType }) {
           // }}
         />
       </CardContent>
+      {!!message.attachment_names.length && (
+        <CardFooter>
+          <AttachmentListProvider attachments={attachments}>
+            <div className="grid w-full gap-1">
+              <AttachmentList
+                onClickAttachment={({ attachment, index }) => {
+                  return () => {
+                    console.log("attachments", attachment, index);
+                  };
+                }}
+              />
+              <AttachmentListFileSize />
+            </div>
+          </AttachmentListProvider>
+        </CardFooter>
+      )}
     </Card>
   );
 }

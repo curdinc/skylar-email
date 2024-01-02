@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
-import { AttachmentButton, AttachmentList } from "../attachment";
+import { AttachmentButton, ComposerAttachmentList } from "../../attachment";
 import { EmailAddressRecipientsField } from "./email-address-recipients-field";
 import { useMessageComposer } from "./use-message-composer";
 
@@ -206,7 +206,7 @@ export const MessageComposer = () => {
             Send
           </Button>
         </div>
-        <AttachmentList />
+        <ComposerAttachmentList />
         {respondingMessageContent && <Letter html={respondingMessageContent} />}
       </form>
     </Form>

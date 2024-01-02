@@ -2,6 +2,7 @@ import { atom, useSetAtom } from "jotai";
 
 import { filterForLabels, getThreadSnippets } from "@skylar/client-db";
 
+import type { LabelTreeViewerParentType } from ".";
 import {
   DEFAULT_LIST_ITEM_LIMIT,
   labelTreeViewerMappingAtom,
@@ -10,6 +11,12 @@ import {
   VIEW_MORE_ITEM,
 } from ".";
 
+export const hasLoadedInitialLabelData = (label: LabelTreeViewerParentType) => {
+  return (
+    label.children.size !== 1 ||
+    !label.children.has(LOADING_LABEL_ITEM(label.id).id)
+  );
+};
 export const toggleLabelAtom = atom<
   null,
   [{ labelIdToToggle: string; userEmailAddress: string }],
@@ -38,10 +45,7 @@ export const toggleLabelAtom = atom<
     set(labelTreeViewerMappingAtom, newMapping);
 
     // if no initial items yet, fetch item
-    if (
-      labelToggled.children.size === 1 &&
-      labelToggled.children.has(labelLoadingItemId)
-    ) {
+    if (!hasLoadedInitialLabelData(labelToggled)) {
       getThreadSnippets({
         userEmails: [userEmailAddress],
         filters: [filterForLabels([labelIdToToggle])],
