@@ -1,34 +1,16 @@
 import { Letter } from "react-letter";
 
-import { formatUnixTimestampToGmailReadableString } from "@skylar/message-manager";
 import type { MessageType } from "@skylar/parsers-and-types";
 
 import { cn } from "~/lib/ui";
-import { SenderDisplay } from "../sender-display";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { MessageInfoPopover } from "./message-info-popover";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { MessageInfoCollapsible } from "./message-info-collapsible";
 
 export function MessageViewer({ message }: { message: MessageType }) {
-  const dateUpdated = formatUnixTimestampToGmailReadableString(
-    message.created_at,
-  );
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex flex-col items-start @lg:flex-row @lg:items-center">
-          <div className="flex items-center gap-1">
-            <SenderDisplay
-              displayType="just-email-address"
-              className="font-heading text-xs font-semibold tracking-tighter @md:text-sm @lg:text-base"
-              senderInfo={message.from}
-            />
-            <MessageInfoPopover message={message} />
-          </div>
-          <div className="text-xs text-muted-foreground @md:text-sm @lg:ml-auto">
-            {dateUpdated}
-          </div>
-        </CardTitle>
+        <MessageInfoCollapsible message={message} />
       </CardHeader>
       <CardContent className="w-full overflow-x-auto">
         <Letter
