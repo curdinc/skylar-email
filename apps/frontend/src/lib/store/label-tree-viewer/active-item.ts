@@ -10,6 +10,9 @@ import type {
   LabelTreeViewerParentType,
 } from ".";
 import { labelTreeViewerDataAtom, labelTreeViewerRowsAtom } from ".";
+import { SkylarClientStore } from "../index,";
+import { toggleLabelAtom } from "./toggle-label";
+import { viewMoreLabelItemAtom } from "./view-more-label-item";
 
 export const activeItemIndexAtom = atom<number | undefined>(undefined);
 export const useActiveItemIndex = () => useAtom(activeItemIndexAtom);
@@ -94,4 +97,27 @@ export const activeItemRowAtom = atom<
 export const useActiveItemRow = () => {
   const [activeItemIndex] = useActiveItemIndex();
   return useRow(activeItemIndex);
+};
+
+export const clickActiveItem = async (userEmailAddress: string) => {
+  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
+  if (!activeRow) {
+    return;
+  }
+  switch (activeRow.type) {
+    case "label": {
+      SkylarClientStore.set(toggleLabelAtom, {
+        labelIdToToggle: activeRow.id,
+        userEmailAddress,
+      });
+      break;
+    }
+    case "labelItemViewMore": {
+      SkylarClientStore.set(viewMoreLabelItemAtom, {
+        labelIdToViewMore: activeRow.parentId,
+        userEmailAddress,
+      });
+      break;
+    }
+  }
 };
