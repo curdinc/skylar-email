@@ -1,22 +1,6 @@
 import type { State } from "@skylar/logic";
 import type { SenderType } from "@skylar/parsers-and-types";
 
-export function formatTimeToMMMDD(time: number): string {
-  return new Date(time).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
-}
-export function formatTimeToMMMDDYYYYHHmm(time: number): string {
-  return new Date(time).toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  });
-}
-
 export const getSenderReplyToEmailAddresses = (
   fromAddresses?: SenderType[],
   replyToAddresses?: SenderType[],

@@ -12,4 +12,8 @@
 
 - checkout PR
 - `ni` at the top level directory
-- ...
+-
+
+## Issues closed
+
+This PR closes

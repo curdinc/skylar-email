@@ -11,6 +11,7 @@ import { Provider } from "jotai";
 import { PostHogProvider } from "posthog-js/react";
 import superjson from "superjson";
 
+import { TooltipProvider } from "~/components/ui/tooltip";
 import { env } from "~/env";
 import { posthogInstance } from "~/lib/analytics/posthog-instance";
 import { api } from "~/lib/api";
@@ -70,12 +71,14 @@ export function ClientProvider(props: {
       <GoogleOAuthProvider clientId={props.googleProviderClientId}>
         <api.Provider client={trpcClient} queryClient={queryClient}>
           <Provider store={SkylarClientStore}>
-            <QueryClientProvider client={queryClient}>
-              <ReactQueryStreamedHydration transformer={superjson}>
-                {props.children}
-              </ReactQueryStreamedHydration>
-              <ReactQueryDevtools initialIsOpen={false} />
-            </QueryClientProvider>
+            <TooltipProvider delayDuration={100}>
+              <QueryClientProvider client={queryClient}>
+                <ReactQueryStreamedHydration transformer={superjson}>
+                  {props.children}
+                </ReactQueryStreamedHydration>
+                <ReactQueryDevtools initialIsOpen={false} />
+              </QueryClientProvider>
+            </TooltipProvider>
           </Provider>
         </api.Provider>
       </GoogleOAuthProvider>
