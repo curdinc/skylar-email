@@ -10,7 +10,7 @@ export const updateInMemoryThreadLabels = atom<
   void
 >(null, (get, set, { thread, updateLabels }) => {
   const threadMapping = get(labelTreeViewerDataAtom);
-  const newThreadMapping = new Map(threadMapping)
+  const newThreadMapping = new Map(threadMapping);
   if (newThreadMapping.has(thread.provider_thread_id)) {
     newThreadMapping.set(thread.provider_thread_id, {
       ...thread,
@@ -19,5 +19,6 @@ export const updateInMemoryThreadLabels = atom<
   }
   set(labelTreeViewerDataAtom, newThreadMapping);
 });
+
 export const useUpdateInMemoryThreadLabels = () =>
   useSetAtom(updateInMemoryThreadLabels);
