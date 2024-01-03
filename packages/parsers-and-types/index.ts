@@ -1,3 +1,5 @@
+export { GMAIL_PROCEDURES_TYPES } from "./src/provider-api/gmail";
+
 export { syncResponseSchema } from "./src/api/email-provider/gmail-provider";
 
 export { emailSchema } from "./src/core-parsers";

@@ -2,6 +2,7 @@ import { ACCESS_TOKEN_REFRESH_INTERVAL_MILLIS } from "../constants";
 import { PROVIDER_PROCEDURES } from "../procedure-types";
 import { skylarBackendClient } from "../skylar-backend-connector";
 import { createGmailApiRouter, gmailApiRouterProcedure } from "../trpc-factory";
+import { hasGrantedGoogleGrantedScopes } from "../utils";
 
 export const providerRouter = createGmailApiRouter({
   // make sure router is connected
@@ -19,9 +20,15 @@ export const providerRouter = createGmailApiRouter({
         exp: Date.now() + ACCESS_TOKEN_REFRESH_INTERVAL_MILLIS,
       });
 
+      // check scopes
+      if (!hasGrantedGoogleGrantedScopes(emailProviderInfo.scope)) {
+        throw new Error("Invalid scopes for google account");
+      }
+
       return {
         ...emailProviderInfo.providerInfo,
         emailAddress: emailProviderInfo.providerInfo.email,
+        refreshToken: emailProviderInfo.providerInfo.refreshToken, // TODO: encrypt refresh token
       };
     },
   ),

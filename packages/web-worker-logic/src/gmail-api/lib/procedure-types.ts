@@ -1,23 +1,7 @@
 import type { BaseSchema } from "valibot";
-import {
-  array,
-  custom,
-  integer,
-  intersect,
-  minValue,
-  number,
-  object,
-  optional,
-  picklist,
-  string,
-  void_,
-} from "valibot";
 
 import {
-  emailSchema,
-  messageConfigSchema,
-  supportedEmailProvidersSchema,
-  syncResponseSchema,
+  GMAIL_PROCEDURES_TYPES,
   validatorTrpcWrapper,
 } from "@skylar/parsers-and-types";
 
@@ -26,116 +10,47 @@ import { gmailApiRouterProcedure } from "./trpc-factory";
 const buildGmailApiRouterProcedure = <
   TInput extends BaseSchema,
   TOutput extends BaseSchema,
->({
-  input,
-  output,
-}: {
+>(procedureType: {
   input: TInput;
   output: TOutput;
 }) => {
   return gmailApiRouterProcedure
-    .input(validatorTrpcWrapper(input))
-    .output(validatorTrpcWrapper(output));
+    .input(validatorTrpcWrapper(procedureType.input))
+    .output(validatorTrpcWrapper(procedureType.output));
 };
 
 export const LABEL_PROCEDURES = {
-  list: buildGmailApiRouterProcedure({
-    input: object({
-      emailAddress: emailSchema,
-    }),
-    output: array(
-      object({
-        type: picklist(["user", "system"]),
-        name: string(),
-        id: string(),
-        labelListVisibility: picklist([
-          "labelShow",
-          "labelHide",
-          "labelShowIfUnread",
-        ]),
-      }),
-    ),
-  }),
-  modify: buildGmailApiRouterProcedure({
-    input: object(
-      {
-        emailAddress: emailSchema,
-        addLabelsIds: array(array(string())),
-        deleteLabelsIds: array(array(string())),
-        threadIds: array(string()),
-      },
-      [
-        custom((value) => {
-          if (
-            value.addLabelsIds.length !== value.deleteLabelsIds.length &&
-            value.addLabelsIds.length !== value.threadIds.length
-          ) {
-            return false;
-          }
-          return true;
-        }, "Length mismatch in modify labels: addLabelsIds, deleteLabelsIds, and threadIds must be the same length"),
-      ],
-    ),
-    output: void_("Error: unable to modify labels."),
-  }),
+  list: buildGmailApiRouterProcedure(
+    GMAIL_PROCEDURES_TYPES.LABEL_PROCEDURES.list,
+  ),
+  modify: buildGmailApiRouterProcedure(
+    GMAIL_PROCEDURES_TYPES.LABEL_PROCEDURES.modify,
+  ),
 };
 
 export const MESSAGE_PROCEDURES = {
-  send: buildGmailApiRouterProcedure({
-    input: intersect([
-      object({
-        emailAddress: emailSchema,
-        messageConfig: messageConfigSchema,
-      }),
-      object({ replyToGmailThreadId: optional(string()) }),
-    ]),
-    output: void_("Error: unable to modify labels."),
-  }),
+  send: buildGmailApiRouterProcedure(
+    GMAIL_PROCEDURES_TYPES.MESSAGE_PROCEDURES.send,
+  ),
 };
 
 export const PROVIDER_PROCEDURES = {
-  addOauthProvider: buildGmailApiRouterProcedure({
-    input: object({
-      code: string(),
-      provider: supportedEmailProvidersSchema,
-    }),
-    output: object({
-      emailAddress: emailSchema,
-      name: string(),
-      imageUri: string(),
-      refreshToken: string(),
-    }),
-  }),
+  addOauthProvider: buildGmailApiRouterProcedure(
+    GMAIL_PROCEDURES_TYPES.PROVIDER_PROCEDURES.addOauthProvider,
+  ),
 };
 
 export const THREAD_PROCEDURES = {
-  delete: buildGmailApiRouterProcedure({
-    input: object({
-      emailAddress: emailSchema,
-      threadIds: array(string()),
-    }),
-    output: void_("Error: unable to delete thread."),
-  }),
+  delete: buildGmailApiRouterProcedure(
+    GMAIL_PROCEDURES_TYPES.THREAD_PROCEDURES.delete,
+  ),
 };
 
 export const SYNC_PROCEDURES = {
-  incrementalSync: buildGmailApiRouterProcedure({
-    input: intersect([
-      object({
-        emailAddress: emailSchema,
-        numberOfMessagesToFetch: number([integer(), minValue(1)]),
-      }),
-      object({ pageToken: optional(string()) }),
-    ]),
-    output: syncResponseSchema,
-  }),
-  partialSync: buildGmailApiRouterProcedure({
-    input: intersect([
-      object({
-        emailAddress: emailSchema,
-      }),
-      object({ startHistoryId: string() }),
-    ]),
-    output: syncResponseSchema,
-  }),
+  incrementalSync: buildGmailApiRouterProcedure(
+    GMAIL_PROCEDURES_TYPES.SYNC_PROCEDURES.incrementalSync,
+  ),
+  partialSync: buildGmailApiRouterProcedure(
+    GMAIL_PROCEDURES_TYPES.SYNC_PROCEDURES.partialSync,
+  ),
 };

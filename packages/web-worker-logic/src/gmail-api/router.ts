@@ -1,8 +1,8 @@
-import { labelRouter } from "./lib/sub-routers/label";
-import { messageRouter } from "./lib/sub-routers/message";
-import { providerRouter } from "./lib/sub-routers/provider";
-import { syncRouter } from "./lib/sub-routers/sync";
-import { threadRouter } from "./lib/sub-routers/thread";
+import { labelRouter } from "./lib/routers/label";
+import { messageRouter } from "./lib/routers/message";
+import { providerRouter } from "./lib/routers/provider";
+import { syncRouter } from "./lib/routers/sync";
+import { threadRouter } from "./lib/routers/thread";
 import {
   createGmailApiRouter,
   gmailApiRouterProcedure,

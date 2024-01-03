@@ -88,7 +88,7 @@ export function useConnectEmailProviderPage() {
     onError(error, variables) {
       toast({
         title: "Error connecting to email provider",
-        description: "Please try again later",
+        description: error.message,
         variant: "destructive",
       });
       logger.error("Error adding email provider to client DB", {
