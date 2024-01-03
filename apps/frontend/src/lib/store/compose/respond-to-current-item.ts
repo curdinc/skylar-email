@@ -6,24 +6,22 @@ import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { SkylarClientStore } from "../index,";
 import { activeItemRowAtom } from "../label-tree-viewer/active-item";
 
-export const startResponseToCurrentItem = (
+export const startResponseToCurrentItem = async (
   type: ValidReplyMessageOptionsType,
 ) => {
-  return () => {
-    const activeRow = SkylarClientStore.get(activeItemRowAtom);
-    if (!activeRow || activeRow.type !== "labelItem") {
-      return;
-    }
-    captureEvent({
-      event: TrackingEvents.composeReplyAllMessage,
-      properties: {
-        isShortcut: true,
-        messageConversationLength: activeRow.thread.provider_message_ids.length,
-      },
-    });
-    setReplyMessageType({
-      replyType: type,
-      thread: activeRow.thread,
-    });
-  };
+  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
+  if (!activeRow || activeRow.type !== "labelItem") {
+    return;
+  }
+  captureEvent({
+    event: TrackingEvents.composeReplyAllMessage,
+    properties: {
+      isShortcut: true,
+      messageConversationLength: activeRow.thread.provider_message_ids.length,
+    },
+  });
+  setReplyMessageType({
+    replyType: type,
+    thread: activeRow.thread,
+  });
 };

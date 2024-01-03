@@ -5,52 +5,44 @@ import { trashThreads } from "~/lib/inbox-toolkit/thread/trash-threads";
 import { SkylarClientStore } from "../index,";
 import { activeItemRowAtom } from "./active-item";
 
-export const markCurrentListItemAsRead = (emailAddress: string) => {
-  const activeRow = SkylarClientStore.get(activeItemRowAtom);
+export const markCurrentListItemAsRead = async (emailAddress: string) => {
+  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
   if (!activeRow || activeRow.type !== "labelItem") {
     return;
   }
-  markAsRead({
+  return markAsRead({
     emailAddress,
     threads: [activeRow.thread],
-  }).catch((e) => {
-    console.error("Fail to mark current thread as read", e);
   });
 };
-export const markCurrentListItemAsUnread = (emailAddress: string) => {
-  const activeRow = SkylarClientStore.get(activeItemRowAtom);
+export const markCurrentListItemAsUnread = async (emailAddress: string) => {
+  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
   if (!activeRow || activeRow.type !== "labelItem") {
     return;
   }
-  markAsUnread({
+  return markAsUnread({
     emailAddress,
     threads: [activeRow.thread],
-  }).catch((e) => {
-    console.error("Fail to mark current thread as unread", e);
   });
 };
 
-export const markCurrentListItemAsDone = (emailAddress: string) => {
-  const activeRow = SkylarClientStore.get(activeItemRowAtom);
+export const markCurrentListItemAsDone = async (emailAddress: string) => {
+  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
   if (!activeRow || activeRow.type !== "labelItem") {
     return;
   }
-  archiveThreads({
+  return archiveThreads({
     emailAddress,
     threads: [activeRow.thread],
-  }).catch((e) => {
-    console.error("Fail to mark current thread as done", e);
   });
 };
-export const deleteCurrentListItem = (emailAddress: string) => {
-  const activeRow = SkylarClientStore.get(activeItemRowAtom);
+export const deleteCurrentListItem = async (emailAddress: string) => {
+  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
   if (!activeRow || activeRow.type !== "labelItem") {
     return;
   }
-  trashThreads({
+  return trashThreads({
     emailAddress,
     threads: [activeRow.thread],
-  }).catch((e) => {
-    console.error("Fail to delete current thread", e);
   });
 };

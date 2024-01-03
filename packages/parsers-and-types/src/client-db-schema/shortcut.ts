@@ -1,9 +1,8 @@
 export type ShortcutIndexType = {
   shortcut_id: string;
-  label_search: string[];
-  description_search: string[];
   combo: string;
   label: string;
+  actionId: string;
   updated_at: number;
 };
 
@@ -15,14 +14,9 @@ export type ShortcutType = ShortcutIndexType & {
 
 export type ShortcutInsertType = Omit<
   ShortcutType,
-  | "shortcut_id"
-  | "created_at"
-  | "updated_at"
-  | "label_search"
-  | "description_search"
-  | "keepActiveDuringInput"
+  "shortcut_id" | "created_at" | "updated_at" | "keepActiveDuringInput"
 > &
   Partial<Pick<ShortcutType, "keepActiveDuringInput">>;
 
 export const SHORTCUT_INDEX =
-  `++shortcut_id, *label_search, *description_search, combo, &label, updated_at` as const;
+  `++shortcut_id, actionId, combo, &label, updated_at` as const;
