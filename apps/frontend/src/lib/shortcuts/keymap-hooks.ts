@@ -1,4 +1,5 @@
 import { useEffect, useTransition } from "react";
+import error from "next/error";
 import { useRouter } from "next/navigation";
 
 import { useAllShortcuts } from "@skylar/client-db";
@@ -45,25 +46,56 @@ export const useNavigateMessagesKeymap = () => {
           combo: "Delete",
           description: "Delete a given item in the list",
           label: "message.delete",
-          onKeyDown: () => deleteCurrentListItem(activeEmailAddress),
+          onKeyDown: () => {
+            deleteCurrentListItem(activeEmailAddress).catch((e: unknown) => {
+              logger.error("Something went wrong deleteCurrentListItem", {
+                error: e,
+              });
+            });
+          },
         },
         {
           combo: "e",
           description: "Mark a given item in the list as done",
           label: "message.mark-as-done",
-          onKeyDown: () => markCurrentListItemAsDone(activeEmailAddress),
+          onKeyDown: () => {
+            markCurrentListItemAsDone(activeEmailAddress).catch(
+              (e: unknown) => {
+                logger.error("Something went wrong markCurrentListItemAsDone", {
+                  error: e,
+                });
+              },
+            );
+          },
         },
         {
           combo: "Shift+U",
           description: "Mark a given item in the list as read",
           label: "message.mark-as-read",
-          onKeyDown: () => markCurrentListItemAsRead(activeEmailAddress),
+          onKeyDown: () => {
+            markCurrentListItemAsRead(activeEmailAddress).catch(
+              (e: unknown) => {
+                logger.error("Something went wrong markCurrentListItemAsRead", {
+                  error: e,
+                });
+              },
+            );
+          },
         },
         {
           combo: "u",
           description: "Mark a given item in the list as unread",
           label: "message.mark-as-unread",
-          onKeyDown: () => markCurrentListItemAsUnread(activeEmailAddress),
+          onKeyDown: () => {
+            markCurrentListItemAsUnread(activeEmailAddress).catch(
+              (e: unknown) => {
+                logger.error(
+                  "Something went wrong markCurrentListItemAsUnread",
+                  { error: e },
+                );
+              },
+            );
+          },
         },
         {
           combo: "j",
@@ -93,25 +125,49 @@ export const useNavigateMessagesKeymap = () => {
           combo: "h",
           description: "Close current label or go previous label",
           label: "message.previous-label",
-          onKeyDown: closeLabelOrGoToPreviousLabel(activeEmailAddress),
+          onKeyDown: () => {
+            closeLabelOrGoToPreviousLabel(activeEmailAddress).catch(
+              (e: unknown) => {
+                logger.error("Error closeLabelOrGoToPreviousLabel", {
+                  error: e,
+                });
+              },
+            );
+          },
         },
         {
           combo: "ArrowLeft",
           description: "Close current label or go previous label",
           label: "message.previous-label-alt",
-          onKeyDown: closeLabelOrGoToPreviousLabel(activeEmailAddress),
+          onKeyDown: () => {
+            closeLabelOrGoToPreviousLabel(activeEmailAddress).catch(
+              (e: unknown) => {
+                logger.error("Error closeLabelOrGoToPreviousLabel", {
+                  error: e,
+                });
+              },
+            );
+          },
         },
         {
           combo: "l",
           description: "Open current label or go next label",
           label: "message.next-label",
-          onKeyDown: openLabelOrGoToNextLabel(activeEmailAddress),
+          onKeyDown: () => {
+            openLabelOrGoToNextLabel(activeEmailAddress).catch((e: unknown) => {
+              logger.error("Error openLabelOrGoToNextLabel", { error: e });
+            });
+          },
         },
         {
           combo: "ArrowRight",
           description: "Open current label or go next label",
           label: "message.next-label-alt",
-          onKeyDown: openLabelOrGoToNextLabel(activeEmailAddress),
+          onKeyDown: () => {
+            openLabelOrGoToNextLabel(activeEmailAddress).catch((e: unknown) => {
+              logger.error("Error openLabelOrGoToNextLabel", { error: e });
+            });
+          },
         },
       ],
       existingShortcuts,
@@ -164,7 +220,11 @@ export const useGlobalKeymap = () => {
               }
             } else {
               if (activeEmailAddress) {
-                closeLabelOrGoToPreviousLabel(activeEmailAddress)();
+                closeLabelOrGoToPreviousLabel(activeEmailAddress).catch(
+                  (e: unknown) => {
+                    logger.error("Error closing label", { error: e });
+                  },
+                );
               }
             }
           },
@@ -187,19 +247,31 @@ export const useGlobalKeymap = () => {
           combo: "f",
           description: "Forward message",
           label: "message.forward",
-          onKeyDown: startResponseToCurrentItem("forward"),
+          onKeyDown: () => {
+            startResponseToCurrentItem("forward").catch((e: unknown) => {
+              logger.error("Error forwarding message", { error, e });
+            });
+          },
         },
         {
           combo: "r",
           description: "Reply to everyone on the message",
           label: "message.reply-all",
-          onKeyDown: startResponseToCurrentItem("reply-all"),
+          onKeyDown: () => {
+            startResponseToCurrentItem("reply-all").catch((e: unknown) => {
+              logger.error("Error reply-all current message", { error, e });
+            });
+          },
         },
         {
           combo: "Shift+R",
           description: "Reply to the sender of the message",
           label: "message.reply-sender",
-          onKeyDown: startResponseToCurrentItem("reply-sender"),
+          onKeyDown: () => {
+            startResponseToCurrentItem("reply-sender").catch((e: unknown) => {
+              logger.error("Error reply-sender current message", { error, e });
+            });
+          },
         },
         {
           combo: "Alt+1",

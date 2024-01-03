@@ -15,6 +15,7 @@ import {
 import { useActiveItemIndex } from "~/lib/store/label-tree-viewer/active-item";
 import { useListLabels } from "../../app/(inbox)/(workspace)/use-list-labels";
 import { LabelTreeRow } from "./label-tree-row";
+import type { RowStateType } from "./types";
 
 /**
  * @returns The component that renders all the labels of a user and the corresponding messages
@@ -100,8 +101,7 @@ export const LabelTreeViewer = () => {
       >
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
           const rowData = rows[virtualRow.index];
-          let rowState: Parameters<typeof LabelTreeRow>[0]["rowState"] =
-            "inactive";
+          let rowState: RowStateType = "inactive";
           if (virtualRow.index === activeItemIndex) {
             rowState = "active";
           }

@@ -8,7 +8,7 @@ export const VIEW_MORE_ITEM = (labelId: string) => {
     parentId: labelId,
     displayValue: "View more",
     type: "labelItemViewMore",
-  } satisfies LabelTreeViewerLeafType;
+  } satisfies LabelTreeViewerEndOfLabelListType;
 };
 export const LOADING_LABEL_ITEM = (labelId: string) => {
   return {
@@ -16,7 +16,7 @@ export const LOADING_LABEL_ITEM = (labelId: string) => {
     parentId: labelId,
     displayValue: "Loading...",
     type: "labelItemInfo",
-  } satisfies LabelTreeViewerLeafType;
+  } satisfies LabelTreeViewerEndOfLabelListType;
 };
 export const NO_LABELS_ITEM = (labelId: string) => {
   return {
@@ -24,36 +24,37 @@ export const NO_LABELS_ITEM = (labelId: string) => {
     parentId: labelId,
     displayValue: "No more messages",
     type: "labelItemInfo",
-  } satisfies LabelTreeViewerLeafType;
+  } satisfies LabelTreeViewerEndOfLabelListType;
 };
 export const DEFAULT_LIST_ITEM_LIMIT = 25;
 
-type LabelTreeViewerLeafType =
-  | {
-      id: string;
-      parentId: string;
-      displayValue: string;
-      type: "labelItemViewMore" | "labelItemInfo";
-    }
-  | {
-      id: string;
-      parentId: string;
-      displayValue: string;
-      type: "labelItem";
-      state: "beingViewed" | "viewable" | "hidden";
-      thread: ThreadType;
-    };
+export type LabelTreeViewerEndOfLabelListType = {
+  id: string;
+  parentId: string;
+  displayValue: string;
+  type: "labelItemViewMore" | "labelItemInfo";
+};
+export type LabelTreeViewerItemType = {
+  id: string;
+  parentId: string;
+  displayValue: string;
+  type: "labelItem";
+  state: "viewable" | "hidden";
+};
 export type LabelTreeViewerParentType = {
   id: string;
   displayValue: string;
   type: "label";
   state: "closed" | "open";
-  children: Map<string, LabelTreeViewerLeafType>;
+  children: Map<
+    string,
+    LabelTreeViewerEndOfLabelListType | LabelTreeViewerItemType
+  >;
 };
-
 export type LabelTreeViewerRowType =
   | LabelTreeViewerParentType
-  | LabelTreeViewerLeafType;
+  | LabelTreeViewerEndOfLabelListType
+  | LabelTreeViewerItemType;
 
 export const labelTreeViewerMappingAtom = atom<
   Map<string, LabelTreeViewerParentType>
@@ -77,11 +78,21 @@ export const labelTreeViewerRowsAtom = atom<LabelTreeViewerRowType[]>((get) => {
 });
 export const useLabelsTreeViewerRows = () => useAtom(labelTreeViewerRowsAtom);
 
+export const labelTreeViewerDataAtom = atom<Map<string, ThreadType>>(new Map());
+
 export const labelListAtom = atom<string[]>((get) => {
   const labelsMap = get(labelTreeViewerMappingAtom);
   return Array.from(labelsMap.keys());
 });
+
 export const labelTreeViewerRowsLengthAtom = atom<number>((get) => {
   const rowData = get(labelTreeViewerRowsAtom);
   return rowData.length;
 });
+
+export const hasLoadedInitialData = (label: LabelTreeViewerParentType) => {
+  return (
+    label.children.size !== 1 ||
+    !label.children.has(LOADING_LABEL_ITEM(label.id).id)
+  );
+};

@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { Allotment } from "allotment";
 
@@ -34,7 +35,9 @@ export default function Inbox() {
         <Allotment vertical>
           <div className="h-full overflow-auto">
             {/* Single Thread viewer */}
-            <ThreadViewer />
+            <Suspense fallback={<div>Loading thread</div>}>
+              <ThreadViewer />
+            </Suspense>
           </div>
           {messageType !== "none" && (
             <div className="h-full overflow-auto">

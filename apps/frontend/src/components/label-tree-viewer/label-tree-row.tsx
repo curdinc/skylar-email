@@ -1,18 +1,15 @@
-import { memo, useTransition } from "react";
+import { memo, Suspense } from "react";
 
-import { isThreadUnread } from "@skylar/client-db";
-
-import { captureEvent } from "~/lib/analytics/capture-event";
-import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import type { LabelTreeViewerRowType } from "~/lib/store/label-tree-viewer";
-import { useActiveItemIndex } from "~/lib/store/label-tree-viewer/active-item";
 import { useToggleLabel } from "~/lib/store/label-tree-viewer/toggle-label";
 import { useViewMoreLabelItem } from "~/lib/store/label-tree-viewer/view-more-label-item";
 import { cn } from "~/lib/ui";
 import { Icons } from "../icons";
-import { ThreadContextMenu } from "../tooklit/components/context-menu";
 import { Button } from "../ui/button";
+import { Skeleton } from "../ui/skeleton";
+import { LabelItem } from "./label-item";
+import type { RowStateType } from "./types";
 
 const LabelTreeRowBase = ({
   row,
@@ -23,22 +20,11 @@ const LabelTreeRowBase = ({
   row?: LabelTreeViewerRowType;
   index: number;
   translateY: number;
-  rowState: "active" | "selective" | "inactive";
+  rowState: RowStateType;
 }) => {
   const { data: activeEmailAddress } = useActiveEmailAddress();
   const toggleLabel = useToggleLabel();
   const viewMoreLabelItem = useViewMoreLabelItem();
-  const [, startTransition] = useTransition();
-  const [, setActiveItemIndex] = useActiveItemIndex();
-
-  const onClickThread = () => {
-    captureEvent({
-      event: TrackingEvents.threadOpened,
-      properties: {},
-    });
-
-    startTransition(() => setActiveItemIndex(index));
-  };
 
   if (!row || !activeEmailAddress) {
     return;
@@ -115,34 +101,21 @@ const LabelTreeRowBase = ({
     );
   }
   if (row.type === "labelItem") {
-    const { thread } = row;
     return (
-      <ThreadContextMenu
-        thread={thread}
-        refetch={async () => {
-          // await threadListData.refetch();
-        }}
-      >
-        <button
-          data-thread-item={`${row.parentId}-${index}`}
-          onClick={onClickThread}
-          className={cn(
-            "flex h-9 items-center pl-6",
-            "hover:bg-secondary",
-            "absolute inset-0",
-            rowState === "active" && "bg-secondary",
-          )}
-          style={{
-            transform: `translateY(${translateY}px)`,
-          }}
-        >
+      <Suspense
+        fallback={
           <div
-            className={cn("truncate", isThreadUnread(thread) && "font-bold")}
+            className={cn("absolute inset-0 h-9 p-1")}
+            style={{
+              transform: `translateY(${translateY}px)`,
+            }}
           >
-            {thread?.subject}
+            <Skeleton className={cn("h-8 w-full")} />
           </div>
-        </button>
-      </ThreadContextMenu>
+        }
+      >
+        <LabelItem index={index} translateY={translateY} rowState={rowState} />
+      </Suspense>
     );
   }
 };

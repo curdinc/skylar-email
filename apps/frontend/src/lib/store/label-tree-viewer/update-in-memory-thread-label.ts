@@ -2,46 +2,22 @@ import { atom, useSetAtom } from "jotai";
 
 import type { ThreadType } from "@skylar/parsers-and-types";
 
-import { labelTreeViewerMappingAtom } from ".";
+import { labelTreeViewerDataAtom } from ".";
 
 export const updateInMemoryThreadLabels = atom<
   null,
   [{ thread: ThreadType; updateLabels: (oldLabels: string[]) => string[] }],
   void
 >(null, (get, set, { thread, updateLabels }) => {
-  const labelMapping = get(labelTreeViewerMappingAtom);
-  const newLabelMapping = new Map(labelMapping);
-  const existingLabels = new Set(thread.provider_message_labels);
-
-  const newThreadLabels = new Set(updateLabels(thread.provider_message_labels));
-  const removedLabels = new Set(
-    [...thread.provider_message_labels].filter(
-      (threadLabel) => !newThreadLabels.has(threadLabel),
-    ),
-  );
-  const addedLabels = new Set(
-    [...newThreadLabels].filter(
-      (threadLabel) => !existingLabels.has(threadLabel),
-    ),
-  );
-
-  [...existingLabels, ...addedLabels].forEach((label) => {
-    const labelRow = newLabelMapping.get(label);
-    if (!labelRow) {
-      return;
-    }
-
-    labelRow.children.set(thread.provider_thread_id, {
-      id: thread.provider_thread_id,
-      parentId: label,
-      displayValue: thread.subject,
-      type: "labelItem",
-      state: removedLabels.has(label) ? "hidden" : "viewable",
-      thread: { ...thread, provider_message_labels: [...newThreadLabels] },
+  const threadMapping = get(labelTreeViewerDataAtom);
+  const newThreadMapping = new Map(threadMapping)
+  if (newThreadMapping.has(thread.provider_thread_id)) {
+    newThreadMapping.set(thread.provider_thread_id, {
+      ...thread,
+      provider_message_labels: updateLabels(thread.provider_message_labels),
     });
-    newLabelMapping.set(label, labelRow);
-  });
-  set(labelTreeViewerMappingAtom, newLabelMapping);
+  }
+  set(labelTreeViewerDataAtom, newThreadMapping);
 });
 export const useUpdateInMemoryThreadLabels = () =>
   useSetAtom(updateInMemoryThreadLabels);
