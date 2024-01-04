@@ -10,6 +10,10 @@ export const syncRouter = createGmailApiRouter({
   // fetches batches of messages (used upto full synchronization)
   backgroundFullSync: SYNC_PROCEDURES.backgroundFullSync.mutation(
     async ({ input, ctx }) => {
+      if (ctx.syncLock.get(input.emailAddress)) {
+        return;
+      }
+      ctx.syncLock.set(input.emailAddress, true);
       await backgroundFullSync({
         emailAddress: input.emailAddress,
         getAccessToken: ctx.getAccessToken,
