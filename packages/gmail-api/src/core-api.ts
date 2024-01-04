@@ -515,6 +515,7 @@ export async function listLabels({
     name: string;
     type: "system" | "user";
     messageListVisibility?: "hide" | "show";
+    labelListVisibility?: "labelHide" | "labelShow" | "labelShowIfUnread";
   }[];
 }
 

@@ -1,4 +1,4 @@
-import type { BaseSchema, ObjectSchema, Output, ValiError } from "valibot";
+import type { BaseSchema, Issues, ObjectSchema, Output } from "valibot";
 import { flatten, merge, object, safeParse } from "valibot";
 
 export type BaseOptions<
@@ -22,7 +22,7 @@ export type BaseOptions<
    * Called when validation fails. By default the error is logged,
    * and an error is thrown telling what environment variables are invalid.
    */
-  onValidationError?: (error: ValiError) => never;
+  onValidationError?: (error: Issues) => never;
 
   /**
    * Called when a server-side environment variable is accessed on the client.
@@ -185,7 +185,7 @@ export function createEnv<
 
   const onValidationError =
     opts.onValidationError ??
-    ((error: ValiError) => {
+    ((error: Issues) => {
       console.error("❌ Invalid environment variables:", flatten(error).nested);
       throw new Error("Invalid environment variables");
     });
@@ -199,17 +199,17 @@ export function createEnv<
     });
 
   if (parsed.success === false) {
-    return onValidationError(parsed.error);
+    return onValidationError(parsed.issues);
   }
 
-  const env = new Proxy(parsed.data, {
+  const env = new Proxy(parsed.output, {
     get(target, prop) {
       if (typeof prop !== "string" || prop === "__esModule") return undefined;
       if (
         !isServer &&
         opts.clientPrefix &&
         !prop.startsWith(opts.clientPrefix) &&
-        shared.object[prop as keyof typeof shared.object] === undefined
+        shared.entries[prop as keyof typeof shared.entries] === undefined // TODO: check that shared.entries is the correct field
       ) {
         return onInvalidAccess(prop);
       }

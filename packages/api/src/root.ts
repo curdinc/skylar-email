@@ -1,15 +1,13 @@
-import { emailComposeRouter } from "./router/email-compose";
-import { gmailRouter } from "./router/email-providers/gmail";
-import { inviteCodeRouter } from "./router/invite-code";
-import { mailingListRouter } from "./router/mailing-list";
-import { oauthRouter } from "./router/oauth";
+import { gmailRouter } from "./routers/email-providers/gmail";
+import { inviteCodeRouter } from "./routers/invite-code";
+import { mailingListRouter } from "./routers/mailing-list";
+import { oauthRouter } from "./routers/oauth";
 import { createTRPCRouter } from "./trpc/factory";
 
 export const appRouter = createTRPCRouter({
   oauth: oauthRouter,
   inviteCode: inviteCodeRouter,
   gmail: gmailRouter,
-  emailCompose: emailComposeRouter,
   mailingList: mailingListRouter,
 });
 

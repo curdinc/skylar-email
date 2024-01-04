@@ -22,7 +22,7 @@ import type {
 
 export const getThreadActions = (
   getThreads: GetThreads,
-  activeEmail: string,
+  activeEmailAddress: string,
   afterClientDbUpdate: (() => Promise<void>)[],
 ) => {
   return {
@@ -97,18 +97,16 @@ export const getThreadActions = (
       icon: Icons.trash,
       name: "Trash",
       tooltipDescription: "Trash thread",
-      applyFn: async (accessToken: string) => {
+      applyFn: async () => {
         const threads = await getThreads();
         await trashThreads({
-          accessToken,
-          email: activeEmail,
+          email: activeEmailAddress,
           threads: threads,
           afterClientDbUpdate,
         });
         return async () => {
           await untrashThreads({
-            accessToken,
-            email: activeEmail,
+            emailAddress: activeEmailAddress,
             threads: threads,
             afterClientDbUpdate,
           });
@@ -123,19 +121,17 @@ export const getThreadActions = (
       icon: Icons.archive,
       name: "Archive",
       tooltipDescription: "Archive thread",
-      applyFn: async (accessToken: string) => {
+      applyFn: async () => {
         const threads = await getThreads();
         await archiveThreads({
-          accessToken,
           afterClientDbUpdate,
-          email: activeEmail,
+          emailAddress: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await unarchiveThreads({
-            accessToken,
             afterClientDbUpdate,
-            email: activeEmail,
+            emailAddress: activeEmailAddress,
             threads: threads,
           });
         };
@@ -149,19 +145,17 @@ export const getThreadActions = (
       icon: Icons.archive,
       name: "Unarchive",
       tooltipDescription: "Unarchive thread",
-      applyFn: async (accessToken: string) => {
+      applyFn: async () => {
         const threads = await getThreads();
         await unarchiveThreads({
-          accessToken,
           afterClientDbUpdate,
-          email: activeEmail,
+          emailAddress: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await archiveThreads({
-            accessToken,
             afterClientDbUpdate,
-            email: activeEmail,
+            emailAddress: activeEmailAddress,
             threads: threads,
           });
         };
@@ -175,19 +169,17 @@ export const getThreadActions = (
       icon: Icons.markRead,
       name: "Mark as read",
       tooltipDescription: "Archive thread",
-      applyFn: async (accessToken: string) => {
+      applyFn: async () => {
         const threads = await getThreads();
         await markReadThreads({
-          accessToken,
           afterClientDbUpdate,
-          email: activeEmail,
+          email: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await markUnreadThreads({
-            accessToken,
             afterClientDbUpdate,
-            email: activeEmail,
+            email: activeEmailAddress,
             threads: threads,
           });
         };
@@ -201,20 +193,18 @@ export const getThreadActions = (
       icon: Icons.markUnread,
       name: "Mark as unread",
       tooltipDescription: "Unarchive thread",
-      applyFn: async (accessToken: string) => {
+      applyFn: async () => {
         const threads = await getThreads();
         setMostRecentlyAffectedThreads(threads);
         await markUnreadThreads({
-          accessToken,
           afterClientDbUpdate,
-          email: activeEmail,
+          email: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await markReadThreads({
-            accessToken,
             afterClientDbUpdate,
-            email: activeEmail,
+            email: activeEmailAddress,
             threads: threads,
           });
         };
@@ -228,7 +218,7 @@ export const getThreadActions = (
       icon: Icons.addLabel,
       name: "Add Labels",
       tooltipDescription: "Add Labels to thread",
-      applyFn: async (accessToken: string, newLabels: string[]) => {
+      applyFn: async (newLabels: string[]) => {
         const threads = await getThreads();
         const labelsToAdd: string[][] = [];
         const labelsToRemove: string[][] = [];
@@ -244,18 +234,16 @@ export const getThreadActions = (
         });
 
         await moveThreads({
-          accessToken,
           afterClientDbUpdate,
-          email: activeEmail,
+          emailAddress: activeEmailAddress,
           threads: threads,
           labelsToAdd,
           labelsToRemove,
         });
         return async () => {
           await moveThreads({
-            accessToken,
             afterClientDbUpdate,
-            email: activeEmail,
+            emailAddress: activeEmailAddress,
             threads: threads,
             labelsToAdd: labelsToRemove,
             labelsToRemove: labelsToAdd,

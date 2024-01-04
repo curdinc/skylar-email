@@ -1,3 +1,9 @@
+export { GMAIL_PROCEDURES_TYPES } from "./src/provider-api/gmail";
+
+export { syncResponseSchema } from "./src/api/email-provider/gmail-provider";
+
+export { emailSchema } from "./src/core-parsers";
+
 // GENERAL
 export * from "./src/utils/format";
 export * from "./src/utils/valibot-wrappers";
@@ -8,15 +14,18 @@ export * from "./src/api/invite-code";
 export * from "./src/api/mailing-list";
 export * from "./src/api/onboarding";
 
+// GMAIL SPECIFIC
 export * from "./src/api/email-provider/gmail-provider";
 export {
   SUPPORTED_EMAIL_PROVIDER_LIST,
   oauthOnboardingSchema,
+  supportedEmailProvidersSchema,
   type Oauth2InitialTokenResponse,
   type Oauth2TokenFromRefreshTokenResponse,
   type SupportedEmailProviderType,
   type oauthOnboardingType,
 } from "./src/api/email-provider/oauth";
+export * from "./src/client-db/gmail-message-utils";
 
 // ENV ITEMS
 export { createEnv } from "./src/create-env";

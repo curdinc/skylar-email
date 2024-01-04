@@ -20,7 +20,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "valibot": "^0.13.1"
+    "valibot": "^0.24.1"
   },
   "devDependencies": {
     "@skylar/eslint-config": "0.2.0",

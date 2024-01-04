@@ -15,15 +15,14 @@ import {
 } from "@skylar/client-db";
 import { resetActiveThread, resetComposeMessage } from "@skylar/logic";
 import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
+import { convertGmailEmailToClientDbEmail } from "@skylar/parsers-and-types";
+import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
-import { convertGmailEmailToClientDbEmail } from "~/lib/email";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
 import { useGlobalKeymap } from "~/lib/shortcuts/keymap-hooks";
-import type { GmailBackgroundSyncWorker } from "./_web-workers/gmail-background-sync/types";
-import { useEmailPartialSync } from "./use-email-partial-sync";
 
 // HANDLES PARTIAL SYNCING OF EMAILS and continues incremental sync
 export const ClientLayout = () => {
@@ -40,8 +39,6 @@ export const ClientLayout = () => {
     resetComposeMessage();
   }, [activeEmailAddress]);
 
-  const { mutateAsync: emailPartialSync } = useEmailPartialSync();
-
   // create workers for each email address
   useEffect(() => {
     if (!allSyncInfo) return;
@@ -52,17 +49,13 @@ export const ClientLayout = () => {
     // const createdWorkers =
     unsyncedEmailAddresses.map((emailAddress) => {
       // GmailBackgroundSyncWorker
-      const newWorker: GmailBackgroundSyncWorker = new SharedWorker(
-        new URL(
-          "./_web-workers/gmail-background-sync/worker.ts",
-          import.meta.url,
-        ),
-      );
-      newWorker.port.start();
-      newWorker.port.postMessage({
-        emailAddress,
-      });
-      return newWorker;
+      gmailApiWorker.sync.backgroundFullSync
+        .mutate({
+          emailAddress,
+        })
+        .catch((error) => {
+          console.error("Error in background sync worker: ", error);
+        });
     });
     // shared workers close automatically when all ports are closed
   }, [allSyncInfo]);
@@ -102,33 +95,33 @@ export const ClientLayout = () => {
           return updatedEmails;
         }
 
-        const emailData = await emailPartialSync({
-          emailAddressToSync: provider.user_email_address,
+        const syncResponse = await gmailApiWorker.sync.partialSync.mutate({
+          emailAddress: provider.user_email_address,
           startHistoryId: syncInfo?.last_sync_history_id,
         });
-        if (!emailData) {
+        if (!syncResponse) {
           return updatedEmails;
         }
 
-        if (emailData.newMessages.length) {
+        if (syncResponse.newMessages.length) {
           const emailToSave = convertGmailEmailToClientDbEmail(
             provider.user_email_address,
-            emailData.newMessages,
+            syncResponse.newMessages,
           );
           await bulkPutMessages({
             messages: emailToSave,
           });
           updatedEmails = true;
         }
-        if (emailData.messagesDeleted?.length) {
+        if (syncResponse.messagesDeleted?.length) {
           await bulkDeleteMessages({
-            providerMessageIds: emailData.messagesDeleted,
+            providerMessageIds: syncResponse.messagesDeleted,
           });
           updatedEmails = true;
         }
-        if (emailData.labelsModified?.length) {
+        if (syncResponse.labelsModified?.length) {
           await bulkUpdateMessages({
-            messages: emailData.labelsModified.map((email) => {
+            messages: syncResponse.labelsModified.map((email) => {
               return {
                 provider_message_id: email.emailProviderMessageId,
                 email_provider_labels: email.newLabels,
@@ -140,7 +133,7 @@ export const ClientLayout = () => {
         await updateEmailSyncInfo({
           syncEmailAddressToUpdate: provider.user_email_address,
           emailSyncInfo: {
-            last_sync_history_id: emailData.lastCheckedHistoryId,
+            last_sync_history_id: syncResponse.lastCheckedHistoryId,
             last_sync_history_id_updated_at: new Date().getTime(),
           },
         });
