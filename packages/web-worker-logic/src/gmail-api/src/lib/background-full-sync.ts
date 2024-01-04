@@ -6,6 +6,7 @@ import {
 } from "@skylar/client-db";
 import { incrementalSync } from "@skylar/gmail-api";
 import { convertGmailEmailToClientDbEmail } from "@skylar/parsers-and-types";
+
 import { BACKGROUND_FULL_SYNC_BATCH_SIZE } from "./constants";
 
 export async function backgroundFullSync({
