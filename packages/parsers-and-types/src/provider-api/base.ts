@@ -1,8 +1,6 @@
 import {
   array,
   custom,
-  integer,
-  minValue,
   number,
   object,
   picklist,
@@ -93,16 +91,22 @@ const THREAD_PROCEDURES = {
 };
 
 const SYNC_PROCEDURES = {
-  incrementalSync: {
+  backgroundFullSync: {
     input: object({
       emailAddress: emailSchema,
-      numberOfMessagesToFetch: number([integer(), minValue(1)]),
     }),
-    output: syncResponseSchema,
+    output: void_("Error: unable to sync."),
   },
   partialSync: {
     input: object({
       emailAddress: emailSchema,
+    }),
+    output: syncResponseSchema,
+  },
+  incrementalSync: {
+    input: object({
+      emailAddress: emailSchema,
+      numberOfMessagesToFetch: number(),
     }),
     output: syncResponseSchema,
   },

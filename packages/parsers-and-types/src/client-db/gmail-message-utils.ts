@@ -1,8 +1,6 @@
-import type {
-  EmailSenderType,
-  MessageType,
-  SyncResponseType,
-} from "@skylar/parsers-and-types";
+import type { EmailSenderType } from "../api/email";
+import type { SyncResponseType } from "../api/email-provider/gmail-provider";
+import type { MessageType } from "../client-db-schema/message";
 
 export function convertGmailEmailToClientDbEmail(
   emailAddress: string,

@@ -5,7 +5,7 @@ import {
   validatorTrpcWrapper,
 } from "@skylar/parsers-and-types";
 
-import { gmailApiRouterProcedure } from "./trpc-factory";
+import { publicGmailApiRouterProcedure } from "../trpc/procedures";
 
 const buildGmailApiRouterProcedure = <
   TInput extends BaseSchema,
@@ -14,7 +14,7 @@ const buildGmailApiRouterProcedure = <
   input: TInput;
   output: TOutput;
 }) => {
-  return gmailApiRouterProcedure
+  return publicGmailApiRouterProcedure
     .input(validatorTrpcWrapper(procedureType.input))
     .output(validatorTrpcWrapper(procedureType.output));
 };
@@ -47,10 +47,13 @@ export const THREAD_PROCEDURES = {
 };
 
 export const SYNC_PROCEDURES = {
-  incrementalSync: buildGmailApiRouterProcedure(
-    GMAIL_PROCEDURES_TYPES.SYNC_PROCEDURES.incrementalSync,
+  backgroundFullSync: buildGmailApiRouterProcedure(
+    GMAIL_PROCEDURES_TYPES.SYNC_PROCEDURES.backgroundFullSync,
   ),
   partialSync: buildGmailApiRouterProcedure(
     GMAIL_PROCEDURES_TYPES.SYNC_PROCEDURES.partialSync,
+  ),
+  incrementalSync: buildGmailApiRouterProcedure(
+    GMAIL_PROCEDURES_TYPES.SYNC_PROCEDURES.incrementalSync,
   ),
 };

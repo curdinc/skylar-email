@@ -3,7 +3,7 @@ import superjson from "superjson";
 
 import type { AppRouter } from "@skylar/api";
 
-import { loggerLinkConfig } from "../../basic-client/logger-config";
+import { loggerLinkConfig } from "../../../lib/logger-config";
 
 export const skylarBackendClient = createTRPCClient<AppRouter>({
   transformer: superjson,

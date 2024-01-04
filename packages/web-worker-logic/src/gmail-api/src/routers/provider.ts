@@ -1,12 +1,13 @@
-import { ACCESS_TOKEN_REFRESH_INTERVAL_MILLIS } from "../constants";
-import { PROVIDER_PROCEDURES } from "../procedure-types";
-import { skylarBackendClient } from "../skylar-backend-connector";
-import { createGmailApiRouter, gmailApiRouterProcedure } from "../trpc-factory";
-import { hasGrantedGoogleGrantedScopes } from "../utils";
+import { ACCESS_TOKEN_REFRESH_INTERVAL_MILLIS } from "../lib/constants";
+import { PROVIDER_PROCEDURES } from "../lib/procedure-types";
+import { skylarBackendClient } from "../lib/skylar-backend-connector";
+import { hasGrantedGoogleGrantedScopes } from "../lib/utils";
+import { createGmailApiRouter } from "../trpc/factory";
+import { publicGmailApiRouterProcedure } from "../trpc/procedures";
 
 export const providerRouter = createGmailApiRouter({
   // make sure router is connected
-  health: gmailApiRouterProcedure.query(() => "OK"),
+  health: publicGmailApiRouterProcedure.query(() => "OK"),
   // Sends a rfc822 message
   addOauthProvider: PROVIDER_PROCEDURES.addOauthProvider.mutation(
     async ({ input, ctx }) => {

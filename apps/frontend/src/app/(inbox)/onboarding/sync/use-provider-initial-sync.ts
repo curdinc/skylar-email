@@ -85,7 +85,6 @@ export const useProviderInitialSync = () => {
         emailAddress: gmailToSync,
         numberOfMessagesToFetch: INITIAL_MESSAGES_TO_FETCH,
       });
-
       return syncResponse;
     },
     onError: (e) => {

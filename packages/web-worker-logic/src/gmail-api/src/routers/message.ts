@@ -1,8 +1,8 @@
 import { sendMail } from "@skylar/gmail-api";
 import { composeRfc822Message } from "@skylar/message-manager";
 
-import { MESSAGE_PROCEDURES } from "../procedure-types";
-import { createGmailApiRouter, gmailApiRouterProcedure } from "../trpc-factory";
+import { MESSAGE_PROCEDURES } from "../lib/procedure-types";
+import { createGmailApiRouter, gmailApiRouterProcedure } from "../trpc/factory";
 
 export const messageRouter = createGmailApiRouter({
   // make sure router is connected

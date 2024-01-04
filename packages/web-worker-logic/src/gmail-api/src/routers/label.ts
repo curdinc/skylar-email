@@ -1,11 +1,12 @@
 import { batchModifyLabels, listLabels } from "@skylar/gmail-api";
 
-import { LABEL_PROCEDURES } from "../procedure-types";
-import { createGmailApiRouter, gmailApiRouterProcedure } from "../trpc-factory";
+import { LABEL_PROCEDURES } from "../lib/procedure-types";
+import { createGmailApiRouter } from "../trpc/factory";
+import { publicGmailApiRouterProcedure } from "../trpc/procedures";
 
 export const labelRouter = createGmailApiRouter({
   // make sure router is connected
-  health: gmailApiRouterProcedure.query(() => "OK"),
+  health: publicGmailApiRouterProcedure.query(() => "OK"),
   // Lists all labels in the user's mailbox.
   list: LABEL_PROCEDURES.list.query(async ({ input, ctx }) => {
     const accessToken = await ctx.getAccessToken(input.emailAddress);

@@ -14,6 +14,7 @@ export * from "./src/api/invite-code";
 export * from "./src/api/mailing-list";
 export * from "./src/api/onboarding";
 
+// GMAIL SPECIFIC
 export * from "./src/api/email-provider/gmail-provider";
 export {
   SUPPORTED_EMAIL_PROVIDER_LIST,
@@ -24,6 +25,7 @@ export {
   type SupportedEmailProviderType,
   type oauthOnboardingType,
 } from "./src/api/email-provider/oauth";
+export * from "./src/client-db/gmail-message-utils";
 
 // ENV ITEMS
 export { createEnv } from "./src/create-env";
