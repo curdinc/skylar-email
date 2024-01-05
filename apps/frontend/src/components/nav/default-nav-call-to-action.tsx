@@ -11,9 +11,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { Kbd } from "../ui/kbd";
 
 export const DefaultNavCallToAction = () => {
   const router = useRouter();
@@ -41,7 +41,7 @@ export const DefaultNavCallToAction = () => {
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={goToSetting}>
             Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+            <Kbd>⌘S</Kbd>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

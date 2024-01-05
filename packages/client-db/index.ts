@@ -32,5 +32,6 @@ export * from "./src/hooks/use-email-address-by-id";
 export * from "./src/hooks/use-provider-sync-info";
 export * from "./src/hooks/use-thread";
 export * from "./src/hooks/use-thread-snippets-infinite";
+export * from "./src/hooks/use-shortcut";
 
 export * from "./src/utils/thread-filters";

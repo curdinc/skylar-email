@@ -2,6 +2,7 @@ import { memo, Suspense } from "react";
 
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import type { LabelTreeViewerRowType } from "~/lib/store/label-tree-viewer";
+import { useActiveItemIndex } from "~/lib/store/label-tree-viewer/active-item";
 import { useToggleLabel } from "~/lib/store/label-tree-viewer/toggle-label";
 import { useViewMoreLabelItem } from "~/lib/store/label-tree-viewer/view-more-label-item";
 import { cn } from "~/lib/ui";
@@ -25,6 +26,15 @@ const LabelTreeRowBase = ({
   const { data: activeEmailAddress } = useActiveEmailAddress();
   const toggleLabel = useToggleLabel();
   const viewMoreLabelItem = useViewMoreLabelItem();
+  const [, setActiveItemIndex] = useActiveItemIndex();
+
+  const onClickLabel = () => {
+    setActiveItemIndex(index);
+    toggleLabel({
+      labelIdToToggle: row?.id ?? "",
+      userEmailAddress: activeEmailAddress ?? "",
+    });
+  };
 
   if (!row || !activeEmailAddress) {
     return;
@@ -34,17 +44,12 @@ const LabelTreeRowBase = ({
       <button
         data-label-item={row.id}
         className={cn(
-          "flex h-8 items-center gap-1 border-t bg-background px-2 shadow-md",
+          "flex h-8 items-center gap-1 border-t bg-background px-2",
           "absolute inset-0",
-          row.state === "open" && "bg-secondary",
+          row.state === "open" && "shadow-md",
           rowState === "active" && "bg-secondary",
         )}
-        onClick={() => {
-          toggleLabel({
-            labelIdToToggle: row.id,
-            userEmailAddress: activeEmailAddress,
-          });
-        }}
+        onClick={onClickLabel}
         style={{
           transform: `translateY(${translateY}px)`,
         }}

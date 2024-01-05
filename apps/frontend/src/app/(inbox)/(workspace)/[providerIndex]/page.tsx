@@ -6,8 +6,10 @@ import { Allotment } from "allotment";
 
 import { useGlobalStore } from "@skylar/logic";
 
+import { EmptyLabelItemScreen } from "~/components/empty-label-item-screen";
 import { LabelTreeViewer } from "~/components/label-tree-viewer/label-tree-viewer";
 import { ThreadViewer } from "~/components/thread-viewer/index";
+import { useActiveItemRow } from "~/lib/store/label-tree-viewer/active-item";
 
 const MIN_PANE_SIZE = 250;
 
@@ -25,6 +27,15 @@ export default function Inbox() {
   const messageType = useGlobalStore(
     (state) => state.EMAIL_CLIENT.COMPOSING.messageType,
   );
+  const [activeItemRow] = useActiveItemRow();
+  const Viewer =
+    activeItemRow?.type === "labelItem" ? (
+      <Suspense fallback={<div>Loading thread</div>}>
+        <ThreadViewer />
+      </Suspense>
+    ) : (
+      <EmptyLabelItemScreen />
+    );
 
   return (
     <Allotment minSize={MIN_PANE_SIZE} defaultSizes={[100, 200]}>
@@ -33,12 +44,7 @@ export default function Inbox() {
       </Allotment.Pane>
       <Allotment.Pane>
         <Allotment vertical>
-          <div className="h-full overflow-auto">
-            {/* Single Thread viewer */}
-            <Suspense fallback={<div>Loading thread</div>}>
-              <ThreadViewer />
-            </Suspense>
-          </div>
+          <div className="h-full overflow-auto">{Viewer}</div>
           {messageType !== "none" && (
             <div className="h-full overflow-auto">
               <MessageComposer />
