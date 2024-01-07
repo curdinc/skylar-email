@@ -4,15 +4,17 @@ import {
   getProviderByEmailAddress,
   updateEmailSyncInfo,
 } from "@skylar/client-db";
+import { incrementalSync } from "@skylar/gmail-api";
+import { convertGmailEmailToClientDbEmail } from "@skylar/parsers-and-types";
 
-import { gmailApiWorker } from "../../basic-client/gmail-api-worker";
-import { MESSAGES_PER_SYNC } from "./constants";
-import { convertGmailEmailToClientDbEmail } from "./utils";
+import { BACKGROUND_FULL_SYNC_BATCH_SIZE } from "./constants";
 
-export async function backgroundSync({
+export async function backgroundFullSync({
   emailAddress,
+  getAccessToken,
 }: {
   emailAddress: string;
+  getAccessToken: (emailAddress: string) => Promise<string>;
 }) {
   console.log("syncing in the background");
   const provider = await getProviderByEmailAddress({ emailAddress });
@@ -28,10 +30,13 @@ export async function backgroundSync({
       return;
     }
 
-    const syncResult = await gmailApiWorker.sync.incrementalSync.mutate({
-      emailAddress: provider.user_email_address,
+    const accessToken = await getAccessToken(emailAddress);
+
+    const syncResult = await incrementalSync({
+      emailId: provider.user_email_address,
       pageToken: nextPageToken,
-      numberOfMessagesToFetch: MESSAGES_PER_SYNC,
+      numberOfMessagesToFetch: BACKGROUND_FULL_SYNC_BATCH_SIZE,
+      accessToken,
     });
 
     const messagesToSave = convertGmailEmailToClientDbEmail(

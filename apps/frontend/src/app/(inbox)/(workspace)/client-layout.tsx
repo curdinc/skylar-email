@@ -18,7 +18,6 @@ import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
 import {
   convertGmailEmailToClientDbEmail,
   gmailApiWorker,
-  gmailBackgroundSyncWorker,
 } from "@skylar/web-worker-logic";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
@@ -54,12 +53,12 @@ export const ClientLayout = () => {
     // const createdWorkers =
     unsyncedEmailAddresses.map((emailAddress) => {
       // GmailBackgroundSyncWorker
-      gmailBackgroundSyncWorker(emailAddress)
-        .sync.backgroundSync.mutate({
+      gmailApiWorker.sync.backgroundFullSync
+        .mutate({
           emailAddress,
         })
-        .catch((err) => {
-          console.error(err);
+        .catch((error) => {
+          console.error("Error in background sync worker: ", error);
         });
     });
     // shared workers close automatically when all ports are closed

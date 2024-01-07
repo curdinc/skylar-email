@@ -6,18 +6,19 @@ export const GMAIL_PROCEDURES_TYPES = {
   ...BASE_PROCEDURES_TYPES,
   // overriden types
   SYNC_PROCEDURES: {
-    incrementalSync: {
-      ...BASE_PROCEDURES_TYPES.SYNC_PROCEDURES.incrementalSync,
-      input: intersect([
-        BASE_PROCEDURES_TYPES.SYNC_PROCEDURES.incrementalSync.input,
-        object({ pageToken: optional(string()) }),
-      ]),
-    },
+    ...BASE_PROCEDURES_TYPES.SYNC_PROCEDURES,
     partialSync: {
       ...BASE_PROCEDURES_TYPES.SYNC_PROCEDURES.partialSync,
       input: intersect([
         BASE_PROCEDURES_TYPES.SYNC_PROCEDURES.partialSync.input,
         object({ startHistoryId: string() }),
+      ]),
+    },
+    incrementalSync: {
+      ...BASE_PROCEDURES_TYPES.SYNC_PROCEDURES.incrementalSync,
+      input: intersect([
+        BASE_PROCEDURES_TYPES.SYNC_PROCEDURES.incrementalSync.input,
+        object({ pageToken: optional(string()) }),
       ]),
     },
   },

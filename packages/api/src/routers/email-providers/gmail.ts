@@ -11,7 +11,6 @@ export const gmailRouter = createTRPCRouter({
   getAccessToken: publicProcedure
     .input(validatorTrpcWrapper(getGmailAccessTokenSchema))
     .mutation(async ({ ctx, input }) => {
-      console.log("Fetching access token for: ", input.email);
       const accessTokenResponse = await getAccessToken({
         clientId: ctx.env.GOOGLE_PROVIDER_CLIENT_ID,
         clientSecret: ctx.env.GOOGLE_PROVIDER_CLIENT_SECRET,
