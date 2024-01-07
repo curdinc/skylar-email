@@ -1,17 +1,15 @@
-import { createTRPCClient, loggerLink } from "@trpc/client";
+import { createTRPCClient } from "@trpc/client";
 import superjson from "superjson";
 
 import { workerLink } from "@skylar/trpc-web-workers";
 
 import type { GmailWorkerRouterType } from "../gmail-api/root";
+import { loggerLinkConfig } from "../lib/logger-config";
 
 export const gmailApiWorker = createTRPCClient<GmailWorkerRouterType>({
   transformer: superjson,
   links: [
-    loggerLink({
-      enabled: (opts) =>
-        opts.direction === "down" && opts.result instanceof Error,
-    }),
+    loggerLinkConfig,
     workerLink({
       createWorker: () => {
         return new SharedWorker(
