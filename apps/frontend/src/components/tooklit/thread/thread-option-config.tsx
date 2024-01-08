@@ -13,7 +13,7 @@ import { moveThreads } from "~/lib/inbox-toolkit/thread/move-threads";
 import { trashThreads } from "~/lib/inbox-toolkit/thread/trash-threads";
 import { unarchiveThreads } from "~/lib/inbox-toolkit/thread/unarchive-threads";
 import { untrashThreads } from "~/lib/inbox-toolkit/thread/untrash-threads";
-import { getLabelModifications } from "~/lib/inbox-toolkit/utils";
+import { getLabelModifications } from "~/lib/inbox-toolkit/thread/utils";
 import type {
   ConfigOption,
   GetThreads,

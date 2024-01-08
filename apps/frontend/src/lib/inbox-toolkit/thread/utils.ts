@@ -1,12 +1,11 @@
 import { startTransition } from "react";
 
-import { bulkPutThreads } from "@skylar/client-db";
+import { bulkUpdateMessages } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/parsers-and-types";
-import { gmailApiWorker } from "@skylar/web-worker-logic";
 
-import { SkylarClientStore } from "../store/index,";
-import { updateInMemoryThreadLabels } from "../store/label-tree-viewer/update-in-memory-thread-label";
-import { GMAIL_IMMUTABLE_LABELS } from "./constants";
+import { SkylarClientStore } from "../../store/index,";
+import { updateInMemoryThreadLabels } from "../../store/label-tree-viewer/update-in-memory-thread-label";
+import { GMAIL_IMMUTABLE_LABELS } from "../constants";
 
 export const getLabelModifications = ({
   currentLabels,
@@ -91,8 +90,17 @@ export const updateAndSaveLabels = async ({
     })
     .filter((thread) => !!thread);
 
-  await bulkPutThreads({
-    threads: updatedThreads,
+  await bulkUpdateMessages({
+    messages: updatedThreads
+      .map((thread) => {
+        return thread.provider_message_ids.map((messageId) => {
+          return {
+            provider_message_id: messageId,
+            email_provider_labels: thread.email_provider_labels,
+          };
+        });
+      })
+      .flat(),
   });
 
   return updatedThreads;
@@ -125,6 +133,7 @@ export const modifyThreadLabels = async ({
     ),
   );
 
+  const { gmailApiWorker } = await import("@skylar/web-worker-logic");
   await gmailApiWorker.label.modify.mutate({
     addLabelsIds: labelsToAdd ?? noChangeLabelArray,
     deleteLabelsIds: labelsToRemove ?? noChangeLabelArray,

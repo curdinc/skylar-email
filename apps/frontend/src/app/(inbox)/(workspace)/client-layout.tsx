@@ -6,7 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 
 import {
   bulkDeleteMessages,
-  bulkPutMessages,
   bulkUpdateMessages,
   getAllProviders,
   getEmailSyncInfo,
@@ -15,12 +14,10 @@ import {
 } from "@skylar/client-db";
 import { resetComposeMessage } from "@skylar/logic";
 import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
-import {
-  convertGmailEmailToClientDbEmail,
-  gmailApiWorker,
-} from "@skylar/web-worker-logic";
+import { convertGmailEmailToClientDbEmail } from "@skylar/parsers-and-types";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
+import { addNewMessages } from "~/lib/inbox-toolkit/messages/add-new-messages";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
@@ -50,15 +47,19 @@ export const ClientLayout = () => {
       .filter((syncInfo) => !syncInfo.full_sync_completed_on)
       .map((syncInfo) => syncInfo.user_email_address);
 
-    // const createdWorkers =
     unsyncedEmailAddresses.map((emailAddress) => {
-      // GmailBackgroundSyncWorker
-      gmailApiWorker.sync.backgroundFullSync
-        .mutate({
-          emailAddress,
+      import("@skylar/web-worker-logic")
+        .then(({ gmailApiWorker }) => {
+          gmailApiWorker.sync.backgroundFullSync
+            .mutate({
+              emailAddress,
+            })
+            .catch((error) => {
+              console.error("Error in background sync worker: ", error);
+            });
         })
-        .catch((error) => {
-          console.error("Error in background sync worker: ", error);
+        .catch((e) => {
+          console.error("Error importing background sync worker: ", e);
         });
     });
     // shared workers close automatically when all ports are closed
@@ -68,6 +69,7 @@ export const ClientLayout = () => {
   const { error } = useQuery({
     queryKey: [],
     queryFn: async () => {
+      const { gmailApiWorker } = await import("@skylar/web-worker-logic");
       let updatedEmails = false;
 
       const connectedProviders = await getAllProviders();
@@ -108,12 +110,12 @@ export const ClientLayout = () => {
         }
 
         if (syncResponse.newMessages.length) {
-          const emailToSave = convertGmailEmailToClientDbEmail(
+          const messages = convertGmailEmailToClientDbEmail(
             provider.user_email_address,
             syncResponse.newMessages,
           );
-          await bulkPutMessages({
-            messages: emailToSave,
+          await addNewMessages({
+            messages,
           });
           updatedEmails = true;
         }
