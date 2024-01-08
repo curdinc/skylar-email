@@ -65,7 +65,8 @@ export function useConnectEmailProviderPage() {
           type: provider,
           user_email_address: providerInfo.emailAddress,
           image_uri: providerInfo.imageUri,
-          inbox_name: providerInfo.name,
+          inbox_name:
+            providerInfo.name ?? providerInfo.emailAddress.split("@")[0] ?? "",
           refresh_token: providerInfo.refreshToken,
         },
       });

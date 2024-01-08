@@ -74,7 +74,7 @@ const PROVIDER_PROCEDURES = {
     }),
     output: object({
       emailAddress: emailSchema,
-      name: string(),
+      name: optional(string()),
       imageUri: optional(string()),
       refreshToken: string(),
     }),
