@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  bulkDeleteMessages,
-  bulkUpdateMessages,
   getAllProviders,
   getEmailSyncInfo,
   updateEmailSyncInfo,
@@ -18,6 +16,8 @@ import { convertGmailEmailToClientDbEmail } from "@skylar/parsers-and-types";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
 import { addNewMessages } from "~/lib/inbox-toolkit/messages/add-new-messages";
+import { deleteMessages } from "~/lib/inbox-toolkit/messages/delete-messages";
+import { updateMessages } from "~/lib/inbox-toolkit/messages/update-messages";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
@@ -107,7 +107,6 @@ export const ClientLayout = () => {
         if (!syncResponse) {
           return updatedEmails;
         }
-
         if (syncResponse.newMessages.length) {
           const messages = convertGmailEmailToClientDbEmail(
             provider.user_email_address,
@@ -119,13 +118,13 @@ export const ClientLayout = () => {
           updatedEmails = true;
         }
         if (syncResponse.messagesDeleted?.length) {
-          await bulkDeleteMessages({
-            providerMessageIds: syncResponse.messagesDeleted,
+          await deleteMessages({
+            messageIds: syncResponse.messagesDeleted,
           });
           updatedEmails = true;
         }
         if (syncResponse.labelsModified?.length) {
-          await bulkUpdateMessages({
+          await updateMessages({
             messages: syncResponse.labelsModified.map((email) => {
               return {
                 provider_message_id: email.emailProviderMessageId,

@@ -67,7 +67,7 @@ const updateLabels = ({
 
   return {
     ...thread,
-    email_provider_labels: [...updatedLabels, ...add] as string[],
+    provider_message_labels: [...updatedLabels, ...add] as string[],
   };
 };
 
@@ -96,7 +96,7 @@ export const updateAndSaveLabels = async ({
         return thread.provider_message_ids.map((messageId) => {
           return {
             provider_message_id: messageId,
-            email_provider_labels: thread.email_provider_labels,
+            provider_message_labels: thread.provider_message_labels,
           };
         });
       })
@@ -128,7 +128,7 @@ export const modifyThreadLabels = async ({
     updatedThreads.forEach((thread) =>
       SkylarClientStore.set(updateInMemoryThreadLabels, {
         thread,
-        updateLabels: () => thread.email_provider_labels,
+        updateLabels: () => thread.provider_message_labels,
       }),
     ),
   );

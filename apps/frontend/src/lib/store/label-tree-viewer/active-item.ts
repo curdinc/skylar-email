@@ -80,7 +80,7 @@ export const activeItemRowAtom = atom<
 >(
   async (get) => {
     const activeItemIndex = get(activeItemIndexAtom);
-    const activeRow = get(getRowAtom(activeItemIndex));
+    const activeRow = await get(getRowAtom(activeItemIndex));
     return activeRow;
   },
   (get, set, update) => {
@@ -94,10 +94,7 @@ export const activeItemRowAtom = atom<
   },
 );
 
-export const useActiveItemRow = () => {
-  const [activeItemIndex] = useActiveItemIndex();
-  return useRow(activeItemIndex);
-};
+export const useActiveItemRow = () => useAtom(activeItemRowAtom);
 
 export const clickActiveItem = async (userEmailAddress: string) => {
   const activeRow = await SkylarClientStore.get(activeItemRowAtom);

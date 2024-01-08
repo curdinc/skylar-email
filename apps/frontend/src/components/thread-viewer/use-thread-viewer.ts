@@ -7,7 +7,7 @@ import { markAsRead } from "~/lib/inbox-toolkit/thread/mark-as-read";
 import { useActiveItemRow } from "~/lib/store/label-tree-viewer/active-item";
 
 export function useThreadViewer() {
-  const activeItemRow = useActiveItemRow();
+  const [activeItemRow] = useActiveItemRow();
 
   const { thread: messagesInThread, isLoading: isLoadingThread } = useThread({
     emailProviderThreadId:
