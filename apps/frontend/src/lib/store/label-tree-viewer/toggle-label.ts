@@ -81,10 +81,6 @@ export const toggleLabelAtom = atom<
               NO_LABELS_ITEM(labelIdToToggle),
             );
           }
-          newLabelMapping.set(labelIdToToggle, {
-            ...labelToggled,
-            children: labelToggled.children,
-          });
 
           set(labelTreeViewerDataAtom, newThreadMapping);
           set(labelTreeViewerMappingAtom, newLabelMapping);

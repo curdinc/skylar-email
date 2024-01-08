@@ -89,11 +89,6 @@ export const viewMoreLabelItemAtom = atom<
           NO_LABELS_ITEM(labelIdToViewMore),
         );
       }
-
-      newLabelMapping.set(labelIdToViewMore, {
-        ...labelToggled,
-        children: labelToggled.children,
-      });
       set(labelTreeViewerMappingAtom, newLabelMapping);
       set(labelTreeViewerDataAtom, newThreadMapping);
     })

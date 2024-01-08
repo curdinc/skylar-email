@@ -100,7 +100,6 @@ export const ClientLayout = () => {
           router.push(ROUTE_ONBOARDING_SYNC);
           return updatedEmails;
         }
-
         const syncResponse = await gmailApiWorker.sync.partialSync.mutate({
           emailAddress: provider.user_email_address,
           startHistoryId: syncInfo?.last_sync_history_id,
@@ -130,7 +129,7 @@ export const ClientLayout = () => {
             messages: syncResponse.labelsModified.map((email) => {
               return {
                 provider_message_id: email.emailProviderMessageId,
-                email_provider_labels: email.newLabels,
+                provider_message_labels: email.newLabels,
               };
             }),
           });
