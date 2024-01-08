@@ -46,7 +46,7 @@ export const oauthRouter = createTRPCRouter({
         providerInfo: {
           email,
           name,
-          imageUri: picture ?? "",
+          imageUri: picture,
           refreshToken: parsedResponse.refresh_token,
         },
       };
