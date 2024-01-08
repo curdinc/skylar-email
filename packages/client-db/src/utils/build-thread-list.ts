@@ -141,7 +141,7 @@ export async function buildThreadList(messages: MessageType[]) {
           ? thread.subject_search
           : buildSearchableString(message.subject),
         // we use the latest email labels as the source of truth
-        provider_message_labels: message.email_provider_labels,
+        provider_message_labels: message.provider_message_labels,
         created_at: createdThreadAt,
         updated_at: updatedThreadAt,
       });

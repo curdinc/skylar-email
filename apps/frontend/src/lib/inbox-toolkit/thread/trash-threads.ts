@@ -1,32 +1,22 @@
 import type { ThreadType } from "@skylar/parsers-and-types";
-import { gmailApiWorker } from "@skylar/web-worker-logic";
+import { EMAIL_PROVIDER_LABELS } from "@skylar/parsers-and-types";
 
-import { updateAndSaveLabels } from "../utils";
+import { modifyThreadLabels } from "./utils";
 
-export async function trashThreads({
+export const trashThreads = async ({
+  emailAddress,
   threads,
-  email,
-  afterClientDbUpdate,
 }: {
   threads: ThreadType[];
-  email: string;
-  afterClientDbUpdate: (() => Promise<unknown>)[];
-}) {
-  const labelsToAdd = Array<string[]>(threads.length).fill(["TRASH"]);
-  const labelsToRemove = Array<string[]>(threads.length).fill(["INBOX"]);
-
-  const updatedThreads = await updateAndSaveLabels({
+  emailAddress: string;
+}) =>
+  modifyThreadLabels({
     threads,
-    labelsToAdd,
-    labelsToRemove,
+    emailAddress,
+    labelsToAdd: Array(threads.length).fill([
+      EMAIL_PROVIDER_LABELS.GMAIL.TRASH,
+    ]),
+    labelsToRemove: Array(threads.length).fill([
+      EMAIL_PROVIDER_LABELS.GMAIL.INBOX,
+    ]),
   });
-
-  for (const func of afterClientDbUpdate) {
-    await func();
-  }
-
-  await gmailApiWorker.thread.delete.mutate({
-    emailAddress: email,
-    threadIds: updatedThreads.map((t) => t.provider_thread_id),
-  });
-}

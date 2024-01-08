@@ -16,6 +16,7 @@ export async function backgroundFullSync({
   emailAddress: string;
   getAccessToken: (emailAddress: string) => Promise<string>;
 }) {
+  console.log("syncing in the background");
   const provider = await getProviderByEmailAddress({ emailAddress });
   if (!provider) {
     return;

@@ -11,7 +11,6 @@ import type {
   ThreadType,
 } from "@skylar/parsers-and-types";
 import { EmailComposeSchema } from "@skylar/parsers-and-types";
-import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { captureEvent } from "~/lib/analytics/capture-event";
@@ -153,6 +152,8 @@ export const useMessageComposer = () => {
             }
           : undefined,
       };
+
+      const { gmailApiWorker } = await import("@skylar/web-worker-logic");
 
       await gmailApiWorker.message.send.mutate({
         emailAddress: values.from,

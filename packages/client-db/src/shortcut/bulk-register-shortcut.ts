@@ -5,7 +5,6 @@ import type {
 } from "@skylar/parsers-and-types";
 
 import { clientDb } from "../db";
-import { buildSearchableString } from "../utils/build-searchable-string";
 import { bulkPutShortcut } from "./bulk-put-shortcuts";
 
 export const bulkRegisterShortcut = async (shortcuts: ShortcutInsertType[]) => {
@@ -33,8 +32,6 @@ export const bulkRegisterShortcut = async (shortcuts: ShortcutInsertType[]) => {
       }
       return {
         ...shortcut,
-        label_search: buildSearchableString(shortcut.label),
-        description_search: buildSearchableString(shortcut.description),
         created_at: Date.now(),
         updated_at: Date.now(),
       };

@@ -10,7 +10,10 @@ export function InboxSideNav({
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
   return (
-    <nav className={cn("flex h-full flex-col gap-6", className)} {...props}>
+    <nav
+      className={cn("flex h-full flex-col gap-6 border-r", className)}
+      {...props}
+    >
       <Button variant="secondary" size="icon-md">
         <Icons.inbox className="h-5 w-5" />
       </Button>

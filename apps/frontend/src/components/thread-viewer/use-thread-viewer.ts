@@ -2,36 +2,38 @@ import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import { useThread } from "@skylar/client-db";
-import { useGlobalStore } from "@skylar/logic";
 
-import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
+import { markAsRead } from "~/lib/inbox-toolkit/thread/mark-as-read";
+import { useActiveItemRow } from "~/lib/store/label-tree-viewer/active-item";
 
 export function useThreadViewer() {
-  const thread = useGlobalStore((state) => state.EMAIL_CLIENT.activeThread);
+  const [activeItemRow] = useActiveItemRow();
 
   const { thread: messagesInThread, isLoading: isLoadingThread } = useThread({
-    emailProviderThreadId: thread?.provider_thread_id ?? "",
+    emailProviderThreadId:
+      activeItemRow?.type === "labelItem"
+        ? activeItemRow.thread.provider_thread_id
+        : "",
   });
 
-  const { mutate: markAsRead } = useMutation({
+  const { mutate: markThreadAsRead } = useMutation({
     mutationFn: async () => {
-      if (!thread) {
+      if (activeItemRow?.type !== "labelItem") {
         return undefined;
       }
 
-      await markReadThreads({
-        threads: [thread],
-        email: thread.user_email_address,
-        afterClientDbUpdate: [], //FIXME: add refetch
+      await markAsRead({
+        threads: [activeItemRow.thread],
+        emailAddress: activeItemRow.thread.user_email_address,
       });
     },
   });
 
   useEffect(() => {
     if (!isLoadingThread && messagesInThread?.length) {
-      markAsRead();
+      markThreadAsRead();
     }
-  }, [messagesInThread, isLoadingThread, markAsRead]);
+  }, [messagesInThread, isLoadingThread, markThreadAsRead]);
 
   return { isLoadingThread, thread: messagesInThread };
 }

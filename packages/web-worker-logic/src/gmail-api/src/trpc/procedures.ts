@@ -8,13 +8,3 @@ import { gmailApiRouterProcedure } from "./factory";
  * can still access user session data if they are logged in
  */
 export const publicGmailApiRouterProcedure = gmailApiRouterProcedure;
-
-/**
- * Protected (authed) procedure
- *
- * If you want a query or mutation to ONLY be accessible to logged in users, use
- * this. It verifies the session is valid and guarantees ctx.session.user is not
- * null
- *
- * @see https://trpc.io/docs/procedures
- */

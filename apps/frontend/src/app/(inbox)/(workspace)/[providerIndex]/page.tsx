@@ -1,11 +1,12 @@
 "use client";
 
+import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { Allotment } from "allotment";
 
 import { useGlobalStore } from "@skylar/logic";
 
-import { LabelAccordion } from "~/components/label-accordion-menu/label-accordion";
+import { LabelTreeViewer } from "~/components/label-tree-viewer/label-tree-viewer";
 import { ThreadViewer } from "~/components/thread-viewer/index";
 
 const MIN_PANE_SIZE = 250;
@@ -28,13 +29,15 @@ export default function Inbox() {
   return (
     <Allotment minSize={MIN_PANE_SIZE} defaultSizes={[100, 200]}>
       <Allotment.Pane snap>
-        <LabelAccordion />
+        <LabelTreeViewer />
       </Allotment.Pane>
       <Allotment.Pane>
         <Allotment vertical>
           <div className="h-full overflow-auto">
             {/* Single Thread viewer */}
-            <ThreadViewer />
+            <Suspense fallback={<div>Loading thread</div>}>
+              <ThreadViewer />
+            </Suspense>
           </div>
           {messageType !== "none" && (
             <div className="h-full overflow-auto">

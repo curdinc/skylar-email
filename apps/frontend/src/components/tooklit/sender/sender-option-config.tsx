@@ -25,11 +25,13 @@ export const getSenderActions = ({
       ...INBOX_TOOLKIT_THREAD_ACTIONS.trashThread,
       name: "Trash all",
       tooltipDescription: "Trash threads from sender",
+      shortcut: undefined,
     },
     archiveFromSender: {
       ...INBOX_TOOLKIT_THREAD_ACTIONS.archiveThread,
       name: "Archive all",
       tooltipDescription: "Trash threads from sender",
+      shortcut: undefined,
     },
     labelFromSender: {
       ...INBOX_TOOLKIT_THREAD_ACTIONS.modifyThreadLabels,

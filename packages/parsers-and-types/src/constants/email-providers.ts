@@ -1,5 +1,6 @@
 export const EMAIL_PROVIDER_LABELS = {
   GMAIL: {
+    CHAT: "CHAT",
     UNREAD: "UNREAD",
     INBOX: "INBOX",
     STARRED: "STARRED",

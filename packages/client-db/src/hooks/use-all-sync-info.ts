@@ -10,5 +10,6 @@ export function useAllSyncInfo() {
       const syncInfo = await getAllSyncInfo();
       return syncInfo;
     },
+    gcTime: 0,
   });
 }
