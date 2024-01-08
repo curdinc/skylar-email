@@ -9,8 +9,8 @@ export const addNewMessages = async ({
 }: {
   messages: MessageType[];
 }) => {
-  SkylarClientStore.set(addNewMessageAtom, messages);
   await bulkPutMessages({
     messages,
   });
+  SkylarClientStore.set(addNewMessageAtom, messages);
 };
