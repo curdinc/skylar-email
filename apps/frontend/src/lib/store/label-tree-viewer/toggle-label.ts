@@ -66,6 +66,7 @@ export const toggleLabelAtom = atom<
               displayValue: thread.subject,
               type: "labelItem",
               state: "viewable",
+              timestampReceived: thread.updated_at,
             });
             newThreadMapping.set(thread.provider_thread_id, thread);
           });
