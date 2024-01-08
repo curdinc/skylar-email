@@ -3,6 +3,7 @@ import {
   custom,
   number,
   object,
+  optional,
   picklist,
   string,
   void_,
@@ -74,7 +75,7 @@ const PROVIDER_PROCEDURES = {
     output: object({
       emailAddress: emailSchema,
       name: string(),
-      imageUri: string(),
+      imageUri: optional(string()),
       refreshToken: string(),
     }),
   },

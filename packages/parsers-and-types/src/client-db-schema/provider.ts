@@ -13,7 +13,7 @@ export type ProviderType = ProviderIndexType & {
   created_at?: number;
   updated_at?: number;
   inbox_name: string;
-  image_uri: string;
+  image_uri?: string;
   refresh_token: string;
 };
 
