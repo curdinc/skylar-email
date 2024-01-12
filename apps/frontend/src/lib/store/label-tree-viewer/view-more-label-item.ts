@@ -74,6 +74,7 @@ export const viewMoreLabelItemAtom = atom<
           displayValue: thread.subject,
           type: "labelItem",
           state: "viewable",
+          timestampReceived: thread.updated_at,
         });
         newThreadMapping.set(thread.provider_thread_id, thread);
       });
@@ -88,11 +89,6 @@ export const viewMoreLabelItemAtom = atom<
           NO_LABELS_ITEM(labelIdToViewMore),
         );
       }
-
-      newLabelMapping.set(labelIdToViewMore, {
-        ...labelToggled,
-        children: labelToggled.children,
-      });
       set(labelTreeViewerMappingAtom, newLabelMapping);
       set(labelTreeViewerDataAtom, newThreadMapping);
     })

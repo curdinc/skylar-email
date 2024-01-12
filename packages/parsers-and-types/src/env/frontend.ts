@@ -1,11 +1,4 @@
-import {
-  coerce,
-  number,
-  optional,
-  string,
-  transform,
-  withDefault,
-} from "valibot";
+import { coerce, number, optional, string, transform } from "valibot";
 
 export const ClientEnvSchemaObject = {
   NEXT_PUBLIC_BACKEND_URL: string(),
@@ -19,7 +12,7 @@ export const SharedEnvSchemaObject = {
   VERCEL_URL: transform(optional(string()), (v) => {
     return v ? `https://${v}` : undefined;
   }),
-  PORT: withDefault(
+  PORT: optional(
     coerce(number(), (raw) => Number(raw)),
     3000,
   ),

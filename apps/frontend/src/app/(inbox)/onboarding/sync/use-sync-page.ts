@@ -8,8 +8,10 @@ import {
   upsertEmailSyncInfo,
 } from "@skylar/client-db";
 import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
-import { formatValidatorError } from "@skylar/parsers-and-types";
-import { convertGmailEmailToClientDbEmail } from "@skylar/web-worker-logic";
+import {
+  convertGmailEmailToClientDbEmail,
+  formatValidatorError,
+} from "@skylar/parsers-and-types";
 
 import { useToast } from "~/components/ui/use-toast";
 import { captureEvent } from "~/lib/analytics/capture-event";

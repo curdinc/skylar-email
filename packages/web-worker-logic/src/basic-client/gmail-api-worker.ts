@@ -3,8 +3,8 @@ import superjson from "superjson";
 
 import { workerLink } from "@skylar/trpc-web-workers";
 
-import type { GmailWorkerRouterType } from "../gmail-api/router";
-import { loggerLinkConfig } from "./logger-config";
+import type { GmailWorkerRouterType } from "../gmail-api/root";
+import { loggerLinkConfig } from "../lib/logger-config";
 
 export const gmailApiWorker = createTRPCClient<GmailWorkerRouterType>({
   transformer: superjson,

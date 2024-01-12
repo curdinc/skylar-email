@@ -38,6 +38,7 @@ export type LabelTreeViewerItemType = {
   id: string;
   parentId: string;
   displayValue: string;
+  timestampReceived: number;
   type: "labelItem";
   state: "viewable" | "hidden";
 };
@@ -65,15 +66,32 @@ export const useLabelsTreeViewerMapping = () =>
 export const labelTreeViewerRowsAtom = atom<LabelTreeViewerRowType[]>((get) => {
   const labels = get(labelTreeViewerMappingAtom);
   return Array.from(labels.values()).reduce((prev, currentLabel) => {
-    return [
-      ...prev,
-      currentLabel,
-      ...(currentLabel.state === "open"
-        ? Array.from(currentLabel.children.values()).filter(
-            (item) => item.type !== "labelItem" || item.state !== "hidden",
-          )
-        : []),
-    ];
+    const children: (
+      | LabelTreeViewerEndOfLabelListType
+      | LabelTreeViewerItemType
+    )[] = [];
+    if (currentLabel.state === "open") {
+      let endListItem: LabelTreeViewerEndOfLabelListType | undefined;
+      for (const item of Array.from(currentLabel.children.values())) {
+        if (item.type === "labelItem") {
+          children.push(item);
+        } else {
+          endListItem = item;
+        }
+      }
+      children.sort((a, b) => {
+        if (a.type !== "labelItem" || b.type !== "labelItem") {
+          return 0;
+        }
+        return b.timestampReceived - a.timestampReceived;
+      });
+      if (!endListItem) {
+        throw new Error("endListItem is undefined");
+      }
+      children.push(endListItem);
+    }
+
+    return [...prev, currentLabel, ...children];
   }, [] as LabelTreeViewerRowType[]);
 });
 export const useLabelsTreeViewerRows = () => useAtom(labelTreeViewerRowsAtom);

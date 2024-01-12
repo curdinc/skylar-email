@@ -19,8 +19,7 @@ export type MessageType = MessageIndexType & {
   in_reply_to?: string;
   content_html?: string;
   content_text: string;
-  skylar_labels: string[];
-  email_provider_labels: string[];
+  provider_message_labels: string[];
   snippet_html: string;
   attachment_names: string[];
   attachments: Record<

@@ -3,15 +3,16 @@ import { TRPCError } from "@trpc/server";
 import { getRefreshTokenByEmailAddress } from "@skylar/client-db";
 import { sharedWorkerAdapter } from "@skylar/trpc-web-workers";
 
-import { ACCESS_TOKEN_REFRESH_INTERVAL_MILLIS } from "./lib/constants";
-import { skylarBackendClient } from "./lib/skylar-backend-connector";
-import { gmailWorkerRouter } from "./router";
+import { gmailApiWorkerRouter } from "./root";
+import { ACCESS_TOKEN_REFRESH_INTERVAL_MILLIS } from "./src/lib/constants";
+import { skylarBackendClient } from "./src/lib/skylar-backend-connector";
 
 // GLOBAL WORKER CONTEXT
 const tokenStore = new Map<string, { at: string; exp: number }>();
+const syncLock = new Map<string, boolean>(); // email -> isLocked
 
 sharedWorkerAdapter({
-  router: gmailWorkerRouter,
+  router: gmailApiWorkerRouter,
   createContext: () => {
     return {
       getAccessToken: async (emailAddress: string) => {
@@ -46,6 +47,7 @@ sharedWorkerAdapter({
         return accessTokenInfo.accessToken;
       },
       tokenStore,
+      syncLock,
     };
   },
 });

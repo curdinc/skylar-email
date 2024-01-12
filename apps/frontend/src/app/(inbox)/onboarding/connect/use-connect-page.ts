@@ -5,7 +5,6 @@ import { useMutation } from "@tanstack/react-query";
 
 import { putProvider } from "@skylar/client-db";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types";
-import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { captureEvent, identifyUser } from "~/lib/analytics/capture-event";
@@ -53,6 +52,8 @@ export function useConnectEmailProviderPage() {
       code: string;
       provider: SupportedEmailProviderType;
     }) => {
+      const { gmailApiWorker } = await import("@skylar/web-worker-logic");
+
       const providerInfo =
         await gmailApiWorker.provider.addOauthProvider.mutate({
           code: code,
@@ -65,7 +66,8 @@ export function useConnectEmailProviderPage() {
           type: provider,
           user_email_address: providerInfo.emailAddress,
           image_uri: providerInfo.imageUri,
-          inbox_name: providerInfo.name,
+          inbox_name:
+            providerInfo.name ?? providerInfo.emailAddress.split("@")[0] ?? "",
           refresh_token: providerInfo.refreshToken,
         },
       });
@@ -88,7 +90,7 @@ export function useConnectEmailProviderPage() {
     onError(error, variables) {
       toast({
         title: "Error connecting to email provider",
-        description: "Please try again later",
+        description: error.message,
         variant: "destructive",
       });
       logger.error("Error adding email provider to client DB", {

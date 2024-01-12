@@ -2,7 +2,6 @@ import { memo, Suspense } from "react";
 
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import type { LabelTreeViewerRowType } from "~/lib/store/label-tree-viewer";
-import { useActiveItemIndex } from "~/lib/store/label-tree-viewer/active-item";
 import { useToggleLabel } from "~/lib/store/label-tree-viewer/toggle-label";
 import { useViewMoreLabelItem } from "~/lib/store/label-tree-viewer/view-more-label-item";
 import { cn } from "~/lib/ui";
@@ -26,10 +25,8 @@ const LabelTreeRowBase = ({
   const { data: activeEmailAddress } = useActiveEmailAddress();
   const toggleLabel = useToggleLabel();
   const viewMoreLabelItem = useViewMoreLabelItem();
-  const [, setActiveItemIndex] = useActiveItemIndex();
 
   const onClickLabel = () => {
-    setActiveItemIndex(index);
     toggleLabel({
       labelIdToToggle: row?.id ?? "",
       userEmailAddress: activeEmailAddress ?? "",

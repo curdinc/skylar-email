@@ -5,7 +5,6 @@ import type {
   SupportedEmailProviderType,
   SyncResponseType,
 } from "@skylar/parsers-and-types";
-import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { useLogger } from "~/lib/logger";
 
@@ -81,11 +80,12 @@ export const useProviderInitialSync = () => {
 
   const { mutateAsync: startGmailInitialSync } = useMutation({
     mutationFn: async (gmailToSync: string) => {
+      const { gmailApiWorker } = await import("@skylar/web-worker-logic");
+
       const syncResponse = await gmailApiWorker.sync.incrementalSync.mutate({
         emailAddress: gmailToSync,
         numberOfMessagesToFetch: INITIAL_MESSAGES_TO_FETCH,
       });
-
       return syncResponse;
     },
     onError: (e) => {
