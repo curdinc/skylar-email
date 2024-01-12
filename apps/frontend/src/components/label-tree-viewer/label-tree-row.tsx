@@ -43,6 +43,7 @@ const LabelTreeRowBase = ({
         className={cn(
           "flex h-8 items-center gap-1 border-t bg-background px-2",
           "absolute inset-0",
+          "hover:border-l-4",
           row.state === "open" && "shadow-md",
           rowState === "active" && "bg-secondary",
         )}

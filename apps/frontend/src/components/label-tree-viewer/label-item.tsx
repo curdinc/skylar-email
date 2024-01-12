@@ -51,7 +51,7 @@ export const LabelItem = ({
         onClick={onClickThread}
         className={cn(
           "flex h-9 items-center pl-6",
-          "hover:bg-secondary",
+          "hover:border-l-4",
           "absolute inset-0",
           rowState === "active" && "bg-secondary",
         )}
