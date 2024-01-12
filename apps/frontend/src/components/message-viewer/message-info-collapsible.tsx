@@ -116,7 +116,7 @@ export const MessageInfoCollapsible = ({
         )}
       </CollapsibleContent>
       <div className="flex gap-1">
-        {message.email_provider_labels.map((label) => {
+        {message.provider_message_labels.map((label) => {
           return (
             <Badge variant={"secondary"} key={label}>
               {label}

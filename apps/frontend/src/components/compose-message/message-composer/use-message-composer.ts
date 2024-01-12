@@ -11,7 +11,6 @@ import type {
   ThreadType,
 } from "@skylar/parsers-and-types";
 import { EmailComposeSchema } from "@skylar/parsers-and-types";
-import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { captureEvent } from "~/lib/analytics/capture-event";

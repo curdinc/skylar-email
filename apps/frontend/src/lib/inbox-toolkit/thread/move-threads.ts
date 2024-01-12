@@ -1,5 +1,4 @@
 import type { ThreadType } from "@skylar/parsers-and-types";
-import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { updateAndSaveLabels } from "./utils";
 
