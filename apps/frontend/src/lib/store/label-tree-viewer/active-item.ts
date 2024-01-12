@@ -114,8 +114,7 @@ export const activeItemRowSuspenseAtom = atom<
 );
 
 export const useActiveItemRowSuspense = () => {
-  const [activeItemIndex] = useActiveItemIndex();
-  return useRowSuspense(activeItemIndex);
+  return useAtom(activeItemRowSuspenseAtom);
 };
 export const useActiveItemRow = () => useAtom(activeItemRowAtom);
 

@@ -9,7 +9,7 @@ import { useActiveItemRowSuspense } from "~/lib/store/label-tree-viewer/active-i
 
 const THREAD_VIEWER_MARK_AS_READ_TIMEOUT = 250;
 export function useThreadViewer() {
-  const activeItemRow = useActiveItemRowSuspense();
+  const [activeItemRow] = useActiveItemRowSuspense();
   const timeOutRef = useRef<NodeJS.Timeout | null>(null);
   const { thread: messagesInThread, isLoading: isLoadingThread } = useThread({
     emailProviderThreadId:
