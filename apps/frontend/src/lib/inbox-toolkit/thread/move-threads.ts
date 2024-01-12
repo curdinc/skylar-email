@@ -1,7 +1,7 @@
 import type { ThreadType } from "@skylar/parsers-and-types";
 import { gmailApiWorker } from "@skylar/web-worker-logic";
 
-import { updateAndSaveLabels } from "../utils";
+import { updateAndSaveLabels } from "./utils";
 
 export async function moveThreads({
   threads,
@@ -26,6 +26,7 @@ export async function moveThreads({
     await func();
   }
 
+  const { gmailApiWorker } = await import("@skylar/web-worker-logic");
   await gmailApiWorker.label.modify.mutate({
     addLabelsIds: labelsToAdd,
     deleteLabelsIds: labelsToRemove,

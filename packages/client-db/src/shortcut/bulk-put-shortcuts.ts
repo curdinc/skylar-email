@@ -16,6 +16,7 @@ export async function bulkPutShortcut({
       return {
         combo: shortcut.combo,
         description: shortcut.description,
+        actionId: shortcut.actionId,
         label: shortcut.label,
         label_search: buildSearchableString(shortcut.label, "."),
         description_search: buildSearchableString(shortcut.description),

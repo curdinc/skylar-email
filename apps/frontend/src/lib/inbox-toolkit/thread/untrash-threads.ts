@@ -1,7 +1,7 @@
 import type { ThreadType } from "@skylar/parsers-and-types";
 import { EMAIL_PROVIDER_LABELS } from "@skylar/parsers-and-types";
 
-import { modifyThreadLabels } from "../utils";
+import { modifyThreadLabels } from "./utils";
 
 export const untrashThreads = async ({
   emailAddress,

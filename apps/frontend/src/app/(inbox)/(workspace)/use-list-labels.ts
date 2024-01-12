@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { useConnectedProviders } from "@skylar/client-db";
-import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 export const LIST_LABEL_QUERY_KEY = "listLabels";
 export function useListLabels() {
@@ -10,6 +9,8 @@ export function useListLabels() {
   return useQuery({
     queryKey: [LIST_LABEL_QUERY_KEY, connectedProviders],
     queryFn: async () => {
+      const { gmailApiWorker } = await import("@skylar/web-worker-logic");
+
       const labelPromise = (connectedProviders ?? []).map(async (provider) => {
         const labels = await gmailApiWorker.label.list.query({
           emailAddress: provider.user_email_address,

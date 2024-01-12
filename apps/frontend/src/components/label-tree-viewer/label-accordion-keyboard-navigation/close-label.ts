@@ -17,17 +17,19 @@ export const closeLabelOrGoToPreviousLabel = (activeEmailAddress: string) => {
         });
       } else {
         const labels = SkylarClientStore.get(labelListAtom);
-        for (let i = 0; i < labels.length; ++i) {
-          const label = labels[i];
-          if (label === activeRow.id) {
-            const previousLabel = labels[i - 1];
-            if (previousLabel) {
-              SkylarClientStore.set(activeItemRowAtom, {
-                id: previousLabel,
-              });
-              return;
-            }
-          }
+        const labelIndex = labels.findIndex((label) => {
+          return label === activeRow.id;
+        });
+        if (labelIndex === -1) {
+          return;
+        }
+
+        const previousLabel = labels[labelIndex - 1];
+        if (previousLabel) {
+          SkylarClientStore.set(activeItemRowAtom, {
+            id: previousLabel,
+          });
+          return;
         }
       }
     } else if (activeRow.parentId) {

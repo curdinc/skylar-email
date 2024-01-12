@@ -4,11 +4,15 @@ import { filterForLabels, getThreadSnippets } from "@skylar/client-db";
 
 import {
   DEFAULT_LIST_ITEM_LIMIT,
+  hasLoadedInitialData,
+  labelTreeViewerDataAtom,
   labelTreeViewerMappingAtom,
   LOADING_LABEL_ITEM,
   NO_LABELS_ITEM,
   VIEW_MORE_ITEM,
 } from ".";
+import { SkylarClientStore } from "../index,";
+import { activeItemRowAtom } from "./active-item";
 
 export const toggleLabelAtom = atom<
   null,
@@ -22,6 +26,10 @@ export const toggleLabelAtom = atom<
   if (!labelToggled) {
     return;
   }
+
+  SkylarClientStore.set(activeItemRowAtom, {
+    id: labelIdToToggle,
+  });
   if (labelToggled.state === "open") {
     const newMapping = new Map(labelMapping);
     newMapping.set(labelIdToToggle, {
@@ -38,10 +46,7 @@ export const toggleLabelAtom = atom<
     set(labelTreeViewerMappingAtom, newMapping);
 
     // if no initial items yet, fetch item
-    if (
-      labelToggled.children.size === 1 &&
-      labelToggled.children.has(labelLoadingItemId)
-    ) {
+    if (!hasLoadedInitialData(labelToggled)) {
       getThreadSnippets({
         userEmails: [userEmailAddress],
         filters: [filterForLabels([labelIdToToggle])],
@@ -50,12 +55,15 @@ export const toggleLabelAtom = atom<
         .then((threadData) => {
           const labelMapping = get(labelTreeViewerMappingAtom);
           const labelToggled = labelMapping.get(labelIdToToggle);
-
           if (!labelToggled) {
             return;
           }
-          const newMapping = new Map(labelMapping);
+
+          const newLabelMapping = new Map(labelMapping);
           labelToggled.children.delete(labelLoadingItemId);
+
+          const threadMapping = get(labelTreeViewerDataAtom);
+          const newThreadMapping = new Map(threadMapping);
 
           threadData.forEach((thread) => {
             labelToggled.children.set(thread.provider_thread_id, {
@@ -64,8 +72,9 @@ export const toggleLabelAtom = atom<
               displayValue: thread.subject,
               type: "labelItem",
               state: "viewable",
-              thread,
+              timestampReceived: thread.updated_at,
             });
+            newThreadMapping.set(thread.provider_thread_id, thread);
           });
           if (threadData.length === DEFAULT_LIST_ITEM_LIMIT) {
             labelToggled.children.set(
@@ -79,11 +88,8 @@ export const toggleLabelAtom = atom<
             );
           }
 
-          newMapping.set(labelIdToToggle, {
-            ...labelToggled,
-            children: labelToggled.children,
-          });
-          set(labelTreeViewerMappingAtom, newMapping);
+          set(labelTreeViewerDataAtom, newThreadMapping);
+          set(labelTreeViewerMappingAtom, newLabelMapping);
         })
         .catch((e) => {
           console.error("Error fetching initial thread data", e);

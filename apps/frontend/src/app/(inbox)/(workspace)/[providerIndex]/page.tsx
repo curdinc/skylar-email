@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { Allotment } from "allotment";
 
@@ -29,7 +30,9 @@ export default function Inbox() {
   const [activeItemRow] = useActiveItemRow();
   const Viewer =
     activeItemRow?.type === "labelItem" ? (
-      <ThreadViewer />
+      <Suspense fallback={<div>Loading thread</div>}>
+        <ThreadViewer />
+      </Suspense>
     ) : (
       <EmptyLabelItemScreen />
     );

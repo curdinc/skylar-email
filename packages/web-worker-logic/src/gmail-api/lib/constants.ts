@@ -1,1 +1,0 @@
-export const ACCESS_TOKEN_REFRESH_INTERVAL_MILLIS = 1000 * 60 * 50; // 50 mins

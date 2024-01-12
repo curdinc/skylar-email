@@ -154,6 +154,8 @@ export const useMessageComposer = () => {
           : undefined,
       };
 
+      const { gmailApiWorker } = await import("@skylar/web-worker-logic");
+
       await gmailApiWorker.message.send.mutate({
         emailAddress: values.from,
         messageConfig,

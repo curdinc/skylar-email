@@ -5,9 +5,6 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import {
-  bulkDeleteMessages,
-  bulkPutMessages,
-  bulkUpdateMessages,
   getAllProviders,
   getEmailSyncInfo,
   updateEmailSyncInfo,
@@ -15,13 +12,12 @@ import {
 } from "@skylar/client-db";
 import { resetComposeMessage } from "@skylar/logic";
 import type { EmailSyncInfoType } from "@skylar/parsers-and-types";
-import {
-  convertGmailEmailToClientDbEmail,
-  gmailApiWorker,
-  gmailBackgroundSyncWorker,
-} from "@skylar/web-worker-logic";
+import { convertGmailEmailToClientDbEmail } from "@skylar/parsers-and-types";
 
 import { identifyUser } from "~/lib/analytics/capture-event";
+import { addNewMessages } from "~/lib/inbox-toolkit/messages/add-new-messages";
+import { deleteMessages } from "~/lib/inbox-toolkit/messages/delete-messages";
+import { updateMessages } from "~/lib/inbox-toolkit/messages/update-messages";
 import { useLogger } from "~/lib/logger";
 import { useActiveEmailAddress } from "~/lib/provider/use-active-email-address";
 import { ROUTE_ONBOARDING_CONNECT, ROUTE_ONBOARDING_SYNC } from "~/lib/routes";
@@ -51,15 +47,19 @@ export const ClientLayout = () => {
       .filter((syncInfo) => !syncInfo.full_sync_completed_on)
       .map((syncInfo) => syncInfo.user_email_address);
 
-    // const createdWorkers =
     unsyncedEmailAddresses.map((emailAddress) => {
-      // GmailBackgroundSyncWorker
-      gmailBackgroundSyncWorker(emailAddress)
-        .syncProvider.mutate({
-          emailAddress,
+      import("@skylar/web-worker-logic")
+        .then(({ gmailApiWorker }) => {
+          gmailApiWorker.sync.backgroundFullSync
+            .mutate({
+              emailAddress,
+            })
+            .catch((error) => {
+              console.error("Error in background sync worker: ", error);
+            });
         })
-        .catch((err) => {
-          console.error(err);
+        .catch((e) => {
+          console.error("Error importing background sync worker: ", e);
         });
     });
     // shared workers close automatically when all ports are closed
@@ -69,6 +69,7 @@ export const ClientLayout = () => {
   const { error } = useQuery({
     queryKey: [],
     queryFn: async () => {
+      const { gmailApiWorker } = await import("@skylar/web-worker-logic");
       let updatedEmails = false;
 
       const connectedProviders = await getAllProviders();
@@ -99,7 +100,6 @@ export const ClientLayout = () => {
           router.push(ROUTE_ONBOARDING_SYNC);
           return updatedEmails;
         }
-
         const syncResponse = await gmailApiWorker.sync.partialSync.mutate({
           emailAddress: provider.user_email_address,
           startHistoryId: syncInfo?.last_sync_history_id,
@@ -107,29 +107,28 @@ export const ClientLayout = () => {
         if (!syncResponse) {
           return updatedEmails;
         }
-
         if (syncResponse.newMessages.length) {
-          const emailToSave = convertGmailEmailToClientDbEmail(
+          const messages = convertGmailEmailToClientDbEmail(
             provider.user_email_address,
             syncResponse.newMessages,
           );
-          await bulkPutMessages({
-            messages: emailToSave,
+          await addNewMessages({
+            messages,
           });
           updatedEmails = true;
         }
         if (syncResponse.messagesDeleted?.length) {
-          await bulkDeleteMessages({
-            providerMessageIds: syncResponse.messagesDeleted,
+          await deleteMessages({
+            messageIds: syncResponse.messagesDeleted,
           });
           updatedEmails = true;
         }
         if (syncResponse.labelsModified?.length) {
-          await bulkUpdateMessages({
+          await updateMessages({
             messages: syncResponse.labelsModified.map((email) => {
               return {
                 provider_message_id: email.emailProviderMessageId,
-                email_provider_labels: email.newLabels,
+                provider_message_labels: email.newLabels,
               };
             }),
           });

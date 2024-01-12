@@ -1,9 +1,14 @@
 import { atom, useSetAtom } from "jotai";
 
-import { filterForLabels, getThreadSnippets } from "@skylar/client-db";
+import {
+  bulkGetThreads,
+  filterForLabels,
+  getThreadSnippets,
+} from "@skylar/client-db";
 
 import {
   DEFAULT_LIST_ITEM_LIMIT,
+  labelTreeViewerDataAtom,
   labelTreeViewerMappingAtom,
   LOADING_LABEL_ITEM,
   NO_LABELS_ITEM,
@@ -14,7 +19,7 @@ export const viewMoreLabelItemAtom = atom<
   null,
   [{ labelIdToViewMore: string; userEmailAddress: string }],
   void
->(null, (get, set, { labelIdToViewMore, userEmailAddress }) => {
+>(null, async (get, set, { labelIdToViewMore, userEmailAddress }) => {
   const labelMapping = get(labelTreeViewerMappingAtom);
   const labelToggled = labelMapping.get(labelIdToViewMore);
   if (!labelToggled) {
@@ -36,12 +41,19 @@ export const viewMoreLabelItemAtom = atom<
   set(labelTreeViewerMappingAtom, newLabelMapping);
 
   const lastLabelItem = Array.from(labelToggled.children.values()).at(-2);
+  let lastEntry = undefined;
+  if (lastLabelItem?.type === "labelItem") {
+    lastEntry = (
+      await bulkGetThreads({
+        providerThreadIds: [lastLabelItem.id],
+      })
+    )[0];
+  }
   getThreadSnippets({
     userEmails: [userEmailAddress],
     filters: [filterForLabels([labelIdToViewMore])],
     limit: DEFAULT_LIST_ITEM_LIMIT,
-    lastEntry:
-      lastLabelItem?.type === "labelItem" ? lastLabelItem.thread : undefined,
+    lastEntry: lastEntry,
   })
     .then((threadData) => {
       const labelMapping = get(labelTreeViewerMappingAtom);
@@ -52,6 +64,9 @@ export const viewMoreLabelItemAtom = atom<
       const newLabelMapping = new Map(labelMapping);
       labelToggled.children.delete(labelLoadingItemId);
 
+      const threadMapping = get(labelTreeViewerDataAtom);
+      const newThreadMapping = new Map(threadMapping);
+
       threadData.forEach((thread) => {
         labelToggled.children.set(thread.provider_thread_id, {
           id: thread.provider_thread_id,
@@ -59,8 +74,9 @@ export const viewMoreLabelItemAtom = atom<
           displayValue: thread.subject,
           type: "labelItem",
           state: "viewable",
-          thread,
+          timestampReceived: thread.updated_at,
         });
+        newThreadMapping.set(thread.provider_thread_id, thread);
       });
       if (threadData.length === DEFAULT_LIST_ITEM_LIMIT) {
         labelToggled.children.set(
@@ -73,12 +89,8 @@ export const viewMoreLabelItemAtom = atom<
           NO_LABELS_ITEM(labelIdToViewMore),
         );
       }
-
-      newLabelMapping.set(labelIdToViewMore, {
-        ...labelToggled,
-        children: labelToggled.children,
-      });
       set(labelTreeViewerMappingAtom, newLabelMapping);
+      set(labelTreeViewerDataAtom, newThreadMapping);
     })
     .catch((e) => {
       console.error("Error fetching more thread data", e);

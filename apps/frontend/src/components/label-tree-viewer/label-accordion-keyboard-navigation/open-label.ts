@@ -16,20 +16,21 @@ export const openLabelOrGoToNextLabel = (activeEmailAddress: string) => {
       });
     } else {
       const labels = SkylarClientStore.get(labelListAtom);
-      for (let i = 0; i < labels.length; ++i) {
-        const label = labels[i];
-        if (
+      const labelIndex = labels.findIndex((label) => {
+        return (
           label === activeRow.id ||
           ("parentId" in activeRow && label === activeRow?.parentId)
-        ) {
-          const nextLabel = labels[i + 1];
-          if (nextLabel) {
-            SkylarClientStore.set(activeItemRowAtom, {
-              id: nextLabel,
-            });
-            return;
-          }
-        }
+        );
+      });
+      if (labelIndex === -1) {
+        return;
+      }
+      const nextLabel = labels[labelIndex + 1];
+      if (nextLabel) {
+        SkylarClientStore.set(activeItemRowAtom, {
+          id: nextLabel,
+        });
+        return;
       }
     }
   };
