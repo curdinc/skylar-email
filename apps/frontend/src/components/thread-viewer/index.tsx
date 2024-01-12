@@ -22,11 +22,11 @@ export function ThreadViewer() {
   });
 
   return (
-    <div className="@container w-full ">
-      <div className="@sm:text-lg @md:text-xl @sm:p-3 @md:p-5 min-h-12 sticky top-0 flex items-center border-b bg-background p-2 font-heading font-semibold tracking-tighter text-foreground">
+    <div className="w-full @container ">
+      <div className="min-h-12 sticky top-0 flex items-center border-b bg-background p-2 font-heading font-semibold tracking-tighter text-foreground @sm:p-3 @sm:text-lg @md:p-5 @md:text-xl">
         {thread?.[0]?.subject}
       </div>
-      <div className="@sm:p-3 @md:p-5 grid gap-3 p-2">{MessageList}</div>
+      <div className="grid gap-3 p-2 @sm:p-3 @md:p-5">{MessageList}</div>
     </div>
   );
 }

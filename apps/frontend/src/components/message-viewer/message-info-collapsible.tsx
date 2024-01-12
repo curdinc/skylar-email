@@ -13,9 +13,9 @@ import { RecipientListDisplay } from "../sender-display/recipient-list-display";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import {
-    Collapsible,
-    CollapsibleContent,
-    CollapsibleTrigger,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
 } from "../ui/collapsible";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
