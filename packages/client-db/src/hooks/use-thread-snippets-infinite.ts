@@ -15,12 +15,12 @@ export function useThreadSnippetsInfinite(
   return useInfiniteQuery({
     queryKey: [
       THREAD_SNIPPETS_QUERY_KEY,
-      args.limit,
-      args.sort,
-      args.orderBy,
-      args.filters,
-      args.userEmails,
       args.uid,
+      args.orderBy,
+      args.sort,
+      args.limit,
+      args.userEmails,
+      args.filters,
     ],
     queryFn: async ({ pageParam }) => {
       const threadSnippets = await getThreadSnippets({
@@ -34,13 +34,12 @@ export function useThreadSnippetsInfinite(
       return threadSnippets;
     },
     getNextPageParam: (lastPage, _pages) => {
-      if (lastPage.length === 0) {
+      if (lastPage.length < (args?.limit ?? 1)) {
         return undefined;
       }
       return { lastThread: lastPage.at(-1) };
     },
     initialPageParam: { lastThread: undefined as undefined | ThreadType },
-    refetchInterval: 2_000, // 2 seconds
     structuralSharing: false, // TODO: rewrite to use more granular filtering
   });
 }

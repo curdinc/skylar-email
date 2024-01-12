@@ -11,13 +11,13 @@ const isEventTargetInputOrTextArea = (eventTarget: EventTarget | null) => {
 };
 
 export const registerShortcuts = ({
+  onkeyDownMapping,
   shortcuts,
   existingShortcuts,
   onError,
 }: {
-  shortcuts: (ShortcutInsertType & {
-    onKeyDown: (event: KeyboardEvent) => void;
-  })[];
+  shortcuts: ShortcutInsertType[];
+  onkeyDownMapping: Record<string, (event: KeyboardEvent) => void>;
   existingShortcuts?: ShortcutInsertType[];
   onError?: (error: unknown) => void;
 }) => {
@@ -34,7 +34,11 @@ export const registerShortcuts = ({
   const activeDuringInput: string[] = [];
   shortcuts.forEach((shortcut) => {
     const existingCombo = existingKeyMap[shortcut.label];
-    keyMap[existingCombo ?? shortcut.combo] = shortcut.onKeyDown;
+    const onKeyDown = onkeyDownMapping[shortcut.actionId];
+    if (!onKeyDown) {
+      throw new Error(`Missing onKeyDown for ${shortcut.actionId}`);
+    }
+    keyMap[existingCombo ?? shortcut.combo] = onKeyDown;
     if (shortcut?.keepActiveDuringInput) {
       activeDuringInput.push(shortcut.combo);
     }

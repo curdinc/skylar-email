@@ -5,7 +5,6 @@ import { useMutation } from "@tanstack/react-query";
 
 import { putProvider } from "@skylar/client-db";
 import type { SupportedEmailProviderType } from "@skylar/parsers-and-types";
-import { gmailApiWorker } from "@skylar/web-worker-logic";
 
 import { useToast } from "~/components/ui/use-toast";
 import { captureEvent, identifyUser } from "~/lib/analytics/capture-event";
@@ -53,6 +52,8 @@ export function useConnectEmailProviderPage() {
       code: string;
       provider: SupportedEmailProviderType;
     }) => {
+      const { gmailApiWorker } = await import("@skylar/web-worker-logic");
+
       const providerInfo =
         await gmailApiWorker.provider.addOauthProvider.mutate({
           code: code,

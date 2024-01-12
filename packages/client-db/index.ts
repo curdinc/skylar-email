@@ -10,6 +10,7 @@ export * from "./src/sync/upsert-email-sync-info";
 
 export * from "./src/thread/bulk-put-threads";
 export * from "./src/thread/get-all-threads-from-sender-email-address";
+export * from "./src/thread/get-thread-snippets";
 
 export * from "./src/provider/get-all-providers";
 export * from "./src/provider/get-provider-by-email-address";

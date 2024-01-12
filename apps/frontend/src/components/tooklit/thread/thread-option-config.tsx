@@ -7,13 +7,13 @@ import { Icons } from "~/components/icons";
 import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { archiveThreads } from "~/lib/inbox-toolkit/thread/archive-threads";
-import { markReadThreads } from "~/lib/inbox-toolkit/thread/mark-read-threads";
-import { markUnreadThreads } from "~/lib/inbox-toolkit/thread/mark-unread-threads";
+import { markAsRead } from "~/lib/inbox-toolkit/thread/mark-as-read";
+import { markAsUnread } from "~/lib/inbox-toolkit/thread/mark-as-unread";
 import { moveThreads } from "~/lib/inbox-toolkit/thread/move-threads";
 import { trashThreads } from "~/lib/inbox-toolkit/thread/trash-threads";
 import { unarchiveThreads } from "~/lib/inbox-toolkit/thread/unarchive-threads";
 import { untrashThreads } from "~/lib/inbox-toolkit/thread/untrash-threads";
-import { getLabelModifications } from "~/lib/inbox-toolkit/utils";
+import { getLabelModifications } from "~/lib/inbox-toolkit/thread/utils";
 import type {
   ConfigOption,
   GetThreads,
@@ -100,21 +100,20 @@ export const getThreadActions = (
       applyFn: async () => {
         const threads = await getThreads();
         await trashThreads({
-          email: activeEmailAddress,
+          emailAddress: activeEmailAddress,
           threads: threads,
-          afterClientDbUpdate,
         });
         return async () => {
           await untrashThreads({
             emailAddress: activeEmailAddress,
             threads: threads,
-            afterClientDbUpdate,
           });
         };
       },
       undoToastConfig: {
         title: "Thread deleted.",
       },
+      shortcut: "Del",
     },
     archiveThread: {
       type: "reversible-action",
@@ -124,13 +123,11 @@ export const getThreadActions = (
       applyFn: async () => {
         const threads = await getThreads();
         await archiveThreads({
-          afterClientDbUpdate,
           emailAddress: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await unarchiveThreads({
-            afterClientDbUpdate,
             emailAddress: activeEmailAddress,
             threads: threads,
           });
@@ -139,6 +136,7 @@ export const getThreadActions = (
       undoToastConfig: {
         title: "Thread archived.",
       },
+      shortcut: "e",
     },
     unarchiveThread: {
       type: "reversible-action",
@@ -148,13 +146,11 @@ export const getThreadActions = (
       applyFn: async () => {
         const threads = await getThreads();
         await unarchiveThreads({
-          afterClientDbUpdate,
           emailAddress: activeEmailAddress,
           threads: threads,
         });
         return async () => {
           await archiveThreads({
-            afterClientDbUpdate,
             emailAddress: activeEmailAddress,
             threads: threads,
           });
@@ -168,18 +164,16 @@ export const getThreadActions = (
       type: "reversible-action",
       icon: Icons.markRead,
       name: "Mark as read",
-      tooltipDescription: "Archive thread",
+      tooltipDescription: "Mark as read",
       applyFn: async () => {
         const threads = await getThreads();
-        await markReadThreads({
-          afterClientDbUpdate,
-          email: activeEmailAddress,
+        await markAsRead({
+          emailAddress: activeEmailAddress,
           threads: threads,
         });
         return async () => {
-          await markUnreadThreads({
-            afterClientDbUpdate,
-            email: activeEmailAddress,
+          await markAsUnread({
+            emailAddress: activeEmailAddress,
             threads: threads,
           });
         };
@@ -187,6 +181,7 @@ export const getThreadActions = (
       undoToastConfig: {
         title: "Thread marked as read.",
       },
+      shortcut: "Shift U",
     },
     markUnreadThread: {
       type: "reversible-action",
@@ -196,15 +191,13 @@ export const getThreadActions = (
       applyFn: async () => {
         const threads = await getThreads();
         setMostRecentlyAffectedThreads(threads);
-        await markUnreadThreads({
-          afterClientDbUpdate,
-          email: activeEmailAddress,
+        await markAsUnread({
+          emailAddress: activeEmailAddress,
           threads: threads,
         });
         return async () => {
-          await markReadThreads({
-            afterClientDbUpdate,
-            email: activeEmailAddress,
+          await markAsRead({
+            emailAddress: activeEmailAddress,
             threads: threads,
           });
         };
@@ -212,6 +205,7 @@ export const getThreadActions = (
       undoToastConfig: {
         title: "Thread marked as unread.",
       },
+      shortcut: "u",
     },
     modifyThreadLabels: {
       type: "reversible-action",
