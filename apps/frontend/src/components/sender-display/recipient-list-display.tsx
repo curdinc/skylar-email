@@ -23,12 +23,13 @@ export const RecipientListDisplay = ({
     return (
       <span>
         <CopyToClipboard
-            variant={"link"}
-            className={cn("w-fit", "text-text-muted-foreground")}
-            valueToCopy={userEmailAddress}
-          >
-           You
-          </CopyToClipboard> and{" "}
+          variant={"link"}
+          className={cn("w-fit", "text-text-muted-foreground")}
+          valueToCopy={userEmailAddress}
+        >
+          You
+        </CopyToClipboard>{" "}
+        and{" "}
         <Tooltip>
           <TooltipTrigger>
             <span>{recipientList.length - 1} others</span>
@@ -49,13 +50,15 @@ export const RecipientListDisplay = ({
       </span>
     );
   } else if (isUserPresent) {
-    return <span> <CopyToClipboard
-    variant={"link"}
-    className={cn("w-fit", 'text-text-muted-foreground')}
-    valueToCopy={userEmailAddress}
-  >
-   You
-  </CopyToClipboard></span>;
+    return (
+      <CopyToClipboard
+        variant={"link"}
+        className={cn("w-fit", "text-text-muted-foreground")}
+        valueToCopy={userEmailAddress}
+      >
+        You
+      </CopyToClipboard>
+    );
   } else if (isMoreThanOne) {
     const firstRecipient = recipientList[0];
     if (!firstRecipient) {

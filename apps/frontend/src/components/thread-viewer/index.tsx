@@ -23,7 +23,7 @@ export function ThreadViewer() {
 
   return (
     <div className="w-full @container ">
-      <div className="min-h-12 z-10 sticky top-0 flex items-center border-b bg-background p-2 font-heading font-semibold tracking-tighter text-foreground @sm:p-3 @sm:text-lg @md:p-5 @md:text-xl">
+      <div className="min-h-12 sticky top-0 z-10 flex items-center border-b bg-background p-2 font-heading font-semibold tracking-tighter text-foreground @sm:p-3 @sm:text-lg @md:p-5 @md:text-xl">
         {thread?.[0]?.subject}
       </div>
       <div className="grid gap-3 p-2 @sm:p-3 @md:p-5">{MessageList}</div>
