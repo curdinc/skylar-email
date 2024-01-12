@@ -102,7 +102,6 @@ export const labelListAtom = atom<string[]>((get) => {
   const labelsMap = get(labelTreeViewerMappingAtom);
   return Array.from(labelsMap.keys());
 });
-
 export const labelTreeViewerRowsLengthAtom = atom<number>((get) => {
   const rowData = get(labelTreeViewerRowsAtom);
   return rowData.length;

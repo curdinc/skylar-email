@@ -163,7 +163,7 @@ export const useGlobalKeymap = () => {
               resetComposeMessage();
             }
           } else {
-            closeLabelOrGoToPreviousLabel(activeEmailAddress);
+            closeLabelOrGoToPreviousLabel(activeEmailAddress)();
           }
         },
         "message.forward": () => {

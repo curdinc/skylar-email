@@ -30,7 +30,7 @@ export const AttachmentZone = ({ children }: { children: React.ReactNode }) => {
       {isDragActive && messageType !== "none" && (
         <div
           className={
-            "pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-background/70 font-heading text-4xl font-medium text-foreground backdrop-blur-sm"
+            "bg-background/70 pointer-events-none fixed inset-0 z-50 flex items-center justify-center font-heading text-4xl font-medium text-foreground backdrop-blur-sm"
           }
         >
           Drop files here...
