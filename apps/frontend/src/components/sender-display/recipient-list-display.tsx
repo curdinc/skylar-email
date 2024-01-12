@@ -1,6 +1,8 @@
 import type { SenderType } from "@skylar/parsers-and-types";
 
+import { cn } from "~/lib/ui";
 import { SenderDisplay } from ".";
+import { CopyToClipboard } from "../buttons/copy-to-clipboard";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export const RecipientListDisplay = ({
@@ -20,7 +22,13 @@ export const RecipientListDisplay = ({
   if (isUserPresent && isMoreThanOne) {
     return (
       <span>
-        You and{" "}
+        <CopyToClipboard
+            variant={"link"}
+            className={cn("w-fit", "text-text-muted-foreground")}
+            valueToCopy={userEmailAddress}
+          >
+           You
+          </CopyToClipboard> and{" "}
         <Tooltip>
           <TooltipTrigger>
             <span>{recipientList.length - 1} others</span>
@@ -41,7 +49,13 @@ export const RecipientListDisplay = ({
       </span>
     );
   } else if (isUserPresent) {
-    return <span>You</span>;
+    return <span> <CopyToClipboard
+    variant={"link"}
+    className={cn("w-fit", 'text-text-muted-foreground')}
+    valueToCopy={userEmailAddress}
+  >
+   You
+  </CopyToClipboard></span>;
   } else if (isMoreThanOne) {
     const firstRecipient = recipientList[0];
     if (!firstRecipient) {

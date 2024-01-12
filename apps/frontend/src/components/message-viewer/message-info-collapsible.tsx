@@ -74,8 +74,8 @@ export const MessageInfoCollapsible = ({
                 </Button>
               </CollapsibleTrigger>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>Show full message details</p>
+            <TooltipContent asChild>
+              <p>{isOpen ? "Hide message details":"Show full message details"}</p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -100,7 +100,7 @@ export const MessageInfoCollapsible = ({
           <div className="flex items-center gap-2">
             <div>Cc: </div>
             <RecipientListDisplay
-              recipientList={message.cc}
+              recipientList={message.cc.filter((recipient) => !!recipient.email_address)}
               userEmailAddress={activeEmailAddress}
             />
           </div>
