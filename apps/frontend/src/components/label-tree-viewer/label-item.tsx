@@ -6,7 +6,7 @@ import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import {
   useActiveItemIndex,
-  useRow,
+  useRowSuspense,
 } from "~/lib/store/label-tree-viewer/active-item";
 import { cn } from "~/lib/ui";
 import { ThreadContextMenu } from "../tooklit/components/context-menu";
@@ -23,7 +23,7 @@ export const LabelItem = ({
 }) => {
   const [, startTransition] = useTransition();
   const [, setActiveItemIndex] = useActiveItemIndex();
-  const row = useRow(index);
+  const row = useRowSuspense(index);
 
   const onClickThread = () => {
     captureEvent({
@@ -51,7 +51,7 @@ export const LabelItem = ({
         onClick={onClickThread}
         className={cn(
           "flex h-9 items-center pl-6",
-          "hover:bg-secondary",
+          "hover:border-l-4",
           "absolute inset-0",
           rowState === "active" && "bg-secondary",
         )}

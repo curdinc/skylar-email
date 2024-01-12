@@ -11,6 +11,8 @@ import {
   NO_LABELS_ITEM,
   VIEW_MORE_ITEM,
 } from ".";
+import { SkylarClientStore } from "../index,";
+import { activeItemRowAtom } from "./active-item";
 
 export const toggleLabelAtom = atom<
   null,
@@ -24,6 +26,10 @@ export const toggleLabelAtom = atom<
   if (!labelToggled) {
     return;
   }
+
+  SkylarClientStore.set(activeItemRowAtom, {
+    id: labelIdToToggle,
+  });
   if (labelToggled.state === "open") {
     const newMapping = new Map(labelMapping);
     newMapping.set(labelIdToToggle, {

@@ -4,12 +4,12 @@ import type { ValidReplyMessageOptionsType } from "@skylar/parsers-and-types";
 import { captureEvent } from "~/lib/analytics/capture-event";
 import { TrackingEvents } from "~/lib/analytics/tracking-events";
 import { SkylarClientStore } from "../index,";
-import { activeItemRowAtom } from "../label-tree-viewer/active-item";
+import { activeItemRowSuspenseAtom } from "../label-tree-viewer/active-item";
 
 export const startResponseToCurrentItem = async (
   type: ValidReplyMessageOptionsType,
 ) => {
-  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
+  const activeRow = await SkylarClientStore.get(activeItemRowSuspenseAtom);
   if (!activeRow || activeRow.type !== "labelItem") {
     return;
   }

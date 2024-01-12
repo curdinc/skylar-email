@@ -8,6 +8,7 @@ import type {
   LabelTreeViewerEndOfLabelListType,
   LabelTreeViewerItemType,
   LabelTreeViewerParentType,
+  LabelTreeViewerRowType,
 } from ".";
 import { labelTreeViewerDataAtom, labelTreeViewerRowsAtom } from ".";
 import { SkylarClientStore } from "../index,";
@@ -65,23 +66,21 @@ const getRowAtom = (index?: number) => {
     // },
   );
 };
-export const useRow = (index?: number) =>
+export const useRowSuspense = (index?: number) =>
   useAtomValue(useMemo(() => getRowAtom(index), [index]));
 
 export const activeItemRowAtom = atom<
-  Promise<
-    | LabelTreeViewerParentType
-    | LabelTreeViewerEndOfLabelListType
-    | (LabelTreeViewerItemType & { thread: ThreadType })
-    | undefined
-  >,
+  LabelTreeViewerRowType | undefined,
   [{ id: string }],
   number | undefined
 >(
-  async (get) => {
+  (get) => {
     const activeItemIndex = get(activeItemIndexAtom);
-    const activeRow = await get(getRowAtom(activeItemIndex));
-    return activeRow;
+    if (typeof activeItemIndex === "undefined") {
+      return;
+    }
+    const activeRows = get(labelTreeViewerRowsAtom);
+    return activeRows[activeItemIndex];
   },
   (get, set, update) => {
     const rows = get(labelTreeViewerRowsAtom);
@@ -94,27 +93,52 @@ export const activeItemRowAtom = atom<
   },
 );
 
+export const activeItemRowSuspenseAtom = atom<
+  Promise<
+    | LabelTreeViewerParentType
+    | LabelTreeViewerEndOfLabelListType
+    | (LabelTreeViewerItemType & { thread: ThreadType })
+    | undefined
+  >,
+  [{ id: string }],
+  number | undefined
+>(
+  async (get) => {
+    const activeItemIndex = get(activeItemIndexAtom);
+    const activeRow = get(getRowAtom(activeItemIndex));
+    return activeRow;
+  },
+  (_get, set, update) => {
+    return set(activeItemRowAtom, update);
+  },
+);
+
+export const useActiveItemRowSuspense = () => {
+  return useAtom(activeItemRowSuspenseAtom);
+};
 export const useActiveItemRow = () => useAtom(activeItemRowAtom);
 
-export const clickActiveItem = async (userEmailAddress: string) => {
-  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
-  if (!activeRow) {
-    return;
-  }
-  switch (activeRow.type) {
-    case "label": {
-      SkylarClientStore.set(toggleLabelAtom, {
-        labelIdToToggle: activeRow.id,
-        userEmailAddress,
-      });
-      break;
+export const clickActiveItem = (userEmailAddress: string) => {
+  return () => {
+    const activeRow = SkylarClientStore.get(activeItemRowAtom);
+    if (!activeRow) {
+      return;
     }
-    case "labelItemViewMore": {
-      SkylarClientStore.set(viewMoreLabelItemAtom, {
-        labelIdToViewMore: activeRow.parentId,
-        userEmailAddress,
-      });
-      break;
+    switch (activeRow.type) {
+      case "label": {
+        SkylarClientStore.set(toggleLabelAtom, {
+          labelIdToToggle: activeRow.id,
+          userEmailAddress,
+        });
+        break;
+      }
+      case "labelItemViewMore": {
+        SkylarClientStore.set(viewMoreLabelItemAtom, {
+          labelIdToViewMore: activeRow.parentId,
+          userEmailAddress,
+        });
+        break;
+      }
     }
-  }
+  };
 };

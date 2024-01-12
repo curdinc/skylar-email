@@ -22,6 +22,9 @@ export function ThreadViewer() {
   if (isLoadingThread) {
     return <div>Loading...</div>;
   }
+  if (thread?.length === 0) {
+    return;
+  }
   const EmailList = thread?.map((email, idx) => {
     return (
       <ThreadDisplay

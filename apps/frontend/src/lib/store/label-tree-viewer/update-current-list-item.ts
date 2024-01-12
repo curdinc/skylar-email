@@ -3,10 +3,10 @@ import { markAsRead } from "~/lib/inbox-toolkit/thread/mark-as-read";
 import { markAsUnread } from "~/lib/inbox-toolkit/thread/mark-as-unread";
 import { trashThreads } from "~/lib/inbox-toolkit/thread/trash-threads";
 import { SkylarClientStore } from "../index,";
-import { activeItemRowAtom } from "./active-item";
+import { activeItemRowSuspenseAtom } from "./active-item";
 
 export const markCurrentListItemAsRead = async (emailAddress: string) => {
-  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
+  const activeRow = await SkylarClientStore.get(activeItemRowSuspenseAtom);
   if (!activeRow || activeRow.type !== "labelItem") {
     return;
   }
@@ -16,7 +16,7 @@ export const markCurrentListItemAsRead = async (emailAddress: string) => {
   });
 };
 export const markCurrentListItemAsUnread = async (emailAddress: string) => {
-  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
+  const activeRow = await SkylarClientStore.get(activeItemRowSuspenseAtom);
   if (!activeRow || activeRow.type !== "labelItem") {
     return;
   }
@@ -27,7 +27,7 @@ export const markCurrentListItemAsUnread = async (emailAddress: string) => {
 };
 
 export const markCurrentListItemAsDone = async (emailAddress: string) => {
-  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
+  const activeRow = await SkylarClientStore.get(activeItemRowSuspenseAtom);
   if (!activeRow || activeRow.type !== "labelItem") {
     return;
   }
@@ -37,7 +37,7 @@ export const markCurrentListItemAsDone = async (emailAddress: string) => {
   });
 };
 export const deleteCurrentListItem = async (emailAddress: string) => {
-  const activeRow = await SkylarClientStore.get(activeItemRowAtom);
+  const activeRow = await SkylarClientStore.get(activeItemRowSuspenseAtom);
   if (!activeRow || activeRow.type !== "labelItem") {
     return;
   }

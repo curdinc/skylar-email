@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import { useConnectedProviders } from "@skylar/client-db";
 
+import { Kbd } from "~/components/ui/kbd";
 import { ROUTE_ONBOARDING_CONNECT } from "~/lib/routes";
 import { Icons } from "../../icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
@@ -17,7 +18,6 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
 import { Skeleton } from "../../ui/skeleton";
@@ -81,15 +81,9 @@ export function EmailAccountSelect({ className, ...props }: ButtonProps) {
               </Avatar>
               <span className="flex-grow truncate">{providerInfo.email}</span>
               {idx < 8 && (
-                <DropdownMenuShortcut className="whitespace-nowrap">
-                  ALT {idx + 1}
-                </DropdownMenuShortcut>
+                <Kbd className="whitespace-nowrap">ALT {idx + 1}</Kbd>
               )}
-              {idx === 9 && (
-                <DropdownMenuShortcut className="whitespace-nowrap">
-                  ALT {0}
-                </DropdownMenuShortcut>
-              )}
+              {idx === 9 && <Kbd className="whitespace-nowrap">ALT {0}</Kbd>}
             </Link>
           </DropdownMenuItem>
         ))}

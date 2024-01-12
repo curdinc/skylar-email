@@ -26,6 +26,7 @@ import {
   markCurrentListItemAsRead,
   markCurrentListItemAsUnread,
 } from "../store/label-tree-viewer/update-current-list-item";
+import { SHORTCUT_KEYMAP_INFO } from "./kepmap-info";
 import { registerShortcuts } from "./register-shortcuts";
 
 // ! Note that shortcuts should not overlap
@@ -75,93 +76,46 @@ export const useNavigateMessagesKeymap = () => {
         },
         "message.down": goDownLabelTree(startTransition),
         "message.up": goUpLabelTree(startTransition),
-        "message.previous-label": () => {
-          closeLabelOrGoToPreviousLabel(activeEmailAddress).catch(
-            (e: unknown) => {
-              logger.error("Error closeLabelOrGoToPreviousLabel", {
-                error: e,
-              });
-            },
-          );
-        },
-        "message.next-label": () => {
-          openLabelOrGoToNextLabel(activeEmailAddress).catch((e: unknown) => {
-            logger.error("Error openLabelOrGoToNextLabel", { error: e });
-          });
-        },
+        "message.previous-label":
+          closeLabelOrGoToPreviousLabel(activeEmailAddress),
+        "message.next-label": openLabelOrGoToNextLabel(activeEmailAddress),
       },
       shortcuts: [
         {
-          combo: "Delete",
-          description: "Delete a given item in the list",
-          label: "message.delete",
-          actionId: "message.delete",
+          ...SHORTCUT_KEYMAP_INFO["message.delete"],
         },
         {
-          combo: "e",
-          description: "Mark a given item in the list as done",
-          label: "message.mark-as-done",
-          actionId: "message.mark-as-done",
+          ...SHORTCUT_KEYMAP_INFO["message.mark-as-done"],
         },
         {
-          combo: "Shift+U",
-          description: "Mark a given item in the list as read",
-          label: "message.mark-as-read",
-          actionId: "message.mark-as-read",
+          ...SHORTCUT_KEYMAP_INFO["message.mark-as-read"],
         },
         {
-          combo: "u",
-          description: "Mark a given item in the list as unread",
-          label: "message.mark-as-unread",
-          actionId: "message.mark-as-unread",
+          ...SHORTCUT_KEYMAP_INFO["message.mark-as-unread"],
         },
         {
-          combo: "j",
-          description: "Go down the message list",
-          label: "message.down",
-          actionId: "message.down",
+          ...SHORTCUT_KEYMAP_INFO["message.down"],
         },
         {
-          combo: "ArrowDown",
-          description: "Go down the next message list",
-          label: "message.down-alt",
-          actionId: "message.down",
+          ...SHORTCUT_KEYMAP_INFO["message.down-alt"],
         },
         {
-          combo: "k",
-          description: "Go to up the message list",
-          label: "message.up",
-          actionId: "message.up",
+          ...SHORTCUT_KEYMAP_INFO["message.up"],
         },
         {
-          combo: "ArrowUp",
-          description: "Go to up the message list",
-          label: "message.up-alt",
-          actionId: "message.up",
+          ...SHORTCUT_KEYMAP_INFO["message.up-alt"],
         },
         {
-          combo: "h",
-          description: "Close current label or go previous label",
-          label: "message.previous-label",
-          actionId: "message.previous-label",
+          ...SHORTCUT_KEYMAP_INFO["message.previous-label"],
         },
         {
-          combo: "ArrowLeft",
-          description: "Close current label or go previous label",
-          label: "message.previous-label-alt",
-          actionId: "message.previous-label",
+          ...SHORTCUT_KEYMAP_INFO["message.previous-label-alt"],
         },
         {
-          combo: "l",
-          description: "Open current label or go next label",
-          label: "message.next-label",
-          actionId: "message.next-label",
+          ...SHORTCUT_KEYMAP_INFO["message.next-label"],
         },
         {
-          combo: "ArrowRight",
-          description: "Open current label or go next label",
-          label: "message.next-label-alt",
-          actionId: "message.next-label",
+          ...SHORTCUT_KEYMAP_INFO["message.next-label-alt"],
         },
       ],
       existingShortcuts,
@@ -196,11 +150,7 @@ export const useGlobalKeymap = () => {
     };
     const unsubscribe = registerShortcuts({
       onkeyDownMapping: {
-        select: () => {
-          clickActiveItem(activeEmailAddress).catch((e: unknown) => {
-            logger.error("Error clicking active item", { error: e });
-          });
-        },
+        select: clickActiveItem(activeEmailAddress),
         close: () => {
           const currentMessageType =
             useGlobalStore.getState().EMAIL_CLIENT.COMPOSING.messageType;
@@ -213,11 +163,7 @@ export const useGlobalKeymap = () => {
               resetComposeMessage();
             }
           } else {
-            closeLabelOrGoToPreviousLabel(activeEmailAddress).catch(
-              (e: unknown) => {
-                logger.error("Error closing label", { error: e });
-              },
-            );
+            closeLabelOrGoToPreviousLabel(activeEmailAddress);
           }
         },
         "message.forward": () => {
@@ -276,28 +222,16 @@ export const useGlobalKeymap = () => {
           actionId: "close",
         },
         {
-          combo: "c",
-          description: "Compose new message",
-          label: "message.compose",
-          actionId: "message.compose",
+          ...SHORTCUT_KEYMAP_INFO["message.compose"],
         },
         {
-          combo: "f",
-          description: "Forward message",
-          label: "message.forward",
-          actionId: "message.forward",
+          ...SHORTCUT_KEYMAP_INFO["message.forward"],
         },
         {
-          combo: "r",
-          description: "Reply to everyone on the message",
-          label: "message.reply-all",
-          actionId: "message.reply-all",
+          ...SHORTCUT_KEYMAP_INFO["message.reply-all"],
         },
         {
-          combo: "Shift+R",
-          description: "Reply to the sender of the message",
-          label: "message.reply-sender",
-          actionId: "message.reply-sender",
+          ...SHORTCUT_KEYMAP_INFO["message.reply-sender"],
         },
         {
           combo: "Alt+1",

@@ -90,7 +90,7 @@ export const getThreadActions = (
           setReplyMessageType({ thread, replyType: "reply-all" });
         }
       },
-      shortcut: "Shift R",
+      shortcut: "⇧R",
     },
     trashThread: {
       type: "reversible-action",
@@ -181,7 +181,7 @@ export const getThreadActions = (
       undoToastConfig: {
         title: "Thread marked as read.",
       },
-      shortcut: "Shift U",
+      shortcut: "⇧U",
     },
     markUnreadThread: {
       type: "reversible-action",

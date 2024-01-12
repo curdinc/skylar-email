@@ -3,8 +3,8 @@ import { startTransition } from "react";
 import { bulkUpdateMessages } from "@skylar/client-db";
 import type { ThreadType } from "@skylar/parsers-and-types";
 
-import { SkylarClientStore } from "../../store/index,";
-import { updateInMemoryThreadLabels } from "../../store/label-tree-viewer/update-in-memory-thread-label";
+import { SkylarClientStore } from "~/lib/store/index,";
+import { updateInMemoryThreadLabels } from "~/lib/store/label-tree-viewer/update-in-memory-thread-label";
 import { GMAIL_IMMUTABLE_LABELS } from "../constants";
 
 export const getLabelModifications = ({

@@ -26,6 +26,13 @@ const LabelTreeRowBase = ({
   const toggleLabel = useToggleLabel();
   const viewMoreLabelItem = useViewMoreLabelItem();
 
+  const onClickLabel = () => {
+    toggleLabel({
+      labelIdToToggle: row?.id ?? "",
+      userEmailAddress: activeEmailAddress ?? "",
+    });
+  };
+
   if (!row || !activeEmailAddress) {
     return;
   }
@@ -34,17 +41,13 @@ const LabelTreeRowBase = ({
       <button
         data-label-item={row.id}
         className={cn(
-          "flex h-8 items-center gap-1 border-t bg-background px-2 shadow-md",
+          "flex h-8 items-center gap-1 border-t bg-background px-2",
           "absolute inset-0",
-          row.state === "open" && "bg-secondary",
+          "hover:border-l-4",
+          row.state === "open" && "shadow-md",
           rowState === "active" && "bg-secondary",
         )}
-        onClick={() => {
-          toggleLabel({
-            labelIdToToggle: row.id,
-            userEmailAddress: activeEmailAddress,
-          });
-        }}
+        onClick={onClickLabel}
         style={{
           transform: `translateY(${translateY}px)`,
         }}
